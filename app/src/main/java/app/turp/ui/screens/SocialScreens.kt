@@ -80,6 +80,7 @@ import app.turp.data.Message
 import app.turp.data.RequestRepo
 import app.turp.data.SafetyRepo
 import app.turp.ui.components.Avatar
+import app.turp.ui.components.CandyButton
 import app.turp.ui.components.ConfirmDialog
 import app.turp.ui.components.Countries
 import app.turp.ui.components.EmptyState
@@ -217,15 +218,20 @@ private fun RequestCard(
             }
             Spacer(Modifier.height(12.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                OutlinedButton(onClick = onDecline, enabled = !busy, modifier = Modifier.weight(1f)) {
-                    Text("Ablehnen")
-                }
-                Button(
+                CandyButton(
+                    text = "Nö",
+                    onClick = onDecline,
+                    enabled = !busy,
+                    color = InkHigh,
+                    modifier = Modifier.weight(1f)
+                )
+                CandyButton(
+                    text = "Annehmen 🎉",
                     onClick = onAccept,
                     enabled = !busy,
-                    modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(containerColor = Teal, contentColor = Ink)
-                ) { Text("Annehmen") }
+                    color = Teal,
+                    modifier = Modifier.weight(1f)
+                )
             }
         }
     }

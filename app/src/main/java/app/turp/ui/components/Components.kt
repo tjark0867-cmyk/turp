@@ -3,6 +3,9 @@ package app.turp.ui.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -56,7 +59,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -78,6 +88,9 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import app.turp.ui.theme.Coral
+import app.turp.ui.theme.Display
+import app.turp.ui.theme.Online
+import app.turp.ui.theme.Sun
 import app.turp.ui.theme.Ink
 import app.turp.ui.theme.InkElevated
 import app.turp.ui.theme.InkHigh
@@ -88,48 +101,234 @@ import app.turp.ui.theme.TextHigh
 import app.turp.ui.theme.TextLow
 import coil.compose.AsyncImage
 
-/** Schriftzug "turp" mit Farbverlauf */
+/** Schriftzug "turp" im Sticker-Look: Farbverlauf, weiße Kontur, harter Schatten */
 @Composable
 fun TurpLogo(modifier: Modifier = Modifier, fontSize: TextUnit = 56.sp) {
-    Text(
-        text = "turp",
-        style = LogoStyle.copy(fontSize = fontSize),
-        color = Color.White,
-        modifier = modifier
-            .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
-            .drawWithCache {
-                val brush = Brush.linearGradient(listOf(Teal, Lilac, Coral))
-                onDrawWithContent {
-                    drawContent()
-                    drawRect(brush = brush, blendMode = BlendMode.SrcAtop)
+    val style = LogoStyle.copy(fontSize = fontSize)
+    val o = (fontSize.value * 0.045f).dp
+    Box(modifier) {
+        Text("turp", style = style, color = Color.Black, modifier = Modifier.offset(x = o, y = o * 2.4f))
+        listOf(-1 to 0, 1 to 0, 0 to -1, 0 to 1, -1 to -1, 1 to 1, -1 to 1, 1 to -1).forEach { (dx, dy) ->
+            Text("turp", style = style, color = Color.White, modifier = Modifier.offset(x = o * dx, y = o * dy))
+        }
+        Text(
+            text = "turp",
+            style = style,
+            color = Color.White,
+            modifier = Modifier
+                .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+                .drawWithCache {
+                    val brush = Brush.linearGradient(listOf(Teal, Lilac, Coral))
+                    onDrawWithContent {
+                        drawContent()
+                        drawRect(brush = brush, blendMode = BlendMode.SrcAtop)
+                    }
                 }
+        )
+    }
+}
+
+/** Gut lesbare Schriftfarbe auf einer Hintergrundfarbe */
+fun readableOn(background: Color): Color = if (background.luminance() > 0.5f) Ink else Color.White
+
+/** Etwas dunklere Variante einer Farbe (für 3D-Kanten) */
+fun darken(color: Color, factor: Float = 0.7f): Color =
+    Color(color.red * factor, color.green * factor, color.blue * factor, color.alpha)
+
+/** Schräg aufgeklebtes Namensschild mit weißem Rand und hartem Schatten */
+@Composable
+fun Sticker(
+    text: String,
+    background: Color,
+    modifier: Modifier = Modifier,
+    rotation: Float = -4f,
+    fontSize: TextUnit = 22.sp,
+    textColor: Color = readableOn(background),
+) {
+    val shape = RoundedCornerShape(12.dp)
+    Text(
+        text = text,
+        style = TextStyle(fontFamily = Display, fontSize = fontSize),
+        color = textColor,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = modifier
+            .graphicsLayer { rotationZ = rotation }
+            .drawBehind {
+                drawRoundRect(
+                    color = Color.Black.copy(alpha = 0.55f),
+                    topLeft = Offset(3.dp.toPx(), 4.dp.toPx()),
+                    size = size,
+                    cornerRadius = CornerRadius(12.dp.toPx())
+                )
             }
+            .background(background, shape)
+            .border(2.5.dp, Color.White, shape)
+            .padding(horizontal = 12.dp, vertical = 3.dp)
     )
 }
 
+/** Dicker Bonbon-Button mit 3D-Kante, der beim Drücken einsinkt */
 @Composable
-fun Avatar(url: String, name: String, color: String, size: Dp, modifier: Modifier = Modifier) {
-    val accent = parseColor(color)
+fun CandyButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    loading: Boolean = false,
+    color: Color = Teal,
+    contentColor: Color = readableOn(color),
+    height: Dp = 52.dp,
+    fontSize: TextUnit = 19.sp,
+) {
+    val interaction = remember { MutableInteractionSource() }
+    val pressed by interaction.collectIsPressedAsState()
+    val active = enabled && !loading
+    val face = if (active) color else color.copy(alpha = 0.45f)
+    val depth = 5.dp
+    val shape = RoundedCornerShape(50)
+    Box(
+        modifier.clickable(interactionSource = interaction, indication = null, enabled = active, onClick = onClick),
+        propagateMinConstraints = true
+    ) {
+        Box(
+            Modifier
+                .matchParentSize()
+                .padding(top = depth)
+                .background(darken(face), shape)
+        )
+        Box(
+            Modifier
+                .padding(top = if (pressed) depth else 0.dp, bottom = if (pressed) 0.dp else depth)
+                .height(height)
+                .background(face, shape)
+                .border(2.dp, Color.White.copy(alpha = 0.28f), shape)
+                .padding(horizontal = 22.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            if (loading) {
+                CircularProgressIndicator(Modifier.size(22.dp), color = contentColor, strokeWidth = 2.5.dp)
+            } else {
+                Text(text, style = TextStyle(fontFamily = Display, fontSize = fontSize), color = contentColor, maxLines = 1)
+            }
+        }
+    }
+}
+
+/** Runder Bonbon-Knopf mit Symbol */
+@Composable
+fun RoundCandyButton(
+    icon: ImageVector,
+    contentDescription: String,
+    color: Color,
+    size: Dp,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    iconColor: Color = readableOn(color),
+) {
+    val interaction = remember { MutableInteractionSource() }
+    val pressed by interaction.collectIsPressedAsState()
+    val depth = 4.dp
     Box(
         modifier
-            .size(size)
-            .clip(CircleShape)
-            .background(Brush.linearGradient(listOf(accent, accent.copy(alpha = 0.55f)))),
-        contentAlignment = Alignment.Center
+            .size(size + depth)
+            .clickable(interactionSource = interaction, indication = null, onClick = onClick)
     ) {
-        if (url.isNotBlank()) {
-            AsyncImage(
-                model = url,
-                contentDescription = name,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+        Box(
+            Modifier
+                .size(size)
+                .align(Alignment.BottomCenter)
+                .background(darken(color), CircleShape)
+        )
+        Box(
+            Modifier
+                .padding(top = if (pressed) depth else 0.dp)
+                .size(size)
+                .background(color, CircleShape)
+                .border(2.5.dp, Color.White.copy(alpha = 0.9f), CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(icon, contentDescription = contentDescription, tint = iconColor, modifier = Modifier.size(size * 0.48f))
+        }
+    }
+}
+
+/** Gem-Anzeige oben rechts; roter Punkt = Check-in heute noch offen */
+@Composable
+fun GemPill(gems: Long, showDot: Boolean, modifier: Modifier = Modifier) {
+    Box(modifier) {
+        Row(
+            Modifier
+                .background(InkHigh, CircleShape)
+                .border(2.dp, Sun.copy(alpha = 0.7f), CircleShape)
+                .padding(horizontal = 12.dp, vertical = 5.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("💎", fontSize = 18.sp)
+            Spacer(Modifier.width(5.dp))
+            Text("$gems", style = TextStyle(fontFamily = Display, fontSize = 20.sp), color = TextHigh)
+        }
+        if (showDot) {
+            Box(
+                Modifier
+                    .align(Alignment.TopEnd)
+                    .offset(x = 3.dp, y = (-3).dp)
+                    .size(13.dp)
+                    .background(Coral, CircleShape)
+                    .border(2.dp, Ink, CircleShape)
             )
-        } else {
-            Text(
-                text = name.take(1).uppercase(),
-                color = Ink,
-                fontWeight = FontWeight.Black,
-                fontSize = (size.value * 0.42f).sp
+        }
+    }
+}
+
+@Composable
+fun Avatar(
+    url: String,
+    name: String,
+    color: String,
+    size: Dp,
+    modifier: Modifier = Modifier,
+    ring: Color? = null,
+    online: Boolean = false,
+) {
+    val accent = parseColor(color)
+    Box(modifier.size(size)) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .clip(CircleShape)
+                .background(Brush.linearGradient(listOf(accent, accent.copy(alpha = 0.55f)))),
+            contentAlignment = Alignment.Center
+        ) {
+            if (url.isNotBlank()) {
+                AsyncImage(
+                    model = url,
+                    contentDescription = name,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
+                Text(
+                    text = name.take(1).uppercase(),
+                    color = readableOn(accent),
+                    style = TextStyle(fontFamily = Display, fontSize = (size.value * 0.45f).sp)
+                )
+            }
+            if (ring != null) {
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .border(2.5.dp, ring, CircleShape)
+                )
+            }
+        }
+        if (online) {
+            Box(
+                Modifier
+                    .align(Alignment.TopEnd)
+                    .size(size * 0.28f)
+                    .background(Online, CircleShape)
+                    .border(2.dp, Ink, CircleShape)
             )
         }
     }
@@ -250,26 +449,15 @@ fun PrimaryButton(
     loading: Boolean = false,
     color: Color = Teal,
 ) {
-    Button(
+    CandyButton(
+        text = text,
         onClick = onClick,
-        enabled = enabled && !loading,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(54.dp),
-        shape = CircleShape,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = color,
-            contentColor = Ink,
-            disabledContainerColor = color.copy(alpha = 0.35f),
-            disabledContentColor = Ink.copy(alpha = 0.7f)
-        )
-    ) {
-        if (loading) {
-            CircularProgressIndicator(Modifier.size(22.dp), color = Ink, strokeWidth = 2.5.dp)
-        } else {
-            Text(text, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-        }
-    }
+        modifier = modifier.fillMaxWidth(),
+        enabled = enabled,
+        loading = loading,
+        color = color,
+        height = 56.dp,
+    )
 }
 
 /** Eingabezeile für Chat und Lounge */

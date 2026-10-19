@@ -104,6 +104,7 @@ import app.turp.data.Socials
 import app.turp.data.UserProfile
 import app.turp.ui.components.ALL_INTERESTS
 import app.turp.ui.components.Avatar
+import app.turp.ui.components.CandyButton
 import app.turp.ui.components.ColorPicker
 import app.turp.ui.components.ConfirmDialog
 import app.turp.ui.components.Countries
@@ -218,11 +219,15 @@ fun ProfileScreen(
                     modifier = Modifier.weight(1f),
                     fontWeight = FontWeight.Bold
                 )
-                Button(
+                CandyButton(
+                    text = if (checkedInToday) "Erledigt ✓" else "Check-in 💎",
                     onClick = { vm.checkIn() },
-                    enabled = !checkedInToday && !vm.busy,
-                    colors = ButtonDefaults.buttonColors(containerColor = Teal, contentColor = Ink)
-                ) { Text(if (checkedInToday) "Heute erledigt ✓" else "Check-in") }
+                    enabled = !checkedInToday,
+                    loading = vm.busy,
+                    color = Sun,
+                    height = 46.dp,
+                    fontSize = 17.sp
+                )
             }
         }
 
@@ -245,15 +250,14 @@ fun ProfileScreen(
                     )
                 }
                 Spacer(Modifier.width(10.dp))
-                Button(
+                CandyButton(
+                    text = "Teilen",
                     onClick = { shareInvite(context, account.inviteCode) },
                     enabled = account.inviteCode.isNotBlank(),
-                    colors = ButtonDefaults.buttonColors(containerColor = Coral, contentColor = Color.White)
-                ) {
-                    Icon(Icons.Rounded.Share, contentDescription = null, modifier = Modifier.size(18.dp))
-                    Spacer(Modifier.width(6.dp))
-                    Text("Teilen")
-                }
+                    color = Coral,
+                    height = 46.dp,
+                    fontSize = 17.sp
+                )
             }
         }
 

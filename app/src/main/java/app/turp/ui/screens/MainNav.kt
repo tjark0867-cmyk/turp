@@ -5,7 +5,26 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
@@ -14,10 +33,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ChatBubble
-import androidx.compose.material.icons.rounded.Explore
-import androidx.compose.material.icons.rounded.Forum
 import androidx.compose.material.icons.rounded.Person
-import androidx.compose.material.icons.rounded.PersonAdd
+import androidx.compose.material.icons.rounded.EmojiEmotions
+import androidx.compose.material.icons.rounded.Public
+import androidx.compose.material.icons.rounded.Style
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
@@ -56,6 +75,10 @@ import app.turp.data.SessionViewModel
 import app.turp.ui.theme.Coral
 import app.turp.ui.theme.Ink
 import app.turp.ui.theme.InkElevated
+import app.turp.ui.theme.InkLine
+import app.turp.ui.theme.Lilac
+import app.turp.ui.theme.Sky
+import app.turp.ui.theme.Sun
 import app.turp.ui.theme.Teal
 import app.turp.ui.theme.TextLow
 import kotlinx.coroutines.flow.SharingStarted
@@ -69,12 +92,12 @@ class MainViewModel : ViewModel() {
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 }
 
-private enum class Tab(val label: String, val icon: ImageVector) {
-    Discover("Entdecken", Icons.Rounded.Explore),
-    Requests("Anfragen", Icons.Rounded.PersonAdd),
-    Chats("Chats", Icons.Rounded.ChatBubble),
-    Lounge("Lounge", Icons.Rounded.Forum),
-    Profile("Profil", Icons.Rounded.Person),
+private enum class Tab(val label: String, val icon: ImageVector, val color: Color) {
+    Discover("Entdecken", Icons.Rounded.Style, Teal),
+    Lounge("Lounge", Icons.Rounded.Public, Lilac),
+    Requests("Anfragen", Icons.Rounded.EmojiEmotions, Sun),
+    Chats("Chats", Icons.Rounded.ChatBubble, Sky),
+    Profile("Profil", Icons.Rounded.Person, Coral),
 }
 
 @Composable
@@ -162,38 +185,11 @@ private fun MainTabs(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
-            NavigationBar(containerColor = InkElevated, tonalElevation = 0.dp) {
-                Tab.entries.forEach { t ->
-                    val badge = when (t) {
-                        Tab.Requests -> incoming.size
-                        Tab.Chats -> unread
-                        else -> 0
-                    }
-                    NavigationBarItem(
-                        selected = tab == t,
-                        onClick = { tab = t },
-                        icon = {
-                            if (badge > 0) {
-                                BadgedBox(badge = {
-                                    Badge(containerColor = Coral, contentColor = Color.White) {
-                                        Text(if (badge > 9) "9+" else badge.toString())
-                                    }
-                                }) { Icon(t.icon, contentDescription = t.label) }
-                            } else {
-                                Icon(t.icon, contentDescription = t.label)
-                            }
-                        },
-                        label = { Text(t.label, maxLines = 1) },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Ink,
-                            selectedTextColor = Teal,
-                            indicatorColor = Teal,
-                            unselectedIconColor = TextLow,
-                            unselectedTextColor = TextLow,
-                        )
-                    )
-                }
-            }
+            TurpBottomBar(
+                selected = tab,
+                onSelect = { tab = it },
+                badges = mapOf(Tab.Requests to incoming.size, Tab.Chats to unread),
+            )
         }
     ) { padding ->
         Box(
@@ -207,6 +203,7 @@ private fun MainTabs(
                     session = session,
                     onOpenUser = { nav.navigate("user/$it") },
                     onEditProfile = { nav.navigate("editProfile") },
+                    onOpenProfile = { tab = Tab.Profile },
                 )
                 Tab.Requests -> RequestsScreen(
                     incoming = incoming,
@@ -230,6 +227,76 @@ private fun MainTabs(
                     onPremium = { nav.navigate("premium") },
                     onAdmin = { nav.navigate("admin") },
                 )
+            }
+        }
+    }
+}
+
+/** Untere Leiste: nur Symbole, jedes in seiner eigenen Farbe */
+@Composable
+private fun TurpBottomBar(selected: Tab, onSelect: (Tab) -> Unit, badges: Map<Tab, Int>) {
+    Surface(color = Ink) {
+        Column {
+            HorizontalDivider(color = InkLine.copy(alpha = 0.6f), thickness = 1.dp)
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .height(66.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Tab.entries.forEach { t ->
+                    val isSelected = t == selected
+                    val scale by animateFloatAsState(if (isSelected) 1.18f else 1f, label = "tabScale")
+                    Box(
+                        Modifier
+                            .size(58.dp)
+                            .clip(CircleShape)
+                            .clickable { onSelect(t) },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            t.icon,
+                            contentDescription = t.label,
+                            tint = if (isSelected) t.color else TextLow,
+                            modifier = Modifier
+                                .size(30.dp)
+                                .graphicsLayer {
+                                    scaleX = scale
+                                    scaleY = scale
+                                }
+                        )
+                        if (isSelected) {
+                            Box(
+                                Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .padding(bottom = 4.dp)
+                                    .size(width = 14.dp, height = 4.dp)
+                                    .background(t.color, CircleShape)
+                            )
+                        }
+                        val count = badges[t] ?: 0
+                        if (count > 0) {
+                            Box(
+                                Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(top = 8.dp, end = 6.dp)
+                                    .size(19.dp)
+                                    .background(Coral, CircleShape)
+                                    .border(2.dp, Ink, CircleShape),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    if (count > 9) "9+" else "$count",
+                                    color = Color.White,
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }

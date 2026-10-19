@@ -6,6 +6,19 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.rounded.Flag
+import app.turp.data.SafetyRepo
+import app.turp.ui.components.Avatar
+import app.turp.ui.components.GemPill
+import app.turp.ui.components.ReportDialog
+import app.turp.ui.components.RoundCandyButton
+import app.turp.ui.components.Sticker
+import app.turp.ui.components.TurpLogo
+import app.turp.ui.components.todayBerlin
+import app.turp.ui.theme.Lilac
+import app.turp.ui.theme.Sun
+import app.turp.ui.theme.TextHigh
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -145,6 +158,15 @@ class DiscoverViewModel : BaseViewModel() {
         launchSafe(showBusy = false) { DiscoverRepo.skip(profile.uid) }
     }
 
+    fun report(profile: UserProfile, reason: String, details: String) {
+        cards.value = cards.value - profile
+        launchSafe {
+            SafetyRepo.report(profile.uid, reason, details, "Entdecken")
+            DiscoverRepo.skip(profile.uid)
+            toast("Danke! Unser Team schaut sich das an. 💛")
+        }
+    }
+
     fun like(profile: UserProfile) {
         cards.value = cards.value - profile
         viewModelScope.launch {
@@ -170,6 +192,7 @@ fun DiscoverScreen(
     session: SessionState.Active,
     onOpenUser: (String) -> Unit,
     onEditProfile: () -> Unit,
+    onOpenProfile: () -> Unit,
     vm: DiscoverViewModel = viewModel(),
 ) {
     val context = LocalContext.current
@@ -179,21 +202,43 @@ fun DiscoverScreen(
     val cards by vm.cards.collectAsState()
     val me by remember(session.uid) { ProfileRepo.profile(session.uid) }.collectAsState(initial = null)
     var showFilter by remember { mutableStateOf(false) }
+    var reporting by remember { mutableStateOf<UserProfile?>(null) }
     val myProfile = me
+    val checkInOpen = session.account.lastCheckIn != todayBerlin()
 
     Column(
         Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 12.dp)
     ) {
-        ScreenHeader(
-            title = "Entdecken",
-            subtitle = if (session.account.ageGroup == "teen") "Jugend-Community · 13–17" else "Community · 18+"
+        // Kopfzeile: eigenes Profil + Filter | Logo | Gems
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .padding(top = 6.dp, bottom = 8.dp)
         ) {
-            GemChip(session.account.gems)
-            IconButton(onClick = { showFilter = true }) {
-                Icon(Icons.Rounded.Tune, contentDescription = "Filter")
+            Row(Modifier.align(Alignment.CenterStart), verticalAlignment = Alignment.CenterVertically) {
+                Avatar(
+                    url = myProfile?.photos?.firstOrNull().orEmpty(),
+                    name = myProfile?.name.orEmpty(),
+                    color = myProfile?.color ?: "#2DE1C2",
+                    size = 42.dp,
+                    ring = Color.White,
+                    online = true,
+                    modifier = Modifier.clickable(onClick = onOpenProfile)
+                )
+                IconButton(onClick = { showFilter = true }) {
+                    Icon(Icons.Rounded.Tune, contentDescription = "Filter", tint = TextHigh, modifier = Modifier.size(28.dp))
+                }
             }
+            TurpLogo(Modifier.align(Alignment.Center), fontSize = 38.sp)
+            GemPill(
+                gems = session.account.gems,
+                showDot = checkInOpen,
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .clickable(onClick = onOpenProfile)
+            )
         }
 
         if (myProfile != null && myProfile.photos.isEmpty()) {
@@ -201,15 +246,16 @@ fun DiscoverScreen(
                 onClick = onEditProfile,
                 shape = RoundedCornerShape(18.dp),
                 color = Coral.copy(alpha = 0.18f),
-                border = BorderStroke(1.dp, Coral),
+                border = BorderStroke(2.dp, Coral),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
             ) {
                 Text(
-                    "📸 Füge ein Foto hinzu – erst dann sehen dich andere beim Entdecken. Tippen zum Bearbeiten.",
+                    "📸 Lad ein Foto hoch – erst dann sehen dich andere. Tippen zum Bearbeiten.",
                     Modifier.padding(12.dp),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
                 )
             }
         }
@@ -218,6 +264,7 @@ fun DiscoverScreen(
             Modifier
                 .weight(1f)
                 .fillMaxWidth()
+                .padding(bottom = 10.dp)
         ) {
             when {
                 !vm.loaded -> LoadingBox()
@@ -233,7 +280,8 @@ fun DiscoverScreen(
                     cards = cards,
                     onSkip = vm::skip,
                     onLike = vm::like,
-                    onOpen = onOpenUser
+                    onOpen = onOpenUser,
+                    onReport = { reporting = it }
                 )
             }
         }
@@ -252,6 +300,18 @@ fun DiscoverScreen(
             }
         )
     }
+
+    val target = reporting
+    if (target != null) {
+        ReportDialog(
+            name = target.name,
+            onDismiss = { reporting = null },
+            onSubmit = { reason, details ->
+                vm.report(target, reason, details)
+                reporting = null
+            }
+        )
+    }
 }
 
 @Composable
@@ -260,6 +320,7 @@ private fun CardStack(
     onSkip: (UserProfile) -> Unit,
     onLike: (UserProfile) -> Unit,
     onOpen: (String) -> Unit,
+    onReport: (UserProfile) -> Unit,
 ) {
     val top = cards.first()
     val scope = rememberCoroutineScope()
@@ -277,105 +338,74 @@ private fun CardStack(
         }
     }
 
-    Column(Modifier.fillMaxSize()) {
-        Box(
-            Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-                .onSizeChanged { widthPx = it.width.toFloat().coerceAtLeast(1f) }
-        ) {
-            if (cards.size > 1) {
-                val next = cards[1]
-                key(next.uid) {
-                    ProfileCard(
-                        profile = next,
-                        interactive = false,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .graphicsLayer {
-                                val p = (abs(offsetX.value) / widthPx).coerceIn(0f, 1f)
-                                scaleX = 0.94f + 0.06f * p
-                                scaleY = 0.94f + 0.06f * p
-                                alpha = 0.5f + 0.5f * p
-                            }
-                    )
-                }
-            }
-            key(top.uid) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .onSizeChanged { widthPx = it.width.toFloat().coerceAtLeast(1f) }
+    ) {
+        if (cards.size > 1) {
+            val next = cards[1]
+            key(next.uid) {
                 ProfileCard(
-                    profile = top,
-                    interactive = true,
-                    onOpen = { onOpen(top.uid) },
-                    likeProgress = { (offsetX.value / widthPx * 3f).coerceIn(-1f, 1f) },
+                    profile = next,
+                    interactive = false,
                     modifier = Modifier
                         .fillMaxSize()
                         .graphicsLayer {
-                            translationX = offsetX.value
-                            translationY = offsetY.value
-                            rotationZ = offsetX.value / 45f
-                        }
-                        .pointerInput(top.uid) {
-                            detectDragGestures(
-                                onDragEnd = {
-                                    val threshold = size.width * 0.28f
-                                    when {
-                                        offsetX.value > threshold -> fling(true)
-                                        offsetX.value < -threshold -> fling(false)
-                                        else -> scope.launch {
-                                            launch { offsetX.animateTo(0f, spring()) }
-                                            offsetY.animateTo(0f, spring())
-                                        }
-                                    }
-                                },
-                                onDragCancel = {
-                                    scope.launch {
-                                        launch { offsetX.animateTo(0f, spring()) }
-                                        offsetY.animateTo(0f, spring())
-                                    }
-                                },
-                                onDrag = { change, amount ->
-                                    change.consume()
-                                    scope.launch {
-                                        offsetX.snapTo(offsetX.value + amount.x)
-                                        offsetY.snapTo(offsetY.value + amount.y)
-                                    }
-                                }
-                            )
+                            val p = (abs(offsetX.value) / widthPx).coerceIn(0f, 1f)
+                            scaleX = 0.94f + 0.06f * p
+                            scaleY = 0.94f + 0.06f * p
+                            alpha = 0.5f + 0.5f * p
                         }
                 )
             }
         }
-
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(bottom = 12.dp, top = 4.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            RoundAction(Icons.Rounded.Close, Coral, 64.dp, "Weiter") { fling(false) }
-            RoundAction(Icons.Rounded.PersonAdd, Teal, 76.dp, "Anfrage · $REQUEST_COST 💎") { fling(true) }
+        key(top.uid) {
+            ProfileCard(
+                profile = top,
+                interactive = true,
+                onOpen = { onOpen(top.uid) },
+                onLike = { fling(true) },
+                onSkip = { fling(false) },
+                onReport = { onReport(top) },
+                likeProgress = { (offsetX.value / widthPx * 3f).coerceIn(-1f, 1f) },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        translationX = offsetX.value
+                        translationY = offsetY.value
+                        rotationZ = offsetX.value / 45f
+                    }
+                    .pointerInput(top.uid) {
+                        detectDragGestures(
+                            onDragEnd = {
+                                val threshold = size.width * 0.28f
+                                when {
+                                    offsetX.value > threshold -> fling(true)
+                                    offsetX.value < -threshold -> fling(false)
+                                    else -> scope.launch {
+                                        launch { offsetX.animateTo(0f, spring()) }
+                                        offsetY.animateTo(0f, spring())
+                                    }
+                                }
+                            },
+                            onDragCancel = {
+                                scope.launch {
+                                    launch { offsetX.animateTo(0f, spring()) }
+                                    offsetY.animateTo(0f, spring())
+                                }
+                            },
+                            onDrag = { change, amount ->
+                                change.consume()
+                                scope.launch {
+                                    offsetX.snapTo(offsetX.value + amount.x)
+                                    offsetY.snapTo(offsetY.value + amount.y)
+                                }
+                            }
+                        )
+                    }
+            )
         }
-    }
-}
-
-@Composable
-private fun RoundAction(icon: ImageVector, tint: Color, size: Dp, label: String, onClick: () -> Unit) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Surface(
-            onClick = onClick,
-            shape = CircleShape,
-            color = InkHigh,
-            border = BorderStroke(2.dp, tint),
-            modifier = Modifier.size(size)
-        ) {
-            Box(contentAlignment = Alignment.Center) {
-                Icon(icon, contentDescription = label, tint = tint, modifier = Modifier.size(size * 0.42f))
-            }
-        }
-        Spacer(Modifier.height(4.dp))
-        Text(label, style = MaterialTheme.typography.labelSmall, color = TextLow)
     }
 }
 
@@ -385,17 +415,19 @@ private fun ProfileCard(
     interactive: Boolean,
     modifier: Modifier = Modifier,
     onOpen: () -> Unit = {},
+    onLike: () -> Unit = {},
+    onSkip: () -> Unit = {},
+    onReport: () -> Unit = {},
     likeProgress: () -> Float = { 0f },
 ) {
     var photoIndex by remember(profile.uid) { mutableIntStateOf(0) }
     val accent = parseColor(profile.color)
-    val shape = RoundedCornerShape(28.dp)
+    val shape = RoundedCornerShape(30.dp)
 
     Box(
         modifier
             .clip(shape)
             .background(InkHigh)
-            .border(3.dp, accent.copy(alpha = 0.9f), shape)
     ) {
         AsyncImage(
             model = profile.photos.getOrNull(photoIndex),
@@ -408,31 +440,13 @@ private fun ProfileCard(
                 .fillMaxSize()
                 .background(
                     Brush.verticalGradient(
-                        0.0f to Color.Transparent,
-                        0.5f to Color.Transparent,
-                        1.0f to Ink.copy(alpha = 0.95f)
+                        0.0f to Ink.copy(alpha = 0.35f),
+                        0.18f to Color.Transparent,
+                        0.6f to Color.Transparent,
+                        1.0f to Ink.copy(alpha = 0.9f)
                     )
                 )
         )
-
-        if (profile.photos.size > 1) {
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                profile.photos.indices.forEach { i ->
-                    Box(
-                        Modifier
-                            .weight(1f)
-                            .height(4.dp)
-                            .clip(RoundedCornerShape(2.dp))
-                            .background(if (i == photoIndex) Color.White else Color.White.copy(alpha = 0.35f))
-                    )
-                }
-            }
-        }
 
         if (interactive) {
             // Links/rechts tippen = Fotos blättern, unten tippen = Profil öffnen
@@ -441,7 +455,7 @@ private fun ProfileCard(
                     .fillMaxSize()
                     .pointerInput(profile.uid, profile.photos.size) {
                         detectTapGestures { pos ->
-                            if (pos.y > size.height * 0.62f) {
+                            if (pos.y > size.height * 0.6f) {
                                 onOpen()
                             } else if (pos.x < size.width / 2f) {
                                 photoIndex = (photoIndex - 1).coerceAtLeast(0)
@@ -451,22 +465,67 @@ private fun ProfileCard(
                         }
                     }
             )
+        }
+
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 14.dp)
+        ) {
+            // Foto-Fortschritt wie bei Storys
+            Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                val count = profile.photos.size.coerceAtLeast(1)
+                repeat(count) { i ->
+                    Box(
+                        Modifier
+                            .weight(1f)
+                            .height(4.dp)
+                            .clip(CircleShape)
+                            .background(if (i == photoIndex) Color.White else Color.White.copy(alpha = 0.35f))
+                    )
+                }
+            }
+            Spacer(Modifier.height(14.dp))
+            Row(verticalAlignment = Alignment.Top) {
+                Column(Modifier.weight(1f)) {
+                    Sticker(profile.name, accent, rotation = -4f, fontSize = 28.sp)
+                    Spacer(Modifier.height(8.dp))
+                    Sticker(
+                        "${Countries.flag(profile.country)} ${profile.country}, ${profile.age}",
+                        Lilac,
+                        rotation = -2f,
+                        fontSize = 18.sp,
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                }
+                if (interactive) {
+                    IconButton(onClick = onReport) {
+                        Icon(
+                            Icons.Rounded.Flag,
+                            contentDescription = "Melden",
+                            tint = Color.White,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+                }
+            }
+        }
+
+        if (interactive) {
             Stamp(
-                text = "ANFRAGE 👋",
+                text = "HEY 👋",
                 color = Teal,
-                rotation = -12f,
+                rotation = -14f,
                 modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(28.dp)
+                    .align(Alignment.Center)
                     .graphicsLayer { alpha = likeProgress().coerceIn(0f, 1f) }
             )
             Stamp(
-                text = "WEITER",
+                text = "NÄCHSTE",
                 color = Coral,
-                rotation = 12f,
+                rotation = 14f,
                 modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(28.dp)
+                    .align(Alignment.Center)
                     .graphicsLayer { alpha = (-likeProgress()).coerceIn(0f, 1f) }
             )
         }
@@ -475,36 +534,63 @@ private fun ProfileCard(
             Modifier
                 .align(Alignment.BottomStart)
                 .fillMaxWidth()
-                .padding(20.dp)
+                .padding(14.dp)
         ) {
-            Row(verticalAlignment = Alignment.Bottom) {
-                Text(
-                    profile.name,
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Black,
-                    color = Color.White,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f, fill = false)
-                )
-                Spacer(Modifier.width(8.dp))
-                Text("${profile.age}", fontSize = 24.sp, color = Color.White.copy(alpha = 0.85f))
-            }
-            Text(
-                "${Countries.flag(profile.country)} ${Countries.name(profile.country)}",
-                color = Color.White.copy(alpha = 0.8f)
-            )
             if (profile.bio.isNotBlank()) {
-                Spacer(Modifier.height(6.dp))
-                Text(profile.bio, color = Color.White, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                Text(
+                    profile.bio,
+                    color = Color.White,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                )
+                Spacer(Modifier.height(8.dp))
             }
             if (profile.interests.isNotEmpty()) {
-                Spacer(Modifier.height(10.dp))
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                    modifier = Modifier.padding(horizontal = 2.dp)
                 ) {
                     profile.interests.take(4).forEach { InterestSticker(it, accent) }
+                }
+                Spacer(Modifier.height(12.dp))
+            }
+            if (interactive) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Surface(
+                        onClick = onLike,
+                        shape = CircleShape,
+                        color = Color.Black.copy(alpha = 0.5f),
+                        border = BorderStroke(2.dp, Color.White.copy(alpha = 0.85f)),
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(58.dp)
+                    ) {
+                        Row(
+                            Modifier.padding(horizontal = 18.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("👋", fontSize = 24.sp)
+                            Spacer(Modifier.width(10.dp))
+                            Text(
+                                "Anfrage senden",
+                                style = MaterialTheme.typography.labelLarge.copy(fontSize = 19.sp),
+                                color = Color.White,
+                                modifier = Modifier.weight(1f)
+                            )
+                            Text("$REQUEST_COST 💎", color = Sun, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                    Spacer(Modifier.width(10.dp))
+                    RoundCandyButton(
+                        icon = Icons.Rounded.Close,
+                        contentDescription = "Weiter",
+                        color = Coral,
+                        size = 56.dp,
+                        onClick = onSkip
+                    )
                 }
             }
         }
@@ -516,12 +602,12 @@ private fun Stamp(text: String, color: Color, rotation: Float, modifier: Modifie
     Text(
         text = text,
         color = color,
-        fontWeight = FontWeight.Black,
-        fontSize = 24.sp,
+        style = MaterialTheme.typography.headlineLarge,
         modifier = modifier
             .graphicsLayer { rotationZ = rotation }
-            .border(3.dp, color, RoundedCornerShape(10.dp))
-            .padding(horizontal = 10.dp, vertical = 4.dp)
+            .background(Ink.copy(alpha = 0.55f), RoundedCornerShape(14.dp))
+            .border(4.dp, color, RoundedCornerShape(14.dp))
+            .padding(horizontal = 16.dp, vertical = 6.dp)
     )
 }
 

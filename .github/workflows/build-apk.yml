@@ -57,6 +57,18 @@ jobs:
             echo "Keine Firebase-Daten - App wird ohne Firebase gebaut"
           fi
 
+      # Schrift "Lilita One" (SIL Open Font License) – wird beim Bauen geladen
+      - name: Schrift laden
+        run: |
+          mkdir -p app/src/main/res/font app/src/main/assets/licenses
+          URL="https://raw.githubusercontent.com/google/fonts/main/ofl/lilitaone"
+          for i in 1 2 3; do
+            curl -fsSL -o app/src/main/res/font/lilita_one.ttf "$URL/LilitaOne-Regular.ttf" && break
+            sleep 5
+          done
+          curl -fsSL -o app/src/main/assets/licenses/LilitaOne-OFL.txt "$URL/OFL.txt" || true
+          test -s app/src/main/res/font/lilita_one.ttf
+
       - name: APK bauen
         id: build
         run: |
