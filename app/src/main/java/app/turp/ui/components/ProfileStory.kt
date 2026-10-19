@@ -28,10 +28,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -128,26 +130,24 @@ fun ProfileStory(
                 )
             }
             StoryPage.Info -> {
-                // Hintergrund: erstes Foto, weichgezeichnet und abgedunkelt, in der Profilfarbe getönt
+                // Hintergrund: dasselbe Foto wie auf Seite 1, klar erkennbar, nur etwas dunkler
                 profile.photos.firstOrNull()?.let { url ->
                     AsyncImage(
                         model = url,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .blur(26.dp)
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
                 Box(
                     Modifier
                         .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.52f))
+                        .background(Color.Black.copy(alpha = 0.38f))
                         .background(
                             Brush.verticalGradient(
-                                0.0f to accent.copy(alpha = 0.34f),
-                                0.55f to accent.copy(alpha = 0.10f),
-                                1.0f to Color.Black.copy(alpha = 0.55f)
+                                0.0f to Color.Black.copy(alpha = 0.18f),
+                                0.45f to Color.Transparent,
+                                1.0f to Color.Black.copy(alpha = 0.30f)
                             )
                         )
                 )
@@ -190,6 +190,9 @@ private fun StoryBars(count: Int, current: Int, modifier: Modifier = Modifier) {
     }
 }
 
+/** Leichter Schatten, damit weiße Schrift auf jedem Foto lesbar bleibt */
+private val TextOnPhoto = TextStyle(shadow = Shadow(Color.Black.copy(alpha = 0.7f), Offset(0f, 2f), 10f))
+
 /** Seite 2: Bio groß und gut lesbar, darunter die Interessen als Sticker */
 @Composable
 private fun InfoPage(profile: UserProfile, accent: Color, modifier: Modifier = Modifier) {
@@ -208,6 +211,7 @@ private fun InfoPage(profile: UserProfile, accent: Color, modifier: Modifier = M
                 fontSize = if (long) 18.sp else 22.sp,
                 lineHeight = if (long) 25.sp else 30.sp,
                 fontWeight = FontWeight.Bold,
+                style = TextOnPhoto,
             )
         } else {
             Text(
@@ -215,6 +219,7 @@ private fun InfoPage(profile: UserProfile, accent: Color, modifier: Modifier = M
                 color = Color.White.copy(alpha = 0.7f),
                 fontSize = 17.sp,
                 fontWeight = FontWeight.Medium,
+                style = TextOnPhoto,
             )
         }
         if (profile.interests.isNotEmpty()) {
