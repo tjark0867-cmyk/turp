@@ -198,7 +198,25 @@ fun MainNav(
             EditProfileScreen(onBack = { nav.popBackStack() })
         }
         composable("premium") {
-            PremiumScreen(onBack = { nav.popBackStack() })
+            ShopScreen(session = sessionState.value, onBack = { nav.popBackStack() })
+        }
+        composable("settings") {
+            SettingsScreen(
+                session = sessionState.value,
+                sessionVm = sessionVm,
+                onBack = { nav.popBackStack() },
+                onEdit = { nav.navigate("editProfile") },
+                onShop = { nav.navigate("premium") },
+                onAdmin = { nav.navigate("admin") },
+                onCheckUpdate = { updateVm.checkManually() },
+            )
+        }
+        composable("friends") {
+            AllFriendsScreen(
+                onClose = { nav.popBackStack() },
+                onOpenChat = { nav.navigate("chat/$it") },
+                onOpenUser = { nav.navigate("user/$it") },
+            )
         }
         composable("admin") {
             AdminScreen(
@@ -325,6 +343,7 @@ private fun MainTabs(
                     onOpenUser = { nav.navigate("user/$it") },
                     onEditProfile = { nav.navigate("editProfile") },
                     onOpenProfile = { tab = Tab.Profile },
+                    onOpenShop = { nav.navigate("premium") },
                 )
                 Tab.Requests -> FriendsScreen(
                     session = session,
@@ -334,12 +353,16 @@ private fun MainTabs(
                     onOpenChat = { nav.navigate("chat/$it") },
                     onOpenProfile = { tab = Tab.Profile },
                     onDiscover = { tab = Tab.Discover },
+                    onAllFriends = { nav.navigate("friends") },
+                    onOpenShop = { nav.navigate("premium") },
                 )
                 Tab.Chats -> ChatsScreen(
+                    session = session,
                     chats = chats,
-                    me = session.uid,
                     onOpenChat = { nav.navigate("chat/$it") },
                     onDiscover = { tab = Tab.Discover },
+                    onOpenProfile = { tab = Tab.Profile },
+                    onOpenShop = { nav.navigate("premium") },
                     onStartTestChat = if (BuildConfig.DEBUG) {
                         { vm.startTestChat { chatId -> nav.navigate("chat/$chatId") } }
                     } else {
@@ -353,11 +376,11 @@ private fun MainTabs(
                 )
                 Tab.Profile -> ProfileScreen(
                     session = session,
-                    sessionVm = sessionVm,
+                    onBack = { tab = Tab.Discover },
                     onEdit = { nav.navigate("editProfile") },
-                    onPremium = { nav.navigate("premium") },
-                    onAdmin = { nav.navigate("admin") },
-                    onCheckUpdate = onCheckUpdate,
+                    onPreview = { nav.navigate("user/${session.uid}") },
+                    onShop = { nav.navigate("premium") },
+                    onSettings = { nav.navigate("settings") },
                 )
             }
         }

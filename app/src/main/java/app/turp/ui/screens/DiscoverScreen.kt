@@ -202,6 +202,7 @@ fun DiscoverScreen(
     onOpenUser: (String) -> Unit,
     onEditProfile: () -> Unit,
     onOpenProfile: () -> Unit,
+    onOpenShop: () -> Unit,
     vm: DiscoverViewModel = viewModel(),
 ) {
     val context = LocalContext.current
@@ -246,7 +247,7 @@ fun DiscoverScreen(
                 showDot = checkInOpen,
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
-                    .clickable(onClick = onOpenProfile)
+                    .clickable(onClick = onOpenShop)
             )
         }
 
@@ -278,7 +279,14 @@ fun DiscoverScreen(
                 .padding(bottom = 10.dp)
         ) {
             when {
-                !vm.loaded -> LoadingBox()
+                !vm.loaded -> Column(
+                    Modifier.align(Alignment.Center),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    GemIcon(110.dp, spin = true)
+                    Spacer(Modifier.height(18.dp))
+                    Text("Profile werden geladen", color = TextHigh, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
+                }
                 cards.isEmpty() -> EmptyState(
                     emoji = "🌍",
                     title = "Gerade keine neuen Leute",

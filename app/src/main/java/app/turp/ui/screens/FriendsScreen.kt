@@ -1,5 +1,16 @@
 package app.turp.ui.screens
 
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.SharingStarted
+import app.turp.ui.components.TabHeader
+import app.turp.data.Fb
+import app.turp.data.ChatRepo
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TextField
+import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Group
+import androidx.compose.material.icons.rounded.ChatBubble
+import androidx.compose.foundation.layout.statusBarsPadding
 import app.turp.ui.theme.Online
 import app.turp.ui.components.rememberIsOnline
 import android.content.Context
@@ -160,6 +171,8 @@ fun FriendsScreen(
     onOpenChat: (String) -> Unit,
     onOpenProfile: () -> Unit,
     onDiscover: () -> Unit,
+    onAllFriends: () -> Unit,
+    onOpenShop: () -> Unit,
     vm: RequestsViewModel = viewModel(),
 ) {
     val context = LocalContext.current
@@ -193,15 +206,18 @@ fun FriendsScreen(
 
     LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 24.dp)) {
         item {
-            FriendsHeader(
+            TabHeader(
+                title = "Freunde",
                 me = me,
                 gems = session.account.gems,
-                checkInOpen = session.account.lastCheckIn != todayBerlin(),
+                showDot = session.account.lastCheckIn != todayBerlin(),
                 onOpenProfile = onOpenProfile,
-                onInvite = session.account.inviteCode.takeIf { it.isNotBlank() }?.let { code ->
-                    { shareInvite(context, code) }
-                },
-            )
+                onOpenShop = onOpenShop,
+            ) {
+                IconButton(onClick = onAllFriends) {
+                    Icon(Icons.Rounded.Group, contentDescription = "Alle Freunde", tint = TextHigh, modifier = Modifier.size(25.dp))
+                }
+            }
         }
 
         item { Heading("Neue Freunde", Modifier.padding(start = 16.dp, top = 6.dp, bottom = 10.dp)) }
@@ -269,59 +285,6 @@ fun FriendsScreen(
                 modifier = Modifier.animateItem()
             )
         }
-    }
-}
-
-/** Kopfzeile wie beim Entdecken: eigenes Profil + Einladen | Titel | Gems */
-@Composable
-private fun FriendsHeader(
-    me: UserProfile?,
-    gems: Long,
-    checkInOpen: Boolean,
-    onOpenProfile: () -> Unit,
-    onInvite: (() -> Unit)?,
-) {
-    Box(
-        Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 12.dp)
-            .padding(top = 6.dp, bottom = 8.dp)
-    ) {
-        Row(Modifier.align(Alignment.CenterStart), verticalAlignment = Alignment.CenterVertically) {
-            Avatar(
-                url = me?.photos?.firstOrNull().orEmpty(),
-                name = me?.name.orEmpty(),
-                color = me?.color ?: DEFAULT_COLOR,
-                size = 38.dp,
-                ring = Color.White,
-                online = true,
-                modifier = Modifier.clickable(onClick = onOpenProfile)
-            )
-            if (onInvite != null) {
-                IconButton(onClick = onInvite) {
-                    Icon(
-                        Icons.Rounded.PersonAdd,
-                        contentDescription = "Freunde einladen",
-                        tint = TextHigh,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-            }
-        }
-        Text(
-            "Freunde",
-            color = TextHigh,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.ExtraBold,
-            modifier = Modifier.align(Alignment.Center)
-        )
-        GemPill(
-            gems = gems,
-            showDot = checkInOpen,
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .clickable(onClick = onOpenProfile)
-        )
     }
 }
 
@@ -621,4 +584,143 @@ private fun TopMatchBadge(modifier: Modifier = Modifier) {
             .border(1.5.dp, Brush.linearGradient(Holo), shape)
             .padding(horizontal = 7.dp, vertical = 1.dp)
     )
+}
+
+// ---- Alle Freunde ----------------------------------------------------------
+
+class AllFriendsViewModel : BaseViewModel() {
+    val chats = ChatRepo.chats()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    /** Profile der Freunde (für Alter und Land) – jedes wird nur einmal geladen */
+    var profiles by mutableStateOf<Map<String, UserProfile>>(emptyMap())
+        private set
+    private val requested = mutableSetOf<String>()
+
+    fun load(uids: Collection<String>) {
+        val missing = uids.filter { requested.add(it) }
+        if (missing.isEmpty()) return
+        viewModelScope.launch {
+            val loaded = missing.map { uid ->
+                async {
+                    uid to try {
+                        ProfileRepo.get(uid)
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (e: Exception) {
+                        null
+                    }
+                }
+            }.awaitAll()
+            profiles = profiles + loaded.mapNotNull { (uid, p) -> p?.let { uid to it } }
+        }
+    }
+}
+
+@Composable
+fun AllFriendsScreen(
+    onClose: () -> Unit,
+    onOpenChat: (String) -> Unit,
+    onOpenUser: (String) -> Unit,
+    vm: AllFriendsViewModel = viewModel(),
+) {
+    val me = Fb.uid
+    val chats by vm.chats.collectAsState()
+    val friends = chats.filter { !it.closed }.sortedBy { it.other(me).name.lowercase() }
+    LaunchedEffect(friends.size) { vm.load(friends.map { it.otherUid(me) }) }
+    var query by remember { mutableStateOf("") }
+    val shown = if (query.isBlank()) friends else friends.filter { it.other(me).name.contains(query.trim(), ignoreCase = true) }
+
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(Ink)
+            .statusBarsPadding()
+    ) {
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp, vertical = 2.dp)
+        ) {
+            IconButton(onClick = onClose, modifier = Modifier.align(Alignment.CenterStart)) {
+                Icon(Icons.Rounded.Close, contentDescription = "Schließen", tint = TextHigh)
+            }
+            Text(
+                "Alle Freunde 👯",
+                color = TextHigh,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.ExtraBold,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+        TextField(
+            value = query,
+            onValueChange = { query = it.take(30) },
+            placeholder = { Text("Nach Namen suchen") },
+            leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = null) },
+            singleLine = true,
+            shape = CircleShape,
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedContainerColor = InkHigh,
+                unfocusedContainerColor = InkHigh,
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        )
+        LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 24.dp)) {
+            if (shown.isEmpty()) {
+                item {
+                    EmptyState(
+                        emoji = "👯",
+                        title = if (friends.isEmpty()) "Noch keine Freunde" else "Niemand gefunden",
+                        text = if (friends.isEmpty()) "Nimm Anfragen an oder schick selbst welche beim Entdecken." else "Probier einen anderen Namen.",
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                }
+            }
+            items(shown, key = { it.id }) { chat ->
+                val uid = chat.otherUid(me)
+                val info = chat.other(me)
+                val profile = vm.profiles[uid]
+                val online = rememberIsOnline(uid)
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .clickable { onOpenUser(uid) }
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Avatar(info.photo, info.name, info.color, 46.dp, online = online)
+                    Spacer(Modifier.width(12.dp))
+                    Column(Modifier.weight(1f)) {
+                        Text(
+                            info.name,
+                            color = TextHigh,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        if (profile != null) {
+                            Text(
+                                if (profile.bot) "🤖 Testbot" else "${profile.age}, ${Countries.flag(profile.country)} ${profile.country}",
+                                color = TextLow,
+                                fontSize = 12.sp
+                            )
+                        }
+                    }
+                    Surface(onClick = { onOpenChat(chat.id) }, shape = CircleShape, color = Teal) {
+                        Row(Modifier.padding(horizontal = 12.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Rounded.ChatBubble, contentDescription = null, tint = Ink, modifier = Modifier.size(14.dp))
+                            Spacer(Modifier.width(5.dp))
+                            Text("Chat", color = Ink, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

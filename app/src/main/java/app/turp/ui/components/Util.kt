@@ -64,6 +64,19 @@ fun timeAgo(ts: Timestamp?): String {
     }
 }
 
+/** Kurz für die Chat-Liste: "jetzt", "5 Min.", "3 Std.", "3 T.", ab einer Woche "7 T.+" */
+fun chatAge(ts: Timestamp?): String {
+    if (ts == null) return ""
+    val minutes = ((System.currentTimeMillis() - ts.toDate().time) / 60_000).coerceAtLeast(0)
+    return when {
+        minutes < 1 -> "jetzt"
+        minutes < 60 -> "$minutes Min."
+        minutes < 24 * 60 -> "${minutes / 60} Std."
+        minutes < 7 * 24 * 60 -> "${minutes / (24 * 60)} T."
+        else -> "7 T.+"
+    }
+}
+
 /** Gilt als "Online", wenn die letzte Meldung höchstens so lange her ist */
 const val ONLINE_WINDOW_MS = 4 * 60_000L
 

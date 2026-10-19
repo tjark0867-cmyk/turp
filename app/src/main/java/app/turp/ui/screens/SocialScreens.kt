@@ -1,5 +1,12 @@
 package app.turp.ui.screens
 
+import app.turp.ui.components.todayBerlin
+import app.turp.ui.components.chatAge
+import app.turp.ui.components.TabHeader
+import app.turp.ui.components.SectionHeading
+import app.turp.data.SessionState
+import app.turp.data.ProfileRepo
+import androidx.compose.foundation.lazy.LazyRow
 import app.turp.ui.components.VoicePlayer
 import app.turp.ui.components.VoiceMessageContent
 import app.turp.ui.components.RecordingBar
@@ -140,46 +147,43 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ChatsScreen(
+    session: SessionState.Active,
     chats: List<Chat>,
-    me: String,
     onOpenChat: (String) -> Unit,
     onDiscover: () -> Unit,
+    onOpenProfile: () -> Unit,
+    onOpenShop: () -> Unit,
     onStartTestChat: (() -> Unit)? = null,
     testBusy: Boolean = false,
 ) {
-    LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(horizontal = 16.dp)) {
-        item { ScreenHeader("Chats") }
-        if (onStartTestChat != null) {
+    val me = session.uid
+    val myProfile by remember(me) { ProfileRepo.profile(me) }.collectAsState(initial = null)
+    val friends = chats.filter { !it.closed }
+
+    LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 16.dp)) {
+        item {
+            TabHeader(
+                title = "Chats 💬",
+                me = myProfile,
+                gems = session.account.gems,
+                showDot = session.account.lastCheckIn != todayBerlin(),
+                onOpenProfile = onOpenProfile,
+                onOpenShop = onOpenShop,
+            )
+        }
+        if (friends.isNotEmpty()) {
+            item { SectionHeading("Freunde", Modifier.padding(start = 16.dp, top = 4.dp, bottom = 10.dp)) }
             item {
-                Surface(
-                    onClick = onStartTestChat,
-                    enabled = !testBusy,
-                    shape = RoundedCornerShape(16.dp),
-                    color = InkElevated,
-                    border = BorderStroke(1.dp, Teal.copy(alpha = 0.5f)),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp)
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Text("🤖", fontSize = 26.sp)
-                        Spacer(Modifier.width(12.dp))
-                        Column(Modifier.weight(1f)) {
-                            Text("Test-Chat mit dem turp Bot", style = MaterialTheme.typography.titleMedium)
-                            Text(
-                                "Antwortet sofort – nur in der Test-Version sichtbar",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = TextLow
-                            )
-                        }
-                        if (testBusy) {
-                            CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp, color = Teal)
-                        } else {
-                            Text("Start", color = Teal, fontWeight = FontWeight.SemiBold)
-                        }
+                    items(friends, key = { "f_${it.id}" }) { chat ->
+                        FriendBubble(chat, me) { onOpenChat(chat.id) }
                     }
                 }
             }
+            item { Spacer(Modifier.height(8.dp)) }
         }
         if (chats.isEmpty()) {
             item {
@@ -188,13 +192,64 @@ fun ChatsScreen(
                     title = "Noch keine Chats",
                     text = "Sobald jemand deine Anfrage annimmt, könnt ihr hier schreiben.",
                     actionLabel = "Leute entdecken",
-                    onAction = onDiscover
+                    onAction = onDiscover,
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
         }
         items(chats, key = { it.id }) { chat ->
             ChatRow(chat, me) { onOpenChat(chat.id) }
         }
+        if (onStartTestChat != null) {
+            item {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .clickable(enabled = !testBusy, onClick = onStartTestChat)
+                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("🤖", fontSize = 22.sp)
+                    Spacer(Modifier.width(12.dp))
+                    Text(
+                        "Test-Chat mit dem turp Bot",
+                        color = TextLow,
+                        fontSize = 14.sp,
+                        modifier = Modifier.weight(1f)
+                    )
+                    if (testBusy) {
+                        CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp, color = Teal)
+                    } else {
+                        Text("Start", color = Teal, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+                    }
+                }
+            }
+        }
+    }
+}
+
+/** Rundes Profilbild mit Namen in der Freunde-Leiste */
+@Composable
+private fun FriendBubble(chat: Chat, me: String, onClick: () -> Unit) {
+    val other = chat.other(me)
+    val online = rememberIsOnline(chat.otherUid(me))
+    Column(
+        Modifier
+            .width(64.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Avatar(other.photo, other.name, other.color, 56.dp, online = online)
+        Spacer(Modifier.height(4.dp))
+        Text(
+            other.name,
+            color = TextHigh,
+            fontSize = 12.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Center
+        )
     }
 }
 
@@ -207,18 +262,25 @@ private fun ChatRow(chat: Chat, me: String, onClick: () -> Unit) {
     Row(
         Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(18.dp))
             .clickable(onClick = onClick)
-            .padding(vertical = 10.dp, horizontal = 4.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Avatar(other.photo, other.name, other.color, 54.dp, online = online)
+        Avatar(other.photo, other.name, other.color, 50.dp, online = online)
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
-            Text(other.name, style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(
+                other.name,
+                color = TextHigh,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
             Text(
                 if (chat.closed) "Chat geschlossen" else chat.lastMessage,
                 color = if (unread) TextHigh else TextLow,
+                fontSize = 14.sp,
                 fontWeight = if (unread) FontWeight.Bold else FontWeight.Normal,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -226,13 +288,13 @@ private fun ChatRow(chat: Chat, me: String, onClick: () -> Unit) {
         }
         Spacer(Modifier.width(8.dp))
         Column(horizontalAlignment = Alignment.End) {
-            Text(shortTime(chat.lastAt), style = MaterialTheme.typography.labelSmall, color = TextLow)
+            Text(chatAge(chat.lastAt), color = TextLow, fontSize = 12.sp)
             if (unread) {
                 Box(
                     Modifier
                         .padding(top = 6.dp)
                         .size(10.dp)
-                        .background(Coral, CircleShape)
+                        .background(Teal, CircleShape)
                 )
             }
         }

@@ -1,5 +1,24 @@
 package app.turp.ui.screens
 
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.foundation.text.BasicTextField
+import app.turp.ui.components.SectionHeading
+import app.turp.data.INVITE_BONUS
+import androidx.compose.material.icons.rounded.Visibility
+import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.PersonAdd
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyRow
 import app.turp.ui.components.Sticker
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.geometry.Offset
@@ -155,6 +174,22 @@ import kotlinx.coroutines.tasks.await
 
 class ProfileViewModel : BaseViewModel() {
 
+    var uploading by mutableStateOf(false)
+        private set
+
+    fun addPhoto(appContext: Context, uri: Uri) {
+        if (uploading) return
+        uploading = true
+        launchSafe(showBusy = false) {
+            try {
+                ProfileRepo.uploadPhoto(appContext, uri)
+                toast("Foto geprüft und hinzugefügt ✨")
+            } finally {
+                uploading = false
+            }
+        }
+    }
+
     fun checkIn() = launchSafe {
         val (reward, streak) = ProfileRepo.checkIn()
         toast("+$reward 💎 · $streak ${if (streak == 1L) "Tag" else "Tage"} Serie 🔥")
@@ -192,117 +227,239 @@ internal fun shareInvite(context: Context, code: String) {
 @Composable
 fun ProfileScreen(
     session: SessionState.Active,
-    sessionVm: SessionViewModel,
+    onBack: () -> Unit,
     onEdit: () -> Unit,
-    onPremium: () -> Unit,
-    onAdmin: () -> Unit,
-    onCheckUpdate: () -> Unit,
+    onPreview: () -> Unit,
+    onShop: () -> Unit,
+    onSettings: () -> Unit,
     vm: ProfileViewModel = viewModel(),
 ) {
     val context = LocalContext.current
     LaunchedEffect(Unit) { vm.notices.collect { context.toast(it) } }
     val profile by remember(session.uid) { ProfileRepo.profile(session.uid) }.collectAsState(initial = null)
     val account = session.account
-    val checkedInToday = account.lastCheckIn == todayBerlin()
-    var confirmDelete by remember { mutableStateOf(false) }
+    val p = profile
+    val picker = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri != null) vm.addPhoto(context.applicationContext, uri)
+    }
 
     Column(
         Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        ScreenHeader("Profil") {
-            if (account.plus) Text("turp+ ✨", color = Sun, fontWeight = FontWeight.Bold)
-        }
-
-        ProfileHero(profile, onEdit)
-
-        SectionCard {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                GemIcon(40.dp, spin = true)
-                Spacer(Modifier.width(10.dp))
-                Text("${account.gems} Gems", style = MaterialTheme.typography.titleLarge)
+        // Zurück | Profil | Einstellungen
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp, vertical = 2.dp)
+        ) {
+            IconButton(onClick = onBack, modifier = Modifier.align(Alignment.CenterStart)) {
+                Icon(Icons.AutoMirrored.Rounded.ArrowBackIos, contentDescription = "Zurück", tint = TextHigh, modifier = Modifier.size(22.dp))
             }
             Text(
-                "Eine Freundschaftsanfrage kostet $REQUEST_COST Gems. Neue gibt's beim täglichen Check-in, " +
-                    "für neue Freundschaften und Einladungen.",
-                color = TextLow,
-                style = MaterialTheme.typography.bodySmall
+                "Profil",
+                color = TextHigh,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.ExtraBold,
+                modifier = Modifier.align(Alignment.Center)
             )
-            Spacer(Modifier.height(12.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    "🔥 ${account.streak} ${if (account.streak == 1L) "Tag" else "Tage"} Serie",
-                    modifier = Modifier.weight(1f),
-                    fontWeight = FontWeight.Bold
-                )
-                CandyButton(
-                    text = if (checkedInToday) "Erledigt ✓" else "Check-in",
-                    onClick = { vm.checkIn() },
-                    enabled = !checkedInToday,
-                    loading = vm.busy,
-                    color = Teal,
-                    height = 46.dp,
-                    fontSize = 17.sp
-                )
+            IconButton(onClick = onSettings, modifier = Modifier.align(Alignment.CenterEnd)) {
+                Icon(Icons.Rounded.Settings, contentDescription = "Einstellungen", tint = TextHigh, modifier = Modifier.size(26.dp))
             }
         }
 
-        SectionCard {
-            Text("Freunde einladen", style = MaterialTheme.typography.titleMedium)
-            Text(
-                "Für jede Person, die sich mit deinem Code anmeldet, bekommst du 25 💎 – sie selbst bekommt 10 💎.",
-                color = TextLow,
-                style = MaterialTheme.typography.bodySmall
+        if (p == null) {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(160.dp)
+            ) { LoadingBox() }
+        } else {
+            // Bild, Name, Bearbeiten / Vorschau
+            Row(
+                Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Avatar(p.photos.firstOrNull().orEmpty(), p.name, p.color, 74.dp, online = true)
+                Spacer(Modifier.width(14.dp))
+                Column {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(p.name, color = TextHigh, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold, maxLines = 1)
+                        if (account.plus) {
+                            Spacer(Modifier.width(6.dp))
+                            Text("turp+", color = Sun, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        PillButton(Icons.Rounded.Edit, "Bearbeiten", onEdit)
+                        PillButton(Icons.Rounded.Visibility, "Vorschau", onPreview)
+                    }
+                }
+            }
+
+            // Medien
+            SectionHeading(
+                "${p.photos.size + (if (p.videoUrl.isNotBlank()) 1 else 0)} Medien",
+                Modifier.padding(start = 16.dp, top = 18.dp, bottom = 10.dp)
             )
-            Spacer(Modifier.height(10.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Surface(shape = RoundedCornerShape(12.dp), color = InkHigh, modifier = Modifier.weight(1f)) {
-                    Text(
-                        account.inviteCode.ifBlank { "–" },
-                        modifier = Modifier.padding(12.dp),
-                        fontWeight = FontWeight.Black,
-                        letterSpacing = 3.sp,
-                        textAlign = TextAlign.Center
+            LazyRow(
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (p.photos.size < MAX_PHOTOS) {
+                    item {
+                        Surface(
+                            onClick = { picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
+                            enabled = !vm.uploading,
+                            shape = RoundedCornerShape(16.dp),
+                            color = InkElevated,
+                            modifier = Modifier.size(width = 104.dp, height = 138.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                if (vm.uploading) {
+                                    CircularProgressIndicator(Modifier.size(24.dp), color = Teal, strokeWidth = 2.5.dp)
+                                } else {
+                                    Box(
+                                        Modifier
+                                            .size(34.dp)
+                                            .background(Teal, CircleShape),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Icon(Icons.Rounded.Add, contentDescription = "Foto hinzufügen", tint = Ink)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                items(p.photos) { url ->
+                    AsyncImage(
+                        model = url,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(width = 104.dp, height = 138.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(InkHigh)
+                            .clickable(onClick = onEdit)
                     )
                 }
-                Spacer(Modifier.width(10.dp))
-                CandyButton(
-                    text = "Teilen",
-                    onClick = { shareInvite(context, account.inviteCode) },
-                    enabled = account.inviteCode.isNotBlank(),
-                    color = InkHigh,
-                    height = 46.dp,
-                    fontSize = 17.sp
-                )
             }
         }
 
-        SectionCard {
-            MenuRow(Icons.Rounded.Edit, "Profil bearbeiten", onClick = onEdit)
-            MenuRow(Icons.Rounded.AutoAwesome, "turp+ & Gem-Shop", onClick = onPremium)
-            if (session.isAdmin) MenuRow(Icons.Rounded.AdminPanelSettings, "Admin-Bereich", onClick = onAdmin)
-            MenuRow(Icons.Rounded.SystemUpdate, "Nach Updates suchen", onClick = onCheckUpdate)
-            MenuRow(Icons.AutoMirrored.Rounded.Logout, "Abmelden", onClick = { sessionVm.signOut() })
-            MenuRow(Icons.Rounded.DeleteForever, "Konto löschen", tint = Coral, onClick = { confirmDelete = true })
+        // Upgrade
+        SectionHeading("Upgrade ⭐", Modifier.padding(start = 16.dp, top = 22.dp, bottom = 10.dp))
+        Surface(
+            onClick = onShop,
+            shape = RoundedCornerShape(18.dp),
+            color = Teal,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
+            Row(Modifier.padding(horizontal = 14.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+                GemIcon(30.dp, spin = true)
+                Spacer(Modifier.width(10.dp))
+                Column(Modifier.weight(1f)) {
+                    Text("Deine Gems: ${account.gems}", color = Ink, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
+                    Text("Nutze sie, um noch mehr Freunde zu finden.", color = Ink.copy(alpha = 0.75f), fontSize = 13.sp)
+                }
+                Icon(Icons.AutoMirrored.Rounded.KeyboardArrowRight, contentDescription = null, tint = Ink)
+            }
         }
-
-        Text(
-            "turp ${BuildConfig.VERSION_NAME} · Goldene Regel: Sei immer freundlich. 💛",
-            style = MaterialTheme.typography.bodySmall,
-            color = TextLow,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
+        Spacer(Modifier.height(12.dp))
+        PlusBanner(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            onClick = onShop,
+            buttonLabel = "Mehr erfahren"
         )
-        if (!session.isAdmin) {
-            TextButton(
-                onClick = { vm.claimAdmin(onDone = { sessionVm.refreshClaims() }) },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) { Text("Admin? Zugang prüfen", color = TextLow, style = MaterialTheme.typography.labelSmall) }
+        Spacer(Modifier.height(24.dp))
+    }
+}
+
+/** Kleiner Knopf wie "Bearbeiten" / "Vorschau" */
+@Composable
+private fun PillButton(icon: ImageVector, label: String, onClick: () -> Unit) {
+    Surface(onClick = onClick, shape = CircleShape, color = Teal) {
+        Row(Modifier.padding(horizontal = 12.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+            Icon(icon, contentDescription = null, tint = Ink, modifier = Modifier.size(15.dp))
+            Spacer(Modifier.width(5.dp))
+            Text(label, color = Ink, fontSize = 13.sp, fontWeight = FontWeight.Bold)
         }
-        Spacer(Modifier.height(16.dp))
+    }
+}
+
+// ---- Einstellungen --------------------------------------------------------
+
+@Composable
+fun SettingsScreen(
+    session: SessionState.Active,
+    sessionVm: SessionViewModel,
+    onBack: () -> Unit,
+    onEdit: () -> Unit,
+    onShop: () -> Unit,
+    onAdmin: () -> Unit,
+    onCheckUpdate: () -> Unit,
+    vm: ProfileViewModel = viewModel(),
+) {
+    val context = LocalContext.current
+    LaunchedEffect(Unit) { vm.notices.collect { context.toast(it) } }
+    var confirmDelete by remember { mutableStateOf(false) }
+    val account = session.account
+
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(Ink)
+            .statusBarsPadding()
+            .verticalScroll(rememberScrollState())
+    ) {
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp, vertical = 2.dp)
+        ) {
+            IconButton(onClick = onBack, modifier = Modifier.align(Alignment.CenterStart)) {
+                Icon(Icons.AutoMirrored.Rounded.ArrowBackIos, contentDescription = "Zurück", tint = TextHigh, modifier = Modifier.size(22.dp))
+            }
+            Text(
+                "Einstellungen",
+                color = TextHigh,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.ExtraBold,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            SectionCard {
+                MenuRow(Icons.Rounded.Edit, "Profil bearbeiten", onClick = onEdit)
+                MenuRow(Icons.Rounded.AutoAwesome, "Shop & turp+", onClick = onShop)
+                MenuRow(Icons.Rounded.PersonAdd, "Freunde einladen (+$INVITE_BONUS 💎)", onClick = {
+                    if (account.inviteCode.isNotBlank()) shareInvite(context, account.inviteCode)
+                })
+                if (session.isAdmin) MenuRow(Icons.Rounded.AdminPanelSettings, "Admin-Bereich", onClick = onAdmin)
+                MenuRow(Icons.Rounded.SystemUpdate, "Nach Updates suchen", onClick = onCheckUpdate)
+            }
+            SectionCard {
+                MenuRow(Icons.AutoMirrored.Rounded.Logout, "Abmelden", onClick = { sessionVm.signOut() })
+                MenuRow(Icons.Rounded.DeleteForever, "Konto löschen", tint = Coral, onClick = { confirmDelete = true })
+            }
+            Text(
+                "turp ${BuildConfig.VERSION_NAME} · Dein Einladungscode: ${account.inviteCode.ifBlank { "–" }}\nGoldene Regel: Sei immer freundlich. 💛",
+                style = MaterialTheme.typography.bodySmall,
+                color = TextLow,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+            if (!session.isAdmin) {
+                TextButton(
+                    onClick = { vm.claimAdmin(onDone = { sessionVm.refreshClaims() }) },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) { Text("Admin? Zugang prüfen", color = TextLow, style = MaterialTheme.typography.labelSmall) }
+            }
+        }
     }
 
     if (confirmDelete) {
@@ -317,64 +474,6 @@ fun ProfileScreen(
                 vm.deleteAccount()
             }
         )
-    }
-}
-
-@Composable
-private fun ProfileHero(profile: UserProfile?, onEdit: () -> Unit) {
-    if (profile == null) {
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .height(220.dp)
-        ) { LoadingBox() }
-        return
-    }
-    val accent = parseColor(profile.color)
-    Surface(shape = RoundedCornerShape(28.dp), color = InkElevated, modifier = Modifier.fillMaxWidth()) {
-        Box {
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .height(96.dp)
-                    .background(Brush.linearGradient(listOf(accent, accent.copy(alpha = 0.35f), InkElevated)))
-            )
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(start = 18.dp, end = 18.dp, top = 50.dp, bottom = 18.dp)
-            ) {
-                Avatar(
-                    profile.photos.firstOrNull().orEmpty(),
-                    profile.name,
-                    profile.color,
-                    92.dp,
-                    Modifier.border(4.dp, InkElevated, CircleShape)
-                )
-                Spacer(Modifier.height(10.dp))
-                Row(verticalAlignment = Alignment.Bottom) {
-                    Text(profile.name, style = MaterialTheme.typography.headlineSmall)
-                    Spacer(Modifier.width(8.dp))
-                    Text("${profile.age}", style = MaterialTheme.typography.titleLarge, color = TextLow)
-                }
-                Text("${Countries.flag(profile.country)} ${Countries.name(profile.country)}", color = TextLow)
-                if (profile.bio.isNotBlank()) {
-                    Spacer(Modifier.height(8.dp))
-                    Text(profile.bio)
-                }
-                if (profile.interests.isNotEmpty()) {
-                    Spacer(Modifier.height(10.dp))
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
-                    ) { profile.interests.forEach { InterestSticker(it, accent) } }
-                }
-                if (profile.photos.isEmpty()) {
-                    Spacer(Modifier.height(10.dp))
-                    OutlinedButton(onClick = onEdit) { Text("📸 Erstes Foto hinzufügen") }
-                }
-            }
-        }
     }
 }
 
@@ -484,6 +583,8 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
     var snapchat by remember(socialsLoaded) { mutableStateOf(socials?.snapchat.orEmpty()) }
     var tiktok by remember(socialsLoaded) { mutableStateOf(socials?.tiktok.orEmpty()) }
     var visible by remember(socialsLoaded) { mutableStateOf(socials?.visible ?: false) }
+    var showColors by remember { mutableStateOf(false) }
+    var showInterests by remember { mutableStateOf(false) }
     val isTeen = p.ageGroup == "teen"
 
     val photoPicker = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -497,48 +598,123 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
         vm.save(name, bio, interests, color, Socials(instagram, snapchat, tiktok, visible), onDone = onBack)
     }
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            TopAppBar(
-                title = { Text("Profil bearbeiten") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Zurück")
-                    }
-                },
-                actions = {
-                    TextButton(onClick = { doSave() }, enabled = !vm.busy) {
-                        Text("Speichern", color = Teal, fontWeight = FontWeight.Bold)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(Ink)
+            .statusBarsPadding()
+    ) {
+        // Zurück | Profil bearbeiten | Speichern
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp, vertical = 2.dp)
+        ) {
+            IconButton(onClick = onBack, modifier = Modifier.align(Alignment.CenterStart)) {
+                Icon(Icons.AutoMirrored.Rounded.ArrowBackIos, contentDescription = "Zurück", tint = TextHigh, modifier = Modifier.size(22.dp))
+            }
+            Text(
+                "Profil bearbeiten",
+                color = TextHigh,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.ExtraBold,
+                modifier = Modifier.align(Alignment.Center)
             )
+            Surface(
+                onClick = { doSave() },
+                enabled = !vm.busy,
+                shape = CircleShape,
+                color = InkHigh,
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 8.dp)
+            ) {
+                Text(
+                    "Speichern",
+                    color = Teal,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                )
+            }
         }
-    ) { padding ->
+
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .consumeWindowInsets(padding)
                 .imePadding()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            SectionTitle("Fotos (bis zu $MAX_PHOTOS)")
+            // Angaben wie in einer Liste
+            GroupCard {
+                FieldRow("Name") {
+                    InlineField(name, { name = it.take(30) }, "Dein Name")
+                }
+                RowDivider()
+                FieldRow("Alter") { Text("${p.age}", color = TextLow, fontSize = 15.sp) }
+                RowDivider()
+                FieldRow("Profilfarbe", onClick = { showColors = true }) {
+                    Box(
+                        Modifier
+                            .size(18.dp)
+                            .background(parseColor(color), CircleShape)
+                    )
+                }
+                RowDivider()
+                FieldRow("Land") { Text("${Countries.flag(p.country)} ${Countries.name(p.country)}", color = TextLow, fontSize = 15.sp) }
+            }
+
+            FieldLabel("Bio")
+            GroupCard {
+                Box(Modifier.padding(horizontal = 14.dp, vertical = 12.dp)) {
+                    BasicTextField(
+                        value = bio,
+                        onValueChange = { bio = it.take(300) },
+                        textStyle = TextStyle(color = TextHigh, fontSize = 15.sp, lineHeight = 21.sp),
+                        cursorBrush = SolidColor(Teal),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 72.dp)
+                    )
+                    if (bio.isEmpty()) Text("Erzähl etwas über dich …", color = TextLow, fontSize = 15.sp)
+                }
+                Text(
+                    "${bio.length}/300",
+                    color = TextLow,
+                    fontSize = 11.sp,
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(end = 14.dp, bottom = 8.dp)
+                )
+            }
+
+            GroupCard {
+                FieldRow("Meine Interessen", onClick = { showInterests = true }) {
+                    Text(
+                        interests.joinToString("") { it.substringBefore(" ") }.ifBlank { "Auswählen" },
+                        color = if (interests.isEmpty()) TextLow else TextHigh,
+                        fontSize = 15.sp,
+                        maxLines = 1
+                    )
+                    Icon(Icons.AutoMirrored.Rounded.KeyboardArrowRight, contentDescription = null, tint = TextLow)
+                }
+            }
+
+            FieldLabel("Medien")
             // null = Feld zum Hinzufügen
             val slots: List<String?> = buildList {
                 addAll(p.photos)
                 if (p.photos.size < MAX_PHOTOS) add(null)
             }
             slots.chunked(3).forEach { row ->
-                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     row.forEach { url ->
                         Box(
                             Modifier
                                 .weight(1f)
-                                .aspectRatio(0.8f)
+                                .aspectRatio(0.78f)
                         ) {
                             if (url == null) {
                                 AddPhotoTile(uploading = vm.uploading == "photo") {
@@ -558,138 +734,225 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
                 }
             }
             Text(
-                "Alle Fotos und Videos werden automatisch geprüft. Nacktbilder und Gewalt werden blockiert. " +
-                    "Tippe auf ⭐, um ein Foto zum Hauptfoto zu machen.",
-                style = MaterialTheme.typography.bodySmall,
+                "Fotos und Videos werden automatisch geprüft. Tippe auf ⭐, um ein Foto zum Hauptfoto zu machen.",
+                fontSize = 12.sp,
                 color = TextLow
             )
-
-            SectionTitle("Profilvideo (höchstens 30 Sekunden)")
-            if (p.videoUrl.isNotBlank()) {
-                VideoPlayer(
-                    url = p.videoUrl,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(280.dp)
-                )
-                OutlinedButton(onClick = { vm.removeMedia(p.videoUrl) }) { Text("Video entfernen") }
-            } else {
-                OutlinedButton(
-                    onClick = {
-                        videoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly))
-                    },
-                    enabled = vm.uploading == null
-                ) {
-                    if (vm.uploading == "video") {
-                        CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp, color = Teal)
-                        Spacer(Modifier.width(8.dp))
-                        Text("Wird geprüft…")
-                    } else {
-                        Icon(Icons.Rounded.Videocam, contentDescription = null)
-                        Spacer(Modifier.width(8.dp))
-                        Text("Video hinzufügen")
+            GroupCard {
+                if (p.videoUrl.isNotBlank()) {
+                    FieldRow("Profilvideo", onClick = { vm.removeMedia(p.videoUrl) }) {
+                        Text("Entfernen", color = Coral, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                    }
+                } else {
+                    FieldRow(
+                        "Profilvideo (max. 30 s)",
+                        onClick = {
+                            if (vm.uploading == null) {
+                                videoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly))
+                            }
+                        }
+                    ) {
+                        if (vm.uploading == "video") {
+                            CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp, color = Teal)
+                        } else {
+                            Icon(Icons.Rounded.Videocam, contentDescription = null, tint = Teal)
+                        }
                     }
                 }
             }
 
-            SectionTitle("Über dich")
-            OutlinedTextField(
-                value = name,
-                onValueChange = { name = it.take(30) },
-                label = { Text("Name") },
-                singleLine = true,
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = bio,
-                onValueChange = { bio = it.take(300) },
-                label = { Text("Bio") },
-                supportingText = { Text("${bio.length}/300") },
-                minLines = 3,
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            SectionTitle("Interessen (bis zu $MAX_INTERESTS)")
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                ALL_INTERESTS.forEach { interest ->
-                    val selected = interest in interests
-                    FilterChip(
-                        selected = selected,
-                        onClick = {
-                            interests = when {
-                                selected -> interests - interest
-                                interests.size >= MAX_INTERESTS -> {
-                                    context.toast("Höchstens $MAX_INTERESTS Interessen.")
-                                    interests
-                                }
-                                else -> interests + interest
-                            }
-                        },
-                        label = { Text(interest) },
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = parseColor(color).copy(alpha = 0.3f),
-                            selectedLabelColor = TextHigh
-                        )
+            FieldLabel("Socials")
+            SocialInputRow("👻", Color(0xFFFFFC00), "Snapchat hinzufügen", snapchat) { snapchat = it }
+            SocialInputRow("📷", Color(0xFFDD2A7B), "Instagram hinzufügen", instagram) { instagram = it }
+            SocialInputRow("🎵", Color(0xFF111114), "TikTok hinzufügen", tiktok) { tiktok = it }
+            GroupCard {
+                FieldRow("Für Freunde sichtbar") {
+                    Switch(
+                        checked = visible,
+                        onCheckedChange = { visible = it },
+                        colors = SwitchDefaults.colors(checkedTrackColor = Teal, checkedThumbColor = Ink)
                     )
                 }
             }
-
-            SectionTitle("Profilfarbe")
-            ColorPicker(selected = color, onSelect = { color = it })
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .height(10.dp)
-                    .clip(RoundedCornerShape(5.dp))
-                    .background(Brush.horizontalGradient(listOf(parseColor(color), InkElevated)))
-            )
-
-            SectionTitle("Socials")
             Text(
                 if (isTeen) {
-                    "Nur deine Freunde können deine Socials sehen – und nur, wenn du sie unten freigibst. " +
-                        "Überleg gut, mit wem du sie teilst."
+                    "Nur deine Freunde können deine Socials sehen – und nur, wenn du sie freigibst. Überleg gut, mit wem du sie teilst."
                 } else {
                     "Nur deine Freunde auf turp können deine Socials sehen – und nur, wenn du sie freigibst."
                 },
-                style = MaterialTheme.typography.bodySmall,
+                fontSize = 12.sp,
                 color = TextLow
             )
-            SocialField("Instagram", instagram) { instagram = it }
-            SocialField("Snapchat", snapchat) { snapchat = it }
-            SocialField("TikTok", tiktok) { tiktok = it }
-            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
-                Text("Für Freunde sichtbar", modifier = Modifier.weight(1f))
-                Switch(
-                    checked = visible,
-                    onCheckedChange = { visible = it },
-                    colors = SwitchDefaults.colors(checkedTrackColor = Teal, checkedThumbColor = Ink)
-                )
-            }
-
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(4.dp))
             PrimaryButton(text = "Speichern", onClick = { doSave() }, loading = vm.busy)
             Spacer(Modifier.height(24.dp))
         }
     }
+
+    if (showColors) {
+        Dialog(onDismissRequest = { showColors = false }) {
+            Surface(shape = RoundedCornerShape(26.dp), color = InkElevated) {
+                Column(Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Box(Modifier.fillMaxWidth()) {
+                        Text(
+                            "Profilfarbe 🎨",
+                            color = TextHigh,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                        IconButton(onClick = { showColors = false }, modifier = Modifier.align(Alignment.CenterEnd)) {
+                            Icon(Icons.Rounded.Close, contentDescription = "Schließen", tint = TextHigh)
+                        }
+                    }
+                    Text(
+                        "Wähle eine Farbe für dein Namensschild",
+                        color = TextLow,
+                        fontSize = 14.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(Modifier.height(14.dp))
+                    Sticker(name.ifBlank { p.name }, parseColor(color), fontSize = 26.sp)
+                    Spacer(Modifier.height(16.dp))
+                    ColorPicker(selected = color, onSelect = { color = it })
+                }
+            }
+        }
+    }
+
+    if (showInterests) {
+        ModalBottomSheet(
+            onDismissRequest = { showInterests = false },
+            containerColor = InkElevated,
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        ) {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    "Meine Interessen (${interests.size}/$MAX_INTERESTS)",
+                    color = TextHigh,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
+                Spacer(Modifier.height(12.dp))
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    ALL_INTERESTS.forEach { interest ->
+                        val selected = interest in interests
+                        FilterChip(
+                            selected = selected,
+                            onClick = {
+                                interests = when {
+                                    selected -> interests - interest
+                                    interests.size >= MAX_INTERESTS -> {
+                                        context.toast("Höchstens $MAX_INTERESTS Interessen.")
+                                        interests
+                                    }
+                                    else -> interests + interest
+                                }
+                            },
+                            label = { Text(interest) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = parseColor(color).copy(alpha = 0.3f),
+                                selectedLabelColor = TextHigh
+                            )
+                        )
+                    }
+                }
+                Spacer(Modifier.height(14.dp))
+                PrimaryButton(text = "Fertig", onClick = { showInterests = false })
+                Spacer(Modifier.height(24.dp))
+            }
+        }
+    }
+}
+
+/** Kleine farbige Überschrift wie "Bio" oder "Socials" */
+@Composable
+private fun FieldLabel(text: String) {
+    Text(text, color = Teal, fontSize = 13.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 6.dp, start = 2.dp))
+}
+
+/** Dunkle, abgerundete Gruppe von Zeilen */
+@Composable
+private fun GroupCard(content: @Composable ColumnScope.() -> Unit) {
+    Surface(shape = RoundedCornerShape(18.dp), color = InkElevated, modifier = Modifier.fillMaxWidth()) {
+        Column(content = content)
+    }
 }
 
 @Composable
-private fun SocialField(label: String, value: String, onChange: (String) -> Unit) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = { onChange(ProfileRepo.cleanHandle(it)) },
-        label = { Text(label) },
-        prefix = { Text("@") },
-        singleLine = true,
-        shape = RoundedCornerShape(16.dp),
-        modifier = Modifier.fillMaxWidth()
-    )
+private fun RowDivider() {
+    HorizontalDivider(color = InkLine, thickness = 0.5.dp, modifier = Modifier.padding(horizontal = 14.dp))
+}
+
+/** Zeile: Bezeichnung links, Wert rechts */
+@Composable
+private fun FieldRow(label: String, onClick: (() -> Unit)? = null, value: @Composable RowScope.() -> Unit) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .heightIn(min = 50.dp)
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            .padding(horizontal = 14.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Text(label, color = TextHigh, fontSize = 15.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(1f))
+        value()
+    }
+}
+
+/** Eingabe rechtsbündig in einer Zeile */
+@Composable
+private fun InlineField(value: String, onChange: (String) -> Unit, placeholder: String) {
+    Box(Modifier.widthIn(min = 80.dp, max = 200.dp), contentAlignment = Alignment.CenterEnd) {
+        BasicTextField(
+            value = value,
+            onValueChange = onChange,
+            singleLine = true,
+            textStyle = TextStyle(color = TextLow, fontSize = 15.sp, textAlign = TextAlign.End),
+            cursorBrush = SolidColor(Teal),
+            modifier = Modifier.fillMaxWidth()
+        )
+        if (value.isEmpty()) Text(placeholder, color = TextLow.copy(alpha = 0.6f), fontSize = 15.sp)
+    }
+}
+
+/** Socials-Zeile mit farbigem Symbol und Eingabe */
+@Composable
+private fun SocialInputRow(emoji: String, color: Color, placeholder: String, value: String, onChange: (String) -> Unit) {
+    Surface(shape = RoundedCornerShape(18.dp), color = InkElevated, modifier = Modifier.fillMaxWidth()) {
+        Row(Modifier.padding(horizontal = 10.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                Modifier
+                    .size(34.dp)
+                    .background(color, CircleShape)
+                    .border(1.dp, Color.White.copy(alpha = 0.15f), CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(emoji, fontSize = 17.sp)
+            }
+            Spacer(Modifier.width(12.dp))
+            Box(Modifier.weight(1f)) {
+                BasicTextField(
+                    value = value,
+                    onValueChange = { onChange(ProfileRepo.cleanHandle(it)) },
+                    singleLine = true,
+                    textStyle = TextStyle(color = TextHigh, fontSize = 15.sp),
+                    cursorBrush = SolidColor(Teal),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                if (value.isEmpty()) Text(placeholder, color = TextLow, fontSize = 15.sp)
+            }
+        }
+    }
 }
 
 @Composable
