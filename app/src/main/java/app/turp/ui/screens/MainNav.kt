@@ -73,7 +73,10 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import app.turp.BuildConfig
+import app.turp.data.BaseViewModel
 import app.turp.data.ChatRepo
+import app.turp.ui.components.toast
 import app.turp.data.RequestRepo
 import app.turp.data.SessionState
 import app.turp.data.SessionViewModel
@@ -90,11 +93,16 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 
 /** Gemeinsame Live-Daten für die Reiter (Anfragen & Chats mit Zähler-Abzeichen) */
-class MainViewModel : ViewModel() {
+class MainViewModel : BaseViewModel() {
     val incoming = RequestRepo.incoming()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
     val chats = ChatRepo.chats()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    /** Chat mit dem Test-Bot öffnen (nur in Test-Versionen sichtbar) */
+    fun startTestChat(onOpen: (String) -> Unit) = launchSafe {
+        onOpen(ChatRepo.startTestChat())
+    }
 }
 
 private enum class Tab(val label: String, val icon: ImageVector, val iconOutlined: ImageVector) {
@@ -182,6 +190,8 @@ private fun MainTabs(
     vm: MainViewModel = viewModel(),
 ) {
     val session = sessionState.value
+    val context = LocalContext.current
+    LaunchedEffect(Unit) { vm.notices.collect { context.toast(it) } }
     var tab by rememberSaveable { mutableStateOf(Tab.Discover) }
     val incoming by vm.incoming.collectAsState()
     val chats by vm.chats.collectAsState()
@@ -220,6 +230,12 @@ private fun MainTabs(
                     me = session.uid,
                     onOpenChat = { nav.navigate("chat/$it") },
                     onDiscover = { tab = Tab.Discover },
+                    onStartTestChat = if (BuildConfig.DEBUG) {
+                        { vm.startTestChat { chatId -> nav.navigate("chat/$chatId") } }
+                    } else {
+                        null
+                    },
+                    testBusy = vm.busy,
                 )
                 Tab.Lounge -> RoomScreen(
                     session = session,

@@ -2,6 +2,7 @@ package app.turp.data
 
 import android.content.Context
 import android.net.Uri
+import app.turp.BuildConfig
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.StorageMetadata
@@ -159,8 +160,11 @@ object DiscoverRepo {
 
         return (after + before).asSequence()
             .map { it.toProfile() }
-            .filter { it.uid !in excluded && it.photos.isNotEmpty() && it.age in minAge..maxAge }
+            .filter { it.uid !in excluded && it.photos.isNotEmpty() }
+            // Der Test-Bot erscheint nur in Test-Versionen (Debug-Builds), dann ganz vorne
+            .filter { if (it.bot) BuildConfig.DEBUG else it.age in minAge..maxAge }
             .distinctBy { it.uid }
+            .sortedByDescending { it.bot }
             .toList()
     }
 
@@ -259,6 +263,11 @@ object ChatRepo {
             )
         ).await()
     }
+
+    /** Startet einen Chat mit dem Test-Bot und liefert die Chat-ID */
+    suspend fun startTestChat(): String =
+        callFunction("startTestChat")["chatId"] as? String
+            ?: throw IllegalStateException("Der Test-Chat konnte nicht gestartet werden.")
 
     suspend fun markRead(chatId: String) {
         chatRef(chatId).update("readAt.${Fb.uid}", FieldValue.serverTimestamp()).await()

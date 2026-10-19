@@ -1,6 +1,22 @@
 package app.turp.ui.components
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.lerp
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.pow
+import kotlin.math.sin
+import kotlin.math.sqrt
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -242,39 +258,235 @@ fun RoundCandyButton(
     }
 }
 
-/** Gezeichneter Edelstein in der Akzentfarbe */
+/**
+ * 3D-Diamant im Brillantschliff (Türkis). Wird als echtes 3D-Modell gezeichnet:
+ * Tafel, Krone, Rundiste und Pavillon, beleuchtet von zwei Lichtern, mit
+ * Glanzpunkten, Farbspiel und gelegentlichem Funkeln. Mit [spin] dreht er sich.
+ */
 @Composable
-fun GemIcon(iconSize: Dp, modifier: Modifier = Modifier, color: Color = Teal) {
-    Canvas(modifier.size(iconSize)) {
-        val w = this.size.width
-        val h = this.size.height
-        val top = h * 0.16f
-        val mid = h * 0.42f
-        val bottom = h * 0.94f
-        val gem = Path().apply {
-            moveTo(w * 0.27f, top)
-            lineTo(w * 0.73f, top)
-            lineTo(w * 0.97f, mid)
-            lineTo(w * 0.5f, bottom)
-            lineTo(w * 0.03f, mid)
-            close()
+fun GemIcon(iconSize: Dp, modifier: Modifier = Modifier, spin: Boolean = false) {
+    val path = remember { Path() }
+    if (spin) {
+        val transition = rememberInfiniteTransition(label = "gem")
+        val angle = transition.animateFloat(
+            initialValue = 0f,
+            targetValue = 360f,
+            animationSpec = infiniteRepeatable(animation = tween(durationMillis = 4200, easing = LinearEasing)),
+            label = "gemSpin"
+        )
+        Canvas(modifier.size(iconSize)) { drawGem(angle.value, path, twinkle = true) }
+    } else {
+        Canvas(modifier.size(iconSize)) { drawGem(20f, path, twinkle = false) }
+    }
+}
+
+private object GemModel {
+    val vertices: Array<FloatArray>
+    val faces: Array<IntArray>
+    val flip: FloatArray
+    val azimuth: FloatArray
+    val tiltCos = cos(Math.toRadians(24.0)).toFloat()
+    val tiltSin = sin(Math.toRadians(24.0)).toFloat()
+    val light1 = normalize3(-0.45f, 0.75f, 0.5f)
+    val light2 = normalize3(0.6f, 0.35f, 0.72f)
+
+    init {
+        // Eckpunkte: 0–7 Tafel, 8–23 Rundiste, 24 Spitze (Kalette)
+        val v = ArrayList<FloatArray>()
+        for (i in 0 until 8) {
+            val a = Math.toRadians(i * 45.0)
+            v.add(floatArrayOf((0.56 * cos(a)).toFloat(), 0.36f, (0.56 * sin(a)).toFloat()))
         }
-        drawPath(gem, color)
-        val facet = Path().apply {
-            moveTo(w * 0.27f, top)
-            lineTo(w * 0.73f, top)
-            lineTo(w * 0.63f, mid)
-            lineTo(w * 0.37f, mid)
-            close()
+        for (j in 0 until 16) {
+            val a = Math.toRadians(j * 22.5)
+            v.add(floatArrayOf(cos(a).toFloat(), 0f, sin(a).toFloat()))
         }
-        drawPath(facet, Color.White.copy(alpha = 0.4f))
-        val shade = Path().apply {
-            moveTo(w * 0.5f, bottom)
-            lineTo(w * 0.97f, mid)
-            lineTo(w * 0.63f, mid)
-            close()
+        v.add(floatArrayOf(0f, -0.92f, 0f))
+        vertices = v.toTypedArray()
+
+        val f = ArrayList<IntArray>()
+        f.add(IntArray(8) { it })
+        for (i in 0 until 8) {
+            val t0 = i
+            val t1 = (i + 1) % 8
+            val g0 = 8 + 2 * i
+            val g1 = 8 + (2 * i + 1) % 16
+            val g2 = 8 + (2 * i + 2) % 16
+            f.add(intArrayOf(t0, g0, g1))
+            f.add(intArrayOf(t0, g1, t1))
+            f.add(intArrayOf(t1, g1, g2))
         }
-        drawPath(shade, Color.Black.copy(alpha = 0.25f))
+        for (j in 0 until 16) f.add(intArrayOf(8 + j, 8 + (j + 1) % 16, 24))
+        faces = f.toTypedArray()
+
+        // Flächen so ausrichten, dass ihre Normale nach außen zeigt
+        flip = FloatArray(faces.size)
+        azimuth = FloatArray(faces.size)
+        for (k in faces.indices) {
+            val face = faces[k]
+            val a = vertices[face[0]]
+            val b = vertices[face[1]]
+            val c = vertices[face[2]]
+            val ux = b[0] - a[0]
+            val uy = b[1] - a[1]
+            val uz = b[2] - a[2]
+            val wx = c[0] - a[0]
+            val wy = c[1] - a[1]
+            val wz = c[2] - a[2]
+            val nx = uy * wz - uz * wy
+            val ny = uz * wx - ux * wz
+            val nz = ux * wy - uy * wx
+            var mx = 0f
+            var my = 0f
+            var mz = 0f
+            for (idx in face) {
+                mx += vertices[idx][0]
+                my += vertices[idx][1]
+                mz += vertices[idx][2]
+            }
+            mx /= face.size
+            my /= face.size
+            mz /= face.size
+            val d = nx * mx + ny * (my + 0.2f) + nz * mz
+            flip[k] = if (d < 0f) -1f else 1f
+            azimuth[k] = atan2(mz, mx)
+        }
+    }
+}
+
+private fun normalize3(x: Float, y: Float, z: Float): FloatArray {
+    val l = sqrt(x * x + y * y + z * z)
+    return floatArrayOf(x / l, y / l, z / l)
+}
+
+private val GemDark = Color(0xFF003831)
+private val GemMid = Color(0xFF10BCA0)
+private val GemLight = Color(0xFFCCFFF7)
+
+private fun gemShade(t: Float): Color =
+    if (t < 0.5f) lerp(GemDark, GemMid, (t * 2f).coerceIn(0f, 1f))
+    else lerp(GemMid, GemLight, ((t - 0.5f) * 2f).coerceIn(0f, 1f))
+
+private fun specular(nx: Float, ny: Float, nz: Float, l: FloatArray, power: Int): Float {
+    val d = nx * l[0] + ny * l[1] + nz * l[2]
+    if (d <= 0f) return 0f
+    val rz = 2f * d * nz - l[2]
+    return if (rz <= 0f) 0f else rz.pow(power)
+}
+
+private fun DrawScope.drawGem(angleDeg: Float, path: Path, twinkle: Boolean) {
+    val w = size.width
+    val h = size.height
+    val th = Math.toRadians(angleDeg.toDouble()).toFloat()
+    val ct = cos(th)
+    val st = sin(th)
+    val ca = GemModel.tiltCos
+    val sa = GemModel.tiltSin
+    val scale = min(w / 2f, h / 1.40f) * 0.92f
+    val cx = w / 2f
+    val cy = h / 2f - 0.142f * scale
+
+    val vs = GemModel.vertices
+    val n = vs.size
+    val rx = FloatArray(n)
+    val ry = FloatArray(n)
+    val rz = FloatArray(n)
+    val px = FloatArray(n)
+    val py = FloatArray(n)
+    for (i in 0 until n) {
+        val v = vs[i]
+        val x1 = v[0] * ct + v[2] * st
+        val z1 = -v[0] * st + v[2] * ct
+        val y2 = v[1] * ca - z1 * sa
+        val z2 = v[1] * sa + z1 * ca
+        rx[i] = x1
+        ry[i] = y2
+        rz[i] = z2
+        px[i] = cx + x1 * scale
+        py[i] = cy - y2 * scale
+    }
+
+    val stroke = Stroke(width = max(0.6f, size.minDimension * 0.004f), join = StrokeJoin.Round)
+    val l1 = GemModel.light1
+    val l2 = GemModel.light2
+    for (k in GemModel.faces.indices) {
+        val face = GemModel.faces[k]
+        val a = face[0]
+        val b = face[1]
+        val c = face[2]
+        val ux = rx[b] - rx[a]
+        val uy = ry[b] - ry[a]
+        val uz = rz[b] - rz[a]
+        val wx = rx[c] - rx[a]
+        val wy = ry[c] - ry[a]
+        val wz = rz[c] - rz[a]
+        val f = GemModel.flip[k]
+        var nx = (uy * wz - uz * wy) * f
+        var ny = (uz * wx - ux * wz) * f
+        var nz = (ux * wy - uy * wx) * f
+        val len = sqrt(nx * nx + ny * ny + nz * nz)
+        if (len < 1e-6f) continue
+        nx /= len
+        ny /= len
+        nz /= len
+        if (nz <= 0.02f) continue // Rückseite, nicht sichtbar
+
+        val diffuse = max(0f, nx * l1[0] + ny * l1[1] + nz * l1[2])
+        val fire = 0.5f + 0.5f * sin(3f * GemModel.azimuth[k] + 2f * th)
+        val t = when {
+            k == 0 -> 0.50f + 0.22f * diffuse                      // Tafel
+            k <= 24 -> 0.20f + 0.50f * diffuse + 0.18f * fire     // Krone
+            else -> 0.10f + 0.58f * fire + 0.10f * diffuse        // Pavillon
+        }
+        val shine = (specular(nx, ny, nz, l1, 24) * 0.75f + specular(nx, ny, nz, l2, 60)).coerceIn(0f, 1f)
+        val color = lerp(gemShade(t), Color.White, shine)
+
+        path.reset()
+        path.moveTo(px[face[0]], py[face[0]])
+        for (m in 1 until face.size) path.lineTo(px[face[m]], py[face[m]])
+        path.close()
+        drawPath(path, color)
+        drawPath(path, lerp(color, Color.White, 0.35f), style = stroke)
+    }
+
+    // Spiegelungen in der Tafel
+    val tcy = cy - 0.36f * ca * scale
+    for (i in 0 until 8) {
+        val j = (i + 1) % 8
+        val mx = (px[i] + px[j]) / 2f
+        val my = (py[i] + py[j]) / 2f
+        val ix = cx + (mx - cx) * 0.55f
+        val iy = tcy + (my - tcy) * 0.55f
+        val fire = 0.5f + 0.5f * sin(3f * Math.toRadians(i * 45.0 + 22.5).toFloat() + 2f * th + 1.3f)
+        val color = lerp(gemShade(0.45f + 0.3f * fire), Color.White, 0.15f * fire)
+        path.reset()
+        path.moveTo(px[i], py[i])
+        path.lineTo(px[j], py[j])
+        path.lineTo(ix, iy)
+        path.close()
+        drawPath(path, color)
+        drawPath(path, lerp(color, Color.White, 0.3f), style = stroke)
+    }
+
+    // Funkeln
+    if (twinkle) {
+        val tw = ((sin(3f * th) + 1f) / 2f).pow(8)
+        if (tw > 0.02f) {
+            val sx = cx - 0.34f * scale
+            val sy = cy - 0.52f * scale
+            val r = scale * 0.30f * tw
+            path.reset()
+            path.moveTo(sx, sy - r)
+            path.lineTo(sx + r * 0.16f, sy - r * 0.16f)
+            path.lineTo(sx + r, sy)
+            path.lineTo(sx + r * 0.16f, sy + r * 0.16f)
+            path.lineTo(sx, sy + r)
+            path.lineTo(sx - r * 0.16f, sy + r * 0.16f)
+            path.lineTo(sx - r, sy)
+            path.lineTo(sx - r * 0.16f, sy - r * 0.16f)
+            path.close()
+            drawPath(path, Color.White)
+        }
     }
 }
 
@@ -286,7 +498,7 @@ fun GemPill(gems: Long, showDot: Boolean, modifier: Modifier = Modifier) {
             Modifier.padding(horizontal = 6.dp, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            GemIcon(22.dp)
+            GemIcon(26.dp, spin = true)
             Spacer(Modifier.width(6.dp))
             Text("$gems", color = TextHigh, fontSize = 18.sp, fontWeight = FontWeight.Bold)
         }

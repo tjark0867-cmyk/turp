@@ -39,6 +39,7 @@ import androidx.compose.material.icons.rounded.Flag
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -68,6 +69,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.turp.data.BaseViewModel
@@ -240,9 +242,48 @@ private fun RequestCard(
 // ---- Chat-Liste -----------------------------------------------------------
 
 @Composable
-fun ChatsScreen(chats: List<Chat>, me: String, onOpenChat: (String) -> Unit, onDiscover: () -> Unit) {
+fun ChatsScreen(
+    chats: List<Chat>,
+    me: String,
+    onOpenChat: (String) -> Unit,
+    onDiscover: () -> Unit,
+    onStartTestChat: (() -> Unit)? = null,
+    testBusy: Boolean = false,
+) {
     LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(horizontal = 16.dp)) {
         item { ScreenHeader("Chats") }
+        if (onStartTestChat != null) {
+            item {
+                Surface(
+                    onClick = onStartTestChat,
+                    enabled = !testBusy,
+                    shape = RoundedCornerShape(16.dp),
+                    color = InkElevated,
+                    border = BorderStroke(1.dp, Teal.copy(alpha = 0.5f)),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
+                ) {
+                    Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Text("🤖", fontSize = 26.sp)
+                        Spacer(Modifier.width(12.dp))
+                        Column(Modifier.weight(1f)) {
+                            Text("Test-Chat mit dem turp Bot", style = MaterialTheme.typography.titleMedium)
+                            Text(
+                                "Antwortet sofort – nur in der Test-Version sichtbar",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = TextLow
+                            )
+                        }
+                        if (testBusy) {
+                            CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp, color = Teal)
+                        } else {
+                            Text("Start", color = Teal, fontWeight = FontWeight.SemiBold)
+                        }
+                    }
+                }
+            }
+        }
         if (chats.isEmpty()) {
             item {
                 EmptyState(

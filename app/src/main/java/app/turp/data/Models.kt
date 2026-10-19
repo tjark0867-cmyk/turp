@@ -19,6 +19,7 @@ data class UserProfile(
     val videoUrl: String = "",
     val color: String = DEFAULT_COLOR,
     val ageGroup: String = "",
+    val bot: Boolean = false,
 )
 
 data class Account(
@@ -136,6 +137,7 @@ fun DocumentSnapshot.toProfile() = UserProfile(
     videoUrl = s("videoUrl"),
     color = s("color").ifBlank { DEFAULT_COLOR },
     ageGroup = s("ageGroup"),
+    bot = b("bot"),
 )
 
 fun DocumentSnapshot.toAccount() = Account(

@@ -107,6 +107,7 @@ import app.turp.ui.components.Avatar
 import app.turp.ui.components.CandyButton
 import app.turp.ui.components.ColorPicker
 import app.turp.ui.components.ConfirmDialog
+import app.turp.ui.components.GemIcon
 import app.turp.ui.components.Countries
 import app.turp.ui.components.EmptyState
 import app.turp.ui.components.InterestSticker
@@ -205,7 +206,11 @@ fun ProfileScreen(
         ProfileHero(profile, onEdit)
 
         SectionCard {
-            Text("💎 ${account.gems} Gems", style = MaterialTheme.typography.titleLarge)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                GemIcon(40.dp, spin = true)
+                Spacer(Modifier.width(10.dp))
+                Text("${account.gems} Gems", style = MaterialTheme.typography.titleLarge)
+            }
             Text(
                 "Eine Freundschaftsanfrage kostet $REQUEST_COST Gems. Neue gibt's beim täglichen Check-in, " +
                     "für neue Freundschaften und Einladungen.",
@@ -839,7 +844,7 @@ fun UserProfileScreen(
                         Row(verticalAlignment = Alignment.Bottom) {
                             Text(p.name, style = MaterialTheme.typography.headlineMedium)
                             Spacer(Modifier.width(10.dp))
-                            Text("${p.age}", style = MaterialTheme.typography.headlineSmall, color = TextLow)
+                            Text(if (p.bot) "🤖 Testbot" else "${p.age}", style = MaterialTheme.typography.headlineSmall, color = TextLow)
                         }
                         Text("${Countries.flag(p.country)} ${Countries.name(p.country)}", color = TextLow)
                     }

@@ -9,6 +9,8 @@
  */
 
 const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
 const { setGlobalOptions } = require("firebase-functions/v2");
 const { onCall, onRequest, HttpsError } = require("firebase-functions/v2/https");
 const { onDocumentCreated, onDocumentWritten } = require("firebase-functions/v2/firestore");
@@ -585,6 +587,114 @@ async function befriend(aUid, bUid) {
   return chatId;
 }
 
+// ---- Test-Bot ---------------------------------------------------------------
+// Ein Profil pro Altersgruppe, das Anfragen sofort annimmt und im Chat antwortet.
+// So lässt sich der Chat ohne zweites Handy testen. Die App zeigt den Bot nur
+// in Test-Versionen (Debug-Builds) an.
+
+const BOT_NAME = "turp Bot";
+
+function botUidFor(group) {
+  return `turp-bot-${group}`;
+}
+
+async function ensureBot(group) {
+  const botUid = botUidFor(group);
+  const ref = db.doc(`users/${botUid}`);
+  const snap = await ref.get();
+  if (snap.exists && (snap.get("photos") || []).length > 0) return botUid;
+
+  const file = getStorage().bucket().file(`media/${botUid}/avatar.png`);
+  await file.save(fs.readFileSync(path.join(__dirname, "assets", "bot.png")), {
+    resumable: false,
+    metadata: { contentType: "image/png", metadata: { firebaseStorageDownloadTokens: crypto.randomUUID() } },
+  });
+  const url = await downloadUrl(file);
+  const now = FieldValue.serverTimestamp();
+  const batch = db.batch();
+  batch.set(ref, {
+    name: BOT_NAME,
+    age: 0,
+    country: "DE",
+    bio: "Ich bin der Testbot von turp. Schreib mir – ich antworte sofort, damit du den Chat testen kannst. 🤖",
+    interests: ["💻 Coden", "😂 Memes"],
+    photos: [url],
+    videoUrl: "",
+    color: DEFAULT_COLOR,
+    ageGroup: group,
+    active: true,
+    hiddenForReview: false,
+    bot: true,
+    random: Math.random(),
+    createdAt: now,
+  });
+  batch.set(db.doc(`accounts/${botUid}`), {
+    status: "active",
+    ageGroup: group,
+    gems: 0,
+    streak: 0,
+    lastCheckIn: "",
+    inviteCode: "",
+    invitedBy: "",
+    parentEmail: "",
+    plus: false,
+    fcmToken: "",
+    videoPath: "",
+    bot: true,
+    createdAt: now,
+  });
+  batch.set(db.doc(`users/${botUid}/private/socials`), { instagram: "", snapchat: "", tiktok: "", visible: false });
+  await batch.commit();
+  return botUid;
+}
+
+async function botSay(chatId, botUid, text) {
+  await db.collection(`chats/${chatId}/messages`).add({
+    senderId: botUid,
+    type: "text",
+    text,
+    createdAt: FieldValue.serverTimestamp(),
+  });
+}
+
+const BOT_GREETING = "Hey! 👋 Ich bin der turp-Testbot. Schreib mir etwas – ich antworte sofort, damit du den Chat testen kannst.";
+
+function botReply(msg, preview) {
+  if (msg.type === "image") {
+    return String(preview).includes("blockiert")
+      ? "Dein Foto wurde von der automatischen Bildprüfung blockiert 🚫"
+      : "Foto angekommen 📷 – die automatische Bildprüfung hat es durchgelassen ✅";
+  }
+  const text = String(msg.text || "").toLowerCase();
+  if (/(^|\s)(hallo|hi|hey|moin|servus|hallöchen)(\s|!|$)/.test(text)) {
+    return "Hey! 😊 Deine Nachricht ist angekommen – der Chat funktioniert ✅";
+  }
+  if (text.includes("?")) return "Gute Frage! 🤔 Ich bin nur ein Testbot, aber deine Nachricht ist angekommen ✅";
+  const replies = [
+    "Angekommen ✅",
+    "Läuft! Der Chat funktioniert 🙌",
+    "Hab ich bekommen 👍",
+    "Schreib ruhig weiter – ich antworte immer sofort.",
+    "Tipp: Halte eine Nachricht gedrückt, um sie zu melden.",
+    "Du kannst mir auch ein Foto schicken – dann siehst du, ob die Bildprüfung klappt 📷",
+  ];
+  return replies[Math.floor(Math.random() * replies.length)];
+}
+
+exports.startTestChat = onCall(async (req) => {
+  const uid = requireActive(req);
+  const botUid = await ensureBot(req.auth.token.ageGroup);
+  const friend = await db.doc(`users/${uid}/friends/${botUid}`).get();
+  if (friend.exists && friend.get("chatId")) {
+    const chatId = friend.get("chatId");
+    await db.doc(`chats/${chatId}`).update({ closed: false }).catch(() => {});
+    return { chatId };
+  }
+  const chatId = await befriend(botUid, uid);
+  await botSay(chatId, botUid, BOT_GREETING);
+  return { chatId };
+});
+
 exports.sendRequest = onCall(async (req) => {
   const uid = requireActive(req);
   const toUid = str(req.data && req.data.toUid, 128);
@@ -605,6 +715,14 @@ exports.sendRequest = onCall(async (req) => {
   if (!other.exists || other.get("ageGroup") !== group || other.get("active") !== true) throw unavailable;
   if (blockedByMe.exists || blockedMe.exists) throw unavailable;
   if (friend.exists) throw new HttpsError("already-exists", "Ihr seid schon befreundet.");
+
+  // Test-Bot: nimmt jede Anfrage sofort an (kostenlos)
+  if (other.get("bot") === true) {
+    const chatId = await befriend(toUid, uid);
+    await db.doc(`users/${uid}/seen/${toUid}`).set({ at: FieldValue.serverTimestamp(), liked: true });
+    await botSay(chatId, toUid, BOT_GREETING);
+    return { matched: true, chatId };
+  }
 
   // Hat die andere Person mich schon angefragt? Dann direkt Freunde – kostenlos.
   const reverseRef = db.doc(`requests/${toUid}_${uid}`);
@@ -971,10 +1089,18 @@ exports.onMessageCreated = onDocumentCreated(
 
     await chatRef.update({ lastMessage: preview, lastAt: FieldValue.serverTimestamp(), lastSender: msg.senderId });
     const other = (chat.members || []).find((m) => m !== msg.senderId);
-    if (other) {
-      const senderName = (chat.memberInfo && chat.memberInfo[msg.senderId] && chat.memberInfo[msg.senderId].name) || "turp";
-      await notify(other, senderName, preview, { type: "message", chatId: event.params.chatId });
+    if (!other) return;
+
+    // Schreibt jemand dem Test-Bot, antwortet er kurz darauf
+    if (other.startsWith("turp-bot-")) {
+      if (chat.closed) return;
+      await new Promise((r) => setTimeout(r, 1200));
+      await botSay(event.params.chatId, other, botReply(msg, preview));
+      return;
     }
+
+    const senderName = (chat.memberInfo && chat.memberInfo[msg.senderId] && chat.memberInfo[msg.senderId].name) || "turp";
+    await notify(other, senderName, preview, { type: "message", chatId: event.params.chatId });
   });
 
 // ---- Automatik: Profiländerungen ------------------------------------------

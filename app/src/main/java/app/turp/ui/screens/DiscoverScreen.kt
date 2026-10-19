@@ -177,8 +177,11 @@ class DiscoverViewModel : BaseViewModel() {
             try {
                 val matched = DiscoverRepo.sendRequest(profile.uid)
                 toast(
-                    if (matched) "🎉 Ihr seid jetzt Freunde – ${profile.name} hatte dich auch angefragt!"
-                    else "👋 Anfrage an ${profile.name} gesendet"
+                    when {
+                        profile.bot -> "🤖 ${profile.name} hat sofort angenommen – schau in deine Chats!"
+                        matched -> "🎉 Ihr seid jetzt Freunde – ${profile.name} hatte dich auch angefragt!"
+                        else -> "👋 Anfrage an ${profile.name} gesendet"
+                    }
                 )
             } catch (e: CancellationException) {
                 throw e
@@ -497,7 +500,7 @@ private fun ProfileCard(
                     Sticker(profile.name, accent, rotation = -3f, fontSize = 30.sp)
                     Spacer(Modifier.height(6.dp))
                     Sticker(
-                        "${Countries.flag(profile.country)} ${profile.country}, ${profile.age}",
+                        if (profile.bot) "🤖 Testprofil" else "${Countries.flag(profile.country)} ${profile.country}, ${profile.age}",
                         accent,
                         rotation = -3f,
                         fontSize = 18.sp,
