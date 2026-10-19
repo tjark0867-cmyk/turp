@@ -190,3 +190,5 @@ turp/
 ```
 
 **Grenzen dieser ersten Version:** Login nur per E-Mail/Passwort, Käufe (turp+, Gems) noch nicht aktiv.
+
+<!-- Server eingerichtet: 2026-10-19 -->
