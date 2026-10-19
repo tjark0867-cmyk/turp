@@ -1,5 +1,6 @@
 package app.turp.ui.screens
 
+import androidx.activity.compose.BackHandler
 import app.turp.data.PresenceRepo
 import kotlinx.coroutines.delay
 import androidx.lifecycle.repeatOnLifecycle
@@ -300,6 +301,7 @@ private fun MainTabs(
     val incoming by vm.incoming.collectAsState()
     val chats by vm.chats.collectAsState()
     val unread = chats.count { it.isUnread(session.uid) }
+    BackHandler(enabled = tab == Tab.Profile) { tab = Tab.Discover }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -376,7 +378,8 @@ private fun TurpBottomBar(selected: Tab, onSelect: (Tab) -> Unit, badges: Map<Ta
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Tab.entries.forEach { t ->
+                // Profil erreicht man über das eigene Bild oben links, darum nicht in der Leiste
+                Tab.entries.filter { it != Tab.Profile }.forEach { t ->
                     val isSelected = t == selected
                     val scale by animateFloatAsState(if (isSelected) 1.08f else 1f, label = "tabScale")
                     Box(

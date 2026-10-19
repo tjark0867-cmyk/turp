@@ -77,6 +77,7 @@ fun ProfileStory(
     topSpace: Dp = 14.dp,
     bottomSpace: Dp = 16.dp,
     header: @Composable () -> Unit = {},
+    infoExtra: (@Composable () -> Unit)? = null,
 ) {
     val pages = remember(profile.uid, profile.photos) { storyPages(profile.photos) }
     var index by remember(profile.uid) { mutableIntStateOf(0) }
@@ -166,6 +167,7 @@ fun ProfileStory(
                 InfoPage(
                     profile = profile,
                     accent = accent,
+                    extra = infoExtra,
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth()
@@ -195,7 +197,7 @@ private val TextOnPhoto = TextStyle(shadow = Shadow(Color.Black.copy(alpha = 0.7
 
 /** Seite 2: Bio groß und gut lesbar, darunter die Interessen als Sticker */
 @Composable
-private fun InfoPage(profile: UserProfile, accent: Color, modifier: Modifier = Modifier) {
+private fun InfoPage(profile: UserProfile, accent: Color, modifier: Modifier = Modifier, extra: (@Composable () -> Unit)? = null) {
     Column(
         modifier
             .verticalScroll(rememberScrollState())
@@ -231,6 +233,10 @@ private fun InfoPage(profile: UserProfile, accent: Color, modifier: Modifier = M
             ) {
                 profile.interests.forEach { InterestTile(it) }
             }
+        }
+        if (extra != null) {
+            Spacer(Modifier.height(2.dp))
+            extra()
         }
     }
 }

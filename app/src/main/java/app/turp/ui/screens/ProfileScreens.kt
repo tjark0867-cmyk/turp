@@ -1,5 +1,13 @@
 package app.turp.ui.screens
 
+import app.turp.ui.components.Sticker
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.window.Dialog
+import androidx.compose.material.icons.rounded.ChatBubble
+import androidx.compose.material.icons.automirrored.rounded.Send
+import androidx.compose.material.icons.automirrored.rounded.ArrowBackIos
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.WindowInsets
@@ -820,68 +828,38 @@ fun UserProfileScreen(
     var menuOpen by remember { mutableStateOf(false) }
     var showReport by remember { mutableStateOf(false) }
     var confirmBlock by remember { mutableStateOf(false) }
+    var showVideo by remember { mutableStateOf(false) }
     val p = profile
     val friendChat = chatId
 
-    Box(
+    Column(
         Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(Ink)
+            .statusBarsPadding()
+            .navigationBarsPadding()
     ) {
-        when {
-            p == null && vm.unavailable -> EmptyState(
-                emoji = "🙈",
-                title = "Profil nicht verfügbar",
-                text = "Diese Person ist gerade nicht erreichbar.",
-                modifier = Modifier.align(Alignment.Center)
-            )
-            p == null -> LoadingBox()
-            else -> Column(
-                Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-            ) {
-                // Seite 1 Foto, Seite 2 Bio + Interessen, dann weitere Fotos
-                ProfileStory(
-                    profile = p,
-                    topSpace = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 64.dp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(0.66f),
-                    header = { ProfileNameStickers(p, modifier = Modifier.padding(horizontal = 16.dp)) }
-                )
-                Column(
-                    Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(14.dp)
-                ) {
-                    if (p.videoUrl.isNotBlank()) {
-                        SectionTitle("Video")
-                        VideoPlayer(
-                            url = p.videoUrl,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(320.dp)
-                        )
-                    }
-                    if (!isMe) SocialsCard(isFriend = friendChat != null, socials = socials)
-                    Spacer(Modifier.height(96.dp))
-                }
-            }
-        }
-
-        // Obere Leiste: Zurück und Menü
+        // Oben: Zurück | Menü
         Row(
             Modifier
                 .fillMaxWidth()
-                .statusBarsPadding()
-                .padding(8.dp),
+                .padding(horizontal = 4.dp, vertical = 2.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            RoundIcon(Icons.AutoMirrored.Rounded.ArrowBack, "Zurück", onBack)
+            IconButton(onClick = onBack) {
+                Icon(
+                    Icons.AutoMirrored.Rounded.ArrowBackIos,
+                    contentDescription = "Zurück",
+                    tint = TextHigh,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
             Spacer(Modifier.weight(1f))
             if (!isMe && p != null) {
                 Box {
-                    RoundIcon(Icons.Rounded.MoreVert, "Mehr") { menuOpen = true }
+                    IconButton(onClick = { menuOpen = true }) {
+                        Icon(Icons.Rounded.MoreVert, contentDescription = "Mehr", tint = TextHigh, modifier = Modifier.size(26.dp))
+                    }
                     DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                         DropdownMenuItem(
                             text = { Text("Melden") },
@@ -904,30 +882,105 @@ fun UserProfileScreen(
             }
         }
 
-        // Untere Aktion: Anfrage senden oder Chat öffnen
-        if (p != null && !isMe) {
-            Box(
-                Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .background(Brush.verticalGradient(listOf(Color.Transparent, Ink)))
-                    .navigationBarsPadding()
-                    .padding(16.dp)
-            ) {
-                if (friendChat != null) {
-                    PrimaryButton(text = "💬 Chat öffnen", onClick = { onOpenChat(friendChat) })
-                } else {
-                    PrimaryButton(
-                        text = if (vm.requested) "Anfrage gesendet ✓" else "👋 Anfrage senden · $REQUEST_COST 💎",
-                        onClick = { vm.sendRequest() },
-                        enabled = !vm.requested,
-                        loading = vm.busy
+        Box(
+            Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
+                .clip(RoundedCornerShape(30.dp))
+                .background(InkHigh)
+        ) {
+            when {
+                p == null && vm.unavailable -> EmptyState(
+                    emoji = "🙈",
+                    title = "Profil nicht verfügbar",
+                    text = "Diese Person ist gerade nicht erreichbar.",
+                    modifier = Modifier.align(Alignment.Center)
+                )
+                p == null -> LoadingBox()
+                else -> {
+                    // Seite 1 Foto, Seite 2 Bio + Interessen (+ Socials, Video), dann weitere Fotos
+                    ProfileStory(
+                        profile = p,
+                        bottomSpace = if (isMe) 16.dp else 86.dp,
+                        modifier = Modifier.fillMaxSize(),
+                        header = { ProfileNameStickers(p, modifier = Modifier.padding(horizontal = 16.dp)) },
+                        infoExtra = {
+                            ProfileExtras(
+                                accent = parseColor(p.color),
+                                showSocials = !isMe,
+                                isFriend = friendChat != null,
+                                socials = socials,
+                                hasVideo = p.videoUrl.isNotBlank(),
+                                onVideo = { showVideo = true },
+                            )
+                        },
                     )
+                    // Unten in der Karte: Chat öffnen oder Anfrage senden
+                    if (!isMe) {
+                        val requested = vm.requested
+                        Surface(
+                            onClick = {
+                                if (friendChat != null) onOpenChat(friendChat) else if (!requested) vm.sendRequest()
+                            },
+                            enabled = friendChat != null || (!requested && !vm.busy),
+                            shape = CircleShape,
+                            color = Color.Black.copy(alpha = 0.45f),
+                            border = BorderStroke(1.5.dp, Color.White.copy(alpha = 0.7f)),
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .fillMaxWidth()
+                                .padding(14.dp)
+                                .height(56.dp)
+                        ) {
+                            Row(
+                                Modifier.padding(horizontal = 18.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                when {
+                                    friendChat != null -> {
+                                        Icon(Icons.Rounded.ChatBubble, contentDescription = null, tint = Teal, modifier = Modifier.size(22.dp))
+                                        Spacer(Modifier.width(10.dp))
+                                        Text("Chat öffnen", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                                    }
+                                    requested -> Text("Anfrage gesendet ✓", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                                    vm.busy -> CircularProgressIndicator(color = Teal, strokeWidth = 2.dp, modifier = Modifier.size(22.dp))
+                                    else -> {
+                                        Icon(Icons.AutoMirrored.Rounded.Send, contentDescription = null, tint = Teal, modifier = Modifier.size(22.dp))
+                                        Spacer(Modifier.width(10.dp))
+                                        Text("Anfrage senden", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                                        Spacer(Modifier.width(10.dp))
+                                        GemIcon(15.dp)
+                                        Spacer(Modifier.width(4.dp))
+                                        Text("$REQUEST_COST", color = Color.White.copy(alpha = 0.75f), fontWeight = FontWeight.SemiBold)
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 
+    if (showVideo && p != null && p.videoUrl.isNotBlank()) {
+        Dialog(onDismissRequest = { showVideo = false }) {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(Ink)
+            ) {
+                VideoPlayer(
+                    url = p.videoUrl,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(460.dp)
+                )
+            }
+        }
+    }
     if (showReport && p != null) {
         ReportDialog(
             name = p.name,
@@ -952,17 +1005,16 @@ fun UserProfileScreen(
     }
 }
 
+/** Zusatz auf Seite 2 des Profils: Socials (nur für Freunde) und Video */
 @Composable
-private fun RoundIcon(icon: ImageVector, label: String, onClick: () -> Unit) {
-    Surface(onClick = onClick, shape = CircleShape, color = Ink.copy(alpha = 0.6f), modifier = Modifier.size(44.dp)) {
-        Box(contentAlignment = Alignment.Center) {
-            Icon(icon, contentDescription = label, tint = Color.White)
-        }
-    }
-}
-
-@Composable
-private fun SocialsCard(isFriend: Boolean, socials: Socials?) {
+private fun ProfileExtras(
+    accent: Color,
+    showSocials: Boolean,
+    isFriend: Boolean,
+    socials: Socials?,
+    hasVideo: Boolean,
+    onVideo: () -> Unit,
+) {
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
     fun open(url: String) {
@@ -972,34 +1024,46 @@ private fun SocialsCard(isFriend: Boolean, socials: Socials?) {
             context.toast("Link konnte nicht geöffnet werden.")
         }
     }
-    SectionCard {
-        Text("Socials", style = MaterialTheme.typography.titleMedium)
-        Spacer(Modifier.height(6.dp))
-        val s = socials
-        when {
-            !isFriend -> Text("🔒 Sichtbar, sobald ihr Freunde seid.", color = TextLow)
-            s == null || (s.instagram.isBlank() && s.snapchat.isBlank() && s.tiktok.isBlank()) ->
-                Text("Keine Socials freigegeben.", color = TextLow)
-            else -> {
-                if (s.instagram.isNotBlank()) SocialRow("📷 Instagram", s.instagram) { open("https://instagram.com/${s.instagram}") }
-                if (s.snapchat.isNotBlank()) SocialRow("👻 Snapchat", s.snapchat) { open("https://www.snapchat.com/add/${s.snapchat}") }
-                if (s.tiktok.isNotBlank()) SocialRow("🎵 TikTok", s.tiktok) { open("https://www.tiktok.com/@${s.tiktok}") }
+    val shadow = TextStyle(shadow = Shadow(Color.Black.copy(alpha = 0.7f), Offset(0f, 2f), 10f))
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        if (hasVideo) {
+            OverlayChip("▶  Video ansehen", onVideo)
+        }
+        if (showSocials) {
+            Sticker("Socials", accent, rotation = -3f, fontSize = 20.sp)
+            val s = socials
+            when {
+                !isFriend -> Text("🔒 Sichtbar, sobald ihr Freunde seid.", color = Color.White.copy(alpha = 0.85f), fontSize = 15.sp, style = shadow)
+                s == null || (s.instagram.isBlank() && s.snapchat.isBlank() && s.tiktok.isBlank()) ->
+                    Text("Keine Socials freigegeben.", color = Color.White.copy(alpha = 0.85f), fontSize = 15.sp, style = shadow)
+                else -> FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    if (s.instagram.isNotBlank()) OverlayChip("📷 @${s.instagram}") { open("https://instagram.com/${s.instagram}") }
+                    if (s.snapchat.isNotBlank()) OverlayChip("👻 @${s.snapchat}") { open("https://www.snapchat.com/add/${s.snapchat}") }
+                    if (s.tiktok.isNotBlank()) OverlayChip("🎵 @${s.tiktok}") { open("https://www.tiktok.com/@${s.tiktok}") }
+                }
             }
         }
     }
 }
 
+/** Halbtransparenter Knopf auf dem Foto */
 @Composable
-private fun SocialRow(label: String, handle: String, onClick: () -> Unit) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .clickable(onClick = onClick)
-            .padding(vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically
+private fun OverlayChip(text: String, onClick: () -> Unit) {
+    Surface(
+        onClick = onClick,
+        shape = CircleShape,
+        color = Color.Black.copy(alpha = 0.45f),
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.6f))
     ) {
-        Text(label, modifier = Modifier.weight(1f))
-        Text("@$handle", color = Teal, fontWeight = FontWeight.Bold)
+        Text(
+            text,
+            color = Color.White,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)
+        )
     }
 }
