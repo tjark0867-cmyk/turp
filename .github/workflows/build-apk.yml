@@ -57,6 +57,14 @@ jobs:
             echo "Keine Firebase-Daten - App wird ohne Firebase gebaut"
           fi
 
+      # Immer denselben Signatur-Schlüssel benutzen, damit Updates sich
+      # ohne Deinstallieren über die alte Version installieren lassen.
+      - name: Signatur-Schlüssel wiederverwenden
+        uses: actions/cache@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: turp-debug-keystore-v1
+
       # Schrift "Lilita One" (SIL Open Font License) – wird beim Bauen geladen
       - name: Schrift laden
         run: |
