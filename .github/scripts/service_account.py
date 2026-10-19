@@ -13,6 +13,12 @@ text = re.sub(r"^```[a-zA-Z]*\s*", "", text)
 text = re.sub(r"\s*```$", "", text).strip()
 info = f"Länge {len(raw)} Zeichen, erstes Zeichen {raw.strip()[:1]!r}, letztes Zeichen {raw.strip()[-1:]!r}"
 
+# Beim Kopieren am Handy fehlt oft die erste oder letzte Klammer
+if text.startswith('"'):
+    text = "{" + text
+if text.startswith("{") and not text.endswith("}"):
+    text = text.rstrip(",") + "}"
+
 start, end = text.find("{"), text.rfind("}")
 if start == -1 or end <= start:
     print(f"::error title=Secret ungültig::FIREBASE_SERVICE_ACCOUNT enthält kein JSON ({info}). "
