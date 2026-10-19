@@ -1,5 +1,13 @@
 package app.turp.ui.screens
 
+import app.turp.R
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,7 +49,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -65,7 +72,6 @@ import app.turp.ui.theme.Coral
 import app.turp.ui.theme.Ink
 import app.turp.ui.theme.InkHigh
 import app.turp.ui.theme.Lilac
-import app.turp.ui.theme.Night
 import app.turp.ui.theme.Sun
 import app.turp.ui.theme.Teal
 import app.turp.ui.theme.TextLow
@@ -101,23 +107,45 @@ fun PremiumScreen(onBack: () -> Unit) {
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            Surface(shape = RoundedCornerShape(28.dp), color = Color.Transparent, modifier = Modifier.fillMaxWidth()) {
-                Column(
+            // Banner: Berglandschaft aus Pappe, Logo mit goldenem 3D-Plus
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(176.dp)
+                    .clip(RoundedCornerShape(28.dp))
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.premium_mountains),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+                Row(
                     Modifier
-                        .background(Brush.linearGradient(listOf(Night, Lilac.copy(alpha = 0.6f), Coral.copy(alpha = 0.6f))))
-                        .padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .align(Alignment.TopCenter)
+                        .padding(top = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        TurpLogo(fontSize = 48.sp)
-                        Text("+", fontSize = 48.sp, fontWeight = FontWeight.Black, color = Sun)
-                    }
-                    Text(
-                        "Mehr Gems, mehr Möglichkeiten.",
-                        style = MaterialTheme.typography.titleMedium,
-                        textAlign = TextAlign.Center
+                    TurpLogo(fontSize = 44.sp)
+                    Spacer(Modifier.width(4.dp))
+                    Image(
+                        painter = painterResource(R.drawable.gold_plus),
+                        contentDescription = "plus",
+                        modifier = Modifier.size(42.dp)
                     )
                 }
+                Text(
+                    "Mehr Gems, mehr Möglichkeiten.",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        shadow = Shadow(Color.Black.copy(alpha = 0.75f), Offset(0f, 2f), 10f)
+                    ),
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(start = 16.dp, end = 16.dp, bottom = 14.dp)
+                )
             }
 
             SectionCard {

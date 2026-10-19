@@ -79,12 +79,21 @@ fun Query.asFlow(): Flow<List<DocumentSnapshot>> {
 
 /** Verständliche Fehlermeldung auf Deutsch */
 fun Throwable.toUserMessage(): String = when (this) {
-    is FirebaseFunctionsException ->
-        if (code == FirebaseFunctionsException.Code.INTERNAL || code == FirebaseFunctionsException.Code.UNKNOWN) {
+    is FirebaseFunctionsException -> when {
+        code == FirebaseFunctionsException.Code.INTERNAL || code == FirebaseFunctionsException.Code.UNKNOWN ->
             "Serverfehler – bitte versuch es gleich noch einmal."
-        } else {
-            message ?: "Etwas ist schiefgelaufen."
+        // Keine eigene Meldung vom Server (z. B. nur "UNAUTHENTICATED"): verständlich übersetzen
+        message.isNullOrBlank() || message == code.name -> when (code) {
+            FirebaseFunctionsException.Code.UNAUTHENTICATED,
+            FirebaseFunctionsException.Code.UNAVAILABLE,
+            FirebaseFunctionsException.Code.DEADLINE_EXCEEDED ->
+                "Verbindung zum Server fehlgeschlagen – bitte gleich noch einmal versuchen."
+            FirebaseFunctionsException.Code.PERMISSION_DENIED -> "Dafür fehlt dir die Berechtigung."
+            FirebaseFunctionsException.Code.NOT_FOUND -> "Diese Funktion ist gerade nicht verfügbar."
+            else -> "Etwas ist schiefgelaufen."
         }
+        else -> message ?: "Etwas ist schiefgelaufen."
+    }
     is FirebaseAuthWeakPasswordException -> "Das Passwort ist zu schwach (mindestens 6 Zeichen)."
     is FirebaseAuthUserCollisionException -> "Diese E-Mail-Adresse ist schon registriert. Log dich ein."
     is FirebaseAuthInvalidUserException -> "Kein aktives Konto mit dieser E-Mail gefunden."
