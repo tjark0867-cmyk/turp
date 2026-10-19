@@ -409,7 +409,7 @@ private fun SortChip(text: String, selected: Boolean, onClick: () -> Unit) {
     }
 }
 
-/** Angepinnte Zeile vom turp-Team: Freunde einladen und Gems bekommen */
+/** Angepinnte Zeile vom kumi-Team: Freunde einladen und Gems bekommen */
 @Composable
 private fun TeamInviteRow(onShare: () -> Unit, onHide: () -> Unit, modifier: Modifier = Modifier) {
     Row(
@@ -429,14 +429,14 @@ private fun TeamInviteRow(onShare: () -> Unit, onHide: () -> Unit, modifier: Mod
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(R.drawable.turp_logo),
+                painter = painterResource(R.drawable.app_logo),
                 contentDescription = null,
                 modifier = Modifier.width(40.dp)
             )
         }
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
-            Text("turp Team", color = TextHigh, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            Text("kumi Team", color = TextHigh, fontSize = 16.sp, fontWeight = FontWeight.Bold)
             Text("Lade Freunde ein: +$INVITE_BONUS 💎 pro Person", color = TextLow, fontSize = 13.sp)
         }
         IconButton(onClick = onHide) {

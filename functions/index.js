@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * turp – Server-Logik (Firebase Cloud Functions, 2. Generation)
+ * kumi – Server-Logik (Firebase Cloud Functions, 2. Generation)
  *
  * Alles, was nicht manipuliert werden darf, passiert hier:
  * Alter & Altersgruppe, Gems, Freundschaftsanfragen, Elternzustimmung,
@@ -214,7 +214,7 @@ exports.createProfile = onCall({ secrets: [SMTP_URI] }, async (req) => {
 
   const age = ageOn(birthDate, todayBerlin());
   if (age < 13) {
-    throw new HttpsError("failed-precondition", "Du musst mindestens 13 Jahre alt sein, um turp zu nutzen.");
+    throw new HttpsError("failed-precondition", "Du musst mindestens 13 Jahre alt sein, um kumi zu nutzen.");
   }
   if (age > 110) throw new HttpsError("invalid-argument", "Bitte gib ein gültiges Geburtsdatum ein.");
 
@@ -323,11 +323,11 @@ async function sendConsentMail(uid, parentEmail, childName) {
   const text = [
     "Hallo,",
     "",
-    `${childName} hat sich bei turp angemeldet und deine E-Mail-Adresse als Elternteil angegeben.`,
-    "turp ist eine App, um neue Freunde zu finden. Weil dein Kind jünger als 16 ist,",
+    `${childName} hat sich bei kumi angemeldet und deine E-Mail-Adresse als Elternteil angegeben.`,
+    "kumi ist eine App, um neue Freunde zu finden. Weil dein Kind jünger als 16 ist,",
     "brauchen wir deine Zustimmung, bevor das Konto genutzt werden kann.",
     "",
-    "So schützt turp Jugendliche:",
+    "So schützt kumi Jugendliche:",
     "- 13- bis 17-Jährige sehen und schreiben nur mit Gleichaltrigen. Erwachsene haben keinen Zugang zu diesem Bereich.",
     "- Chats gibt es nur zwischen Freunden, die eine Anfrage angenommen haben.",
     "- Alle Bilder werden automatisch geprüft, Nacktbilder werden blockiert.",
@@ -337,17 +337,17 @@ async function sendConsentMail(uid, parentEmail, childName) {
     "",
     "Wenn du diese E-Mail nicht erwartet hast, kannst du sie ignorieren. Ohne Zustimmung bleibt das Konto gesperrt.",
     "",
-    "Dein turp-Team",
+    "Dein kumi-Team",
   ].join("\n");
 
   const html = `
   <div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;max-width:560px;margin:auto;color:#1b1d2e">
-    <h1 style="color:#0E0F1A;font-size:28px;margin:0 0 4px">turp</h1>
+    <h1 style="color:#0E0F1A;font-size:28px;margin:0 0 4px">kumi</h1>
     <p>Hallo,</p>
-    <p><b>${safeName}</b> hat sich bei turp angemeldet und deine E-Mail-Adresse als Elternteil angegeben.
-    turp ist eine App, um neue Freunde zu finden. Weil dein Kind jünger als 16 ist, brauchen wir deine Zustimmung,
+    <p><b>${safeName}</b> hat sich bei kumi angemeldet und deine E-Mail-Adresse als Elternteil angegeben.
+    kumi ist eine App, um neue Freunde zu finden. Weil dein Kind jünger als 16 ist, brauchen wir deine Zustimmung,
     bevor das Konto genutzt werden kann.</p>
-    <p><b>So schützt turp Jugendliche:</b></p>
+    <p><b>So schützt kumi Jugendliche:</b></p>
     <ul>
       <li>13- bis 17-Jährige sehen und schreiben nur mit Gleichaltrigen. Erwachsene haben keinen Zugang zu diesem Bereich.</li>
       <li>Chats gibt es nur zwischen Freunden, die eine Anfrage angenommen haben.</li>
@@ -369,7 +369,7 @@ async function sendConsentMail(uid, parentEmail, childName) {
   batch.update(db.doc(`accounts/${uid}`), { parentEmail, lastConsentMailAt: FieldValue.serverTimestamp() });
   await batch.commit();
 
-  return deliverMail(parentEmail, `${childName} möchte turp nutzen – bitte um deine Zustimmung`, text, html);
+  return deliverMail(parentEmail, `${childName} möchte kumi nutzen – bitte um deine Zustimmung`, text, html);
 }
 
 /** Verschickt eine E-Mail über den SMTP-Zugang. Liefert false, wenn keiner eingerichtet ist. */
@@ -386,11 +386,11 @@ async function deliverMail(to, subject, text, html) {
   }
   try {
     const nodemailer = require("nodemailer");
-    let from = "turp";
+    let from = "kumi";
     try {
-      from = `turp <${decodeURIComponent(new URL(uri).username)}>`;
+      from = `kumi <${decodeURIComponent(new URL(uri).username)}>`;
     } catch (e) {
-      // Absender bleibt "turp"
+      // Absender bleibt "kumi"
     }
     await nodemailer.createTransport(uri).sendMail({ from, to, subject, text, html });
     return true;
@@ -420,7 +420,7 @@ exports.resendConsent = onCall({ secrets: [SMTP_URI] }, async (req) => {
   const sent = await sendConsentMail(uid, parentEmail, user.get("name") || "Dein Kind");
   if (!sent) {
     throw new HttpsError("unavailable",
-      "Der E-Mail-Versand ist noch nicht eingerichtet. Bitte melde dich beim turp-Team.");
+      "Der E-Mail-Versand ist noch nicht eingerichtet. Bitte melde dich beim kumi-Team.");
   }
   return { ok: true };
 });
@@ -428,7 +428,7 @@ exports.resendConsent = onCall({ secrets: [SMTP_URI] }, async (req) => {
 function page(title, bodyHtml) {
   return `<!doctype html><html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${escapeHtml(title)} · turp</title>
+<title>${escapeHtml(title)} · kumi</title>
 <style>
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#0E0F1A;color:#F4F5FB;
 display:flex;min-height:100vh;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
@@ -438,7 +438,7 @@ h1{margin:0 0 12px;font-size:24px} p,li{line-height:1.55;color:#C9CCE0} ul{paddi
 form{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
 button{border:0;border-radius:999px;padding:14px 22px;font-size:16px;font-weight:700;cursor:pointer}
 .yes{background:#2DE1C2;color:#0E0F1A}.no{background:transparent;color:#FF5C8A;border:2px solid #FF5C8A}
-</style></head><body><div class="card"><div class="logo">turp</div><h1>${escapeHtml(title)}</h1>${bodyHtml}</div></body></html>`;
+</style></head><body><div class="card"><div class="logo">kumi</div><h1>${escapeHtml(title)}</h1>${bodyHtml}</div></body></html>`;
 }
 
 // Link aus der Eltern-E-Mail. GET zeigt nur die Seite an (E-Mail-Scanner
@@ -463,8 +463,8 @@ exports.parentConsent = onRequest(async (req, res) => {
   const name = escapeHtml(user.get("name") || "Dein Kind");
 
   if (req.method === "GET") {
-    res.send(page("Zustimmung für turp", `
-      <p><b>${name}</b> (${escapeHtml(String(user.get("age") || ""))} Jahre) möchte turp nutzen, eine App zum Freunde-Finden.</p>
+    res.send(page("Zustimmung für kumi", `
+      <p><b>${name}</b> (${escapeHtml(String(user.get("age") || ""))} Jahre) möchte kumi nutzen, eine App zum Freunde-Finden.</p>
       <ul>
         <li>Jugendliche (13–17) sind strikt von Erwachsenen getrennt.</li>
         <li>Chats nur zwischen Freunden, die sich gegenseitig bestätigt haben.</li>
@@ -592,7 +592,8 @@ async function befriend(aUid, bUid) {
 // So lässt sich der Chat ohne zweites Handy testen. Die App zeigt den Bot nur
 // in Test-Versionen (Debug-Builds) an.
 
-const BOT_NAME = "turp Bot";
+const BOT_NAME = "kumi Bot";
+const BOT_BIO = "Ich bin der Testbot von kumi. Schreib mir – ich antworte sofort, damit du den Chat testen kannst. 🤖";
 
 function botUidFor(group) {
   return `turp-bot-${group}`;
@@ -602,7 +603,13 @@ async function ensureBot(group) {
   const botUid = botUidFor(group);
   const ref = db.doc(`users/${botUid}`);
   const snap = await ref.get();
-  if (snap.exists && (snap.get("photos") || []).length > 0) return botUid;
+  if (snap.exists && (snap.get("photos") || []).length > 0) {
+    // Name/Bio nach einer Umbenennung der App aktualisieren
+    if (snap.get("name") !== BOT_NAME || snap.get("bio") !== BOT_BIO) {
+      await ref.update({ name: BOT_NAME, bio: BOT_BIO });
+    }
+    return botUid;
+  }
 
   const file = getStorage().bucket().file(`media/${botUid}/avatar.png`);
   await file.save(fs.readFileSync(path.join(__dirname, "assets", "bot.png")), {
@@ -616,7 +623,7 @@ async function ensureBot(group) {
     name: BOT_NAME,
     age: 0,
     country: "DE",
-    bio: "Ich bin der Testbot von turp. Schreib mir – ich antworte sofort, damit du den Chat testen kannst. 🤖",
+    bio: BOT_BIO,
     interests: ["💻 Coden", "😂 Memes"],
     photos: [url],
     videoUrl: "",
@@ -657,7 +664,7 @@ async function botSay(chatId, botUid, text) {
   });
 }
 
-const BOT_GREETING = "Hey! 👋 Ich bin der turp-Testbot. Schreib mir etwas – ich antworte sofort, damit du den Chat testen kannst.";
+const BOT_GREETING = "Hey! 👋 Ich bin der kumi-Testbot. Schreib mir etwas – ich antworte sofort, damit du den Chat testen kannst.";
 
 function botReply(msg, preview) {
   if (msg.type === "audio") return "Sprachnachricht angekommen 🎤 – Abspielen klappt ✅";
@@ -1122,7 +1129,7 @@ exports.onMessageCreated = onDocumentCreated(
       return;
     }
 
-    const senderName = (chat.memberInfo && chat.memberInfo[msg.senderId] && chat.memberInfo[msg.senderId].name) || "turp";
+    const senderName = (chat.memberInfo && chat.memberInfo[msg.senderId] && chat.memberInfo[msg.senderId].name) || "kumi";
     await notify(other, senderName, preview, { type: "message", chatId: event.params.chatId });
   });
 
@@ -1181,7 +1188,7 @@ async function moveToAdult(uid) {
   [sent, received].forEach((q) => q.forEach((d) => w.delete(d.ref)));
   await w.close();
 
-  await notify(uid, "Happy Birthday! 🎂", "Du bist jetzt 18 und wechselst in die Erwachsenen-Community von turp.");
+  await notify(uid, "Happy Birthday! 🎂", "Du bist jetzt 18 und wechselst in die Erwachsenen-Community von kumi.");
 }
 
 exports.dailyMaintenance = onSchedule(

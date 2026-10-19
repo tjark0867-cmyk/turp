@@ -88,7 +88,7 @@ class ShopViewModel : BaseViewModel() {
     }
 }
 
-/** turp+-Banner: Berglandschaft aus Pappe, Logo mit goldenem Plus */
+/** kumi+-Banner: Berglandschaft aus Pappe, Logo mit goldenem Plus */
 @Composable
 fun PlusBanner(modifier: Modifier = Modifier, onClick: (() -> Unit)? = null, buttonLabel: String? = null) {
     Box(

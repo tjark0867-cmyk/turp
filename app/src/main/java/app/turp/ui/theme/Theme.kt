@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.turp.R
 
-// turp-Farben: tiefes Schwarz, Grautöne und genau EINE Akzentfarbe (Mint).
+// kumi-Farben: tiefes Schwarz, Grautöne und genau EINE Akzentfarbe (Mint).
 val Ink = Color(0xFF050506)
 val InkElevated = Color(0xFF121214)
 val InkHigh = Color(0xFF1C1C20)

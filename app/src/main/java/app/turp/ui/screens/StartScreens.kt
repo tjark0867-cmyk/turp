@@ -120,7 +120,7 @@ fun SetupMissingScreen() {
     MessageScreen(
         emoji = "🔧",
         title = "Fast geschafft!",
-        text = "Diese turp-Version ist noch nicht mit deinem Firebase-Projekt verbunden. " +
+        text = "Diese kumi-Version ist noch nicht mit deinem Firebase-Projekt verbunden. " +
             "Lege die Datei google-services.json in den Ordner app/ und baue die App neu. " +
             "Die einzelnen Schritte stehen in der README."
     )
@@ -132,7 +132,7 @@ fun BannedScreen(onSignOut: () -> Unit) {
         emoji = "⛔",
         title = "Konto gesperrt",
         text = "Dein Konto wurde gesperrt, weil es gegen unsere Regeln verstoßen hat. " +
-            "Wenn du denkst, dass das ein Fehler ist, melde dich beim turp-Team.",
+            "Wenn du denkst, dass das ein Fehler ist, melde dich beim kumi-Team.",
         actionLabel = "Abmelden",
         onAction = onSignOut
     )
@@ -302,7 +302,7 @@ fun AuthScreen(vm: AuthViewModel = viewModel()) {
         }
         Spacer(Modifier.height(32.dp))
         Text(
-            "Goldene Regel auf turp: Sei immer freundlich. 💛",
+            "Goldene Regel auf kumi: Sei immer freundlich. 💛",
             color = TextLow,
             style = MaterialTheme.typography.bodySmall,
             textAlign = TextAlign.Center
@@ -363,7 +363,7 @@ fun OnboardingScreen(onSignOut: () -> Unit, vm: OnboardingViewModel = viewModel(
         TurpLogo(fontSize = 40.sp)
         Text("Erzähl uns kurz von dir", style = MaterialTheme.typography.headlineSmall)
         Text(
-            "Dein Alter bestimmt, wen du auf turp triffst. Es lässt sich später nicht mehr ändern.",
+            "Dein Alter bestimmt, wen du auf kumi triffst. Es lässt sich später nicht mehr ändern.",
             color = TextLow
         )
 
@@ -383,7 +383,7 @@ fun OnboardingScreen(onSignOut: () -> Unit, vm: OnboardingViewModel = viewModel(
             onClick = { showDate = true }
         )
         if (tooYoung) {
-            Text("turp ist erst ab 13 Jahren erlaubt.", color = Coral, fontWeight = FontWeight.Bold)
+            Text("kumi ist erst ab 13 Jahren erlaubt.", color = Coral, fontWeight = FontWeight.Bold)
         }
 
         PickerField(

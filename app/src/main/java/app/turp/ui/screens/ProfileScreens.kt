@@ -215,13 +215,13 @@ class ProfileViewModel : BaseViewModel() {
 }
 
 internal fun shareInvite(context: Context, code: String) {
-    val text = "Komm zu turp und finde neue Freunde! 🌍 Gib bei der Anmeldung meinen Code $code ein, " +
+    val text = "Komm zu kumi und finde neue Freunde! 🌍 Gib bei der Anmeldung meinen Code $code ein, " +
         "dann bekommst du 10 Bonus-Gems 💎"
     val intent = Intent(Intent.ACTION_SEND).apply {
         type = "text/plain"
         putExtra(Intent.EXTRA_TEXT, text)
     }
-    context.startActivity(Intent.createChooser(intent, "turp teilen"))
+    context.startActivity(Intent.createChooser(intent, "kumi teilen"))
 }
 
 @Composable
@@ -288,7 +288,7 @@ fun ProfileScreen(
                         Text(p.name, color = TextHigh, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold, maxLines = 1)
                         if (account.plus) {
                             Spacer(Modifier.width(6.dp))
-                            Text("turp+", color = Sun, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                            Text("kumi+", color = Sun, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                     Spacer(Modifier.height(8.dp))
@@ -435,7 +435,7 @@ fun SettingsScreen(
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             SectionCard {
                 MenuRow(Icons.Rounded.Edit, "Profil bearbeiten", onClick = onEdit)
-                MenuRow(Icons.Rounded.AutoAwesome, "Shop & turp+", onClick = onShop)
+                MenuRow(Icons.Rounded.AutoAwesome, "Shop & kumi+", onClick = onShop)
                 MenuRow(Icons.Rounded.PersonAdd, "Freunde einladen (+$INVITE_BONUS 💎)", onClick = {
                     if (account.inviteCode.isNotBlank()) shareInvite(context, account.inviteCode)
                 })
@@ -447,7 +447,7 @@ fun SettingsScreen(
                 MenuRow(Icons.Rounded.DeleteForever, "Konto löschen", tint = Coral, onClick = { confirmDelete = true })
             }
             Text(
-                "turp ${BuildConfig.VERSION_NAME} · Dein Einladungscode: ${account.inviteCode.ifBlank { "–" }}\nGoldene Regel: Sei immer freundlich. 💛",
+                "kumi ${BuildConfig.VERSION_NAME} · Dein Einladungscode: ${account.inviteCode.ifBlank { "–" }}\nGoldene Regel: Sei immer freundlich. 💛",
                 style = MaterialTheme.typography.bodySmall,
                 color = TextLow,
                 textAlign = TextAlign.Center,
@@ -778,7 +778,7 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
                 if (isTeen) {
                     "Nur deine Freunde können deine Socials sehen – und nur, wenn du sie freigibst. Überleg gut, mit wem du sie teilst."
                 } else {
-                    "Nur deine Freunde auf turp können deine Socials sehen – und nur, wenn du sie freigibst."
+                    "Nur deine Freunde auf kumi können deine Socials sehen – und nur, wenn du sie freigibst."
                 },
                 fontSize = 12.sp,
                 color = TextLow

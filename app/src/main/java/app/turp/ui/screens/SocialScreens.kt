@@ -212,7 +212,7 @@ fun ChatsScreen(
                     Text("🤖", fontSize = 22.sp)
                     Spacer(Modifier.width(12.dp))
                     Text(
-                        "Test-Chat mit dem turp Bot",
+                        "Test-Chat mit dem kumi Bot",
                         color = TextLow,
                         fontSize = 14.sp,
                         modifier = Modifier.weight(1f)

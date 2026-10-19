@@ -1,4 +1,4 @@
-# turp – Freunde finden auf der ganzen Welt
+# kumi – Freunde finden auf der ganzen Welt
 
 Android-App (Kotlin + Jetpack Compose) mit Firebase als Server.
 
@@ -16,7 +16,7 @@ Android-App (Kotlin + Jetpack Compose) mit Firebase als Server.
 - Lounge: globaler Gruppenchat je Altersgruppe mit Slow-Mode
 - Automatische Prüfung aller Fotos und Videos (Nacktbilder/Gewalt werden blockiert), Wortfilter
 - Melden und Blockieren überall, Admin-Bereich für Meldungen (Jugend-Meldungen zuerst), Konto löschen
-- turp+ und Gem-Shop sind vorbereitet (Käufe noch nicht aktiv)
+- kumi+ und Gem-Shop sind vorbereitet (Käufe noch nicht aktiv)
 
 ---
 
@@ -189,6 +189,6 @@ turp/
 └─ .github/workflows/           automatischer APK-Bau auf GitHub
 ```
 
-**Grenzen dieser ersten Version:** Login nur per E-Mail/Passwort, Käufe (turp+, Gems) noch nicht aktiv.
+**Grenzen dieser ersten Version:** Login nur per E-Mail/Passwort, Käufe (kumi+, Gems) noch nicht aktiv.
 
 <!-- Server eingerichtet: 2026-10-19 -->

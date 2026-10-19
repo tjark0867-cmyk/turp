@@ -252,8 +252,8 @@ private fun ReinstallDialog(info: UpdateInfo, onDownload: () -> Unit, onDismiss:
         title = { Text("Einmal neu installieren") },
         text = {
             Text(
-                "turp ${info.versionName} kann die installierte Version nicht direkt ersetzen. " +
-                    "Lade die neue Version herunter, lösche turp und installiere sie dann. " +
+                "kumi ${info.versionName} kann die installierte Version nicht direkt ersetzen. " +
+                    "Lade die neue Version herunter, lösche kumi und installiere sie dann. " +
                     "Dein Konto, deine Freunde und Chats bleiben erhalten – du meldest dich einfach wieder an."
             )
         },
@@ -275,7 +275,7 @@ private fun UpdateDialog(info: UpdateInfo, progress: Float?, onUpdate: () -> Uni
         title = { Text("Neue Version verfügbar") },
         text = {
             Column {
-                Text("turp ${info.versionName} ist da.")
+                Text("kumi ${info.versionName} ist da.")
                 if (info.notes.isNotBlank()) {
                     Spacer(Modifier.height(6.dp))
                     Text(info.notes, color = TextLow, style = MaterialTheme.typography.bodySmall)

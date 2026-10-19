@@ -128,17 +128,17 @@ import app.turp.ui.theme.TextLow
 import coil.compose.AsyncImage
 
 /** Seitenverhältnis des Logo-Bildes (Breite / Höhe) */
-private const val LogoAspect = 1280f / 502f
+private const val LogoAspect = 1280f / 472f
 
 /**
- * Schriftzug "turp" im Magazin-Schnipsel-Look: jeder Buchstabe ein eigenes
+ * Schriftzug "kumi" im Magazin-Schnipsel-Look: jeder Buchstabe ein eigenes
  * Papierstück. [fontSize] bestimmt die Größe wie bei einem Text.
  */
 @Composable
 fun TurpLogo(modifier: Modifier = Modifier, fontSize: TextUnit = 56.sp) {
     Image(
-        painter = painterResource(R.drawable.turp_logo),
-        contentDescription = "turp",
+        painter = painterResource(R.drawable.app_logo),
+        contentDescription = "kumi",
         contentScale = ContentScale.Fit,
         modifier = modifier
             .height((fontSize.value * 1.2f).dp)

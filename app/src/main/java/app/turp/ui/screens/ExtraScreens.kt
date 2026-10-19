@@ -91,7 +91,7 @@ private fun SimpleTopBar(title: String, onBack: () -> Unit) {
     )
 }
 
-// ---- turp+ (vorbereitet, Käufe folgen später) -----------------------------
+// ---- kumi+ (vorbereitet, Käufe folgen später) -----------------------------
 
 
 
