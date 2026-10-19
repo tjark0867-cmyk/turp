@@ -75,7 +75,6 @@ import app.turp.ui.components.Avatar
 import app.turp.ui.components.Countries
 import app.turp.ui.components.EmptyState
 import app.turp.ui.components.GemPill
-import app.turp.ui.components.SectionTitle
 import app.turp.ui.components.darken
 import app.turp.ui.components.parseColor
 import app.turp.ui.components.readableOn
@@ -97,8 +96,6 @@ import coil.compose.AsyncImage
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 // ---- Freunde & Anfragen ------------------------------------------------------
@@ -107,9 +104,6 @@ import kotlinx.coroutines.launch
 private val Holo = listOf(Teal, Sky, Lilac, Color(0xFFFF7AB6), Sun, Teal)
 
 class RequestsViewModel : BaseViewModel() {
-    val outgoing = RequestRepo.outgoing()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-
     var processing by mutableStateOf(setOf<String>())
         private set
 
@@ -170,7 +164,6 @@ fun FriendsScreen(
     LaunchedEffect(Unit) { vm.notices.collect { context.toast(it) } }
     LaunchedEffect(incoming) { vm.loadSenders(incoming.map { it.from }) }
 
-    val outgoing by vm.outgoing.collectAsState()
     val me by remember(session.uid) { ProfileRepo.profile(session.uid) }.collectAsState(initial = null)
     val prefs = remember { context.getSharedPreferences("turp", Context.MODE_PRIVATE) }
     var inviteHidden by remember { mutableStateOf(prefs.getBoolean("inviteRowHidden", false)) }
@@ -209,11 +202,11 @@ fun FriendsScreen(
             )
         }
 
-        item { Heading("Neue Freunde", Modifier.padding(start = 16.dp, top = 8.dp, bottom = 12.dp)) }
+        item { Heading("Neue Freunde", Modifier.padding(start = 16.dp, top = 6.dp, bottom = 10.dp)) }
         item {
             LazyRow(
                 contentPadding = PaddingValues(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 if (friends.isEmpty()) item { FindFriendsCard(onDiscover) }
                 items(friends, key = { it.id }) { chat ->
@@ -226,12 +219,12 @@ fun FriendsScreen(
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 10.dp),
+                    .padding(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Heading("Anfragen", Modifier.weight(1f))
                 SortChip("Neueste", selected = !vm.sortByInterest) { vm.sortByInterest = false }
-                Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(6.dp))
                 SortChip("Interessen", selected = vm.sortByInterest) { vm.sortByInterest = true }
             }
         }
@@ -274,31 +267,6 @@ fun FriendsScreen(
                 modifier = Modifier.animateItem()
             )
         }
-
-        if (outgoing.isNotEmpty()) {
-            item { SectionTitle("Gesendet · wartet auf Antwort", Modifier.padding(start = 16.dp, top = 18.dp)) }
-            items(outgoing, key = { "out_${it.id}" }) { r ->
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .clickable { onOpenUser(r.to) }
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Avatar(r.toPhoto, r.toName, r.toColor, 42.dp)
-                    Spacer(Modifier.width(12.dp))
-                    Text(
-                        r.toName,
-                        color = TextHigh,
-                        fontWeight = FontWeight.SemiBold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f)
-                    )
-                    Text("⏳ ${timeAgo(r.createdAt)}", color = TextLow, fontSize = 13.sp)
-                }
-            }
-        }
     }
 }
 
@@ -322,7 +290,7 @@ private fun FriendsHeader(
                 url = me?.photos?.firstOrNull().orEmpty(),
                 name = me?.name.orEmpty(),
                 color = me?.color ?: DEFAULT_COLOR,
-                size = 42.dp,
+                size = 38.dp,
                 ring = Color.White,
                 online = true,
                 modifier = Modifier.clickable(onClick = onOpenProfile)
@@ -333,7 +301,7 @@ private fun FriendsHeader(
                         Icons.Rounded.PersonAdd,
                         contentDescription = "Freunde einladen",
                         tint = TextHigh,
-                        modifier = Modifier.size(27.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             }
@@ -341,7 +309,7 @@ private fun FriendsHeader(
         Text(
             "Freunde",
             color = TextHigh,
-            fontSize = 26.sp,
+            fontSize = 22.sp,
             fontWeight = FontWeight.ExtraBold,
             modifier = Modifier.align(Alignment.Center)
         )
@@ -357,7 +325,7 @@ private fun FriendsHeader(
 
 @Composable
 private fun Heading(text: String, modifier: Modifier = Modifier) {
-    Text(text, color = TextHigh, fontSize = 21.sp, fontWeight = FontWeight.ExtraBold, modifier = modifier)
+    Text(text, color = TextHigh, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, modifier = modifier)
 }
 
 /** Hochkant-Karte mit Foto und Name – tippen öffnet den Chat */
@@ -365,10 +333,10 @@ private fun Heading(text: String, modifier: Modifier = Modifier) {
 private fun NewFriendCard(chat: Chat, me: String, onClick: () -> Unit) {
     val info = chat.other(me)
     val accent = parseColor(info.color)
-    val shape = RoundedCornerShape(22.dp)
+    val shape = RoundedCornerShape(18.dp)
     Box(
         Modifier
-            .size(width = 124.dp, height = 168.dp)
+            .size(width = 104.dp, height = 142.dp)
             .clip(shape)
             .background(Brush.linearGradient(listOf(accent, darken(accent, 0.45f))))
             .clickable(onClick = onClick)
@@ -383,7 +351,7 @@ private fun NewFriendCard(chat: Chat, me: String, onClick: () -> Unit) {
         } else {
             Text(
                 info.name.take(1).uppercase(),
-                style = TextStyle(fontFamily = Display, fontSize = 56.sp),
+                style = TextStyle(fontFamily = Display, fontSize = 46.sp),
                 color = readableOn(accent),
                 modifier = Modifier.align(Alignment.Center)
             )
@@ -396,21 +364,21 @@ private fun NewFriendCard(chat: Chat, me: String, onClick: () -> Unit) {
         Text(
             info.name,
             color = Color.White,
-            fontSize = 17.sp,
+            fontSize = 15.sp,
             fontWeight = FontWeight.ExtraBold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             style = TextStyle(shadow = Shadow(Color.Black.copy(alpha = 0.6f), Offset(0f, 2f), 6f)),
             modifier = Modifier
                 .align(Alignment.BottomStart)
-                .padding(horizontal = 10.dp, vertical = 10.dp)
+                .padding(horizontal = 9.dp, vertical = 8.dp)
         )
         if (chat.isUnread(me)) {
             Box(
                 Modifier
                     .align(Alignment.TopEnd)
                     .padding(8.dp)
-                    .size(13.dp)
+                    .size(11.dp)
                     .background(Teal, CircleShape)
                     .border(2.dp, Ink, CircleShape)
             )
@@ -421,10 +389,10 @@ private fun NewFriendCard(chat: Chat, me: String, onClick: () -> Unit) {
 /** Platzhalter, solange es noch keine Freunde gibt */
 @Composable
 private fun FindFriendsCard(onClick: () -> Unit) {
-    val shape = RoundedCornerShape(22.dp)
+    val shape = RoundedCornerShape(18.dp)
     Column(
         Modifier
-            .size(width = 124.dp, height = 168.dp)
+            .size(width = 104.dp, height = 142.dp)
             .clip(shape)
             .background(InkElevated)
             .border(1.5.dp, InkLine, shape)
@@ -435,7 +403,7 @@ private fun FindFriendsCard(onClick: () -> Unit) {
     ) {
         Box(
             Modifier
-                .size(44.dp)
+                .size(38.dp)
                 .background(Teal.copy(alpha = 0.15f), CircleShape),
             contentAlignment = Alignment.Center
         ) {
@@ -445,7 +413,7 @@ private fun FindFriendsCard(onClick: () -> Unit) {
         Text(
             "Finde neue Freunde",
             color = TextHigh,
-            fontSize = 14.sp,
+            fontSize = 13.sp,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center
         )
@@ -458,9 +426,9 @@ private fun SortChip(text: String, selected: Boolean, onClick: () -> Unit) {
         Text(
             text,
             color = if (selected) Ink else TextHigh,
-            fontSize = 15.sp,
+            fontSize = 13.sp,
             fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 9.dp)
+            modifier = Modifier.padding(horizontal = 13.dp, vertical = 7.dp)
         )
     }
 }
@@ -474,12 +442,12 @@ private fun TeamInviteRow(onShare: () -> Unit, onHide: () -> Unit, modifier: Mod
             .padding(horizontal = 8.dp)
             .clip(RoundedCornerShape(32.dp))
             .clickable(onClick = onShare)
-            .padding(horizontal = 8.dp, vertical = 8.dp),
+            .padding(horizontal = 8.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             Modifier
-                .size(58.dp)
+                .size(48.dp)
                 .clip(CircleShape)
                 .background(Color.White),
             contentAlignment = Alignment.Center
@@ -487,23 +455,24 @@ private fun TeamInviteRow(onShare: () -> Unit, onHide: () -> Unit, modifier: Mod
             Image(
                 painter = painterResource(R.drawable.turp_logo),
                 contentDescription = null,
-                modifier = Modifier.width(48.dp)
+                modifier = Modifier.width(40.dp)
             )
         }
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
-            Text("turp Team", color = TextHigh, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            Text("Lade Freunde ein: +$INVITE_BONUS 💎 pro Person", color = TextLow, fontSize = 14.sp)
+            Text("turp Team", color = TextHigh, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            Text("Lade Freunde ein: +$INVITE_BONUS 💎 pro Person", color = TextLow, fontSize = 13.sp)
         }
         IconButton(onClick = onHide) {
-            Icon(Icons.Rounded.Close, contentDescription = "Ausblenden", tint = TextLow, modifier = Modifier.size(24.dp))
+            Icon(Icons.Rounded.Close, contentDescription = "Ausblenden", tint = TextLow, modifier = Modifier.size(21.dp))
         }
         Surface(onClick = onShare, shape = CircleShape, color = Teal) {
             Text(
                 "Teilen",
                 color = Ink,
+                fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
             )
         }
     }
@@ -522,12 +491,12 @@ private fun RequestRow(
     onDecline: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val shape = RoundedCornerShape(34.dp)
+    val shape = RoundedCornerShape(30.dp)
     Box(
         modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp)
-            .padding(top = if (best) 12.dp else 0.dp, bottom = if (best) 6.dp else 0.dp)
+            .padding(top = if (best) 10.dp else 0.dp, bottom = if (best) 4.dp else 0.dp)
     ) {
         Row(
             Modifier
@@ -537,65 +506,65 @@ private fun RequestRow(
                         Modifier
                             .background(InkElevated, shape)
                             .background(Brush.linearGradient(Holo.map { it.copy(alpha = 0.22f) }), shape)
-                            .border(2.5.dp, Brush.linearGradient(Holo), shape)
+                            .border(2.dp, Brush.linearGradient(Holo), shape)
                     } else {
                         Modifier
                     }
                 )
                 .clip(shape)
                 .clickable(onClick = onOpen)
-                .padding(horizontal = 8.dp, vertical = 10.dp),
+                .padding(horizontal = 8.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Avatar(request.fromPhoto, request.fromName, request.fromColor, 58.dp)
-            Spacer(Modifier.width(12.dp))
+            Avatar(request.fromPhoto, request.fromName, request.fromColor, 48.dp)
+            Spacer(Modifier.width(10.dp))
             Column(Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         request.fromName,
                         color = TextHigh,
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f, fill = false)
                     )
-                    Spacer(Modifier.width(8.dp))
+                    Spacer(Modifier.width(6.dp))
                     Text(
                         "${request.fromAge}, ${Countries.flag(request.fromCountry)} ${request.fromCountry}",
                         color = TextHigh,
-                        fontSize = 14.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
                         maxLines = 1,
                         modifier = Modifier
                             .background(InkHigh, RoundedCornerShape(8.dp))
-                            .padding(horizontal = 7.dp, vertical = 2.dp)
+                            .padding(horizontal = 6.dp, vertical = 1.dp)
                     )
                 }
-                Spacer(Modifier.height(5.dp))
+                Spacer(Modifier.height(4.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     // Gemeinsame Interessen zuerst und hervorgehoben
                     val ordered = interests.sortedByDescending { it in shared }.take(5)
                     ordered.forEach { interest ->
                         InterestEmoji(interest, shared = interest in shared)
-                        Spacer(Modifier.width(5.dp))
+                        Spacer(Modifier.width(4.dp))
                     }
                     Text(
                         timeAgo(request.createdAt),
                         color = TextLow,
-                        fontSize = 13.sp,
+                        fontSize = 12.sp,
                         modifier = Modifier.padding(start = if (ordered.isEmpty()) 0.dp else 3.dp)
                     )
                 }
             }
             IconButton(onClick = onDecline, enabled = !busy) {
-                Icon(Icons.Rounded.Close, contentDescription = "Ablehnen", tint = TextHigh, modifier = Modifier.size(30.dp))
+                Icon(Icons.Rounded.Close, contentDescription = "Ablehnen", tint = TextHigh, modifier = Modifier.size(25.dp))
             }
             IconButton(onClick = onAccept, enabled = !busy) {
                 if (busy) {
-                    CircularProgressIndicator(color = Teal, strokeWidth = 2.5.dp, modifier = Modifier.size(24.dp))
+                    CircularProgressIndicator(color = Teal, strokeWidth = 2.dp, modifier = Modifier.size(20.dp))
                 } else {
-                    Icon(Icons.Rounded.Check, contentDescription = "Annehmen", tint = Teal, modifier = Modifier.size(32.dp))
+                    Icon(Icons.Rounded.Check, contentDescription = "Annehmen", tint = Teal, modifier = Modifier.size(27.dp))
                 }
             }
         }
@@ -603,7 +572,7 @@ private fun RequestRow(
             TopMatchBadge(
                 Modifier
                     .align(Alignment.TopEnd)
-                    .offset(x = (-10).dp, y = (-12).dp)
+                    .offset(x = (-10).dp, y = (-10).dp)
             )
         }
     }
@@ -612,15 +581,15 @@ private fun RequestRow(
 @Composable
 private fun InterestEmoji(interest: String, shared: Boolean) {
     val emoji = interest.trim().substringBefore(" ")
-    val shape = RoundedCornerShape(9.dp)
+    val shape = RoundedCornerShape(7.dp)
     Box(
         Modifier
-            .size(30.dp)
+            .size(24.dp)
             .background(if (shared) Teal.copy(alpha = 0.16f) else InkHigh, shape)
-            .then(if (shared) Modifier.border(1.5.dp, Teal, shape) else Modifier),
+            .then(if (shared) Modifier.border(1.dp, Teal, shape) else Modifier),
         contentAlignment = Alignment.Center
     ) {
-        Text(emoji, fontSize = 16.sp)
+        Text(emoji, fontSize = 13.sp)
     }
 }
 
@@ -630,13 +599,13 @@ private fun TopMatchBadge(modifier: Modifier = Modifier) {
     val shape = RoundedCornerShape(10.dp)
     Text(
         "Top Match",
-        style = TextStyle(fontFamily = Display, fontSize = 14.sp),
+        style = TextStyle(fontFamily = Display, fontSize = 12.sp),
         color = Ink,
         modifier = modifier
             .graphicsLayer { rotationZ = 7f }
             .shadow(6.dp, shape)
             .background(Color.White, shape)
-            .border(2.dp, Brush.linearGradient(Holo), shape)
-            .padding(horizontal = 9.dp, vertical = 2.dp)
+            .border(1.5.dp, Brush.linearGradient(Holo), shape)
+            .padding(horizontal = 7.dp, vertical = 1.dp)
     )
 }
