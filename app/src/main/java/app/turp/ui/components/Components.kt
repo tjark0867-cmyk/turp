@@ -1,5 +1,6 @@
 package app.turp.ui.components
 
+import androidx.compose.material.icons.rounded.PhotoCamera
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
@@ -700,6 +701,8 @@ fun MessageInput(
     sendHint: String? = null,
     onPickImage: (() -> Unit)? = null,
     imageBusy: Boolean = false,
+    onCamera: (() -> Unit)? = null,
+    onGif: (() -> Unit)? = null,
 ) {
     var text by rememberSaveable { mutableStateOf("") }
     Surface(color = InkElevated, modifier = Modifier.fillMaxWidth()) {
@@ -709,6 +712,11 @@ fun MessageInput(
                 .padding(horizontal = 8.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            if (onCamera != null) {
+                IconButton(onClick = onCamera, enabled = enabled && !imageBusy) {
+                    Icon(Icons.Rounded.PhotoCamera, contentDescription = "Foto aufnehmen", tint = Teal)
+                }
+            }
             if (onPickImage != null) {
                 IconButton(onClick = onPickImage, enabled = enabled && !imageBusy) {
                     if (imageBusy) {
@@ -724,6 +732,22 @@ fun MessageInput(
                 placeholder = { Text(placeholder) },
                 enabled = enabled,
                 maxLines = 4,
+                trailingIcon = onGif?.let { open ->
+                    {
+                        val tint = if (enabled) TextHigh else TextLow
+                        Text(
+                            "GIF",
+                            color = tint,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(7.dp))
+                                .border(1.5.dp, tint, RoundedCornerShape(7.dp))
+                                .clickable(enabled = enabled, onClick = open)
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                        )
+                    }
+                },
                 shape = RoundedCornerShape(24.dp),
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,

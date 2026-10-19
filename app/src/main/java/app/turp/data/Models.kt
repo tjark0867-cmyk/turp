@@ -93,6 +93,9 @@ data class Message(
     val imageUrl: String,
     val imageStatus: String,
     val createdAt: Timestamp?,
+    val gifId: String = "",
+    val gifW: Int = 0,
+    val gifH: Int = 0,
 )
 
 data class RoomMessage(
@@ -215,6 +218,9 @@ fun DocumentSnapshot.toMessage() = Message(
     imageUrl = s("imageUrl"),
     imageStatus = s("imageStatus"),
     createdAt = ts("createdAt"),
+    gifId = s("gifId"),
+    gifW = n("w").toInt(),
+    gifH = n("h").toInt(),
 )
 
 fun DocumentSnapshot.toRoomMessage() = RoomMessage(

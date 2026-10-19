@@ -1,5 +1,14 @@
 package app.turp.ui.screens
 
+import java.io.File
+import app.turp.ui.components.rememberIsOnline
+import app.turp.ui.components.GifPicker
+import app.turp.data.Gifs
+import app.turp.data.Gif
+import androidx.core.content.FileProvider
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.foundation.layout.aspectRatio
+import android.content.ActivityNotFoundException
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.delay
 import com.google.firebase.Timestamp
@@ -190,6 +199,8 @@ fun ChatsScreen(
 private fun ChatRow(chat: Chat, me: String, onClick: () -> Unit) {
     val other = chat.other(me)
     val unread = chat.isUnread(me)
+    val isOnline = rememberIsOnline(chat.otherUid(me))
+    val online = !chat.closed && isOnline
     Row(
         Modifier
             .fillMaxWidth()
@@ -198,7 +209,7 @@ private fun ChatRow(chat: Chat, me: String, onClick: () -> Unit) {
             .padding(vertical = 10.dp, horizontal = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Avatar(other.photo, other.name, other.color, 54.dp)
+        Avatar(other.photo, other.name, other.color, 54.dp, online = online)
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
             Text(other.name, style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -239,6 +250,10 @@ class ChatViewModel(private val chatId: String) : BaseViewModel() {
     fun send(text: String) {
         if (text.isBlank()) return
         launchSafe(showBusy = false) { ChatRepo.sendText(chatId, text.take(1000)) }
+    }
+
+    fun sendGif(gif: Gif) {
+        launchSafe(showBusy = false) { ChatRepo.sendGif(chatId, gif) }
     }
 
     fun sendImage(appContext: Context, uri: Uri) {
@@ -323,6 +338,29 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) vm.sendImage(context.applicationContext, uri)
     }
+
+    // Kamera: Foto in einer temporären Datei aufnehmen, danach wie ein Galerie-Foto senden (wird geprüft)
+    var cameraUri by rememberSaveable { mutableStateOf<String?>(null) }
+    val camera = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { ok ->
+        val taken = cameraUri
+        if (ok && taken != null) vm.sendImage(context.applicationContext, Uri.parse(taken))
+    }
+    fun openCamera() {
+        try {
+            val dir = File(context.cacheDir, "camera").apply { mkdirs() }
+            dir.listFiles()?.forEach { it.delete() }
+            val file = File(dir, "foto_${System.currentTimeMillis()}.jpg")
+            val uri = FileProvider.getUriForFile(context, "${context.packageName}.files", file)
+            cameraUri = uri.toString()
+            camera.launch(uri)
+        } catch (e: ActivityNotFoundException) {
+            context.toast("Keine Kamera-App gefunden.")
+        } catch (e: Exception) {
+            context.toast("Kamera konnte nicht geöffnet werden.")
+        }
+    }
+
+    var showGifs by remember { mutableStateOf(false) }
 
     LaunchedEffect(messages.size) {
         if (messages.isNotEmpty()) {
@@ -436,7 +474,12 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
                     onPickImage = {
                         picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                     },
-                    imageBusy = vm.sendingImage
+                    imageBusy = vm.sendingImage,
+                    onCamera = { openCamera() },
+                    onGif = {
+                        if (Gifs.enabled) showGifs = true
+                        else context.toast("GIFs werden gerade eingerichtet – bald verfügbar.")
+                    },
                 )
             }
         }
@@ -478,12 +521,28 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
                         other = other,
                         showRead = m.id == lastReadId,
                         onLongPress = {
-                            if (!mine) reportContext = if (m.type == "text") m.text else "[Foto]"
+                            if (!mine) {
+                                reportContext = when (m.type) {
+                                    "text" -> m.text
+                                    "gif" -> "[GIF ${m.gifId}]"
+                                    else -> "[Foto]"
+                                }
+                            }
                         }
                     )
                 }
             }
         }
+    }
+
+    if (showGifs) {
+        GifPicker(
+            onDismiss = { showGifs = false },
+            onPick = { gif ->
+                showGifs = false
+                vm.sendGif(gif)
+            }
+        )
     }
 
     val ctx = reportContext
@@ -606,6 +665,31 @@ private fun Bubble(message: Message, mine: Boolean, lastInRun: Boolean, onLongPr
                     contentDescription = "Foto",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(220.dp)
+                )
+                Text(
+                    time,
+                    color = Color.White,
+                    fontSize = 11.sp,
+                    style = TextStyle(shadow = Shadow(Color.Black.copy(alpha = 0.7f), Offset(0f, 1f), 4f)),
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(8.dp)
+                )
+            }
+            message.type == "gif" && message.gifId.isNotBlank() -> Box {
+                val ratio = if (message.gifW > 0 && message.gifH > 0) {
+                    (message.gifW.toFloat() / message.gifH).coerceIn(0.5f, 2.2f)
+                } else {
+                    1f
+                }
+                AsyncImage(
+                    model = Gifs.url(message.gifId),
+                    contentDescription = "GIF",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .width(210.dp)
+                        .aspectRatio(ratio)
+                        .background(InkHigh)
                 )
                 Text(
                     time,

@@ -1,11 +1,16 @@
 package app.turp
 
+import coil.decode.ImageDecoderDecoder
+import coil.decode.GifDecoder
+import coil.ImageLoaderFactory
+import coil.ImageLoader
+import android.os.Build
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import com.google.firebase.FirebaseApp
 
-class TurpApp : Application() {
+class TurpApp : Application(), ImageLoaderFactory {
 
     override fun onCreate() {
         super.onCreate()
@@ -20,6 +25,15 @@ class TurpApp : Application() {
         ).apply { description = "Neue Nachrichten und Freundschaftsanfragen" }
         getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
     }
+
+    /** Bilder-Lader mit Unterstützung für animierte GIFs */
+    override fun newImageLoader(): ImageLoader =
+        ImageLoader.Builder(this)
+            .components {
+                if (Build.VERSION.SDK_INT >= 28) add(ImageDecoderDecoder.Factory()) else add(GifDecoder.Factory())
+            }
+            .crossfade(true)
+            .build()
 
     companion object {
         const val CHANNEL_ID = "turp_default"

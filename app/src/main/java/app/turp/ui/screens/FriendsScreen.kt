@@ -1,5 +1,7 @@
 package app.turp.ui.screens
 
+import app.turp.ui.theme.Online
+import app.turp.ui.components.rememberIsOnline
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -334,6 +336,7 @@ private fun NewFriendCard(chat: Chat, me: String, onClick: () -> Unit) {
     val info = chat.other(me)
     val accent = parseColor(info.color)
     val shape = RoundedCornerShape(18.dp)
+    val online = rememberIsOnline(chat.otherUid(me))
     Box(
         Modifier
             .size(width = 104.dp, height = 142.dp)
@@ -361,6 +364,16 @@ private fun NewFriendCard(chat: Chat, me: String, onClick: () -> Unit) {
                 .fillMaxSize()
                 .background(Brush.verticalGradient(0.5f to Color.Transparent, 1f to Color.Black.copy(alpha = 0.7f)))
         )
+        if (online) {
+            Box(
+                Modifier
+                    .align(Alignment.TopStart)
+                    .padding(8.dp)
+                    .size(12.dp)
+                    .background(Online, CircleShape)
+                    .border(2.dp, Ink, CircleShape)
+            )
+        }
         Text(
             info.name,
             color = Color.White,

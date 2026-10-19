@@ -22,6 +22,9 @@ val signingStore = (project.findProperty("signingStore") as String?)
     ?.takeIf { it.isNotBlank() }?.let { file(it) }?.takeIf { it.isFile }
 val signingPassword = (project.findProperty("signingPassword") as String?).orEmpty()
 
+// GIPHY-Schlüssel für die GIF-Suche (GitHub-Secret GIPHY_API_KEY), leer = GIFs aus
+val giphyKey = (project.findProperty("giphyKey") as String?).orEmpty().trim().filter { it.isLetterOrDigit() }
+
 android {
     namespace = "app.turp"
     compileSdk = 35
@@ -35,6 +38,7 @@ android {
         buildConfigField("String", "UPDATE_URL", "\"$updateUrl\"")
         // Muss zur Region der Cloud Functions passen (functions/index.js)
         buildConfigField("String", "FUNCTIONS_REGION", "\"europe-west3\"")
+        buildConfigField("String", "GIPHY_KEY", "\"$giphyKey\"")
     }
 
     signingConfigs {
@@ -103,6 +107,7 @@ dependencies {
     implementation("androidx.exifinterface:exifinterface:1.3.7")
 
     implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation("io.coil-kt:coil-gif:2.7.0")
     implementation("androidx.media3:media3-exoplayer:1.5.0")
     implementation("androidx.media3:media3-ui:1.5.0")
 
