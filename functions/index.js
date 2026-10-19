@@ -13,7 +13,7 @@ const { setGlobalOptions } = require("firebase-functions/v2");
 const { onCall, onRequest, HttpsError } = require("firebase-functions/v2/https");
 const { onDocumentCreated, onDocumentWritten } = require("firebase-functions/v2/firestore");
 const { onSchedule } = require("firebase-functions/v2/scheduler");
-const { defineString } = require("firebase-functions/params");
+const { defineString, defineSecret } = require("firebase-functions/params");
 const logger = require("firebase-functions/logger");
 
 const { initializeApp } = require("firebase-admin/app");
@@ -34,6 +34,9 @@ const REGION = "europe-west3";
 setGlobalOptions({ region: REGION, maxInstances: 10 });
 
 const ADMIN_EMAILS = defineString("ADMIN_EMAILS", { default: "" });
+// SMTP-Zugang für die Eltern-E-Mails, z. B. smtps://adresse%40gmail.com:apppasswort@smtp.gmail.com:465
+// Wird vom GitHub-Workflow "Server einrichten" angelegt ("none" = noch nicht eingerichtet).
+const SMTP_URI = defineSecret("SMTP_URI");
 
 // ---- Spielregeln ---------------------------------------------------------
 const START_GEMS = 30;
@@ -194,7 +197,7 @@ function randomCode(len = 6) {
 
 // ---- Profil anlegen -------------------------------------------------------
 
-exports.createProfile = onCall(async (req) => {
+exports.createProfile = onCall({ secrets: [SMTP_URI] }, async (req) => {
   const uid = requireAuth(req);
   const data = req.data || {};
   const name = str(data.name, 30);
@@ -361,16 +364,41 @@ async function sendConsentMail(uid, parentEmail, childName) {
   const batch = db.batch();
   old.forEach((d) => batch.delete(d.ref));
   batch.set(db.doc(`consents/${token}`), { uid, parentEmail, createdAt: FieldValue.serverTimestamp() });
-  // Wird von der Firebase-Erweiterung "Trigger Email from Firestore" verschickt
-  batch.set(db.collection("mail").doc(), {
-    to: parentEmail,
-    message: { subject: `${childName} möchte turp nutzen – bitte um deine Zustimmung`, text, html },
-  });
   batch.update(db.doc(`accounts/${uid}`), { parentEmail, lastConsentMailAt: FieldValue.serverTimestamp() });
   await batch.commit();
+
+  return deliverMail(parentEmail, `${childName} möchte turp nutzen – bitte um deine Zustimmung`, text, html);
 }
 
-exports.resendConsent = onCall(async (req) => {
+/** Verschickt eine E-Mail über den SMTP-Zugang. Liefert false, wenn keiner eingerichtet ist. */
+async function deliverMail(to, subject, text, html) {
+  let uri = "";
+  try {
+    uri = String(SMTP_URI.value() || "").trim();
+  } catch (e) {
+    uri = "";
+  }
+  if (!uri || uri === "none") {
+    logger.warn("Kein E-Mail-Versand eingerichtet (SMTP_URI) – Eltern-E-Mail wurde nicht verschickt.");
+    return false;
+  }
+  try {
+    const nodemailer = require("nodemailer");
+    let from = "turp";
+    try {
+      from = `turp <${decodeURIComponent(new URL(uri).username)}>`;
+    } catch (e) {
+      // Absender bleibt "turp"
+    }
+    await nodemailer.createTransport(uri).sendMail({ from, to, subject, text, html });
+    return true;
+  } catch (e) {
+    logger.error("E-Mail konnte nicht verschickt werden", e.message);
+    return false;
+  }
+}
+
+exports.resendConsent = onCall({ secrets: [SMTP_URI] }, async (req) => {
   const uid = requireAuth(req);
   const accRef = db.doc(`accounts/${uid}`);
   const acc = await accRef.get();
@@ -387,7 +415,11 @@ exports.resendConsent = onCall(async (req) => {
     throw new HttpsError("invalid-argument", "Die Eltern-E-Mail muss eine andere Adresse sein als deine eigene.");
   }
   const user = await db.doc(`users/${uid}`).get();
-  await sendConsentMail(uid, parentEmail, user.get("name") || "Dein Kind");
+  const sent = await sendConsentMail(uid, parentEmail, user.get("name") || "Dein Kind");
+  if (!sent) {
+    throw new HttpsError("unavailable",
+      "Der E-Mail-Versand ist noch nicht eingerichtet. Bitte melde dich beim turp-Team.");
+  }
   return { ok: true };
 });
 

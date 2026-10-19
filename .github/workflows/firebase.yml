@@ -1,0 +1,165 @@
+name: Server einrichten
+
+# Richtet das Firebase-Projekt ein und lädt Server-Logik, Regeln und Indizes hoch.
+# Braucht das Secret FIREBASE_SERVICE_ACCOUNT (JSON-Schlüssel eines Dienstkontos mit Rolle "Inhaber").
+# Optional: ADMIN_EMAILS, GMAIL_ADDRESS + GMAIL_APP_PASSWORD (für die Eltern-E-Mails).
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+    paths:
+      - "functions/**"
+      - "firestore.rules"
+      - "firestore.indexes.json"
+      - "storage.rules"
+      - "firebase.json"
+      - ".github/workflows/firebase.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: firebase-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Zugang prüfen
+        id: check
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$SA" ]; then
+            echo "::error title=Secret fehlt::Lege im Repository das Secret FIREBASE_SERVICE_ACCOUNT an (Inhalt der JSON-Schlüsseldatei)."
+            exit 1
+          fi
+          printf '%s' "$SA" > "$RUNNER_TEMP/sa.json"
+          P=$(jq -r .project_id "$RUNNER_TEMP/sa.json")
+          if [ -z "$P" ] || [ "$P" = "null" ]; then
+            echo "::error title=Secret ungültig::FIREBASE_SERVICE_ACCOUNT enthält keine gültige JSON-Schlüsseldatei."
+            exit 1
+          fi
+          echo "project=$P" >> "$GITHUB_OUTPUT"
+          echo "Projekt: $P"
+
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Einrichten und hochladen
+        id: deploy
+        env:
+          P: ${{ steps.check.outputs.project }}
+          ADMIN: ${{ secrets.ADMIN_EMAILS }}
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          set -o pipefail
+          {
+            echo "== Google-Dienste einschalten"
+            gcloud services enable \
+              firebase.googleapis.com firestore.googleapis.com identitytoolkit.googleapis.com \
+              cloudfunctions.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com \
+              run.googleapis.com eventarc.googleapis.com pubsub.googleapis.com cloudscheduler.googleapis.com \
+              secretmanager.googleapis.com vision.googleapis.com videointelligence.googleapis.com \
+              firebasestorage.googleapis.com firebaserules.googleapis.com storage.googleapis.com \
+              fcm.googleapis.com firebaseinstallations.googleapis.com iam.googleapis.com \
+              cloudresourcemanager.googleapis.com \
+              --project "$P"
+
+            echo "== Firebase hinzufügen (falls noch nicht geschehen)"
+            npx --yes firebase-tools@latest projects:addfirebase "$P" --non-interactive || true
+
+            echo "== Datenbank anlegen (Frankfurt)"
+            gcloud firestore databases create --location=europe-west3 --project "$P" --quiet || true
+            gcloud firestore databases describe --database="(default)" --project "$P" --format="value(locationId)"
+
+            echo "== E-Mail/Passwort-Login einschalten"
+            TOKEN=$(gcloud auth print-access-token)
+            curl -sS -X PATCH \
+              -H "Authorization: Bearer $TOKEN" -H "X-Goog-User-Project: $P" -H "Content-Type: application/json" \
+              "https://identitytoolkit.googleapis.com/admin/v2/projects/$P/config?updateMask=signIn.email.enabled,signIn.email.passwordRequired" \
+              -d '{"signIn":{"email":{"enabled":true,"passwordRequired":true}}}' | head -c 400 || true
+            echo
+
+            echo "== Rechte für die Server-Funktionen"
+            NUM=$(gcloud projects describe "$P" --format='value(projectNumber)')
+            for ROLE in roles/editor roles/cloudbuild.builds.builder roles/secretmanager.secretAccessor; do
+              gcloud projects add-iam-policy-binding "$P" \
+                --member="serviceAccount:${NUM}-compute@developer.gserviceaccount.com" \
+                --role="$ROLE" --condition=None --quiet > /dev/null
+            done
+
+            echo "== E-Mail-Versand (optional)"
+            if [ -n "$GMAIL_ADDRESS" ] && [ -n "$GMAIL_APP_PASSWORD" ]; then
+              SMTP=$(python3 -c "import os,urllib.parse as u; print('smtps://'+u.quote(os.environ['GMAIL_ADDRESS'].strip(),safe='')+':'+u.quote(os.environ['GMAIL_APP_PASSWORD'].replace(' ','').strip(),safe='')+'@smtp.gmail.com:465')")
+              echo "Gmail-Versand wird eingerichtet"
+            else
+              SMTP="none"
+              echo "Kein Gmail-Zugang hinterlegt - Eltern-E-Mails werden noch nicht verschickt"
+            fi
+            if gcloud secrets describe SMTP_URI --project "$P" > /dev/null 2>&1; then
+              printf '%s' "$SMTP" | gcloud secrets versions add SMTP_URI --data-file=- --project "$P" > /dev/null
+            else
+              printf '%s' "$SMTP" | gcloud secrets create SMTP_URI --data-file=- --replication-policy=automatic --project "$P" > /dev/null
+            fi
+
+            echo "== Admin-Adressen"
+            printf 'ADMIN_EMAILS=%s\n' "$ADMIN" > functions/.env
+
+            echo "== Abhängigkeiten installieren"
+            npm install --prefix functions --no-audit --no-fund
+
+            echo "== Regeln und Indizes hochladen"
+            npx --yes firebase-tools@latest deploy --only firestore --project "$P" --force --non-interactive
+
+            echo "== Server-Funktionen hochladen"
+            ok=0
+            for i in 1 2 3; do
+              if npx --yes firebase-tools@latest deploy --only functions --project "$P" --force --non-interactive; then
+                ok=1; break
+              fi
+              echo "Neuer Versuch in 90 Sekunden (beim ersten Mal brauchen Google-Rechte etwas Zeit)"
+              sleep 90
+            done
+            [ "$ok" = 1 ]
+
+            echo "== Speicher-Regeln hochladen"
+            if ! npx --yes firebase-tools@latest deploy --only storage --project "$P" --force --non-interactive; then
+              echo "::warning title=Storage::Speicher-Regeln konnten nicht hochgeladen werden. Ist in Firebase unter Storage auf 'Loslegen' getippt worden?"
+            fi
+            echo "== Fertig"
+          } 2>&1 | tee deploy.log
+
+      - name: Fehler zusammenfassen
+        if: failure() && steps.deploy.outcome == 'failure'
+        run: |
+          grep -E "Error|error|ERROR|denied|PERMISSION|billing|Billing|not found|failed|Failed" deploy.log | grep -v "^\s*$" | tail -60 > errors.txt || true
+          msg=$(sed -e 's/%/%25/g' -e 's/\r//g' errors.txt | awk '{printf "%s%%0A", $0}')
+          echo "::error title=Server-Fehler::${msg}"
+
+      - name: Protokoll speichern
+        if: always() && steps.deploy.outcome != 'skipped'
+        run: |
+          [ -f deploy.log ] || exit 0
+          sed -E 's/(smtps:\/\/)[^@]*@/\1***@/g' deploy.log > /tmp/deploy.log
+          git config user.name "turp-bot"
+          git config user.email "turp-bot@users.noreply.github.com"
+          git fetch -q origin build-logs || true
+          git checkout -q --orphan logs-tmp
+          git rm -rf --quiet .
+          cp /tmp/deploy.log deploy.log
+          git add deploy.log
+          git commit -q -m "Server-Protokoll ${GITHUB_RUN_NUMBER}"
+          git push -f -q origin HEAD:refs/heads/server-logs

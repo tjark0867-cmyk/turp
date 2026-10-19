@@ -21,17 +21,40 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      - name: google-services.json aus dem Secret einsetzen
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # Firebase-Konfiguration besorgen: entweder direkt aus dem Secret
+      # GOOGLE_SERVICES_JSON oder automatisch über den Dienstkonto-Schlüssel.
+      - name: Firebase-Konfiguration holen
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
           if [ -f app/google-services.json ]; then
             echo "google-services.json liegt im Repository"
           elif [ -n "$GOOGLE_SERVICES_JSON" ]; then
             printf '%s' "$GOOGLE_SERVICES_JSON" > app/google-services.json
             echo "google-services.json aus dem Secret eingesetzt"
+          elif [ -n "$SA" ]; then
+            printf '%s' "$SA" > "$RUNNER_TEMP/sa.json"
+            export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+            P=$(jq -r .project_id "$RUNNER_TEMP/sa.json")
+            FB="npx --yes firebase-tools@latest"
+            $FB projects:addfirebase "$P" --non-interactive > /dev/null 2>&1 || true
+            APP=$($FB apps:list ANDROID --project "$P" --json \
+              | jq -r '.result[]? | select(.packageName=="app.turp" or .namespace=="app.turp") | .appId' | head -n 1)
+            if [ -z "$APP" ]; then
+              echo "Android-App app.turp wird in Firebase registriert"
+              APP=$($FB apps:create ANDROID turp --package-name app.turp --project "$P" --json | jq -r '.result.appId')
+            fi
+            echo "Firebase-App: $APP"
+            $FB apps:sdkconfig ANDROID "$APP" --project "$P" --json \
+              | jq -r '.result.fileContents // (.result.sdkConfig | tojson)' > app/google-services.json
+            jq -e '.project_info.project_id' app/google-services.json
           else
-            echo "Keine google-services.json - App wird ohne Firebase gebaut"
+            echo "Keine Firebase-Daten - App wird ohne Firebase gebaut"
           fi
 
       - name: APK bauen

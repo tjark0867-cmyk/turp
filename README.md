@@ -32,6 +32,36 @@ Richte trotzdem gleich eine **Budget-Warnung** ein (z. B. 5 €).
 
 ---
 
+## Der einfache Weg: GitHub richtet alles ein (auch am Handy)
+
+Dieses Repository enthält zwei automatische Abläufe (*Actions*):
+**„Server einrichten“** (Firebase-Dienste, Datenbank in Frankfurt, Login, Server-Funktionen, Regeln)
+und **„APK bauen“** (holt die Firebase-Konfiguration und baut die App).
+Du musst nur einmal diese Schritte machen:
+
+1. <https://console.firebase.google.com> → **Projekt erstellen**, Name `turp`.
+2. Unten links **Upgrade** → Tarif **Blaze** (Kreditkarte) und eine Budget-Warnung einrichten.
+3. **Build → Authentication → Loslegen → E-Mail/Passwort** aktivieren → Speichern.
+4. **Build → Storage → Loslegen** → Standort wählen (gern `europe-west3`) → Produktionsmodus.
+5. Dienstkonto-Schlüssel erstellen: <https://console.cloud.google.com/iam-admin/serviceaccounts>
+   → oben Projekt **turp** auswählen → **Dienstkonto erstellen** → Name `github` → *Erstellen und fortfahren*
+   → Rolle **Inhaber** → *Fertig* → auf das neue Konto tippen → **Schlüssel → Schlüssel hinzufügen → Neuen Schlüssel erstellen → JSON**.
+   Eine Datei wird heruntergeladen.
+6. Im GitHub-Repository: **Settings → Secrets and variables → Actions → New repository secret**
+   - Name `FIREBASE_SERVICE_ACCOUNT`, Wert: kompletter Inhalt der JSON-Datei. Danach die Datei löschen.
+   - Optional `ADMIN_EMAILS`: deine E-Mail-Adresse (für den Admin-Bereich).
+   - Optional für Eltern-E-Mails: `GMAIL_ADDRESS` (deine Gmail-Adresse) und `GMAIL_APP_PASSWORD`
+     ([App-Passwort](https://myaccount.google.com/apppasswords), braucht die Bestätigung in zwei Schritten).
+7. **Actions → „Server einrichten“ → Run workflow**, danach **Actions → „APK bauen“ → Run workflow**.
+
+Die fertige App liegt dann immer unter `https://github.com/<dein-konto>/turp/raw/apk/turp.apk`.
+
+Der Schlüssel hat volle Rechte auf dein Firebase-Projekt – gib ihn niemandem und lade ihn nirgends hoch außer als Secret.
+
+Die folgenden Schritte 1–3 beschreiben den Weg von Hand, falls du lieber selbst einrichtest.
+
+---
+
 ## Schritt 1: Firebase-Projekt einrichten (ca. 15 Minuten)
 
 1. Öffne <https://console.firebase.google.com> → **Projekt hinzufügen** → Name z. B. `turp`.
