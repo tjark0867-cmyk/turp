@@ -16,6 +16,12 @@ val ciVersionCode = (project.findProperty("versionCode") as String?)?.toIntOrNul
 val updateRepo = (project.findProperty("updateRepo") as String?).orEmpty()
 val updateUrl = if (updateRepo.isNotBlank()) "https://raw.githubusercontent.com/$updateRepo/apk/" else ""
 
+// Fester Signatur-Schlüssel (liegt geschützt im Secret Manager des Firebase-Projekts).
+// Nur mit immer demselben Schlüssel lassen sich Updates über die alte App installieren.
+val signingStore = (project.findProperty("signingStore") as String?)
+    ?.takeIf { it.isNotBlank() }?.let { file(it) }?.takeIf { it.isFile }
+val signingPassword = (project.findProperty("signingPassword") as String?).orEmpty()
+
 android {
     namespace = "app.turp"
     compileSdk = 35
@@ -31,7 +37,21 @@ android {
         buildConfigField("String", "FUNCTIONS_REGION", "\"europe-west3\"")
     }
 
+    signingConfigs {
+        if (signingStore != null) {
+            create("turp") {
+                storeFile = signingStore
+                storePassword = signingPassword
+                keyAlias = "turp"
+                keyPassword = signingPassword
+            }
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfigs.findByName("turp")?.let { signingConfig = it }
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(

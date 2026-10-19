@@ -59,11 +59,43 @@ jobs:
 
       # Immer denselben Signatur-Schlüssel benutzen, damit Updates sich
       # ohne Deinstallieren über die alte Version installieren lassen.
-      - name: Signatur-Schlüssel wiederverwenden
-        uses: actions/cache@v4
-        with:
-          path: ~/.android/debug.keystore
-          key: turp-debug-keystore-v1
+      # Der Schlüssel liegt geschützt im Secret Manager des Firebase-Projekts
+      # (Secret ANDROID_SIGNING_KEY) und wird beim allerersten Build erzeugt.
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Signatur-Schlüssel holen
+        id: signing
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$SA" ]; then
+            echo "::warning title=Signatur::Kein Dienstkonto hinterlegt - Updates in der App funktionieren so nicht."
+            exit 0
+          fi
+          python3 .github/scripts/service_account.py "$RUNNER_TEMP/sa.json" > /dev/null
+          P=$(jq -r .project_id "$RUNNER_TEMP/sa.json")
+          gcloud auth activate-service-account --key-file="$RUNNER_TEMP/sa.json" --quiet
+          KS="$RUNNER_TEMP/turp-signing.p12"
+          PW="turp-signing"
+          get() {
+            gcloud secrets versions access latest --secret=ANDROID_SIGNING_KEY --project "$P" 2>/dev/null | base64 -d > "$KS"
+            [ -s "$KS" ]
+          }
+          if get; then
+            echo "Gespeicherter Signatur-Schlüssel wird benutzt"
+          else
+            echo "Neuer Signatur-Schlüssel wird erstellt und gespeichert"
+            gcloud services enable secretmanager.googleapis.com --project "$P"
+            rm -f "$KS"
+            keytool -genkeypair -keystore "$KS" -storetype PKCS12 -alias turp -keyalg RSA -keysize 2048 \
+              -validity 12000 -storepass "$PW" -keypass "$PW" -dname "CN=turp, O=turp"
+            # Falls ein anderer Build gleichzeitig schon einen angelegt hat, den benutzen
+            base64 -w0 "$KS" | gcloud secrets create ANDROID_SIGNING_KEY --data-file=- \
+              --replication-policy=automatic --project "$P" > /dev/null || get
+          fi
+          keytool -list -keystore "$KS" -storepass "$PW" -alias turp | tail -1
+          echo "store=$KS" >> "$GITHUB_OUTPUT"
+          echo "password=$PW" >> "$GITHUB_OUTPUT"
 
       # Schrift "Lilita One" (SIL Open Font License) – wird beim Bauen geladen
       - name: Schrift laden
@@ -83,7 +115,9 @@ jobs:
           chmod +x gradlew
           set -o pipefail
           ./gradlew assembleDebug --no-daemon --console=plain \
-            -PversionCode=${{ github.run_number }} -PupdateRepo=${{ github.repository }} 2>&1 | tee build.log
+            -PversionCode=${{ github.run_number }} -PupdateRepo=${{ github.repository }} \
+            -PsigningStore="${{ steps.signing.outputs.store }}" -PsigningPassword="${{ steps.signing.outputs.password }}" \
+            2>&1 | tee build.log
 
       - name: APK hochladen
         uses: actions/upload-artifact@v4

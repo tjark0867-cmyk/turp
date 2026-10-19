@@ -86,6 +86,7 @@ import app.turp.data.SessionState
 import app.turp.data.SessionViewModel
 import app.turp.data.UpdateInfo
 import app.turp.data.UpdateViewModel
+import app.turp.data.Updates
 import app.turp.ui.theme.Coral
 import app.turp.ui.theme.Ink
 import app.turp.ui.theme.InkElevated
@@ -191,13 +192,45 @@ fun MainNav(
     }
     val update = updateVm.available
     if (update != null) {
-        UpdateDialog(
-            info = update,
-            progress = updateVm.progress,
-            onUpdate = { updateVm.update(context) },
-            onDismiss = { updateVm.dismiss() },
-        )
+        if (updateVm.reinstallNeeded) {
+            ReinstallDialog(
+                info = update,
+                onDownload = { Updates.openDownload(context, update); updateVm.dismiss() },
+                onDismiss = { updateVm.dismiss() },
+            )
+        } else {
+            UpdateDialog(
+                info = update,
+                progress = updateVm.progress,
+                onUpdate = { updateVm.update(context) },
+                onDismiss = { updateVm.dismiss() },
+            )
+        }
     }
+}
+
+/** Falls ein Update ausnahmsweise nicht über die alte Version passt */
+@Composable
+private fun ReinstallDialog(info: UpdateInfo, onDownload: () -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Einmal neu installieren") },
+        text = {
+            Text(
+                "turp ${info.versionName} kann die installierte Version nicht direkt ersetzen. " +
+                    "Lade die neue Version herunter, lösche turp und installiere sie dann. " +
+                    "Dein Konto, deine Freunde und Chats bleiben erhalten – du meldest dich einfach wieder an."
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onDownload) {
+                Text("Herunterladen", color = Teal, fontWeight = FontWeight.SemiBold)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Später", color = TextLow) }
+        }
+    )
 }
 
 @Composable
