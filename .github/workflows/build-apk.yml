@@ -4,6 +4,16 @@ on:
   workflow_dispatch:
   push:
     branches: [main, master]
+    # Reine Server-Änderungen brauchen keine neue App-Version
+    paths-ignore:
+      - "functions/**"
+      - "firestore.rules"
+      - "firestore.indexes.json"
+      - "storage.rules"
+      - "firebase.json"
+      - ".firebaserc"
+      - ".github/workflows/firebase.yml"
+      - ".github/scripts/last-run.txt"
 
 permissions:
   contents: write

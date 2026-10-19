@@ -144,6 +144,27 @@ jobs:
             done
             [ "$ok" = 1 ]
 
+            # Funktionen, die die App direkt aufruft, müssen öffentlich erreichbar sein
+            # (die Anmeldung prüft der Code selbst). Fehlt das Recht, meldet die App
+            # "UNAUTHENTICATED". Auslöser- und Zeitplan-Funktionen bleiben privat.
+            echo "== Aufrufrechte der App-Funktionen prüfen"
+            gcloud functions list --regions=europe-west3 --project "$P" --format=json > fns.json
+            jq -r '.[] | select(.environment == "GEN_2" and .eventTrigger == null)
+              | select((.labels["deployment-scheduled"] // "") != "true" and (.labels["deployment-taskqueue"] // "") != "true")
+              | .serviceConfig.service | split("/") | last' fns.json > public.txt
+            echo "Privat (Auslöser/Zeitplan): $(jq -r '[.[] | select(.eventTrigger != null or (.labels["deployment-scheduled"] // "") == "true") | .name | split("/") | last] | join(", ")' fns.json)"
+            while read -r SVC; do
+              [ -z "$SVC" ] && continue
+              if gcloud run services get-iam-policy "$SVC" --region europe-west3 --project "$P" --format=json \
+                | jq -e '.bindings[]? | select(.role == "roles/run.invoker") | .members[] | select(. == "allUsers")' > /dev/null; then
+                echo "$SVC: erreichbar"
+              else
+                echo "$SVC: Aufrufrecht fehlte - wird gesetzt"
+                gcloud run services add-iam-policy-binding "$SVC" --region europe-west3 --project "$P" \
+                  --member=allUsers --role=roles/run.invoker --quiet > /dev/null
+              fi
+            done < public.txt
+
             echo "== Speicher einrichten"
             TOKEN=$(gcloud auth print-access-token)
             FS="https://firebasestorage.googleapis.com/v1alpha/projects/$P/defaultBucket"
