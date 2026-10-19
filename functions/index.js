@@ -1001,8 +1001,12 @@ exports.blockUser = onCall(async (req) => {
   const target = str(req.data && req.data.targetUid, 128);
   if (!isSafeId(target) || target === uid) throw new HttpsError("invalid-argument", "Ungültige Person.");
 
+  // Name und Bild merken, damit die Liste "Blockierte Nutzer" sie auch später zeigen kann
+  const targetSnap = await db.doc(`users/${target}`).get();
+  const info = targetSnap.exists ? memberInfo(targetSnap) : { name: "", photo: "", color: DEFAULT_COLOR };
+
   const batch = db.batch();
-  batch.set(db.doc(`users/${uid}/blocked/${target}`), { at: FieldValue.serverTimestamp() });
+  batch.set(db.doc(`users/${uid}/blocked/${target}`), { at: FieldValue.serverTimestamp(), ...info });
   batch.set(db.doc(`users/${uid}/seen/${target}`), { at: FieldValue.serverTimestamp(), liked: false });
   batch.delete(db.doc(`users/${uid}/friends/${target}`));
   batch.delete(db.doc(`users/${target}/friends/${uid}`));
@@ -1012,6 +1016,21 @@ exports.blockUser = onCall(async (req) => {
 
   const chatRef = db.doc(`chats/${pairId(uid, target)}`);
   if ((await chatRef.get()).exists) await chatRef.update({ closed: true });
+  return { ok: true };
+});
+
+// Entblocken: jederzeit möglich. Die Person kann einen dann wieder finden und anfragen;
+// eine frühere Freundschaft wird nicht automatisch wiederhergestellt.
+exports.unblockUser = onCall(async (req) => {
+  const uid = requireAuth(req);
+  const target = str(req.data && req.data.targetUid, 128);
+  if (!isSafeId(target) || target === uid) throw new HttpsError("invalid-argument", "Ungültige Person.");
+
+  const batch = db.batch();
+  batch.delete(db.doc(`users/${uid}/blocked/${target}`));
+  // Beim Blockieren als "gesehen" markiert – damit die Person im Entdecken wieder auftauchen kann
+  batch.delete(db.doc(`users/${uid}/seen/${target}`));
+  await batch.commit();
   return { ok: true };
 });
 

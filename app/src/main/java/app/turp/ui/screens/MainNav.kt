@@ -209,6 +209,13 @@ fun MainNav(
                 onShop = { nav.navigate("premium") },
                 onAdmin = { nav.navigate("admin") },
                 onCheckUpdate = { updateVm.checkManually() },
+                onBlocked = { nav.navigate("blocked") },
+            )
+        }
+        composable("blocked") {
+            BlockedScreen(
+                onBack = { nav.popBackStack() },
+                onOpenUser = { nav.navigate("user/$it") },
             )
         }
         composable("friends") {

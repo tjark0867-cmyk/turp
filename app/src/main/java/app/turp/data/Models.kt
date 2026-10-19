@@ -61,6 +61,15 @@ data class FriendRequest(
 
 data class MemberInfo(val name: String, val photo: String, val color: String)
 
+/** Eintrag in der Liste "Blockierte Nutzer" (Name/Bild vom Zeitpunkt des Blockierens) */
+data class BlockedUser(
+    val uid: String,
+    val name: String,
+    val photo: String,
+    val color: String,
+    val at: Timestamp?,
+)
+
 data class Chat(
     val id: String,
     val members: List<String>,
@@ -244,4 +253,12 @@ fun DocumentSnapshot.toReport() = Report(
     ageGroup = s("ageGroup"),
     priority = n("priority"),
     createdAt = ts("createdAt"),
+)
+
+fun DocumentSnapshot.toBlocked() = BlockedUser(
+    uid = id,
+    name = s("name"),
+    photo = s("photo"),
+    color = s("color").ifBlank { DEFAULT_COLOR },
+    at = ts("at"),
 )

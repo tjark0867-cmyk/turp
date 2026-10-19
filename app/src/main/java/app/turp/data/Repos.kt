@@ -359,6 +359,18 @@ object SafetyRepo {
     suspend fun block(targetUid: String) {
         callFunction("blockUser", mapOf("targetUid" to targetUid))
     }
+
+    suspend fun unblock(targetUid: String) {
+        callFunction("unblockUser", mapOf("targetUid" to targetUid))
+    }
+
+    /** Alle Personen, die ich blockiert habe (neueste zuerst) */
+    fun blocked(): Flow<List<BlockedUser>> =
+        userRef(Fb.uid).collection("blocked").asFlow()
+            .map { docs -> docs.map { it.toBlocked() }.sortedByDescending { it.at } }
+
+    fun isBlocked(uid: String): Flow<Boolean> =
+        userRef(Fb.uid).collection("blocked").document(uid).asFlow().map { it.exists() }
 }
 
 // ---- Admin ----------------------------------------------------------------

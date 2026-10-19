@@ -407,6 +407,7 @@ fun SettingsScreen(
     onShop: () -> Unit,
     onAdmin: () -> Unit,
     onCheckUpdate: () -> Unit,
+    onBlocked: () -> Unit,
     vm: ProfileViewModel = viewModel(),
 ) {
     val context = LocalContext.current
@@ -446,6 +447,9 @@ fun SettingsScreen(
                 })
                 if (session.isAdmin) MenuRow(Icons.Rounded.AdminPanelSettings, "Admin-Bereich", onClick = onAdmin)
                 MenuRow(Icons.Rounded.SystemUpdate, "Nach Updates suchen", onClick = onCheckUpdate)
+            }
+            SectionCard {
+                MenuRow(Icons.Rounded.Block, "Blockierte Nutzer", onClick = onBlocked)
             }
             SectionCard {
                 MenuRow(Icons.AutoMirrored.Rounded.Logout, "Abmelden", onClick = { sessionVm.signOut() })
@@ -1084,10 +1088,18 @@ class UserProfileViewModel(private val uid: String) : BaseViewModel() {
         toast("Danke! Unser Team schaut sich das an. 💛")
     }
 
+    val blocked = SafetyRepo.isBlocked(uid)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
     fun block(onDone: () -> Unit) = launchSafe {
         SafetyRepo.block(uid)
-        toast("Blockiert.")
+        toast("Blockiert. Du kannst das in den Einstellungen jederzeit rückgängig machen.")
         onDone()
+    }
+
+    fun unblock() = launchSafe {
+        SafetyRepo.unblock(uid)
+        toast("Nicht mehr blockiert.")
     }
 }
 
@@ -1112,6 +1124,7 @@ fun UserProfileScreen(
     var showVideo by remember { mutableStateOf(false) }
     val p = profile
     val friendChat = chatId
+    val isBlocked by vm.blocked.collectAsState()
     val me by remember(session.uid) { ProfileRepo.profile(session.uid) }.collectAsState(initial = null)
     val shared = if (isMe || p == null) emptySet() else p.interests.filter { it in me?.interests.orEmpty() }.toSet()
 
@@ -1152,14 +1165,25 @@ fun UserProfileScreen(
                                 showReport = true
                             }
                         )
-                        DropdownMenuItem(
-                            text = { Text("Blockieren", color = Coral) },
-                            leadingIcon = { Icon(Icons.Rounded.Block, contentDescription = null, tint = Coral) },
-                            onClick = {
-                                menuOpen = false
-                                confirmBlock = true
-                            }
-                        )
+                        if (isBlocked) {
+                            DropdownMenuItem(
+                                text = { Text("Entblocken", color = Teal) },
+                                leadingIcon = { Icon(Icons.Rounded.Block, contentDescription = null, tint = Teal) },
+                                onClick = {
+                                    menuOpen = false
+                                    vm.unblock()
+                                }
+                            )
+                        } else {
+                            DropdownMenuItem(
+                                text = { Text("Blockieren", color = Coral) },
+                                leadingIcon = { Icon(Icons.Rounded.Block, contentDescription = null, tint = Coral) },
+                                onClick = {
+                                    menuOpen = false
+                                    confirmBlock = true
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -1200,8 +1224,35 @@ fun UserProfileScreen(
                             )
                         },
                     )
-                    // Unten in der Karte: Chat öffnen oder Anfrage senden
-                    if (!isMe) {
+                    // Unten in der Karte: blockiert → entblocken, sonst Chat öffnen oder Anfrage senden
+                    if (!isMe && isBlocked) {
+                        Surface(
+                            onClick = { vm.unblock() },
+                            enabled = !vm.busy,
+                            shape = CircleShape,
+                            color = Color.Black.copy(alpha = 0.55f),
+                            border = BorderStroke(1.5.dp, Teal),
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .fillMaxWidth()
+                                .padding(14.dp)
+                                .height(56.dp)
+                        ) {
+                            Row(
+                                Modifier.padding(horizontal = 18.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                if (vm.busy) {
+                                    CircularProgressIndicator(color = Teal, strokeWidth = 2.dp, modifier = Modifier.size(22.dp))
+                                } else {
+                                    Icon(Icons.Rounded.Block, contentDescription = null, tint = Teal, modifier = Modifier.size(22.dp))
+                                    Spacer(Modifier.width(10.dp))
+                                    Text("Blockiert · Entblocken", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                                }
+                            }
+                        }
+                    } else if (!isMe) {
                         val requested = vm.requested
                         Surface(
                             onClick = {
@@ -1278,7 +1329,7 @@ fun UserProfileScreen(
     if (confirmBlock && p != null) {
         ConfirmDialog(
             title = "${p.name} blockieren?",
-            text = "Ihr könnt euch dann nicht mehr sehen oder schreiben.",
+            text = "Ihr könnt euch dann nicht mehr sehen oder schreiben. Entblocken kannst du jederzeit in den Einstellungen unter „Blockierte Nutzer“.",
             confirmLabel = "Blockieren",
             onDismiss = { confirmBlock = false },
             onConfirm = {

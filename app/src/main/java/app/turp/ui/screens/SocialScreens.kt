@@ -671,7 +671,8 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
     if (confirmBlock) {
         ConfirmDialog(
             title = "$otherName blockieren?",
-            text = "Ihr könnt euch dann nicht mehr sehen oder schreiben, und der Chat wird geschlossen.",
+            text = "Ihr könnt euch dann nicht mehr sehen oder schreiben, und der Chat wird geschlossen. " +
+                "Entblocken kannst du jederzeit in den Einstellungen unter „Blockierte Nutzer“.",
             confirmLabel = "Blockieren",
             onDismiss = { confirmBlock = false },
             onConfirm = {
