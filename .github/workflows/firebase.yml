@@ -3,6 +3,7 @@ name: Server einrichten
 # Richtet das Firebase-Projekt ein und lädt Server-Logik, Regeln und Indizes hoch.
 # Braucht das Secret FIREBASE_SERVICE_ACCOUNT (JSON-Schlüssel eines Dienstkontos mit Rolle "Inhaber").
 # Optional: ADMIN_EMAILS, GMAIL_ADDRESS + GMAIL_APP_PASSWORD (für die Eltern-E-Mails).
+# Start: Actions → "Server einrichten" → Run workflow.
 
 on:
   workflow_dispatch:
