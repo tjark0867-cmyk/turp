@@ -144,9 +144,20 @@ jobs:
             done
             [ "$ok" = 1 ]
 
+            echo "== Speicher einrichten"
+            TOKEN=$(gcloud auth print-access-token)
+            FS="https://firebasestorage.googleapis.com/v1alpha/projects/$P/defaultBucket"
+            if ! curl -sS -H "Authorization: Bearer $TOKEN" -H "X-Goog-User-Project: $P" "$FS" | grep -q '"name"'; then
+              echo "Standard-Speicher wird angelegt"
+              curl -sS -X POST -H "Authorization: Bearer $TOKEN" -H "X-Goog-User-Project: $P" -H "Content-Type: application/json" \
+                "$FS" -d '{"location":"europe-west3","storageClass":"REGIONAL"}' | head -c 600; echo
+              sleep 15
+            fi
+            curl -sS -H "Authorization: Bearer $TOKEN" -H "X-Goog-User-Project: $P" "$FS" | head -c 400; echo
+
             echo "== Speicher-Regeln hochladen"
             if ! npx --yes firebase-tools@latest deploy --only storage --project "$P" --force --non-interactive; then
-              echo "::warning title=Storage::Speicher-Regeln konnten nicht hochgeladen werden. Ist in Firebase unter Storage auf 'Loslegen' getippt worden?"
+              echo "::warning title=Storage::Speicher-Regeln konnten nicht hochgeladen werden. Bitte in Firebase unter Storage auf 'Loslegen' tippen."
             fi
             echo "== Fertig"
           } 2>&1 | tee deploy.log
