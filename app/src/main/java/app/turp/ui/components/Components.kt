@@ -1,6 +1,8 @@
 package app.turp.ui.components
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -60,6 +62,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -97,28 +101,32 @@ import app.turp.ui.theme.InkHigh
 import app.turp.ui.theme.Lilac
 import app.turp.ui.theme.LogoStyle
 import app.turp.ui.theme.Teal
+import app.turp.ui.theme.TealDark
 import app.turp.ui.theme.TextHigh
 import app.turp.ui.theme.TextLow
 import coil.compose.AsyncImage
 
-/** Schriftzug "turp" im Sticker-Look: Farbverlauf, weiße Kontur, harter Schatten */
+private val LogoOutline = Color(0xFF06322C)
+private val LogoHighlight = Color(0xFF9CFBEA)
+
+/** Schriftzug "turp": Mint mit dunkler Kontur und weichem Schatten */
 @Composable
 fun TurpLogo(modifier: Modifier = Modifier, fontSize: TextUnit = 56.sp) {
     val style = LogoStyle.copy(fontSize = fontSize)
-    val o = (fontSize.value * 0.045f).dp
+    val o = (fontSize.value * 0.032f).dp
     Box(modifier) {
-        Text("turp", style = style, color = Color.Black, modifier = Modifier.offset(x = o, y = o * 2.4f))
+        Text("turp", style = style, color = Color.Black.copy(alpha = 0.55f), modifier = Modifier.offset(y = o * 2.6f))
         listOf(-1 to 0, 1 to 0, 0 to -1, 0 to 1, -1 to -1, 1 to 1, -1 to 1, 1 to -1).forEach { (dx, dy) ->
-            Text("turp", style = style, color = Color.White, modifier = Modifier.offset(x = o * dx, y = o * dy))
+            Text("turp", style = style, color = LogoOutline, modifier = Modifier.offset(x = o * dx, y = o * dy))
         }
         Text(
             text = "turp",
             style = style,
-            color = Color.White,
+            color = Teal,
             modifier = Modifier
                 .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
                 .drawWithCache {
-                    val brush = Brush.linearGradient(listOf(Teal, Lilac, Coral))
+                    val brush = Brush.verticalGradient(listOf(LogoHighlight, Teal, TealDark))
                     onDrawWithContent {
                         drawContent()
                         drawRect(brush = brush, blendMode = BlendMode.SrcAtop)
@@ -129,23 +137,24 @@ fun TurpLogo(modifier: Modifier = Modifier, fontSize: TextUnit = 56.sp) {
 }
 
 /** Gut lesbare Schriftfarbe auf einer Hintergrundfarbe */
-fun readableOn(background: Color): Color = if (background.luminance() > 0.5f) Ink else Color.White
+fun readableOn(background: Color): Color =
+    if (background.alpha > 0.6f && background.luminance() > 0.45f) Color(0xFF0B0B0F) else Color.White
 
-/** Etwas dunklere Variante einer Farbe (für 3D-Kanten) */
+/** Dunklere Variante einer Farbe */
 fun darken(color: Color, factor: Float = 0.7f): Color =
     Color(color.red * factor, color.green * factor, color.blue * factor, color.alpha)
 
-/** Schräg aufgeklebtes Namensschild mit weißem Rand und hartem Schatten */
+/** Namensschild in der Profilfarbe, leicht schräg */
 @Composable
 fun Sticker(
     text: String,
     background: Color,
     modifier: Modifier = Modifier,
-    rotation: Float = -4f,
+    rotation: Float = -3f,
     fontSize: TextUnit = 22.sp,
     textColor: Color = readableOn(background),
 ) {
-    val shape = RoundedCornerShape(12.dp)
+    val shape = RoundedCornerShape(9.dp)
     Text(
         text = text,
         style = TextStyle(fontFamily = Display, fontSize = fontSize),
@@ -154,21 +163,14 @@ fun Sticker(
         overflow = TextOverflow.Ellipsis,
         modifier = modifier
             .graphicsLayer { rotationZ = rotation }
-            .drawBehind {
-                drawRoundRect(
-                    color = Color.Black.copy(alpha = 0.55f),
-                    topLeft = Offset(3.dp.toPx(), 4.dp.toPx()),
-                    size = size,
-                    cornerRadius = CornerRadius(12.dp.toPx())
-                )
-            }
+            .shadow(8.dp, shape, ambientColor = Color.Black, spotColor = Color.Black)
             .background(background, shape)
-            .border(2.5.dp, Color.White, shape)
-            .padding(horizontal = 12.dp, vertical = 3.dp)
+            .border(1.5.dp, darken(background, 0.55f), shape)
+            .padding(horizontal = 10.dp, vertical = 1.dp)
     )
 }
 
-/** Dicker Bonbon-Button mit 3D-Kante, der beim Drücken einsinkt */
+/** Flacher, runder Button mit leichtem Drück-Effekt */
 @Composable
 fun CandyButton(
     text: String,
@@ -178,44 +180,37 @@ fun CandyButton(
     loading: Boolean = false,
     color: Color = Teal,
     contentColor: Color = readableOn(color),
-    height: Dp = 52.dp,
-    fontSize: TextUnit = 19.sp,
+    height: Dp = 50.dp,
+    fontSize: TextUnit = 16.sp,
 ) {
     val interaction = remember { MutableInteractionSource() }
     val pressed by interaction.collectIsPressedAsState()
+    val scale by animateFloatAsState(if (pressed) 0.96f else 1f, label = "buttonScale")
     val active = enabled && !loading
-    val face = if (active) color else color.copy(alpha = 0.45f)
-    val depth = 5.dp
     val shape = RoundedCornerShape(50)
     Box(
-        modifier.clickable(interactionSource = interaction, indication = null, enabled = active, onClick = onClick),
-        propagateMinConstraints = true
-    ) {
-        Box(
-            Modifier
-                .matchParentSize()
-                .padding(top = depth)
-                .background(darken(face), shape)
-        )
-        Box(
-            Modifier
-                .padding(top = if (pressed) depth else 0.dp, bottom = if (pressed) 0.dp else depth)
-                .height(height)
-                .background(face, shape)
-                .border(2.dp, Color.White.copy(alpha = 0.28f), shape)
-                .padding(horizontal = 22.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            if (loading) {
-                CircularProgressIndicator(Modifier.size(22.dp), color = contentColor, strokeWidth = 2.5.dp)
-            } else {
-                Text(text, style = TextStyle(fontFamily = Display, fontSize = fontSize), color = contentColor, maxLines = 1)
+        modifier
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+                alpha = if (enabled || loading) 1f else 0.4f
             }
+            .height(height)
+            .clip(shape)
+            .background(color)
+            .clickable(interactionSource = interaction, indication = null, enabled = active, onClick = onClick)
+            .padding(horizontal = 22.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        if (loading) {
+            CircularProgressIndicator(Modifier.size(20.dp), color = contentColor, strokeWidth = 2.dp)
+        } else {
+            Text(text, color = contentColor, fontSize = fontSize, fontWeight = FontWeight.SemiBold, maxLines = 1)
         }
     }
 }
 
-/** Runder Bonbon-Knopf mit Symbol */
+/** Runder, flacher Knopf mit Symbol */
 @Composable
 fun RoundCandyButton(
     icon: ImageVector,
@@ -225,31 +220,61 @@ fun RoundCandyButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     iconColor: Color = readableOn(color),
+    borderColor: Color? = null,
 ) {
     val interaction = remember { MutableInteractionSource() }
     val pressed by interaction.collectIsPressedAsState()
-    val depth = 4.dp
+    val scale by animateFloatAsState(if (pressed) 0.92f else 1f, label = "roundScale")
     Box(
         modifier
-            .size(size + depth)
-            .clickable(interactionSource = interaction, indication = null, onClick = onClick)
+            .size(size)
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
+            .clip(CircleShape)
+            .background(color)
+            .then(if (borderColor != null) Modifier.border(1.5.dp, borderColor, CircleShape) else Modifier)
+            .clickable(interactionSource = interaction, indication = null, onClick = onClick),
+        contentAlignment = Alignment.Center
     ) {
-        Box(
-            Modifier
-                .size(size)
-                .align(Alignment.BottomCenter)
-                .background(darken(color), CircleShape)
-        )
-        Box(
-            Modifier
-                .padding(top = if (pressed) depth else 0.dp)
-                .size(size)
-                .background(color, CircleShape)
-                .border(2.5.dp, Color.White.copy(alpha = 0.9f), CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(icon, contentDescription = contentDescription, tint = iconColor, modifier = Modifier.size(size * 0.48f))
+        Icon(icon, contentDescription = contentDescription, tint = iconColor, modifier = Modifier.size(size * 0.46f))
+    }
+}
+
+/** Gezeichneter Edelstein in der Akzentfarbe */
+@Composable
+fun GemIcon(iconSize: Dp, modifier: Modifier = Modifier, color: Color = Teal) {
+    Canvas(modifier.size(iconSize)) {
+        val w = this.size.width
+        val h = this.size.height
+        val top = h * 0.16f
+        val mid = h * 0.42f
+        val bottom = h * 0.94f
+        val gem = Path().apply {
+            moveTo(w * 0.27f, top)
+            lineTo(w * 0.73f, top)
+            lineTo(w * 0.97f, mid)
+            lineTo(w * 0.5f, bottom)
+            lineTo(w * 0.03f, mid)
+            close()
         }
+        drawPath(gem, color)
+        val facet = Path().apply {
+            moveTo(w * 0.27f, top)
+            lineTo(w * 0.73f, top)
+            lineTo(w * 0.63f, mid)
+            lineTo(w * 0.37f, mid)
+            close()
+        }
+        drawPath(facet, Color.White.copy(alpha = 0.4f))
+        val shade = Path().apply {
+            moveTo(w * 0.5f, bottom)
+            lineTo(w * 0.97f, mid)
+            lineTo(w * 0.63f, mid)
+            close()
+        }
+        drawPath(shade, Color.Black.copy(alpha = 0.25f))
     }
 }
 
@@ -258,22 +283,18 @@ fun RoundCandyButton(
 fun GemPill(gems: Long, showDot: Boolean, modifier: Modifier = Modifier) {
     Box(modifier) {
         Row(
-            Modifier
-                .background(InkHigh, CircleShape)
-                .border(2.dp, Sun.copy(alpha = 0.7f), CircleShape)
-                .padding(horizontal = 12.dp, vertical = 5.dp),
+            Modifier.padding(horizontal = 6.dp, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("💎", fontSize = 18.sp)
-            Spacer(Modifier.width(5.dp))
-            Text("$gems", style = TextStyle(fontFamily = Display, fontSize = 20.sp), color = TextHigh)
+            GemIcon(22.dp)
+            Spacer(Modifier.width(6.dp))
+            Text("$gems", color = TextHigh, fontSize = 18.sp, fontWeight = FontWeight.Bold)
         }
         if (showDot) {
             Box(
                 Modifier
                     .align(Alignment.TopEnd)
-                    .offset(x = 3.dp, y = (-3).dp)
-                    .size(13.dp)
+                    .size(10.dp)
                     .background(Coral, CircleShape)
                     .border(2.dp, Ink, CircleShape)
             )
@@ -346,16 +367,16 @@ fun GemChip(gems: Long, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun InterestSticker(text: String, accent: Color, modifier: Modifier = Modifier) {
+fun InterestSticker(text: String, @Suppress("UNUSED_PARAMETER") accent: Color, modifier: Modifier = Modifier) {
     Surface(
         shape = RoundedCornerShape(50),
-        color = accent.copy(alpha = 0.18f),
-        border = BorderStroke(1.dp, accent.copy(alpha = 0.6f)),
+        color = Color.White.copy(alpha = 0.08f),
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.14f)),
         modifier = modifier
     ) {
         Text(
             text = text,
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+            modifier = Modifier.padding(horizontal = 11.dp, vertical = 5.dp),
             style = MaterialTheme.typography.labelMedium,
             color = TextHigh
         )
@@ -404,7 +425,7 @@ fun EmptyState(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(emoji, fontSize = 56.sp)
+        Text(emoji, fontSize = 44.sp)
         Spacer(Modifier.height(12.dp))
         Text(title, style = MaterialTheme.typography.titleLarge, textAlign = TextAlign.Center)
         Spacer(Modifier.height(6.dp))
@@ -425,7 +446,12 @@ fun LoadingBox(modifier: Modifier = Modifier) {
 
 @Composable
 fun SectionCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
-    Surface(shape = RoundedCornerShape(24.dp), color = InkElevated, modifier = modifier.fillMaxWidth()) {
+    Surface(
+        shape = RoundedCornerShape(20.dp),
+        color = InkElevated,
+        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.06f)),
+        modifier = modifier.fillMaxWidth()
+    ) {
         Column(Modifier.padding(18.dp), content = content)
     }
 }

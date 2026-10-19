@@ -220,11 +220,11 @@ fun ProfileScreen(
                     fontWeight = FontWeight.Bold
                 )
                 CandyButton(
-                    text = if (checkedInToday) "Erledigt ✓" else "Check-in 💎",
+                    text = if (checkedInToday) "Erledigt ✓" else "Check-in",
                     onClick = { vm.checkIn() },
                     enabled = !checkedInToday,
                     loading = vm.busy,
-                    color = Sun,
+                    color = Teal,
                     height = 46.dp,
                     fontSize = 17.sp
                 )
@@ -254,7 +254,7 @@ fun ProfileScreen(
                     text = "Teilen",
                     onClick = { shareInvite(context, account.inviteCode) },
                     enabled = account.inviteCode.isNotBlank(),
-                    color = Coral,
+                    color = InkHigh,
                     height = 46.dp,
                     fontSize = 17.sp
                 )

@@ -219,14 +219,14 @@ private fun RequestCard(
             Spacer(Modifier.height(12.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 CandyButton(
-                    text = "Nö",
+                    text = "Ablehnen",
                     onClick = onDecline,
                     enabled = !busy,
                     color = InkHigh,
                     modifier = Modifier.weight(1f)
                 )
                 CandyButton(
-                    text = "Annehmen 🎉",
+                    text = "Annehmen",
                     onClick = onAccept,
                     enabled = !busy,
                     color = Teal,

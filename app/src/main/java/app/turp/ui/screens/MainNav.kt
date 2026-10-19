@@ -35,6 +35,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ChatBubble
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.EmojiEmotions
+import androidx.compose.material.icons.outlined.ChatBubbleOutline
+import androidx.compose.material.icons.outlined.EmojiEmotions
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Public
+import androidx.compose.material.icons.outlined.Style
 import androidx.compose.material.icons.rounded.Public
 import androidx.compose.material.icons.rounded.Style
 import androidx.compose.material3.Badge
@@ -92,12 +97,12 @@ class MainViewModel : ViewModel() {
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 }
 
-private enum class Tab(val label: String, val icon: ImageVector, val color: Color) {
-    Discover("Entdecken", Icons.Rounded.Style, Teal),
-    Lounge("Lounge", Icons.Rounded.Public, Lilac),
-    Requests("Anfragen", Icons.Rounded.EmojiEmotions, Sun),
-    Chats("Chats", Icons.Rounded.ChatBubble, Sky),
-    Profile("Profil", Icons.Rounded.Person, Coral),
+private enum class Tab(val label: String, val icon: ImageVector, val iconOutlined: ImageVector) {
+    Discover("Entdecken", Icons.Rounded.Style, Icons.Outlined.Style),
+    Lounge("Lounge", Icons.Rounded.Public, Icons.Outlined.Public),
+    Requests("Anfragen", Icons.Rounded.EmojiEmotions, Icons.Outlined.EmojiEmotions),
+    Chats("Chats", Icons.Rounded.ChatBubble, Icons.Outlined.ChatBubbleOutline),
+    Profile("Profil", Icons.Rounded.Person, Icons.Outlined.Person),
 }
 
 @Composable
@@ -237,7 +242,7 @@ private fun MainTabs(
 private fun TurpBottomBar(selected: Tab, onSelect: (Tab) -> Unit, badges: Map<Tab, Int>) {
     Surface(color = Ink) {
         Column {
-            HorizontalDivider(color = InkLine.copy(alpha = 0.6f), thickness = 1.dp)
+            HorizontalDivider(color = Color.White.copy(alpha = 0.06f), thickness = 1.dp)
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -248,7 +253,7 @@ private fun TurpBottomBar(selected: Tab, onSelect: (Tab) -> Unit, badges: Map<Ta
             ) {
                 Tab.entries.forEach { t ->
                     val isSelected = t == selected
-                    val scale by animateFloatAsState(if (isSelected) 1.18f else 1f, label = "tabScale")
+                    val scale by animateFloatAsState(if (isSelected) 1.08f else 1f, label = "tabScale")
                     Box(
                         Modifier
                             .size(58.dp)
@@ -257,25 +262,16 @@ private fun TurpBottomBar(selected: Tab, onSelect: (Tab) -> Unit, badges: Map<Ta
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            t.icon,
+                            if (isSelected) t.icon else t.iconOutlined,
                             contentDescription = t.label,
-                            tint = if (isSelected) t.color else TextLow,
+                            tint = if (isSelected) Teal else TextLow,
                             modifier = Modifier
-                                .size(30.dp)
+                                .size(28.dp)
                                 .graphicsLayer {
                                     scaleX = scale
                                     scaleY = scale
                                 }
                         )
-                        if (isSelected) {
-                            Box(
-                                Modifier
-                                    .align(Alignment.BottomCenter)
-                                    .padding(bottom = 4.dp)
-                                    .size(width = 14.dp, height = 4.dp)
-                                    .background(t.color, CircleShape)
-                            )
-                        }
                         val count = badges[t] ?: 0
                         if (count > 0) {
                             Box(

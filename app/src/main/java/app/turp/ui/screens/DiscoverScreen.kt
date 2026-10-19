@@ -8,6 +8,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.rounded.Flag
+import androidx.compose.material.icons.automirrored.rounded.Send
+import app.turp.ui.components.GemIcon
+import app.turp.ui.components.readableOn
+import app.turp.ui.theme.InkElevated
 import app.turp.data.SafetyRepo
 import app.turp.ui.components.Avatar
 import app.turp.ui.components.GemPill
@@ -231,7 +235,7 @@ fun DiscoverScreen(
                     Icon(Icons.Rounded.Tune, contentDescription = "Filter", tint = TextHigh, modifier = Modifier.size(28.dp))
                 }
             }
-            TurpLogo(Modifier.align(Alignment.Center), fontSize = 38.sp)
+            TurpLogo(Modifier.align(Alignment.Center), fontSize = 34.sp)
             GemPill(
                 gems = session.account.gems,
                 showDot = checkInOpen,
@@ -244,19 +248,21 @@ fun DiscoverScreen(
         if (myProfile != null && myProfile.photos.isEmpty()) {
             Surface(
                 onClick = onEditProfile,
-                shape = RoundedCornerShape(18.dp),
-                color = Coral.copy(alpha = 0.18f),
-                border = BorderStroke(2.dp, Coral),
+                shape = RoundedCornerShape(16.dp),
+                color = InkElevated,
+                border = BorderStroke(1.dp, Teal.copy(alpha = 0.6f)),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp)
             ) {
-                Text(
-                    "📸 Lad ein Foto hoch – erst dann sehen dich andere. Tippen zum Bearbeiten.",
-                    Modifier.padding(12.dp),
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold
-                )
+                Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        "Lade ein Foto hoch, damit andere dich sehen können.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text("Bearbeiten", color = Teal, fontWeight = FontWeight.SemiBold)
+                }
             }
         }
 
@@ -440,10 +446,10 @@ private fun ProfileCard(
                 .fillMaxSize()
                 .background(
                     Brush.verticalGradient(
-                        0.0f to Ink.copy(alpha = 0.35f),
-                        0.18f to Color.Transparent,
-                        0.6f to Color.Transparent,
-                        1.0f to Ink.copy(alpha = 0.9f)
+                        0.0f to Color.Black.copy(alpha = 0.35f),
+                        0.2f to Color.Transparent,
+                        0.72f to Color.Transparent,
+                        1.0f to Color.Black.copy(alpha = 0.55f)
                     )
                 )
         )
@@ -488,14 +494,14 @@ private fun ProfileCard(
             Spacer(Modifier.height(14.dp))
             Row(verticalAlignment = Alignment.Top) {
                 Column(Modifier.weight(1f)) {
-                    Sticker(profile.name, accent, rotation = -4f, fontSize = 28.sp)
-                    Spacer(Modifier.height(8.dp))
+                    Sticker(profile.name, accent, rotation = -3f, fontSize = 30.sp)
+                    Spacer(Modifier.height(6.dp))
                     Sticker(
                         "${Countries.flag(profile.country)} ${profile.country}, ${profile.age}",
-                        Lilac,
-                        rotation = -2f,
+                        accent,
+                        rotation = -3f,
                         fontSize = 18.sp,
-                        modifier = Modifier.padding(start = 4.dp)
+                        modifier = Modifier.padding(start = 8.dp)
                     )
                 }
                 if (interactive) {
@@ -512,88 +518,97 @@ private fun ProfileCard(
         }
 
         if (interactive) {
-            Stamp(
-                text = "HEY 👋",
-                color = Teal,
-                rotation = -14f,
+            SwipeBadge(
+                icon = Icons.AutoMirrored.Rounded.Send,
+                background = Teal,
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .graphicsLayer { alpha = likeProgress().coerceIn(0f, 1f) }
+                    .graphicsLayer {
+                        val p = likeProgress().coerceIn(0f, 1f)
+                        alpha = p
+                        scaleX = 0.7f + 0.3f * p
+                        scaleY = 0.7f + 0.3f * p
+                    }
             )
-            Stamp(
-                text = "NÄCHSTE",
-                color = Coral,
-                rotation = 14f,
+            SwipeBadge(
+                icon = Icons.Rounded.Close,
+                background = InkHigh,
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .graphicsLayer { alpha = (-likeProgress()).coerceIn(0f, 1f) }
+                    .graphicsLayer {
+                        val p = (-likeProgress()).coerceIn(0f, 1f)
+                        alpha = p
+                        scaleX = 0.7f + 0.3f * p
+                        scaleY = 0.7f + 0.3f * p
+                    }
             )
         }
 
-        Column(
-            Modifier
-                .align(Alignment.BottomStart)
-                .fillMaxWidth()
-                .padding(14.dp)
-        ) {
-            if (profile.bio.isNotBlank()) {
-                Text(
-                    profile.bio,
-                    color = Color.White,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(horizontal = 4.dp)
-                )
-                Spacer(Modifier.height(8.dp))
-            }
-            if (profile.interests.isNotEmpty()) {
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalArrangement = Arrangement.spacedBy(6.dp),
-                    modifier = Modifier.padding(horizontal = 2.dp)
+        if (interactive) {
+            Row(
+                Modifier
+                    .align(Alignment.BottomStart)
+                    .fillMaxWidth()
+                    .padding(14.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Surface(
+                    onClick = onLike,
+                    shape = CircleShape,
+                    color = Color.Black.copy(alpha = 0.45f),
+                    border = BorderStroke(1.5.dp, Color.White.copy(alpha = 0.7f)),
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(56.dp)
                 ) {
-                    profile.interests.take(4).forEach { InterestSticker(it, accent) }
-                }
-                Spacer(Modifier.height(12.dp))
-            }
-            if (interactive) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Surface(
-                        onClick = onLike,
-                        shape = CircleShape,
-                        color = Color.Black.copy(alpha = 0.5f),
-                        border = BorderStroke(2.dp, Color.White.copy(alpha = 0.85f)),
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(58.dp)
+                    Row(
+                        Modifier.padding(horizontal = 18.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(
-                            Modifier.padding(horizontal = 18.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("👋", fontSize = 24.sp)
-                            Spacer(Modifier.width(10.dp))
-                            Text(
-                                "Anfrage senden",
-                                style = MaterialTheme.typography.labelLarge.copy(fontSize = 19.sp),
-                                color = Color.White,
-                                modifier = Modifier.weight(1f)
-                            )
-                            Text("$REQUEST_COST 💎", color = Sun, fontWeight = FontWeight.Bold)
-                        }
+                        Icon(
+                            Icons.AutoMirrored.Rounded.Send,
+                            contentDescription = null,
+                            tint = Teal,
+                            modifier = Modifier.size(22.dp)
+                        )
+                        Spacer(Modifier.width(12.dp))
+                        Text(
+                            "Anfrage senden",
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.weight(1f)
+                        )
+                        GemIcon(15.dp)
+                        Spacer(Modifier.width(4.dp))
+                        Text("$REQUEST_COST", color = Color.White.copy(alpha = 0.75f), fontWeight = FontWeight.SemiBold)
                     }
-                    Spacer(Modifier.width(10.dp))
-                    RoundCandyButton(
-                        icon = Icons.Rounded.Close,
-                        contentDescription = "Weiter",
-                        color = Coral,
-                        size = 56.dp,
-                        onClick = onSkip
-                    )
                 }
+                Spacer(Modifier.width(10.dp))
+                RoundCandyButton(
+                    icon = Icons.Rounded.Close,
+                    contentDescription = "Weiter",
+                    color = Color.Black.copy(alpha = 0.45f),
+                    borderColor = Color.White.copy(alpha = 0.7f),
+                    iconColor = Color.White,
+                    size = 56.dp,
+                    onClick = onSkip
+                )
             }
         }
+    }
+}
+
+@Composable
+private fun SwipeBadge(icon: ImageVector, background: Color, modifier: Modifier = Modifier) {
+    Box(
+        modifier
+            .size(96.dp)
+            .background(background.copy(alpha = 0.92f), CircleShape)
+            .border(2.dp, Color.White.copy(alpha = 0.85f), CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(icon, contentDescription = null, tint = readableOn(background), modifier = Modifier.size(44.dp))
     }
 }
 

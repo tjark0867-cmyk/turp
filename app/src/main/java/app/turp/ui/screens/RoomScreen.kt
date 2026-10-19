@@ -130,7 +130,7 @@ fun RoomScreen(
         // Kopfbereich im gemütlichen Lounge-Look
         Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("🌙 Lounge", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.weight(1f))
+                Text("Lounge", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.weight(1f))
                 Surface(shape = CircleShape, color = Lilac.copy(alpha = 0.2f)) {
                     Text(
                         if (isTeen) "13–17" else "18+",
@@ -141,7 +141,7 @@ fun RoomScreen(
                 }
             }
             Text(
-                "Chill-Bar für alle in deiner Altersgruppe · Slow-Mode 10 s · lo-fi vibes only 🎧",
+                "Gruppenchat für deine Altersgruppe · Slow-Mode 10 s",
                 style = MaterialTheme.typography.bodySmall,
                 color = TextLow
             )
