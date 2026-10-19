@@ -60,6 +60,13 @@ service cloud.firestore {
           && handle(request.resource.data.snapchat)
           && handle(request.resource.data.tiktok)
           && request.resource.data.visible is bool;
+
+        // "Zuletzt online": nur die Person selbst schreibt (mit Serverzeit), nur Freunde lesen
+        allow read: if signedIn() && docId == 'presence'
+          && exists(/databases/$(database)/documents/users/$(uid)/friends/$(me()));
+        allow write: if signedIn() && me() == uid && docId == 'presence'
+          && request.resource.data.keys().hasOnly(['lastActive'])
+          && request.resource.data.lastActive == request.time;
       }
 
       match /friends/{friendId} {

@@ -1,5 +1,23 @@
 package app.turp.ui.screens
 
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.delay
+import com.google.firebase.Timestamp
+import app.turp.ui.components.sameDay
+import app.turp.ui.components.lastOnline
+import app.turp.ui.components.dayLabel
+import app.turp.ui.components.ONLINE_WINDOW_MS
+import app.turp.data.PresenceRepo
+import app.turp.data.MemberInfo
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.runtime.produceState
+import androidx.compose.material.icons.automirrored.rounded.ArrowBackIos
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.itemsIndexed
 import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -269,6 +287,33 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
     val otherUid = current?.otherUid(me).orEmpty()
     val other = current?.other(me)
     val otherName = other?.name.orEmpty()
+    val isBot = otherUid.startsWith("turp-bot-")
+
+    // Zuletzt online (nur für Freunde sichtbar) – jede Minute neu berechnen
+    val lastActive by remember(otherUid) {
+        if (otherUid.isEmpty() || isBot) flowOf(null) else PresenceRepo.lastActive(otherUid)
+    }.collectAsState(initial = null)
+    val now by produceState(System.currentTimeMillis()) {
+        while (true) {
+            delay(60_000)
+            value = System.currentTimeMillis()
+        }
+    }
+    val seen = lastActive
+    val online = isBot || (seen != null && now - seen.toDate().time < ONLINE_WINDOW_MS)
+    val status = when {
+        online -> "Online"
+        seen != null -> "Zuletzt online ${lastOnline(seen)}"
+        else -> ""
+    }
+
+    // Lesebestätigung: kleines Profilbild an meiner letzten Nachricht, die gelesen wurde
+    val otherRead = current?.readAt?.get(otherUid)
+    val lastReadId = if (otherRead == null) {
+        null
+    } else {
+        messages.lastOrNull { it.senderId == me && it.createdAt != null && it.createdAt <= otherRead }?.id
+    }
 
     val listState = rememberLazyListState()
     var menuOpen by remember { mutableStateOf(false) }
@@ -288,59 +333,87 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
     }
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = Ink,
         topBar = {
-            TopAppBar(
-                title = {
-                    Row(
-                        Modifier.clickable(enabled = otherUid.isNotEmpty()) { onOpenUser(otherUid) },
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Avatar(other?.photo.orEmpty(), otherName, other?.color ?: DEFAULT_COLOR, 38.dp)
-                        Spacer(Modifier.width(10.dp))
-                        Text(otherName, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Zurück")
-                    }
-                },
-                actions = {
-                    Box {
-                        IconButton(onClick = { menuOpen = true }, enabled = otherUid.isNotEmpty()) {
-                            Icon(Icons.Rounded.MoreVert, contentDescription = "Mehr")
-                        }
-                        DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
-                            DropdownMenuItem(
-                                text = { Text("Profil ansehen") },
-                                leadingIcon = { Icon(Icons.Rounded.Person, contentDescription = null) },
-                                onClick = {
-                                    menuOpen = false
-                                    onOpenUser(otherUid)
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Melden") },
-                                leadingIcon = { Icon(Icons.Rounded.Flag, contentDescription = null) },
-                                onClick = {
-                                    menuOpen = false
-                                    reportContext = ""
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Blockieren", color = Coral) },
-                                leadingIcon = { Icon(Icons.Rounded.Block, contentDescription = null, tint = Coral) },
-                                onClick = {
-                                    menuOpen = false
-                                    confirmBlock = true
-                                }
+            // Zurück | Profilbild + Name + zuletzt online | Menü
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .background(Ink)
+                    .statusBarsPadding()
+                    .padding(start = 2.dp, end = 2.dp, top = 4.dp, bottom = 6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = onBack) {
+                    Icon(
+                        Icons.AutoMirrored.Rounded.ArrowBackIos,
+                        contentDescription = "Zurück",
+                        tint = TextHigh,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+                Row(
+                    Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(14.dp))
+                        .clickable(enabled = otherUid.isNotEmpty()) { onOpenUser(otherUid) }
+                        .padding(vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Avatar(other?.photo.orEmpty(), otherName, other?.color ?: DEFAULT_COLOR, 44.dp, online = online)
+                    Spacer(Modifier.width(12.dp))
+                    Column {
+                        Text(
+                            otherName,
+                            color = TextHigh,
+                            fontSize = 19.sp,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        if (status.isNotEmpty()) {
+                            Text(
+                                status,
+                                color = if (online) Teal else TextLow,
+                                fontSize = 14.sp,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = InkElevated)
-            )
+                }
+                Box {
+                    IconButton(onClick = { menuOpen = true }, enabled = otherUid.isNotEmpty()) {
+                        Icon(Icons.Rounded.MoreVert, contentDescription = "Mehr", tint = TextHigh, modifier = Modifier.size(26.dp))
+                    }
+                    DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                        DropdownMenuItem(
+                            text = { Text("Profil ansehen") },
+                            leadingIcon = { Icon(Icons.Rounded.Person, contentDescription = null) },
+                            onClick = {
+                                menuOpen = false
+                                onOpenUser(otherUid)
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Melden") },
+                            leadingIcon = { Icon(Icons.Rounded.Flag, contentDescription = null) },
+                            onClick = {
+                                menuOpen = false
+                                reportContext = ""
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Blockieren", color = Coral) },
+                            leadingIcon = { Icon(Icons.Rounded.Block, contentDescription = null, tint = Coral) },
+                            onClick = {
+                                menuOpen = false
+                                confirmBlock = true
+                            }
+                        )
+                    }
+                }
+            }
         },
         bottomBar = {
             if (current?.closed == true) {
@@ -373,30 +446,42 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding),
-            contentPadding = PaddingValues(12.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+            contentPadding = PaddingValues(start = 12.dp, end = 16.dp, top = 6.dp, bottom = 12.dp)
         ) {
             item {
                 Text(
                     "🛡️ Teile keine Adresse, Passwörter oder Nacktbilder und triff dich nie allein mit Leuten aus dem Internet. " +
                         "Halte eine Nachricht gedrückt, um sie zu melden.",
-                    style = MaterialTheme.typography.bodySmall,
+                    fontSize = 12.sp,
+                    lineHeight = 16.sp,
                     color = TextLow,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
-            items(messages, key = { it.id }) { m ->
+            itemsIndexed(messages, key = { _, m -> m.id }) { i, m ->
+                val prev = messages.getOrNull(i - 1)
+                val next = messages.getOrNull(i + 1)
+                val newDay = prev == null || !sameDay(prev.createdAt, m.createdAt)
+                val firstInRun = newDay || prev?.senderId != m.senderId
+                val lastInRun = next == null || next.senderId != m.senderId || !sameDay(m.createdAt, next.createdAt)
                 val mine = m.senderId == me
-                MessageBubble(
-                    message = m,
-                    mine = mine,
-                    onLongPress = {
-                        if (!mine) reportContext = if (m.type == "text") m.text else "[Foto]"
-                    }
-                )
+                Column {
+                    if (newDay) DateChip(m.createdAt)
+                    MessageRow(
+                        message = m,
+                        mine = mine,
+                        firstInRun = firstInRun,
+                        lastInRun = lastInRun,
+                        other = other,
+                        showRead = m.id == lastReadId,
+                        onLongPress = {
+                            if (!mine) reportContext = if (m.type == "text") m.text else "[Foto]"
+                        }
+                    )
+                }
             }
         }
     }
@@ -426,57 +511,136 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
     }
 }
 
+/** Datums-Trenner in der Mitte, z. B. "Heute" oder "03. Okt. 2026" */
 @Composable
-private fun MessageBubble(message: Message, mine: Boolean, onLongPress: () -> Unit) {
-    Row(
-        Modifier.fillMaxWidth(),
-        horizontalArrangement = if (mine) Arrangement.End else Arrangement.Start
+private fun DateChip(ts: Timestamp?) {
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        contentAlignment = Alignment.Center
     ) {
-        Column(
-            Modifier.widthIn(max = 290.dp),
-            horizontalAlignment = if (mine) Alignment.End else Alignment.Start
-        ) {
-            val shape = RoundedCornerShape(
-                topStart = 20.dp,
-                topEnd = 20.dp,
-                bottomStart = if (mine) 20.dp else 6.dp,
-                bottomEnd = if (mine) 6.dp else 20.dp
-            )
-            Box(
-                Modifier
-                    .clip(shape)
-                    .background(if (mine) Teal else InkHigh)
-                    .combinedClickable(onClick = {}, onLongClick = onLongPress)
-            ) {
-                when {
-                    message.type == "image" && message.imageStatus == "ok" -> AsyncImage(
-                        model = message.imageUrl,
-                        contentDescription = "Foto",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(220.dp)
-                    )
-                    message.type == "image" && message.imageStatus == "blocked" ->
-                        BubbleText("🚫 Foto wurde blockiert", mine, italic = true)
-                    message.type == "image" -> BubbleText("📷 Foto wird geprüft…", mine, italic = true)
-                    else -> BubbleText(message.text, mine)
-                }
+        Text(
+            dayLabel(ts),
+            color = TextLow,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier
+                .background(InkHigh, CircleShape)
+                .padding(horizontal = 14.dp, vertical = 6.dp)
+        )
+    }
+}
+
+/**
+ * Eine Nachricht. Bei der anderen Person steht links ihr Profilbild (an der letzten
+ * Nachricht einer Reihe), bei mir zeigt ein kleines Profilbild, bis wohin gelesen wurde.
+ */
+@Composable
+private fun MessageRow(
+    message: Message,
+    mine: Boolean,
+    firstInRun: Boolean,
+    lastInRun: Boolean,
+    other: MemberInfo?,
+    showRead: Boolean,
+    onLongPress: () -> Unit,
+) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(top = if (firstInRun) 8.dp else 3.dp),
+        horizontalArrangement = if (mine) Arrangement.End else Arrangement.Start,
+        verticalAlignment = Alignment.Bottom
+    ) {
+        if (!mine) {
+            if (lastInRun && other != null) {
+                Avatar(other.photo, other.name, other.color, 32.dp)
+            } else {
+                Spacer(Modifier.width(32.dp))
             }
-            Text(
-                timeOfDay(message.createdAt),
-                style = MaterialTheme.typography.labelSmall,
-                color = TextLow,
-                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-            )
+            Spacer(Modifier.width(8.dp))
+        }
+        Box {
+            Bubble(message, mine, lastInRun, onLongPress)
+            if (showRead && other != null) {
+                Avatar(
+                    other.photo,
+                    other.name,
+                    other.color,
+                    16.dp,
+                    ring = Ink,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .offset(x = 7.dp, y = 4.dp)
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun BubbleText(text: String, mine: Boolean, italic: Boolean = false) {
-    Text(
-        text,
-        color = if (mine) Ink else TextHigh,
-        fontStyle = if (italic) FontStyle.Italic else FontStyle.Normal,
-        modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)
+private fun Bubble(message: Message, mine: Boolean, lastInRun: Boolean, onLongPress: () -> Unit) {
+    val round = 20.dp
+    val tail = 6.dp
+    val shape = RoundedCornerShape(
+        topStart = round,
+        topEnd = round,
+        bottomStart = if (!mine && lastInRun) tail else round,
+        bottomEnd = if (mine && lastInRun) tail else round
     )
+    val fg = if (mine) Ink else TextHigh
+    val timeColor = if (mine) Ink.copy(alpha = 0.55f) else TextLow
+    val time = timeOfDay(message.createdAt)
+    Box(
+        Modifier
+            .widthIn(max = 280.dp)
+            .clip(shape)
+            .background(if (mine) Teal else InkHigh)
+            .combinedClickable(onClick = {}, onLongClick = onLongPress)
+    ) {
+        when {
+            message.type == "image" && message.imageStatus == "ok" -> Box {
+                AsyncImage(
+                    model = message.imageUrl,
+                    contentDescription = "Foto",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(220.dp)
+                )
+                Text(
+                    time,
+                    color = Color.White,
+                    fontSize = 11.sp,
+                    style = TextStyle(shadow = Shadow(Color.Black.copy(alpha = 0.7f), Offset(0f, 1f), 4f)),
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(8.dp)
+                )
+            }
+            message.type == "image" && message.imageStatus == "blocked" ->
+                BubbleText("🚫 Foto wurde blockiert", time, fg, timeColor, italic = true)
+            message.type == "image" -> BubbleText("📷 Foto wird geprüft…", time, fg, timeColor, italic = true)
+            else -> BubbleText(message.text, time, fg, timeColor)
+        }
+    }
+}
+
+/** Text mit der Uhrzeit klein unten rechts in der Blase */
+@Composable
+private fun BubbleText(text: String, time: String, color: Color, timeColor: Color, italic: Boolean = false) {
+    Row(
+        Modifier.padding(start = 14.dp, end = 10.dp, top = 8.dp, bottom = 7.dp),
+        verticalAlignment = Alignment.Bottom
+    ) {
+        Text(
+            text,
+            color = color,
+            fontSize = 16.sp,
+            lineHeight = 21.sp,
+            fontStyle = if (italic) FontStyle.Italic else FontStyle.Normal,
+            modifier = Modifier.weight(1f, fill = false)
+        )
+        Spacer(Modifier.width(8.dp))
+        Text(time, color = timeColor, fontSize = 11.sp, modifier = Modifier.padding(bottom = 1.dp))
+    }
 }

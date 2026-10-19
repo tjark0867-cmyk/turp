@@ -1,5 +1,6 @@
 package app.turp.data
 
+import com.google.firebase.Timestamp
 import android.content.Context
 import android.net.Uri
 import app.turp.BuildConfig
@@ -329,4 +330,20 @@ object AdminRepo {
     suspend fun act(reportId: String, action: String) {
         callFunction("adminAction", mapOf("reportId" to reportId, "action" to action))
     }
+}
+
+// ---- Online-Status ----------------------------------------------------------
+
+/** Meldet "ich bin gerade in der App" (alle 2 Minuten); nur Freunde dürfen es lesen. */
+object PresenceRepo {
+    private fun ref(uid: String) =
+        Fb.db.collection("users").document(uid).collection("private").document("presence")
+
+    fun ping() {
+        ref(Fb.uid).set(mapOf("lastActive" to FieldValue.serverTimestamp()))
+            .addOnFailureListener { android.util.Log.w("turp", "Online-Status nicht gespeichert", it) }
+    }
+
+    fun lastActive(uid: String): Flow<Timestamp?> =
+        ref(uid).asFlow().map { if (it.exists()) it.getTimestamp("lastActive") else null }
 }

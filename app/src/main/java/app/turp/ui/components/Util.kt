@@ -64,6 +64,38 @@ fun timeAgo(ts: Timestamp?): String {
     }
 }
 
+/** Gilt als "Online", wenn die letzte Meldung höchstens so lange her ist */
+const val ONLINE_WINDOW_MS = 4 * 60_000L
+
+/** Für "Zuletzt online …": "vor 5 Min.", "vor 18 Std.", "vor 2 Tagen", "am 03.10." */
+fun lastOnline(ts: Timestamp): String {
+    val minutes = ((System.currentTimeMillis() - ts.toDate().time) / 60_000).coerceAtLeast(1)
+    return when {
+        minutes < 60 -> "vor $minutes Min."
+        minutes < 24 * 60 -> "vor ${minutes / 60} Std."
+        minutes < 7 * 24 * 60 -> (minutes / (24 * 60)).let { if (it == 1L) "vor 1 Tag" else "vor $it Tagen" }
+        else -> "am " + SimpleDateFormat("dd.MM.", Locale.GERMANY).format(ts.toDate())
+    }
+}
+
+/** Liegen beide Zeitpunkte am selben Kalendertag? */
+fun sameDay(a: Timestamp?, b: Timestamp?): Boolean {
+    if (a == null || b == null) return true
+    val x = Calendar.getInstance().apply { time = a.toDate() }
+    val y = Calendar.getInstance().apply { time = b.toDate() }
+    return x.get(Calendar.YEAR) == y.get(Calendar.YEAR) && x.get(Calendar.DAY_OF_YEAR) == y.get(Calendar.DAY_OF_YEAR)
+}
+
+/** Datum für die Trenner im Chat: "Heute", "Gestern" oder "03. Okt. 2026" */
+fun dayLabel(ts: Timestamp?): String {
+    if (ts == null) return "Heute"
+    val now = Timestamp.now()
+    if (sameDay(ts, now)) return "Heute"
+    val yesterday = Timestamp(java.util.Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000L))
+    if (sameDay(ts, yesterday)) return "Gestern"
+    return SimpleDateFormat("dd. MMM yyyy", Locale.GERMANY).format(ts.toDate())
+}
+
 fun timeOfDay(ts: Timestamp?): String =
     if (ts == null) "" else SimpleDateFormat("HH:mm", Locale.GERMANY).format(ts.toDate())
 

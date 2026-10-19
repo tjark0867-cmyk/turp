@@ -1,5 +1,10 @@
 package app.turp.ui.screens
 
+import app.turp.data.PresenceRepo
+import kotlinx.coroutines.delay
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.Lifecycle
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
@@ -131,6 +136,17 @@ fun MainNav(
     val context = LocalContext.current
     val updateVm: UpdateViewModel = viewModel()
     LaunchedEffect(Unit) { updateVm.checkOnStart() }
+
+    // "Zuletzt online" für Freunde: nur solange die App wirklich offen ist
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            while (true) {
+                PresenceRepo.ping()
+                delay(120_000)
+            }
+        }
+    }
     LaunchedEffect(Unit) { updateVm.notices.collect { context.toast(it) } }
     // Über State weitergereicht, damit sich der Navigationsgraph nicht bei jeder Gem-Änderung neu aufbaut
     val sessionState = rememberUpdatedState(session)
