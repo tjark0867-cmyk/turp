@@ -39,20 +39,15 @@ jobs:
             echo "::error title=Secret fehlt::Lege im Repository das Secret FIREBASE_SERVICE_ACCOUNT an (Inhalt der JSON-Schlüsseldatei)."
             exit 1
           fi
-          printf '%s' "$SA" > "$RUNNER_TEMP/sa.json"
-          P=$(jq -r .project_id "$RUNNER_TEMP/sa.json")
-          if [ -z "$P" ] || [ "$P" = "null" ]; then
-            echo "::error title=Secret ungültig::FIREBASE_SERVICE_ACCOUNT enthält keine gültige JSON-Schlüsseldatei."
-            exit 1
-          fi
-          echo "project=$P" >> "$GITHUB_OUTPUT"
-          echo "Projekt: $P"
-
-      - uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          python3 .github/scripts/service_account.py "$RUNNER_TEMP/sa.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/sa.json" >> "$GITHUB_ENV"
 
       - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Bei Google anmelden
+        run: |
+          gcloud auth activate-service-account --key-file="$RUNNER_TEMP/sa.json" --quiet
+          gcloud config set project "${{ steps.check.outputs.project }}" --quiet
 
       - uses: actions/setup-node@v4
         with:
