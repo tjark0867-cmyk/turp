@@ -1,6 +1,5 @@
 package app.turp.ui.screens
 
-import app.turp.ui.components.InterestPickTile
 import app.turp.ui.components.InterestIcon
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.ModalBottomSheet
@@ -136,7 +135,11 @@ import app.turp.data.SessionState
 import app.turp.data.SessionViewModel
 import app.turp.data.Socials
 import app.turp.data.UserProfile
-import app.turp.ui.components.ALL_INTERESTS
+import app.turp.ui.components.InterestCategory
+import app.turp.ui.components.InterestCategoryChips
+import app.turp.ui.components.InterestGrid
+import app.turp.ui.components.InterestSearchField
+import app.turp.ui.components.findInterests
 import app.turp.ui.components.Avatar
 import app.turp.ui.components.CandyButton
 import app.turp.ui.components.ColorPicker
@@ -449,7 +452,9 @@ fun SettingsScreen(
                 MenuRow(Icons.Rounded.DeleteForever, "Konto löschen", tint = Coral, onClick = { confirmDelete = true })
             }
             Text(
-                "kumi ${BuildConfig.VERSION_NAME} · Dein Einladungscode: ${account.inviteCode.ifBlank { "–" }}\nGoldene Regel: Sei immer freundlich. 💛",
+                "kumi ${BuildConfig.VERSION_NAME} · Dein Einladungscode: ${account.inviteCode.ifBlank { "–" }}\nGoldene Regel: Sei immer freundlich. 💛\n\n" +
+                    "Interessen-Sticker teils nach Noto Emoji (© Google, Apache 2.0 / SIL OFL 1.1). " +
+                    "Namen von Spielen, Serien und Künstlern gehören ihren Inhabern; kumi steht in keiner Verbindung zu ihnen.",
                 style = MaterialTheme.typography.bodySmall,
                 color = TextLow,
                 textAlign = TextAlign.Center,
@@ -829,38 +834,56 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
             containerColor = InkElevated,
             sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         ) {
+            var query by remember { mutableStateOf("") }
+            var category by remember { mutableStateOf<InterestCategory?>(null) }
+            val items = remember(query, category) { findInterests(query, category) }
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
                     .padding(horizontal = 16.dp)
             ) {
-                Text(
-                    "Meine Interessen (${interests.size}/$MAX_INTERESTS)",
-                    color = TextHigh,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
-                Spacer(Modifier.height(12.dp))
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    ALL_INTERESTS.forEach { interest ->
-                        val selected = interest in interests
-                        InterestPickTile(interest, selected) {
-                            interests = when {
-                                selected -> interests - interest
-                                interests.size >= MAX_INTERESTS -> {
-                                    context.toast("Höchstens $MAX_INTERESTS Interessen.")
-                                    interests
-                                }
-                                else -> interests + interest
-                            }
-                        }
-                    }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        "Meine Interessen",
+                        color = TextHigh,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        "${interests.size}/$MAX_INTERESTS",
+                        color = if (interests.size >= MAX_INTERESTS) Teal else TextLow,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
-                Spacer(Modifier.height(14.dp))
+                Text(
+                    "Tippe an, was du magst – so finden dich Leute mit denselben Interessen.",
+                    color = TextLow,
+                    fontSize = 13.sp
+                )
+                Spacer(Modifier.height(10.dp))
+                InterestSearchField(query = query, onQuery = { query = it }, placeholder = "Suchen, z. B. Minecraft")
+                Spacer(Modifier.height(10.dp))
+                InterestCategoryChips(selected = category, onSelect = { category = it })
+                InterestGrid(
+                    items = items,
+                    selected = interests,
+                    onToggle = { def ->
+                        val selected = def.value in interests
+                        interests = when {
+                            selected -> interests - def.value
+                            interests.size >= MAX_INTERESTS -> {
+                                context.toast("Höchstens $MAX_INTERESTS Interessen.")
+                                interests
+                            }
+                            else -> interests + def.value
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f, fill = false)
+                )
+                Spacer(Modifier.height(8.dp))
                 PrimaryButton(text = "Fertig", onClick = { showInterests = false })
                 Spacer(Modifier.height(24.dp))
             }
@@ -1089,6 +1112,8 @@ fun UserProfileScreen(
     var showVideo by remember { mutableStateOf(false) }
     val p = profile
     val friendChat = chatId
+    val me by remember(session.uid) { ProfileRepo.profile(session.uid) }.collectAsState(initial = null)
+    val shared = if (isMe || p == null) emptySet() else p.interests.filter { it in me?.interests.orEmpty() }.toSet()
 
     Column(
         Modifier
@@ -1161,6 +1186,7 @@ fun UserProfileScreen(
                     ProfileStory(
                         profile = p,
                         bottomSpace = if (isMe) 16.dp else 86.dp,
+                        highlight = shared,
                         modifier = Modifier.fillMaxSize(),
                         header = { ProfileNameStickers(p, modifier = Modifier.padding(horizontal = 16.dp)) },
                         infoExtra = {

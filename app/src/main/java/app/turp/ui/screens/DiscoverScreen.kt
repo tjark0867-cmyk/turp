@@ -51,7 +51,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -86,17 +85,18 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.turp.data.BaseViewModel
+import app.turp.data.DiscoverFilter
+import app.turp.data.DiscoverPrefs
+import app.turp.ui.components.InterestIcon
+import androidx.compose.foundation.layout.offset
 import app.turp.data.DiscoverRepo
 import app.turp.data.ProfileRepo
 import app.turp.data.REQUEST_COST
 import app.turp.data.SessionState
 import app.turp.data.UserProfile
 import app.turp.data.toUserMessage
-import app.turp.ui.components.Countries
-import app.turp.ui.components.CountryPickerDialog
 import app.turp.ui.components.EmptyState
 import app.turp.ui.components.GemChip
-import app.turp.ui.components.InterestSticker
 import app.turp.ui.components.LoadingBox
 import app.turp.ui.components.ScreenHeader
 import app.turp.ui.components.parseColor
@@ -117,41 +117,55 @@ class DiscoverViewModel : BaseViewModel() {
     val cards = MutableStateFlow<List<UserProfile>>(emptyList())
     var loaded by mutableStateOf(false)
         private set
-    var country by mutableStateOf<String?>(null)
-        private set
-    var minAge by mutableIntStateOf(13)
-        private set
-    var maxAge by mutableIntStateOf(17)
+    var filter by mutableStateOf(DiscoverFilter())
         private set
 
     private var group = ""
+    private var myCountry = ""
+    private var myInterests: Set<String> = emptySet()
 
     val ageBounds: IntRange get() = if (group == "teen") 13..17 else 18..80
 
-    fun init(ageGroup: String) {
+    /** Eigenes Land und eigene Interessen (für "Mein Land" und "Gemeinsamkeiten zuerst") */
+    fun setMe(profile: UserProfile) {
+        myCountry = profile.country
+        myInterests = profile.interests.toSet()
+    }
+
+    fun init(ageGroup: String, load: (IntRange) -> DiscoverFilter) {
         if (group == ageGroup) return
         group = ageGroup
-        minAge = ageBounds.first
-        maxAge = ageBounds.last
+        filter = load(ageBounds)
         reload()
     }
 
-    fun setFilter(newCountry: String?, min: Int, max: Int) {
-        country = newCountry
-        minAge = min
-        maxAge = max
+    fun apply(newFilter: DiscoverFilter) {
+        filter = newFilter
         reload()
     }
 
     fun reload() = launchSafe(showBusy = false) {
         loaded = false
         try {
+            val f = filter
             // "80" heißt beim oberen Regler: 80 und älter
-            val upper = if (maxAge >= 80) 200 else maxAge
-            cards.value = DiscoverRepo.candidates(group, country, minAge, upper)
+            val upper = if (f.maxAge >= 80) 200 else f.maxAge
+            val list = DiscoverRepo.candidates(group, f.countryCode(myCountry), f.minAge, upper, f.interests)
+            cards.value = rank(list, f)
         } finally {
             loaded = true
         }
+    }
+
+    /** Test-Bot vorn, dann passende Interessen, dann Gemeinsamkeiten mit dem eigenen Profil */
+    private fun rank(list: List<UserProfile>, f: DiscoverFilter): List<UserProfile> {
+        val wanted = f.interests.toSet()
+        val mine = myInterests
+        return list.sortedWith(
+            compareByDescending<UserProfile> { it.bot }
+                .thenByDescending { p -> p.interests.count { it in wanted } }
+                .thenByDescending { p -> if (f.sharedFirst) p.interests.count { it in mine } else 0 }
+        )
     }
 
     fun reshuffle() = launchSafe(showBusy = false) {
@@ -206,7 +220,6 @@ fun DiscoverScreen(
     vm: DiscoverViewModel = viewModel(),
 ) {
     val context = LocalContext.current
-    LaunchedEffect(session.account.ageGroup) { vm.init(session.account.ageGroup) }
     LaunchedEffect(Unit) { vm.notices.collect { context.toast(it) } }
 
     val cards by vm.cards.collectAsState()
@@ -215,6 +228,15 @@ fun DiscoverScreen(
     var reporting by remember { mutableStateOf<UserProfile?>(null) }
     val myProfile = me
     val checkInOpen = session.account.lastCheckIn != todayBerlin()
+    val myInterests = myProfile?.interests.orEmpty().toSet()
+
+    // Erst laden, wenn das eigene Profil da ist (wegen "Mein Land")
+    LaunchedEffect(myProfile) { myProfile?.let(vm::setMe) }
+    LaunchedEffect(session.account.ageGroup, myProfile != null) {
+        if (myProfile != null) {
+            vm.init(session.account.ageGroup) { bounds -> DiscoverPrefs.load(context, bounds) }
+        }
+    }
 
     Column(
         Modifier
@@ -237,8 +259,24 @@ fun DiscoverScreen(
                     online = true,
                     modifier = Modifier.clickable(onClick = onOpenProfile)
                 )
-                IconButton(onClick = { showFilter = true }) {
-                    Icon(Icons.Rounded.Tune, contentDescription = "Filter", tint = TextHigh, modifier = Modifier.size(28.dp))
+                IconButton(onClick = { showFilter = !showFilter }) {
+                    Box {
+                        Icon(
+                            Icons.Rounded.Tune,
+                            contentDescription = "Such-Einstellungen",
+                            tint = if (showFilter) Teal else TextHigh,
+                            modifier = Modifier.size(28.dp)
+                        )
+                        if (vm.filter.isActive(vm.ageBounds)) {
+                            Box(
+                                Modifier
+                                    .align(Alignment.TopEnd)
+                                    .size(9.dp)
+                                    .background(Teal, CircleShape)
+                                    .border(1.5.dp, Ink, CircleShape)
+                            )
+                        }
+                    }
                 }
             }
             TurpLogo(Modifier.align(Alignment.Center), fontSize = 34.sp)
@@ -251,73 +289,86 @@ fun DiscoverScreen(
             )
         }
 
-        if (myProfile != null && myProfile.photos.isEmpty()) {
-            Surface(
-                onClick = onEditProfile,
-                shape = RoundedCornerShape(16.dp),
-                color = InkElevated,
-                border = BorderStroke(1.dp, Teal.copy(alpha = 0.6f)),
+        if (showFilter) {
+            SearchPreferences(
+                initial = vm.filter,
+                bounds = vm.ageBounds,
+                myCountry = myProfile?.country.orEmpty(),
+                onClose = { showFilter = false },
+                onSave = { f ->
+                    DiscoverPrefs.save(context, vm.ageBounds, f)
+                    showFilter = false
+                    vm.apply(f)
+                },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp)
-            ) {
-                Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        "Lade ein Foto hoch, damit andere dich sehen können.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(1f)
-                    )
-                    Text("Bearbeiten", color = Teal, fontWeight = FontWeight.SemiBold)
-                }
-            }
-        }
+                    .weight(1f)
+                    .padding(bottom = 10.dp)
+            )
+        } else {
 
-        Box(
-            Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .padding(bottom = 10.dp)
-        ) {
-            when {
-                !vm.loaded -> Column(
-                    Modifier.align(Alignment.Center),
-                    horizontalAlignment = Alignment.CenterHorizontally
+            if (myProfile != null && myProfile.photos.isEmpty()) {
+                Surface(
+                    onClick = onEditProfile,
+                    shape = RoundedCornerShape(16.dp),
+                    color = InkElevated,
+                    border = BorderStroke(1.dp, Teal.copy(alpha = 0.6f)),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
                 ) {
-                    GemIcon(110.dp, spin = true)
-                    Spacer(Modifier.height(18.dp))
-                    Text("Profile werden geladen", color = TextHigh, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
+                    Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            "Lade ein Foto hoch, damit andere dich sehen können.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text("Bearbeiten", color = Teal, fontWeight = FontWeight.SemiBold)
+                    }
                 }
-                cards.isEmpty() -> EmptyState(
-                    emoji = "🌍",
-                    title = "Gerade keine neuen Leute",
-                    text = "Schau später wieder vorbei oder ändere deine Filter.",
-                    modifier = Modifier.align(Alignment.Center),
-                    actionLabel = "Übersprungene nochmal zeigen",
-                    onAction = { vm.reshuffle() }
-                )
-                else -> CardStack(
-                    cards = cards,
-                    onSkip = vm::skip,
-                    onLike = vm::like,
-                    onOpen = onOpenUser,
-                    onReport = { reporting = it }
-                )
+            }
+
+            Box(
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp)
+            ) {
+                when {
+                    !vm.loaded -> Column(
+                        Modifier.align(Alignment.Center),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        GemIcon(110.dp, spin = true)
+                        Spacer(Modifier.height(18.dp))
+                        Text("Profile werden geladen", color = TextHigh, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
+                    }
+                    cards.isEmpty() && vm.filter.isActive(vm.ageBounds) -> EmptyState(
+                        emoji = "🔍",
+                        title = "Niemand passt gerade zu deiner Suche",
+                        text = "Probier andere Interessen, ein anderes Land oder ein größeres Alter.",
+                        modifier = Modifier.align(Alignment.Center),
+                        actionLabel = "Such-Einstellungen ändern",
+                        onAction = { showFilter = true }
+                    )
+                    cards.isEmpty() -> EmptyState(
+                        emoji = "🌍",
+                        title = "Gerade keine neuen Leute",
+                        text = "Schau später wieder vorbei oder ändere deine Such-Einstellungen.",
+                        modifier = Modifier.align(Alignment.Center),
+                        actionLabel = "Übersprungene nochmal zeigen",
+                        onAction = { vm.reshuffle() }
+                    )
+                    else -> CardStack(
+                        cards = cards,
+                        myInterests = myInterests,
+                        onSkip = vm::skip,
+                        onLike = vm::like,
+                        onOpen = onOpenUser,
+                        onReport = { reporting = it }
+                    )
+                }
             }
         }
-    }
-
-    if (showFilter) {
-        FilterDialog(
-            country = vm.country,
-            minAge = vm.minAge,
-            maxAge = vm.maxAge,
-            bounds = vm.ageBounds,
-            onDismiss = { showFilter = false },
-            onApply = { c, min, max ->
-                showFilter = false
-                vm.setFilter(c, min, max)
-            }
-        )
     }
 
     val target = reporting
@@ -336,6 +387,7 @@ fun DiscoverScreen(
 @Composable
 private fun CardStack(
     cards: List<UserProfile>,
+    myInterests: Set<String>,
     onSkip: (UserProfile) -> Unit,
     onLike: (UserProfile) -> Unit,
     onOpen: (String) -> Unit,
@@ -367,6 +419,7 @@ private fun CardStack(
             key(next.uid) {
                 ProfileCard(
                     profile = next,
+                    myInterests = myInterests,
                     interactive = false,
                     modifier = Modifier
                         .fillMaxSize()
@@ -382,6 +435,7 @@ private fun CardStack(
         key(top.uid) {
             ProfileCard(
                 profile = top,
+                myInterests = myInterests,
                 interactive = true,
                 onOpen = { onOpen(top.uid) },
                 onLike = { fling(true) },
@@ -431,6 +485,7 @@ private fun CardStack(
 @Composable
 private fun ProfileCard(
     profile: UserProfile,
+    myInterests: Set<String>,
     interactive: Boolean,
     modifier: Modifier = Modifier,
     onOpen: () -> Unit = {},
@@ -448,10 +503,12 @@ private fun ProfileCard(
     ) {
         // Seite 1 Foto, Seite 2 Bio + Interessen, dann weitere Fotos.
         // Tippen irgendwo = weiter, linker Rand = zurück.
+        val shared = remember(profile.interests, myInterests) { profile.interests.filter { it in myInterests }.toSet() }
         ProfileStory(
             profile = profile,
             interactive = interactive,
             bottomSpace = if (interactive) 86.dp else 16.dp,
+            highlight = shared,
             modifier = Modifier.fillMaxSize(),
             header = {
                 Row(
@@ -460,8 +517,12 @@ private fun ProfileCard(
                         .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.Top
                 ) {
-                    Box(Modifier.weight(1f)) {
+                    Column(Modifier.weight(1f)) {
                         ProfileNameStickers(profile = profile, onClick = if (interactive) onOpen else null)
+                        if (shared.isNotEmpty() && !profile.bot) {
+                            Spacer(Modifier.height(8.dp))
+                            SharedInterestsSticker(shared.toList())
+                        }
                     }
                     if (interactive) {
                         IconButton(onClick = onReport) {
@@ -586,61 +647,34 @@ private fun Stamp(text: String, color: Color, rotation: Float, modifier: Modifie
     )
 }
 
+/** Kleiner Hinweis auf der Karte: so viele Interessen habt ihr gemeinsam */
 @Composable
-private fun FilterDialog(
-    country: String?,
-    minAge: Int,
-    maxAge: Int,
-    bounds: IntRange,
-    onDismiss: () -> Unit,
-    onApply: (String?, Int, Int) -> Unit,
-) {
-    var selectedCountry by remember { mutableStateOf(country) }
-    var range by remember { mutableStateOf(minAge.toFloat()..maxAge.toFloat()) }
-    var pickCountry by remember { mutableStateOf(false) }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Filter") },
-        text = {
-            Column {
-                Text("Land", style = MaterialTheme.typography.labelMedium, color = TextLow)
-                OutlinedButton(onClick = { pickCountry = true }, modifier = Modifier.fillMaxWidth()) {
-                    val c = selectedCountry
-                    Text(if (c == null) "🌍 Alle Länder" else "${Countries.flag(c)} ${Countries.name(c)}")
-                }
-                Spacer(Modifier.height(16.dp))
-                val upperLabel = if (range.endInclusive.roundToInt() >= 80) "80+" else "${range.endInclusive.roundToInt()}"
-                Text(
-                    "Alter: ${range.start.roundToInt()} – $upperLabel",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = TextLow
-                )
-                RangeSlider(
-                    value = range,
-                    onValueChange = { range = it },
-                    valueRange = bounds.first.toFloat()..bounds.last.toFloat(),
-                    steps = (bounds.last - bounds.first - 1).coerceAtLeast(0),
-                    colors = SliderDefaults.colors(thumbColor = Teal, activeTrackColor = Teal)
-                )
+private fun SharedInterestsSticker(shared: List<String>) {
+    Row(
+        Modifier
+            .padding(start = 4.dp)
+            .graphicsLayer { rotationZ = 2f }
+            .background(Ink.copy(alpha = 0.72f), RoundedCornerShape(12.dp))
+            .border(1.5.dp, Teal, RoundedCornerShape(12.dp))
+            .padding(start = 4.dp, end = 10.dp, top = 2.dp, bottom = 2.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        val icons = shared.take(3)
+        Box(
+            Modifier
+                .width((26 + 16 * (icons.size - 1)).dp)
+                .height(26.dp)
+        ) {
+            icons.forEachIndexed { i, interest ->
+                InterestIcon(interest, 26.dp, Modifier.offset(x = (16 * i).dp))
             }
-        },
-        confirmButton = {
-            Button(onClick = {
-                onApply(selectedCountry, range.start.roundToInt(), range.endInclusive.roundToInt())
-            }) { Text("Anwenden") }
-        },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Abbrechen") } }
-    )
-
-    if (pickCountry) {
-        CountryPickerDialog(
-            allowAll = true,
-            onDismiss = { pickCountry = false },
-            onPick = {
-                selectedCountry = it
-                pickCountry = false
-            }
+        }
+        Spacer(Modifier.width(4.dp))
+        Text(
+            if (shared.size == 1) "1 Gemeinsamkeit" else "${shared.size} Gemeinsamkeiten",
+            color = Color.White,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.ExtraBold
         )
     }
 }

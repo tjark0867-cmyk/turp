@@ -34,19 +34,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.turp.data.UserProfile
 import app.turp.ui.theme.InkHigh
 import coil.compose.AsyncImage
-import kotlin.math.abs
 
 /** Eine Seite in der Profil-Ansicht */
 private sealed interface StoryPage {
@@ -78,6 +74,8 @@ fun ProfileStory(
     bottomSpace: Dp = 16.dp,
     header: @Composable () -> Unit = {},
     infoExtra: (@Composable () -> Unit)? = null,
+    /** Interessen, die man mit dieser Person gemeinsam hat (werden markiert) */
+    highlight: Set<String> = emptySet(),
 ) {
     val pages = remember(profile.uid, profile.photos) { storyPages(profile.photos) }
     var index by remember(profile.uid) { mutableIntStateOf(0) }
@@ -168,6 +166,7 @@ fun ProfileStory(
                     profile = profile,
                     accent = accent,
                     extra = infoExtra,
+                    highlight = highlight,
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth()
@@ -197,7 +196,13 @@ private val TextOnPhoto = TextStyle(shadow = Shadow(Color.Black.copy(alpha = 0.7
 
 /** Seite 2: Bio groß und gut lesbar, darunter die Interessen als Sticker */
 @Composable
-private fun InfoPage(profile: UserProfile, accent: Color, modifier: Modifier = Modifier, extra: (@Composable () -> Unit)? = null) {
+private fun InfoPage(
+    profile: UserProfile,
+    accent: Color,
+    modifier: Modifier = Modifier,
+    extra: (@Composable () -> Unit)? = null,
+    highlight: Set<String> = emptySet(),
+) {
     Column(
         modifier
             .verticalScroll(rememberScrollState())
@@ -229,37 +234,18 @@ private fun InfoPage(profile: UserProfile, accent: Color, modifier: Modifier = M
             Sticker("Interessen", accent, rotation = -3f, fontSize = 20.sp)
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                profile.interests.forEach { InterestTile(it) }
+                // Gemeinsame Interessen zuerst und mit Haken
+                profile.interests.sortedByDescending { it in highlight }.forEach {
+                    InterestStickerWithTape(it, 60.dp, Modifier.widthIn(min = 66.dp), highlight = it in highlight)
+                }
             }
         }
         if (extra != null) {
             Spacer(Modifier.height(2.dp))
             extra()
         }
-    }
-}
-
-/** Interesse als eigener Sticker, leicht schräg, mit kleinem Namen darunter */
-@Composable
-private fun InterestTile(interest: String) {
-    val tilt = ((abs(interest.hashCode()) % 11) - 5).toFloat()
-    Column(
-        Modifier.widthIn(min = 64.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        InterestIcon(interest, 58.dp, Modifier.graphicsLayer { rotationZ = tilt })
-        Text(
-            interestLabel(interest),
-            color = Color.White,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.SemiBold,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            textAlign = TextAlign.Center,
-            style = TextOnPhoto
-        )
     }
 }
 

@@ -4,7 +4,9 @@ import com.google.firebase.Timestamp
 import android.content.Context
 import android.net.Uri
 import app.turp.BuildConfig
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.StorageMetadata
 import kotlinx.coroutines.Dispatchers
@@ -140,7 +142,17 @@ object ProfileRepo {
 
 object DiscoverRepo {
 
-    suspend fun candidates(ageGroup: String, country: String?, minAge: Int, maxAge: Int): List<UserProfile> {
+    /**
+     * Profile zum Entdecken. Mit [interests] (höchstens 10) kommen nur Leute,
+     * die mindestens eins davon mögen.
+     */
+    suspend fun candidates(
+        ageGroup: String,
+        country: String?,
+        minAge: Int,
+        maxAge: Int,
+        interests: List<String> = emptyList(),
+    ): List<UserProfile> {
         val me = Fb.uid
         val meRef = userRef(me)
         val excluded = coroutineScope {
@@ -156,7 +168,32 @@ object DiscoverRepo {
             .whereEqualTo("active", true)
         if (country != null) base = base.whereEqualTo("country", country)
 
-        // Zufälliger Startpunkt, damit jeder andere Leute zuerst sieht
+        val wanted = interests.take(10)
+        val docs = if (wanted.isEmpty()) {
+            randomWindow(base)
+        } else {
+            try {
+                randomWindow(base.whereArrayContainsAny("interests", wanted))
+            } catch (e: FirebaseFirestoreException) {
+                // Index wird nach einem Update evtl. noch gebaut – dann ohne Index suchen und selbst filtern
+                if (e.code != FirebaseFirestoreException.Code.FAILED_PRECONDITION) throw e
+                android.util.Log.w("kumi", "Interessen-Suche ohne Index", e)
+                randomWindow(base)
+            }
+        }
+
+        return docs.asSequence()
+            .map { it.toProfile() }
+            .filter { it.uid !in excluded && it.photos.isNotEmpty() }
+            // Der Test-Bot erscheint nur in Test-Versionen (Debug-Builds), dann ganz vorne
+            .filter { if (it.bot) BuildConfig.DEBUG else it.age in minAge..maxAge }
+            .filter { wanted.isEmpty() || it.bot || it.interests.any { i -> i in wanted } }
+            .distinctBy { it.uid }
+            .toList()
+    }
+
+    /** Zufälliger Startpunkt, damit jeder andere Leute zuerst sieht */
+    private suspend fun randomWindow(base: Query): List<DocumentSnapshot> {
         val pivot = Math.random()
         val after = base.orderBy("random").startAt(pivot).limit(80).get().await().documents
         val before = if (after.size < 80) {
@@ -164,15 +201,7 @@ object DiscoverRepo {
         } else {
             emptyList()
         }
-
-        return (after + before).asSequence()
-            .map { it.toProfile() }
-            .filter { it.uid !in excluded && it.photos.isNotEmpty() }
-            // Der Test-Bot erscheint nur in Test-Versionen (Debug-Builds), dann ganz vorne
-            .filter { if (it.bot) BuildConfig.DEBUG else it.age in minAge..maxAge }
-            .distinctBy { it.uid }
-            .sortedByDescending { it.bot }
-            .toList()
+        return after + before
     }
 
     suspend fun skip(uid: String) {

@@ -25,6 +25,9 @@ const { getStorage, getDownloadURL } = require("firebase-admin/storage");
 const { getMessaging } = require("firebase-admin/messaging");
 
 const { clean } = require("./wordfilter");
+// Erlaubte Interessen (gleiche Liste wie in der App, InterestCatalog.kt)
+const ALLOWED_INTERESTS = new Set(require("./interests.json"));
+const MAX_INTERESTS = 8;
 const { isImageSafe, isVideoSafe } = require("./moderation");
 
 initializeApp();
@@ -1149,6 +1152,12 @@ exports.onProfileWritten = onDocumentWritten("users/{uid}", async (event) => {
       const c = clean(d[f]);
       if (c.flagged) updates[f] = c.text;
     }
+  }
+  // Nur Interessen aus dem Katalog – kein freier Text, der ungeprüft im Profil steht
+  if (JSON.stringify(d.interests) !== JSON.stringify(before.interests)) {
+    const list = Array.isArray(d.interests) ? d.interests : [];
+    const ok = [...new Set(list.filter((i) => typeof i === "string" && ALLOWED_INTERESTS.has(i)))].slice(0, MAX_INTERESTS);
+    if (JSON.stringify(ok) !== JSON.stringify(list)) updates.interests = ok;
   }
   if (Object.keys(updates).length > 0) await after.ref.update(updates);
 

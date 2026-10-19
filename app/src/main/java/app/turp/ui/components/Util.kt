@@ -139,14 +139,6 @@ object Countries {
     }
 }
 
-val ALL_INTERESTS = listOf(
-    "🎮 Gaming", "🎵 Musik", "🎤 Singen", "🎸 Instrumente", "⚽ Fußball", "🏀 Basketball",
-    "🏋️ Fitness", "🛹 Skaten", "🎨 Zeichnen", "📸 Fotografie", "🎬 Filme", "📺 Serien",
-    "📚 Lesen", "✍️ Schreiben", "🍳 Kochen", "🐶 Tiere", "🌱 Natur", "✈️ Reisen",
-    "💃 Tanzen", "👗 Mode", "💻 Coden", "🧪 Wissenschaft", "🌸 Anime", "🎲 Brettspiele",
-    "🧘 Yoga", "🏊 Schwimmen", "🚴 Radfahren", "🗣️ Sprachen", "😂 Memes", "🎧 Podcasts",
-)
-
 val REPORT_REASONS = listOf(
     "Belästigung oder Mobbing",
     "Sexuelle Inhalte",
