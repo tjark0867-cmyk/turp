@@ -44,7 +44,7 @@ suspend fun callFunction(
     callable.setTimeout(timeoutSeconds, TimeUnit.SECONDS)
     val result = callable.call(data).await()
     @Suppress("UNCHECKED_CAST")
-    return (result.data as? Map<String, Any?>) ?: emptyMap()
+    return (result.getData() as? Map<String, Any?>) ?: emptyMap()
 }
 
 /** Live-Updates eines Dokuments als Flow. Fehler werden nur protokolliert. */
