@@ -241,36 +241,25 @@ private fun InfoPage(profile: UserProfile, accent: Color, modifier: Modifier = M
     }
 }
 
-/** Interesse als kleiner Sticker: großes Emoji, Name darunter, leicht schräg */
+/** Interesse als eigener Sticker, leicht schräg, mit kleinem Namen darunter */
 @Composable
 private fun InterestTile(interest: String) {
-    val parts = interest.trim().split(" ", limit = 2)
-    val emoji = if (parts.size == 2) parts[0] else "⭐"
-    val label = if (parts.size == 2) parts[1] else interest
-    val tilt = ((abs(interest.hashCode()) % 9) - 4).toFloat()
-    Surface(
-        shape = RoundedCornerShape(18.dp),
-        color = Color.Black.copy(alpha = 0.38f),
-        border = BorderStroke(2.dp, Color.White.copy(alpha = 0.9f)),
-        modifier = Modifier.graphicsLayer { rotationZ = tilt }
+    val tilt = ((abs(interest.hashCode()) % 11) - 5).toFloat()
+    Column(
+        Modifier.widthIn(min = 64.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            Modifier
-                .widthIn(min = 76.dp)
-                .padding(horizontal = 10.dp, vertical = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(emoji, fontSize = 30.sp)
-            Text(
-                label,
-                color = Color.White,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                textAlign = TextAlign.Center
-            )
-        }
+        InterestIcon(interest, 58.dp, Modifier.graphicsLayer { rotationZ = tilt })
+        Text(
+            interestLabel(interest),
+            color = Color.White,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.SemiBold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Center,
+            style = TextOnPhoto
+        )
     }
 }
 

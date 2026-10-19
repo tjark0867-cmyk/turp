@@ -1,5 +1,6 @@
 package app.turp.ui.screens
 
+import app.turp.ui.components.InterestIcon
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.SharingStarted
 import app.turp.ui.components.TabHeader
@@ -556,16 +557,13 @@ private fun RequestRow(
 
 @Composable
 private fun InterestEmoji(interest: String, shared: Boolean) {
-    val emoji = interest.trim().substringBefore(" ")
-    val shape = RoundedCornerShape(7.dp)
     Box(
         Modifier
-            .size(24.dp)
-            .background(if (shared) Teal.copy(alpha = 0.16f) else InkHigh, shape)
-            .then(if (shared) Modifier.border(1.dp, Teal, shape) else Modifier),
+            .size(28.dp)
+            .background(if (shared) Teal.copy(alpha = 0.28f) else Color.Transparent, CircleShape),
         contentAlignment = Alignment.Center
     ) {
-        Text(emoji, fontSize = 13.sp)
+        InterestIcon(interest, 26.dp)
     }
 }
 

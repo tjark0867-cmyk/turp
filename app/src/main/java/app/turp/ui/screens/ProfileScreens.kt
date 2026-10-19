@@ -1,5 +1,7 @@
 package app.turp.ui.screens
 
+import app.turp.ui.components.InterestPickTile
+import app.turp.ui.components.InterestIcon
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.HorizontalDivider
@@ -692,12 +694,13 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
 
             GroupCard {
                 FieldRow("Meine Interessen", onClick = { showInterests = true }) {
-                    Text(
-                        interests.joinToString("") { it.substringBefore(" ") }.ifBlank { "Auswählen" },
-                        color = if (interests.isEmpty()) TextLow else TextHigh,
-                        fontSize = 15.sp,
-                        maxLines = 1
-                    )
+                    if (interests.isEmpty()) {
+                        Text("Auswählen", color = TextLow, fontSize = 15.sp)
+                    } else {
+                        Row(horizontalArrangement = Arrangement.spacedBy((-6).dp)) {
+                            interests.take(5).forEach { InterestIcon(it, 28.dp) }
+                        }
+                    }
                     Icon(Icons.AutoMirrored.Rounded.KeyboardArrowRight, contentDescription = null, tint = TextLow)
                 }
             }
@@ -840,29 +843,21 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
                 )
                 Spacer(Modifier.height(12.dp))
                 FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     ALL_INTERESTS.forEach { interest ->
                         val selected = interest in interests
-                        FilterChip(
-                            selected = selected,
-                            onClick = {
-                                interests = when {
-                                    selected -> interests - interest
-                                    interests.size >= MAX_INTERESTS -> {
-                                        context.toast("Höchstens $MAX_INTERESTS Interessen.")
-                                        interests
-                                    }
-                                    else -> interests + interest
+                        InterestPickTile(interest, selected) {
+                            interests = when {
+                                selected -> interests - interest
+                                interests.size >= MAX_INTERESTS -> {
+                                    context.toast("Höchstens $MAX_INTERESTS Interessen.")
+                                    interests
                                 }
-                            },
-                            label = { Text(interest) },
-                            colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = parseColor(color).copy(alpha = 0.3f),
-                                selectedLabelColor = TextHigh
-                            )
-                        )
+                                else -> interests + interest
+                            }
+                        }
                     }
                 }
                 Spacer(Modifier.height(14.dp))
