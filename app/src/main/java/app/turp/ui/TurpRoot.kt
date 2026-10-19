@@ -26,7 +26,7 @@ fun TurpRoot(pendingChatId: String?, onChatHandled: () -> Unit) {
 
     Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier.fillMaxSize()) {
         when (val s = state) {
-            SessionState.Loading -> SplashScreen()
+            SessionState.Loading -> SplashScreen(onRetry = session::retry, onSignOut = session::signOut)
             SessionState.NoFirebase -> SetupMissingScreen()
             SessionState.SignedOut -> AuthScreen()
             SessionState.NeedsProfile -> OnboardingScreen(onSignOut = session::signOut)

@@ -12,6 +12,7 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.Query
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.FirebaseFunctionsException
@@ -48,10 +49,11 @@ suspend fun callFunction(
 }
 
 /** Live-Updates eines Dokuments als Flow. Fehler werden nur protokolliert. */
-fun DocumentReference.asFlow(): Flow<DocumentSnapshot> {
+fun DocumentReference.asFlow(includeMetadata: Boolean = false): Flow<DocumentSnapshot> {
     val ref = this
+    val changes = if (includeMetadata) MetadataChanges.INCLUDE else MetadataChanges.EXCLUDE
     return callbackFlow {
-        val registration = ref.addSnapshotListener { snapshot, error ->
+        val registration = ref.addSnapshotListener(changes) { snapshot, error ->
             if (error != null) {
                 Log.w("turp", "Lesen von ${ref.path} fehlgeschlagen: ${error.code}")
                 return@addSnapshotListener

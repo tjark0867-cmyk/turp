@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import app.turp.TurpApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.Source
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -56,10 +57,28 @@ class SessionViewModel : ViewModel() {
         _state.value = SessionState.Loading
         accountJob = viewModelScope.launch {
             var lastKey: String? = null
-            Fb.db.collection("accounts").document(user.uid).asFlow().collect { snap ->
+            var serverChecked = false
+            val ref = Fb.db.collection("accounts").document(user.uid)
+            // Mit Metadaten: so kommt auch die Bestätigung des Servers an, wenn sich
+            // am Dokument selbst nichts ändert (z. B. "gibt es noch nicht").
+            ref.asFlow(includeMetadata = true).collect { snap ->
                 if (!snap.exists()) {
-                    // Aus dem Offline-Cache: auf die Antwort des Servers warten
-                    if (!snap.metadata.isFromCache) _state.value = SessionState.NeedsProfile
+                    if (!snap.metadata.isFromCache) {
+                        _state.value = SessionState.NeedsProfile
+                    } else if (!serverChecked) {
+                        // Nur aus dem Offline-Speicher: einmal direkt beim Server nachfragen
+                        serverChecked = true
+                        launch {
+                            try {
+                                val fresh = ref.get(Source.SERVER).await()
+                                if (!fresh.exists() && _state.value == SessionState.Loading) {
+                                    _state.value = SessionState.NeedsProfile
+                                }
+                            } catch (e: Exception) {
+                                Log.w("turp", "Konto konnte nicht vom Server geladen werden", e)
+                            }
+                        }
+                    }
                     return@collect
                 }
                 val account = snap.toAccount()
@@ -100,6 +119,11 @@ class SessionViewModel : ViewModel() {
                 Log.w("turp", "Push-Token konnte nicht gespeichert werden", e)
             }
         }
+    }
+
+    /** Lädt den Anmeldestatus neu (falls das Laden hängt). */
+    fun retry() {
+        if (TurpApp.firebaseReady) onUserChanged(Fb.auth.currentUser)
     }
 
     /** Lädt Rechte neu, z. B. nachdem jemand Admin geworden ist. */

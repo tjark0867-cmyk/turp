@@ -81,7 +81,13 @@ private val backgroundGradient = Brush.verticalGradient(listOf(Ink, Night))
 // ---- Ladebildschirm & Hinweise --------------------------------------------
 
 @Composable
-fun SplashScreen() {
+fun SplashScreen(onRetry: (() -> Unit)? = null, onSignOut: (() -> Unit)? = null) {
+    // Dauert das Laden ungewöhnlich lange, gibt es einen Ausweg statt endlos zu warten
+    var slow by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(10_000)
+        slow = true
+    }
     Box(
         Modifier
             .fillMaxSize()
@@ -92,6 +98,19 @@ fun SplashScreen() {
             TurpLogo()
             Spacer(Modifier.height(24.dp))
             CircularProgressIndicator(color = Teal)
+            if (slow && (onRetry != null || onSignOut != null)) {
+                Spacer(Modifier.height(28.dp))
+                Text("Das dauert länger als sonst.", color = TextLow)
+                Spacer(Modifier.height(8.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    if (onRetry != null) {
+                        TextButton(onClick = { slow = false; onRetry() }) { Text("Erneut versuchen", color = Teal) }
+                    }
+                    if (onSignOut != null) {
+                        TextButton(onClick = onSignOut) { Text("Abmelden", color = TextLow) }
+                    }
+                }
+            }
         }
     }
 }
