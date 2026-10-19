@@ -29,28 +29,37 @@ object MediaUtils {
         val decoded = resolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, options) }
             ?: throw IllegalArgumentException("Das Bild konnte nicht gelesen werden.")
 
-        val rotation = try {
+        val orientation = try {
             resolver.openInputStream(uri)?.use { stream ->
-                when (ExifInterface(stream).getAttributeInt(
-                    ExifInterface.TAG_ORIENTATION,
-                    ExifInterface.ORIENTATION_NORMAL
-                )) {
-                    ExifInterface.ORIENTATION_ROTATE_90 -> 90f
-                    ExifInterface.ORIENTATION_ROTATE_180 -> 180f
-                    ExifInterface.ORIENTATION_ROTATE_270 -> 270f
-                    else -> 0f
-                }
-            } ?: 0f
+                ExifInterface(stream).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+            } ?: ExifInterface.ORIENTATION_NORMAL
         } catch (e: Exception) {
-            0f
+            ExifInterface.ORIENTATION_NORMAL
         }
 
+        // Drehen und (bei gespeicherten Selfies) spiegeln, so wie es im Bild vermerkt ist
         val scale = minOf(1f, maxSide.toFloat() / maxOf(decoded.width, decoded.height))
-        val bitmap = if (scale < 1f || rotation != 0f) {
-            val matrix = Matrix().apply {
-                if (scale < 1f) postScale(scale, scale)
-                if (rotation != 0f) postRotate(rotation)
+        val matrix = Matrix()
+        if (scale < 1f) matrix.postScale(scale, scale)
+        when (orientation) {
+            ExifInterface.ORIENTATION_FLIP_HORIZONTAL -> matrix.postScale(-1f, 1f)
+            ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+            ExifInterface.ORIENTATION_FLIP_VERTICAL -> {
+                matrix.postRotate(180f)
+                matrix.postScale(-1f, 1f)
             }
+            ExifInterface.ORIENTATION_TRANSPOSE -> {
+                matrix.postRotate(90f)
+                matrix.postScale(-1f, 1f)
+            }
+            ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+            ExifInterface.ORIENTATION_TRANSVERSE -> {
+                matrix.postRotate(-90f)
+                matrix.postScale(-1f, 1f)
+            }
+            ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(-90f)
+        }
+        val bitmap = if (!matrix.isIdentity) {
             Bitmap.createBitmap(decoded, 0, 0, decoded.width, decoded.height, matrix, true)
         } else {
             decoded

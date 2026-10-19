@@ -1,10 +1,17 @@
 package app.turp.ui.screens
 
+import app.turp.ui.components.VoicePlayer
+import app.turp.ui.components.VoiceMessageContent
+import app.turp.ui.components.RecordingBar
+import app.turp.ui.components.InAppCamera
+import app.turp.data.VoiceRecorder
+import androidx.core.content.ContextCompat
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.DisposableEffect
+import android.content.pm.PackageManager
+import android.Manifest
 import java.io.File
 import app.turp.ui.components.rememberIsOnline
-import androidx.core.content.FileProvider
-import androidx.compose.runtime.saveable.rememberSaveable
-import android.content.ActivityNotFoundException
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.delay
 import com.google.firebase.Timestamp
@@ -248,6 +255,20 @@ class ChatViewModel(private val chatId: String) : BaseViewModel() {
         launchSafe(showBusy = false) { ChatRepo.sendText(chatId, text.take(1000)) }
     }
 
+    var sendingAudio by mutableStateOf(false)
+        private set
+
+    fun sendAudio(file: File, durationMs: Long) {
+        sendingAudio = true
+        launchSafe(showBusy = false) {
+            try {
+                ChatRepo.sendAudio(chatId, file, durationMs)
+            } finally {
+                sendingAudio = false
+            }
+        }
+    }
+
     fun sendImage(appContext: Context, uri: Uri) {
         if (sendingImage) return
         sendingImage = true
@@ -331,24 +352,52 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
         if (uri != null) vm.sendImage(context.applicationContext, uri)
     }
 
-    // Kamera: Foto in einer temporären Datei aufnehmen, danach wie ein Galerie-Foto senden (wird geprüft)
-    var cameraUri by rememberSaveable { mutableStateOf<String?>(null) }
-    val camera = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { ok ->
-        val taken = cameraUri
-        if (ok && taken != null) vm.sendImage(context.applicationContext, Uri.parse(taken))
+    // Eigene Kamera (Selfies werden nicht gespiegelt)
+    var showCamera by remember { mutableStateOf(false) }
+
+    // Sprachnachrichten: aufnehmen und abspielen
+    val recorder = remember { VoiceRecorder(context.applicationContext) }
+    val voice = remember { VoicePlayer(context.applicationContext) }
+    var recording by remember { mutableStateOf(false) }
+    var recordMs by remember { mutableLongStateOf(0L) }
+    DisposableEffect(Unit) {
+        onDispose {
+            recorder.cancel()
+            voice.release()
+        }
     }
-    fun openCamera() {
-        try {
-            val dir = File(context.cacheDir, "camera").apply { mkdirs() }
-            dir.listFiles()?.forEach { it.delete() }
-            val file = File(dir, "foto_${System.currentTimeMillis()}.jpg")
-            val uri = FileProvider.getUriForFile(context, "${context.packageName}.files", file)
-            cameraUri = uri.toString()
-            camera.launch(uri)
-        } catch (e: ActivityNotFoundException) {
-            context.toast("Keine Kamera-App gefunden.")
-        } catch (e: Exception) {
-            context.toast("Kamera konnte nicht geöffnet werden.")
+    fun finishRecording(send: Boolean) {
+        if (!recording) return
+        recording = false
+        if (!send) {
+            recorder.cancel()
+            return
+        }
+        val result = recorder.stop()
+        if (result == null) context.toast("Zu kurz – sprich etwas länger.") else vm.sendAudio(result.first, result.second)
+    }
+    fun startRecording() {
+        if (recorder.start()) {
+            recordMs = 0L
+            recording = true
+        } else {
+            context.toast("Aufnahme nicht möglich.")
+        }
+    }
+    val micPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { ok ->
+        if (ok) startRecording() else context.toast("Ohne Mikrofon-Erlaubnis geht das leider nicht.")
+    }
+    LaunchedEffect(recording) {
+        while (recording) {
+            recordMs = recorder.elapsedMs
+            if (recordMs >= VoiceRecorder.MAX_MS) finishRecording(send = true)
+            delay(200)
+        }
+    }
+    LaunchedEffect(voice.isPlaying) {
+        while (voice.isPlaying) {
+            voice.tick()
+            delay(80)
         }
     }
 
@@ -360,6 +409,7 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
         }
     }
 
+    Box(Modifier.fillMaxSize()) {
     Scaffold(
         containerColor = Ink,
         topBar = {
@@ -456,6 +506,13 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
                         color = TextLow
                     )
                 }
+            } else if (recording) {
+                RecordingBar(
+                    elapsedMs = recordMs,
+                    onCancel = { finishRecording(send = false) },
+                    onSend = { finishRecording(send = true) },
+                    modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars.union(WindowInsets.ime))
+                )
             } else {
                 MessageInput(
                     onSend = vm::send,
@@ -464,8 +521,13 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
                     onPickImage = {
                         picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                     },
-                    imageBusy = vm.sendingImage,
-                    onCamera = { openCamera() },
+                    imageBusy = vm.sendingImage || vm.sendingAudio,
+                    onCamera = { showCamera = true },
+                    onMic = {
+                        val granted = ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) ==
+                            PackageManager.PERMISSION_GRANTED
+                        if (granted) startRecording() else micPermission.launch(Manifest.permission.RECORD_AUDIO)
+                    },
                 )
             }
         }
@@ -506,15 +568,31 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
                         lastInRun = lastInRun,
                         other = other,
                         showRead = m.id == lastReadId,
+                        voice = voice,
                         onLongPress = {
                             if (!mine) {
-                                reportContext = if (m.type == "text") m.text else "[Foto]"
+                                reportContext = when (m.type) {
+                                    "text" -> m.text
+                                    "audio" -> "[Sprachnachricht]"
+                                    else -> "[Foto]"
+                                }
                             }
                         }
                     )
                 }
             }
         }
+    }
+
+    if (showCamera) {
+        InAppCamera(
+            onClose = { showCamera = false },
+            onPhoto = { uri ->
+                showCamera = false
+                vm.sendImage(context.applicationContext, uri)
+            }
+        )
+    }
     }
 
     val ctx = reportContext
@@ -575,6 +653,7 @@ private fun MessageRow(
     lastInRun: Boolean,
     other: MemberInfo?,
     showRead: Boolean,
+    voice: VoicePlayer,
     onLongPress: () -> Unit,
 ) {
     Row(
@@ -593,7 +672,7 @@ private fun MessageRow(
             Spacer(Modifier.width(8.dp))
         }
         Box {
-            Bubble(message, mine, lastInRun, onLongPress)
+            Bubble(message, mine, lastInRun, voice, onLongPress)
             if (showRead && other != null) {
                 Avatar(
                     other.photo,
@@ -611,7 +690,7 @@ private fun MessageRow(
 }
 
 @Composable
-private fun Bubble(message: Message, mine: Boolean, lastInRun: Boolean, onLongPress: () -> Unit) {
+private fun Bubble(message: Message, mine: Boolean, lastInRun: Boolean, voice: VoicePlayer, onLongPress: () -> Unit) {
     val round = 20.dp
     val tail = 6.dp
     val shape = RoundedCornerShape(
@@ -648,6 +727,20 @@ private fun Bubble(message: Message, mine: Boolean, lastInRun: Boolean, onLongPr
                         .padding(8.dp)
                 )
             }
+            message.type == "audio" -> VoiceMessageContent(
+                id = message.id,
+                status = when {
+                    message.audioStatus == "ok" && message.audioUrl.isNotBlank() -> "ok"
+                    message.audioStatus == "blocked" -> "blocked"
+                    else -> "pending"
+                },
+                durationMs = message.durationMs,
+                playing = voice.playingId == message.id && voice.isPlaying,
+                progress = if (voice.playingId == message.id) voice.progress else 0f,
+                mine = mine,
+                time = time,
+                onToggle = { voice.toggle(message.id, message.audioUrl) }
+            )
             message.type == "image" && message.imageStatus == "blocked" ->
                 BubbleText("🚫 Foto wurde blockiert", time, fg, timeColor, italic = true)
             message.type == "image" -> BubbleText("📷 Foto wird geprüft…", time, fg, timeColor, italic = true)

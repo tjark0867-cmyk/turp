@@ -133,6 +133,16 @@ service cloud.firestore {
               && request.resource.data.imageStatus == 'pending'
               && request.resource.data.imagePath is string
               && request.resource.data.imagePath.matches('^chatUploads/' + me() + '/[A-Za-z0-9-]+[.]jpg$'))
+            ||
+            (request.resource.data.type == 'audio'
+              && request.resource.data.keys().hasOnly(['senderId', 'type', 'text', 'audioPath', 'audioStatus', 'durationMs', 'createdAt'])
+              && request.resource.data.text == ''
+              && request.resource.data.audioStatus == 'pending'
+              && request.resource.data.audioPath is string
+              && request.resource.data.audioPath.matches('^chatUploads/' + me() + '/[A-Za-z0-9-]+[.]m4a$')
+              && request.resource.data.durationMs is int
+              && request.resource.data.durationMs > 0
+              && request.resource.data.durationMs <= 120000)
           );
         allow update, delete: if false;
       }

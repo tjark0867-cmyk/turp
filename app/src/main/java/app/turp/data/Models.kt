@@ -93,6 +93,9 @@ data class Message(
     val imageUrl: String,
     val imageStatus: String,
     val createdAt: Timestamp?,
+    val audioUrl: String = "",
+    val audioStatus: String = "",
+    val durationMs: Long = 0,
 )
 
 data class RoomMessage(
@@ -215,6 +218,9 @@ fun DocumentSnapshot.toMessage() = Message(
     imageUrl = s("imageUrl"),
     imageStatus = s("imageStatus"),
     createdAt = ts("createdAt"),
+    audioUrl = s("audioUrl"),
+    audioStatus = s("audioStatus"),
+    durationMs = n("durationMs"),
 )
 
 fun DocumentSnapshot.toRoomMessage() = RoomMessage(

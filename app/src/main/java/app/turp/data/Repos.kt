@@ -254,6 +254,25 @@ object ChatRepo {
         ).await()
     }
 
+    /** Sprachnachricht hochladen; der Server prüft die Datei und gibt sie dann frei */
+    suspend fun sendAudio(chatId: String, file: java.io.File, durationMs: Long) {
+        val path = "chatUploads/${Fb.uid}/${UUID.randomUUID()}.m4a"
+        val meta = StorageMetadata.Builder().setContentType("audio/mp4").build()
+        Fb.storage.reference.child(path).putFile(Uri.fromFile(file), meta).await()
+        file.delete()
+        chatRef(chatId).collection("messages").add(
+            mapOf(
+                "senderId" to Fb.uid,
+                "type" to "audio",
+                "text" to "",
+                "audioPath" to path,
+                "audioStatus" to "pending",
+                "durationMs" to durationMs.coerceIn(1L, 120_000L),
+                "createdAt" to FieldValue.serverTimestamp(),
+            )
+        ).await()
+    }
+
     suspend fun sendImage(context: Context, chatId: String, uri: Uri) {
         val bytes = withContext(Dispatchers.IO) { MediaUtils.compressImage(context, uri, maxSide = 1280, quality = 80) }
         val path = "chatUploads/${Fb.uid}/${UUID.randomUUID()}.jpg"

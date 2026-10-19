@@ -17,13 +17,15 @@ service firebase.storage {
         );
     }
 
-    // Fotos im Chat vor der Prüfung
+    // Fotos und Sprachnachrichten im Chat vor der Prüfung
     match /chatUploads/{uid}/{fileName} {
       allow read: if false;
       allow create: if request.auth != null && request.auth.uid == uid
         && request.auth.token.get('active', false) == true
-        && request.resource.contentType.matches('image/.*')
-        && request.resource.size < 10 * 1024 * 1024;
+        && (
+          (request.resource.contentType.matches('image/.*') && request.resource.size < 10 * 1024 * 1024)
+          || (request.resource.contentType.matches('audio/.*') && request.resource.size < 5 * 1024 * 1024)
+        );
     }
 
     // Geprüfte Medien: nur der Server schreibt, angezeigt wird über Download-Links

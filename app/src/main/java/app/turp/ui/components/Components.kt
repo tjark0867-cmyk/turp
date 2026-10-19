@@ -1,5 +1,6 @@
 package app.turp.ui.components
 
+import androidx.compose.material.icons.rounded.Mic
 import androidx.compose.material.icons.rounded.PhotoCamera
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.LinearEasing
@@ -702,6 +703,7 @@ fun MessageInput(
     onPickImage: (() -> Unit)? = null,
     imageBusy: Boolean = false,
     onCamera: (() -> Unit)? = null,
+    onMic: (() -> Unit)? = null,
 ) {
     var text by rememberSaveable { mutableStateOf("") }
     Surface(color = InkElevated, modifier = Modifier.fillMaxWidth()) {
@@ -749,6 +751,10 @@ fun MessageInput(
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(horizontal = 10.dp)
                 )
+            } else if (onMic != null && text.isBlank()) {
+                IconButton(onClick = onMic, enabled = enabled) {
+                    Icon(Icons.Rounded.Mic, contentDescription = "Sprachnachricht aufnehmen", tint = Teal)
+                }
             } else {
                 val canSend = enabled && text.isNotBlank()
                 IconButton(
