@@ -1,5 +1,10 @@
 package app.turp.ui.screens
 
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.WindowInsets
+import app.turp.ui.components.ProfileNameStickers
+import app.turp.ui.components.ProfileStory
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -27,8 +32,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -838,27 +841,19 @@ fun UserProfileScreen(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
-                PhotoPager(p)
+                // Seite 1 Foto, Seite 2 Bio + Interessen, dann weitere Fotos
+                ProfileStory(
+                    profile = p,
+                    topSpace = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 64.dp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(0.66f),
+                    header = { ProfileNameStickers(p, modifier = Modifier.padding(horizontal = 16.dp)) }
+                )
                 Column(
                     Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
-                    val accent = parseColor(p.color)
-                    Column {
-                        Row(verticalAlignment = Alignment.Bottom) {
-                            Text(p.name, style = MaterialTheme.typography.headlineMedium)
-                            Spacer(Modifier.width(10.dp))
-                            Text(if (p.bot) "🤖 Testbot" else "${p.age}", style = MaterialTheme.typography.headlineSmall, color = TextLow)
-                        }
-                        Text("${Countries.flag(p.country)} ${Countries.name(p.country)}", color = TextLow)
-                    }
-                    if (p.bio.isNotBlank()) Text(p.bio, style = MaterialTheme.typography.bodyLarge)
-                    if (p.interests.isNotEmpty()) {
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) { p.interests.forEach { InterestSticker(it, accent) } }
-                    }
                     if (p.videoUrl.isNotBlank()) {
                         SectionTitle("Video")
                         VideoPlayer(
@@ -962,61 +957,6 @@ private fun RoundIcon(icon: ImageVector, label: String, onClick: () -> Unit) {
     Surface(onClick = onClick, shape = CircleShape, color = Ink.copy(alpha = 0.6f), modifier = Modifier.size(44.dp)) {
         Box(contentAlignment = Alignment.Center) {
             Icon(icon, contentDescription = label, tint = Color.White)
-        }
-    }
-}
-
-@Composable
-private fun PhotoPager(p: UserProfile) {
-    val pagerState = rememberPagerState(pageCount = { p.photos.size.coerceAtLeast(1) })
-    Box(
-        Modifier
-            .fillMaxWidth()
-            .aspectRatio(0.8f)
-            .background(InkHigh)
-    ) {
-        if (p.photos.isEmpty()) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Avatar("", p.name, p.color, 140.dp)
-            }
-        } else {
-            HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
-                AsyncImage(
-                    model = p.photos[page],
-                    contentDescription = p.name,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-        }
-        Box(
-            Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        0.0f to Ink.copy(alpha = 0.5f),
-                        0.2f to Color.Transparent,
-                        0.75f to Color.Transparent,
-                        1.0f to Ink
-                    )
-                )
-        )
-        if (p.photos.size > 1) {
-            Row(
-                Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 14.dp),
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                p.photos.indices.forEach { i ->
-                    Box(
-                        Modifier
-                            .size(if (i == pagerState.currentPage) 10.dp else 7.dp)
-                            .clip(CircleShape)
-                            .background(if (i == pagerState.currentPage) Color.White else Color.White.copy(alpha = 0.4f))
-                    )
-                }
-            }
         }
     }
 }

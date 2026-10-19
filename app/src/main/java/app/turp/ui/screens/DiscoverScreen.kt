@@ -14,6 +14,8 @@ import app.turp.ui.components.readableOn
 import app.turp.ui.theme.InkElevated
 import app.turp.data.SafetyRepo
 import app.turp.ui.components.Avatar
+import app.turp.ui.components.ProfileNameStickers
+import app.turp.ui.components.ProfileStory
 import app.turp.ui.components.GemPill
 import app.turp.ui.components.ReportDialog
 import app.turp.ui.components.RoundCandyButton
@@ -429,8 +431,6 @@ private fun ProfileCard(
     onReport: () -> Unit = {},
     likeProgress: () -> Float = { 0f },
 ) {
-    var photoIndex by remember(profile.uid) { mutableIntStateOf(0) }
-    val accent = parseColor(profile.color)
     val shape = RoundedCornerShape(30.dp)
 
     Box(
@@ -438,87 +438,36 @@ private fun ProfileCard(
             .clip(shape)
             .background(InkHigh)
     ) {
-        AsyncImage(
-            model = profile.photos.getOrNull(photoIndex),
-            contentDescription = profile.name,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
-        Box(
-            Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        0.0f to Color.Black.copy(alpha = 0.35f),
-                        0.2f to Color.Transparent,
-                        0.72f to Color.Transparent,
-                        1.0f to Color.Black.copy(alpha = 0.55f)
-                    )
-                )
-        )
-
-        if (interactive) {
-            // Links/rechts tippen = Fotos blättern, unten tippen = Profil öffnen
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .pointerInput(profile.uid, profile.photos.size) {
-                        detectTapGestures { pos ->
-                            if (pos.y > size.height * 0.6f) {
-                                onOpen()
-                            } else if (pos.x < size.width / 2f) {
-                                photoIndex = (photoIndex - 1).coerceAtLeast(0)
-                            } else {
-                                photoIndex = (photoIndex + 1).coerceAtMost((profile.photos.size - 1).coerceAtLeast(0))
-                            }
+        // Seite 1 Foto, Seite 2 Bio + Interessen, dann weitere Fotos.
+        // Tippen irgendwo = weiter, linker Rand = zurück.
+        ProfileStory(
+            profile = profile,
+            interactive = interactive,
+            bottomSpace = if (interactive) 86.dp else 16.dp,
+            modifier = Modifier.fillMaxSize(),
+            header = {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Box(Modifier.weight(1f)) {
+                        ProfileNameStickers(profile = profile, onClick = if (interactive) onOpen else null)
+                    }
+                    if (interactive) {
+                        IconButton(onClick = onReport) {
+                            Icon(
+                                Icons.Rounded.Flag,
+                                contentDescription = "Melden",
+                                tint = Color.White,
+                                modifier = Modifier.size(30.dp)
+                            )
                         }
                     }
-            )
-        }
-
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 14.dp)
-        ) {
-            // Foto-Fortschritt wie bei Storys
-            Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                val count = profile.photos.size.coerceAtLeast(1)
-                repeat(count) { i ->
-                    Box(
-                        Modifier
-                            .weight(1f)
-                            .height(4.dp)
-                            .clip(CircleShape)
-                            .background(if (i == photoIndex) Color.White else Color.White.copy(alpha = 0.35f))
-                    )
                 }
             }
-            Spacer(Modifier.height(14.dp))
-            Row(verticalAlignment = Alignment.Top) {
-                Column(Modifier.weight(1f)) {
-                    Sticker(profile.name, accent, rotation = -3f, fontSize = 30.sp)
-                    Spacer(Modifier.height(6.dp))
-                    Sticker(
-                        if (profile.bot) "🤖 Testprofil" else "${Countries.flag(profile.country)} ${profile.country}, ${profile.age}",
-                        accent,
-                        rotation = -3f,
-                        fontSize = 18.sp,
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
-                }
-                if (interactive) {
-                    IconButton(onClick = onReport) {
-                        Icon(
-                            Icons.Rounded.Flag,
-                            contentDescription = "Melden",
-                            tint = Color.White,
-                            modifier = Modifier.size(30.dp)
-                        )
-                    }
-                }
-            }
-        }
+        )
 
         if (interactive) {
             SwipeBadge(
