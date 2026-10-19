@@ -84,18 +84,30 @@ jobs:
 
             echo "== E-Mail/Passwort-Login einschalten"
             TOKEN=$(gcloud auth print-access-token)
-            curl -sS -X PATCH \
-              -H "Authorization: Bearer $TOKEN" -H "X-Goog-User-Project: $P" -H "Content-Type: application/json" \
-              "https://identitytoolkit.googleapis.com/admin/v2/projects/$P/config?updateMask=signIn.email.enabled,signIn.email.passwordRequired" \
-              -d '{"signIn":{"email":{"enabled":true,"passwordRequired":true}}}' | head -c 400 || true
-            echo
+            API="https://identitytoolkit.googleapis.com"
+            HDR=(-H "Authorization: Bearer $TOKEN" -H "X-Goog-User-Project: $P" -H "Content-Type: application/json")
+            if curl -sS "${HDR[@]}" "$API/admin/v2/projects/$P/config" | grep -q CONFIGURATION_NOT_FOUND; then
+              echo "Authentication wird zum ersten Mal eingerichtet"
+              curl -sS -X POST "${HDR[@]}" "$API/v2/projects/$P/identityPlatform:initializeAuth" -d '{}' | head -c 300; echo
+              sleep 10
+            fi
+            curl -sS -X PATCH "${HDR[@]}" \
+              "$API/admin/v2/projects/$P/config?updateMask=signIn.email.enabled,signIn.email.passwordRequired" \
+              -d '{"signIn":{"email":{"enabled":true,"passwordRequired":true}}}' > auth.json
+            if grep -q '"enabled": true' auth.json; then echo "E-Mail/Passwort-Login ist aktiv"; else cat auth.json; echo "::warning title=Login::E-Mail/Passwort-Login konnte nicht automatisch eingeschaltet werden."; fi
 
             echo "== Rechte für die Server-Funktionen"
             NUM=$(gcloud projects describe "$P" --format='value(projectNumber)')
             for ROLE in roles/editor roles/cloudbuild.builds.builder roles/secretmanager.secretAccessor; do
-              gcloud projects add-iam-policy-binding "$P" \
-                --member="serviceAccount:${NUM}-compute@developer.gserviceaccount.com" \
-                --role="$ROLE" --condition=None --quiet > /dev/null
+              for TRY in 1 2 3 4 5; do
+                if gcloud projects add-iam-policy-binding "$P" \
+                  --member="serviceAccount:${NUM}-compute@developer.gserviceaccount.com" \
+                  --role="$ROLE" --condition=None --quiet > /dev/null 2> iam.err; then
+                  echo "Rolle $ROLE gesetzt"; break
+                fi
+                if [ "$TRY" = 5 ]; then cat iam.err; exit 1; fi
+                sleep $((TRY * 5))
+              done
             done
 
             echo "== E-Mail-Versand (optional)"
