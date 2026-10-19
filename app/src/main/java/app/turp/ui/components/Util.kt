@@ -51,6 +51,19 @@ fun shortTime(ts: Timestamp?): String {
     return SimpleDateFormat("dd.MM.", Locale.GERMANY).format(date)
 }
 
+/** Wie lange her: "jetzt", "5 Min.", "4 Std.", "2 Tage", danach das Datum */
+fun timeAgo(ts: Timestamp?): String {
+    if (ts == null) return ""
+    val minutes = ((System.currentTimeMillis() - ts.toDate().time) / 60_000).coerceAtLeast(0)
+    return when {
+        minutes < 1 -> "jetzt"
+        minutes < 60 -> "$minutes Min."
+        minutes < 24 * 60 -> "${minutes / 60} Std."
+        minutes < 7 * 24 * 60 -> (minutes / (24 * 60)).let { if (it == 1L) "1 Tag" else "$it Tage" }
+        else -> SimpleDateFormat("dd.MM.", Locale.GERMANY).format(ts.toDate())
+    }
+}
+
 fun timeOfDay(ts: Timestamp?): String =
     if (ts == null) "" else SimpleDateFormat("HH:mm", Locale.GERMANY).format(ts.toDate())
 

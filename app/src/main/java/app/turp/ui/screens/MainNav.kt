@@ -115,7 +115,7 @@ class MainViewModel : BaseViewModel() {
 private enum class Tab(val label: String, val icon: ImageVector, val iconOutlined: ImageVector) {
     Discover("Entdecken", Icons.Rounded.Style, Icons.Outlined.Style),
     Lounge("Lounge", Icons.Rounded.Public, Icons.Outlined.Public),
-    Requests("Anfragen", Icons.Rounded.EmojiEmotions, Icons.Outlined.EmojiEmotions),
+    Requests("Freunde", Icons.Rounded.EmojiEmotions, Icons.Outlined.EmojiEmotions),
     Chats("Chats", Icons.Rounded.ChatBubble, Icons.Outlined.ChatBubbleOutline),
     Profile("Profil", Icons.Rounded.Person, Icons.Outlined.Person),
 }
@@ -308,10 +308,14 @@ private fun MainTabs(
                     onEditProfile = { nav.navigate("editProfile") },
                     onOpenProfile = { tab = Tab.Profile },
                 )
-                Tab.Requests -> RequestsScreen(
+                Tab.Requests -> FriendsScreen(
+                    session = session,
                     incoming = incoming,
+                    chats = chats,
                     onOpenUser = { nav.navigate("user/$it") },
                     onOpenChat = { nav.navigate("chat/$it") },
+                    onOpenProfile = { tab = Tab.Profile },
+                    onDiscover = { tab = Tab.Discover },
                 )
                 Tab.Chats -> ChatsScreen(
                     chats = chats,

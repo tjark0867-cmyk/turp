@@ -171,7 +171,7 @@ class ProfileViewModel : BaseViewModel() {
     }
 }
 
-private fun shareInvite(context: Context, code: String) {
+internal fun shareInvite(context: Context, code: String) {
     val text = "Komm zu turp und finde neue Freunde! 🌍 Gib bei der Anmeldung meinen Code $code ein, " +
         "dann bekommst du 10 Bonus-Gems 💎"
     val intent = Intent(Intent.ACTION_SEND).apply {

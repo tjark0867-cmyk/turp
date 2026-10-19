@@ -25,6 +25,12 @@ object ProfileRepo {
     fun profile(uid: String): Flow<UserProfile?> =
         userRef(uid).asFlow().map { if (it.exists()) it.toProfile() else null }
 
+    /** Profil einmalig laden (null, wenn es nicht existiert oder nicht sichtbar ist) */
+    suspend fun get(uid: String): UserProfile? {
+        val snap = userRef(uid).get().await()
+        return if (snap.exists()) snap.toProfile() else null
+    }
+
     fun account(uid: String): Flow<Account?> =
         Fb.db.collection("accounts").document(uid).asFlow().map { if (it.exists()) it.toAccount() else null }
 

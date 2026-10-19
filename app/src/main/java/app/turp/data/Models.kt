@@ -7,6 +7,8 @@ const val DEFAULT_COLOR = "#2DE1C2"
 const val REQUEST_COST = 3
 const val MAX_PHOTOS = 6
 const val MAX_INTERESTS = 8
+const val FRIEND_BONUS = 5          // muss zu functions/index.js passen
+const val INVITE_BONUS = 25         // Gems pro eingeladener Person
 
 data class UserProfile(
     val uid: String = "",
@@ -68,6 +70,7 @@ data class Chat(
     val lastSender: String,
     val readAt: Map<String, Timestamp>,
     val memberInfo: Map<String, MemberInfo>,
+    val createdAt: Timestamp? = null,
 ) {
     fun otherUid(me: String): String = members.firstOrNull { it != me } ?: ""
 
@@ -200,6 +203,7 @@ fun DocumentSnapshot.toChat(): Chat {
         lastSender = s("lastSender"),
         readAt = read,
         memberInfo = info,
+        createdAt = ts("createdAt"),
     )
 }
 
