@@ -127,7 +127,6 @@ jobs:
           ./gradlew assembleDebug --no-daemon --console=plain \
             -PversionCode=${{ github.run_number }} -PupdateRepo=${{ github.repository }} \
             -PsigningStore="${{ steps.signing.outputs.store }}" -PsigningPassword="${{ steps.signing.outputs.password }}" \
-            -PgiphyKey="${{ secrets.GIPHY_API_KEY }}" \
             2>&1 | tee build.log
 
       - name: APK hochladen

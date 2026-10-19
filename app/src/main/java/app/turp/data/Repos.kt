@@ -254,20 +254,6 @@ object ChatRepo {
         ).await()
     }
 
-    suspend fun sendGif(chatId: String, gif: Gif) {
-        chatRef(chatId).collection("messages").add(
-            mapOf(
-                "senderId" to Fb.uid,
-                "type" to "gif",
-                "text" to "",
-                "gifId" to gif.id,
-                "w" to gif.width,
-                "h" to gif.height,
-                "createdAt" to FieldValue.serverTimestamp(),
-            )
-        ).await()
-    }
-
     suspend fun sendImage(context: Context, chatId: String, uri: Uri) {
         val bytes = withContext(Dispatchers.IO) { MediaUtils.compressImage(context, uri, maxSide = 1280, quality = 80) }
         val path = "chatUploads/${Fb.uid}/${UUID.randomUUID()}.jpg"

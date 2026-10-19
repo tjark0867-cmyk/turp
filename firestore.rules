@@ -133,15 +133,6 @@ service cloud.firestore {
               && request.resource.data.imageStatus == 'pending'
               && request.resource.data.imagePath is string
               && request.resource.data.imagePath.matches('^chatUploads/' + me() + '/[A-Za-z0-9-]+[.]jpg$'))
-            ||
-            // GIFs: nur die GIPHY-ID wird gespeichert, angezeigt wird immer von media.giphy.com
-            (request.resource.data.type == 'gif'
-              && request.resource.data.keys().hasOnly(['senderId', 'type', 'text', 'gifId', 'w', 'h', 'createdAt'])
-              && request.resource.data.text == ''
-              && request.resource.data.gifId is string
-              && request.resource.data.gifId.matches('^[A-Za-z0-9]{5,64}$')
-              && request.resource.data.w is int && request.resource.data.w > 0 && request.resource.data.w <= 1000
-              && request.resource.data.h is int && request.resource.data.h > 0 && request.resource.data.h <= 2000)
           );
         allow update, delete: if false;
       }

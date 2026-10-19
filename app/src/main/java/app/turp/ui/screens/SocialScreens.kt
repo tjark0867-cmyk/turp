@@ -2,12 +2,8 @@ package app.turp.ui.screens
 
 import java.io.File
 import app.turp.ui.components.rememberIsOnline
-import app.turp.ui.components.GifPicker
-import app.turp.data.Gifs
-import app.turp.data.Gif
 import androidx.core.content.FileProvider
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.foundation.layout.aspectRatio
 import android.content.ActivityNotFoundException
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.delay
@@ -252,10 +248,6 @@ class ChatViewModel(private val chatId: String) : BaseViewModel() {
         launchSafe(showBusy = false) { ChatRepo.sendText(chatId, text.take(1000)) }
     }
 
-    fun sendGif(gif: Gif) {
-        launchSafe(showBusy = false) { ChatRepo.sendGif(chatId, gif) }
-    }
-
     fun sendImage(appContext: Context, uri: Uri) {
         if (sendingImage) return
         sendingImage = true
@@ -359,8 +351,6 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
             context.toast("Kamera konnte nicht geöffnet werden.")
         }
     }
-
-    var showGifs by remember { mutableStateOf(false) }
 
     LaunchedEffect(messages.size) {
         if (messages.isNotEmpty()) {
@@ -476,10 +466,6 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
                     },
                     imageBusy = vm.sendingImage,
                     onCamera = { openCamera() },
-                    onGif = {
-                        if (Gifs.enabled) showGifs = true
-                        else context.toast("GIFs werden gerade eingerichtet – bald verfügbar.")
-                    },
                 )
             }
         }
@@ -522,27 +508,13 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
                         showRead = m.id == lastReadId,
                         onLongPress = {
                             if (!mine) {
-                                reportContext = when (m.type) {
-                                    "text" -> m.text
-                                    "gif" -> "[GIF ${m.gifId}]"
-                                    else -> "[Foto]"
-                                }
+                                reportContext = if (m.type == "text") m.text else "[Foto]"
                             }
                         }
                     )
                 }
             }
         }
-    }
-
-    if (showGifs) {
-        GifPicker(
-            onDismiss = { showGifs = false },
-            onPick = { gif ->
-                showGifs = false
-                vm.sendGif(gif)
-            }
-        )
     }
 
     val ctx = reportContext
@@ -665,31 +637,6 @@ private fun Bubble(message: Message, mine: Boolean, lastInRun: Boolean, onLongPr
                     contentDescription = "Foto",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(220.dp)
-                )
-                Text(
-                    time,
-                    color = Color.White,
-                    fontSize = 11.sp,
-                    style = TextStyle(shadow = Shadow(Color.Black.copy(alpha = 0.7f), Offset(0f, 1f), 4f)),
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(8.dp)
-                )
-            }
-            message.type == "gif" && message.gifId.isNotBlank() -> Box {
-                val ratio = if (message.gifW > 0 && message.gifH > 0) {
-                    (message.gifW.toFloat() / message.gifH).coerceIn(0.5f, 2.2f)
-                } else {
-                    1f
-                }
-                AsyncImage(
-                    model = Gifs.url(message.gifId),
-                    contentDescription = "GIF",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .width(210.dp)
-                        .aspectRatio(ratio)
-                        .background(InkHigh)
                 )
                 Text(
                     time,

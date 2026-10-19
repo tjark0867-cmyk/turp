@@ -660,7 +660,6 @@ async function botSay(chatId, botUid, text) {
 const BOT_GREETING = "Hey! 👋 Ich bin der turp-Testbot. Schreib mir etwas – ich antworte sofort, damit du den Chat testen kannst.";
 
 function botReply(msg, preview) {
-  if (msg.type === "gif") return "Cooles GIF! 😄 Ist angekommen ✅";
   if (msg.type === "image") {
     return String(preview).includes("blockiert")
       ? "Dein Foto wurde von der automatischen Bildprüfung blockiert 🚫"
@@ -1082,8 +1081,6 @@ exports.onMessageCreated = onDocumentCreated(
       }
       await snap.ref.update({ imageStatus: ok ? "ok" : "blocked", imageUrl: url });
       preview = ok ? "📷 Foto" : "📷 Foto (blockiert)";
-    } else if (msg.type === "gif") {
-      preview = "🎞️ GIF";
     } else {
       const c = clean(msg.text || "");
       if (c.flagged) await snap.ref.update({ text: c.text, flagged: true });
