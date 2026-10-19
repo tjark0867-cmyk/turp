@@ -16,6 +16,7 @@ on:
       - "storage.rules"
       - "firebase.json"
       - ".github/workflows/firebase.yml"
+      - ".github/scripts/**"
 
 permissions:
   contents: write
