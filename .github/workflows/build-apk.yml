@@ -47,6 +47,20 @@ jobs:
           name: turp-apk
           path: app/build/outputs/apk/debug/app-debug.apk
 
+      # Fertige APK zusätzlich im Branch "apk" ablegen – direkter Download-Link:
+      # https://github.com/<konto>/<repo>/raw/apk/turp.apk
+      - name: APK im Branch "apk" ablegen
+        run: |
+          cp app/build/outputs/apk/debug/app-debug.apk /tmp/turp.apk
+          git config user.name "turp-bot"
+          git config user.email "turp-bot@users.noreply.github.com"
+          git checkout --orphan apk
+          git rm -rf --quiet .
+          cp /tmp/turp.apk turp.apk
+          git add turp.apk
+          git commit -m "APK aus Build ${GITHUB_RUN_NUMBER}"
+          git push -f origin apk
+
       # Bei Fehlern: Fehlermeldungen als Hinweis anzeigen und das komplette
       # Protokoll im Branch "build-logs" ablegen, damit man es leicht lesen kann.
       - name: Fehler zusammenfassen
