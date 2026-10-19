@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- turp: Papierschnipsel mit ausgeschnittenem T -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
@@ -6,5 +7,6 @@
     android:viewportHeight="24">
     <path
         android:fillColor="#FFFFFFFF"
-        android:pathData="M8,4 H16 A4,4 0 0 1 20,8 V13 A4,4 0 0 1 16,17 H11 L6,21 L7,17 A4,4 0 0 1 4,13 V8 A4,4 0 0 1 8,4 Z" />
+        android:fillType="evenOdd"
+        android:pathData="M2.82,5.62 L18.77,2.67 L21.42,18.65 L5.35,21.42 Z M15.77 6.32 16.14 9.59 15.19 9.73Q15.12 8.94 14.86 8.46Q14.59 7.97 14.17 7.77Q13.75 7.57 13.21 7.67L12.52 7.76L13.12 14.58Q13.16 14.97 13.17 15.34Q13.18 15.7 13.17 15.9Q13.33 15.86 13.56 15.82Q13.79 15.78 14 15.74Q14.22 15.71 14.32 15.69L14.42 16.81L10.24 17.4L10.16 16.44Q10.49 16.38 10.71 16.27Q10.93 16.17 11.03 15.89Q11.13 15.61 11.08 15.03L10.47 8.07L9.8 8.16Q8.98 8.29 8.55 8.91Q8.11 9.53 8.22 10.71L7.27 10.84L7.06 7.54Z" />
 </vector>

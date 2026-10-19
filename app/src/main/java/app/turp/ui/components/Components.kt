@@ -19,6 +19,10 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.ui.res.painterResource
+import app.turp.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -115,41 +119,29 @@ import app.turp.ui.theme.Ink
 import app.turp.ui.theme.InkElevated
 import app.turp.ui.theme.InkHigh
 import app.turp.ui.theme.Lilac
-import app.turp.ui.theme.LogoStyle
 import app.turp.ui.theme.Teal
 import app.turp.ui.theme.TealDark
 import app.turp.ui.theme.TextHigh
 import app.turp.ui.theme.TextLow
 import coil.compose.AsyncImage
 
-private val LogoOutline = Color(0xFF06322C)
-private val LogoHighlight = Color(0xFF9CFBEA)
+/** Seitenverhältnis des Logo-Bildes (Breite / Höhe) */
+private const val LogoAspect = 1280f / 502f
 
-/** Schriftzug "turp": Mint mit dunkler Kontur und weichem Schatten */
+/**
+ * Schriftzug "turp" im Magazin-Schnipsel-Look: jeder Buchstabe ein eigenes
+ * Papierstück. [fontSize] bestimmt die Größe wie bei einem Text.
+ */
 @Composable
 fun TurpLogo(modifier: Modifier = Modifier, fontSize: TextUnit = 56.sp) {
-    val style = LogoStyle.copy(fontSize = fontSize)
-    val o = (fontSize.value * 0.032f).dp
-    Box(modifier) {
-        Text("turp", style = style, color = Color.Black.copy(alpha = 0.55f), modifier = Modifier.offset(y = o * 2.6f))
-        listOf(-1 to 0, 1 to 0, 0 to -1, 0 to 1, -1 to -1, 1 to 1, -1 to 1, 1 to -1).forEach { (dx, dy) ->
-            Text("turp", style = style, color = LogoOutline, modifier = Modifier.offset(x = o * dx, y = o * dy))
-        }
-        Text(
-            text = "turp",
-            style = style,
-            color = Teal,
-            modifier = Modifier
-                .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
-                .drawWithCache {
-                    val brush = Brush.verticalGradient(listOf(LogoHighlight, Teal, TealDark))
-                    onDrawWithContent {
-                        drawContent()
-                        drawRect(brush = brush, blendMode = BlendMode.SrcAtop)
-                    }
-                }
-        )
-    }
+    Image(
+        painter = painterResource(R.drawable.turp_logo),
+        contentDescription = "turp",
+        contentScale = ContentScale.Fit,
+        modifier = modifier
+            .height((fontSize.value * 1.2f).dp)
+            .aspectRatio(LogoAspect)
+    )
 }
 
 /** Gut lesbare Schriftfarbe auf einer Hintergrundfarbe */
