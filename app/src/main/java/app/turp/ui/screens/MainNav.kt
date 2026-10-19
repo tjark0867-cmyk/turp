@@ -18,7 +18,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.TextButton
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
@@ -80,6 +84,8 @@ import app.turp.ui.components.toast
 import app.turp.data.RequestRepo
 import app.turp.data.SessionState
 import app.turp.data.SessionViewModel
+import app.turp.data.UpdateInfo
+import app.turp.data.UpdateViewModel
 import app.turp.ui.theme.Coral
 import app.turp.ui.theme.Ink
 import app.turp.ui.theme.InkElevated
@@ -122,6 +128,9 @@ fun MainNav(
 ) {
     val nav = rememberNavController()
     val context = LocalContext.current
+    val updateVm: UpdateViewModel = viewModel()
+    LaunchedEffect(Unit) { updateVm.checkOnStart() }
+    LaunchedEffect(Unit) { updateVm.notices.collect { context.toast(it) } }
     // Über State weitergereicht, damit sich der Navigationsgraph nicht bei jeder Gem-Änderung neu aufbaut
     val sessionState = rememberUpdatedState(session)
 
@@ -150,7 +159,7 @@ fun MainNav(
         popExitTransition = { fadeOut(tween(180)) },
     ) {
         composable("tabs") {
-            MainTabs(sessionState, sessionVm, nav)
+            MainTabs(sessionState, sessionVm, nav, onCheckUpdate = { updateVm.checkManually() })
         }
         composable("chat/{chatId}") { entry ->
             ChatScreen(
@@ -180,6 +189,51 @@ fun MainNav(
             )
         }
     }
+    val update = updateVm.available
+    if (update != null) {
+        UpdateDialog(
+            info = update,
+            progress = updateVm.progress,
+            onUpdate = { updateVm.update(context) },
+            onDismiss = { updateVm.dismiss() },
+        )
+    }
+}
+
+@Composable
+private fun UpdateDialog(info: UpdateInfo, progress: Float?, onUpdate: () -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Neue Version verfügbar") },
+        text = {
+            Column {
+                Text("turp ${info.versionName} ist da.")
+                if (info.notes.isNotBlank()) {
+                    Spacer(Modifier.height(6.dp))
+                    Text(info.notes, color = TextLow, style = MaterialTheme.typography.bodySmall)
+                }
+                if (progress != null) {
+                    Spacer(Modifier.height(16.dp))
+                    LinearProgressIndicator(
+                        progress = { progress },
+                        color = Teal,
+                        trackColor = InkLine,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(Modifier.height(6.dp))
+                    Text("Wird geladen … ${(progress * 100).toInt()} %", color = TextLow, style = MaterialTheme.typography.bodySmall)
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onUpdate, enabled = progress == null) {
+                Text("Jetzt aktualisieren", color = if (progress == null) Teal else TextLow, fontWeight = FontWeight.SemiBold)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss, enabled = progress == null) { Text("Später", color = TextLow) }
+        }
+    )
 }
 
 @Composable
@@ -187,6 +241,7 @@ private fun MainTabs(
     sessionState: State<SessionState.Active>,
     sessionVm: SessionViewModel,
     nav: NavController,
+    onCheckUpdate: () -> Unit,
     vm: MainViewModel = viewModel(),
 ) {
     val session = sessionState.value
@@ -247,6 +302,7 @@ private fun MainTabs(
                     onEdit = { nav.navigate("editProfile") },
                     onPremium = { nav.navigate("premium") },
                     onAdmin = { nav.navigate("admin") },
+                    onCheckUpdate = onCheckUpdate,
                 )
             }
         }

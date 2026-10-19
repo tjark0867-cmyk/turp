@@ -11,6 +11,11 @@ if (file("google-services.json").exists()) {
     apply(plugin = "com.google.gms.google-services")
 }
 
+// Beim Bauen auf GitHub: Versionsnummer = Build-Nummer, Update-Adresse = dieses Repository
+val ciVersionCode = (project.findProperty("versionCode") as String?)?.toIntOrNull() ?: 1
+val updateRepo = (project.findProperty("updateRepo") as String?).orEmpty()
+val updateUrl = if (updateRepo.isNotBlank()) "https://raw.githubusercontent.com/$updateRepo/apk/" else ""
+
 android {
     namespace = "app.turp"
     compileSdk = 35
@@ -19,8 +24,9 @@ android {
         applicationId = "app.turp"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = ciVersionCode
+        versionName = "1.0.$ciVersionCode"
+        buildConfigField("String", "UPDATE_URL", "\"$updateUrl\"")
         // Muss zur Region der Cloud Functions passen (functions/index.js)
         buildConfigField("String", "FUNCTIONS_REGION", "\"europe-west3\"")
     }

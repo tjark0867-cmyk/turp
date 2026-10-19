@@ -47,6 +47,8 @@ import androidx.compose.material.icons.rounded.Flag
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material.icons.rounded.SystemUpdate
+import app.turp.BuildConfig
 import androidx.compose.material.icons.rounded.Videocam
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -183,6 +185,7 @@ fun ProfileScreen(
     onEdit: () -> Unit,
     onPremium: () -> Unit,
     onAdmin: () -> Unit,
+    onCheckUpdate: () -> Unit,
     vm: ProfileViewModel = viewModel(),
 ) {
     val context = LocalContext.current
@@ -270,12 +273,13 @@ fun ProfileScreen(
             MenuRow(Icons.Rounded.Edit, "Profil bearbeiten", onClick = onEdit)
             MenuRow(Icons.Rounded.AutoAwesome, "turp+ & Gem-Shop", onClick = onPremium)
             if (session.isAdmin) MenuRow(Icons.Rounded.AdminPanelSettings, "Admin-Bereich", onClick = onAdmin)
+            MenuRow(Icons.Rounded.SystemUpdate, "Nach Updates suchen", onClick = onCheckUpdate)
             MenuRow(Icons.AutoMirrored.Rounded.Logout, "Abmelden", onClick = { sessionVm.signOut() })
             MenuRow(Icons.Rounded.DeleteForever, "Konto löschen", tint = Coral, onClick = { confirmDelete = true })
         }
 
         Text(
-            "turp 1.0 · Goldene Regel: Sei immer freundlich. 💛",
+            "turp ${BuildConfig.VERSION_NAME} · Goldene Regel: Sei immer freundlich. 💛",
             style = MaterialTheme.typography.bodySmall,
             color = TextLow,
             textAlign = TextAlign.Center,
