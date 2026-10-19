@@ -1,0 +1,155 @@
+rules_version = '2';
+
+// turp – Firestore-Sicherheitsregeln
+//
+// Grundsatz: Die App darf nur lesen, was zur eigenen Altersgruppe gehört,
+// und nur ungefährliche Felder selbst ändern. Alles Wichtige (Alter, Gems,
+// Freundschaften, Sperren) schreibt ausschließlich der Server.
+// Die Altersgruppe kommt aus dem Login-Token (Custom Claim "ageGroup"),
+// den nur der Server setzen kann.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function me() { return request.auth.uid; }
+    function claim(key, fallback) { return request.auth.token.get(key, fallback); }
+    function active() { return signedIn() && claim('active', false) == true; }
+    function group() { return claim('ageGroup', 'none'); }
+    function admin() { return signedIn() && claim('admin', false) == true; }
+    function chatDoc(chatId) { return get(/databases/$(database)/documents/chats/$(chatId)).data; }
+    function isMember(chatId) { return me() in chatDoc(chatId).members; }
+    function handle(v) { return v is string && v.matches('^[A-Za-z0-9._-]{0,40}$'); }
+
+    // Öffentliche Profile – nur innerhalb der eigenen Altersgruppe sichtbar
+    match /users/{uid} {
+      allow read: if signedIn() && (
+        me() == uid
+        || admin()
+        || (active() && resource.data.ageGroup == group() && resource.data.active == true)
+      );
+
+      allow update: if signedIn() && me() == uid
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['name', 'bio', 'interests', 'photos', 'videoUrl', 'color'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 2 && request.resource.data.name.size() <= 30
+        && request.resource.data.bio is string && request.resource.data.bio.size() <= 300
+        && request.resource.data.interests is list && request.resource.data.interests.size() <= 8
+        // Fotos dürfen nur umsortiert oder entfernt werden – neue kommen über den Server (geprüft)
+        && request.resource.data.photos is list
+        && request.resource.data.photos.size() <= 6
+        && request.resource.data.photos.hasOnly(resource.data.photos)
+        && (request.resource.data.videoUrl == resource.data.videoUrl || request.resource.data.videoUrl == '')
+        && request.resource.data.color is string
+        && request.resource.data.color.matches('^#[0-9A-Fa-f]{6}$');
+
+      allow create, delete: if false;
+
+      // Socials: nur für Freunde und nur, wenn freigegeben
+      match /private/{docId} {
+        allow read: if signedIn() && (
+          me() == uid
+          || (docId == 'socials'
+              && resource.data.visible == true
+              && exists(/databases/$(database)/documents/users/$(uid)/friends/$(me())))
+        );
+        allow write: if signedIn() && me() == uid && docId == 'socials'
+          && request.resource.data.keys().hasOnly(['instagram', 'snapchat', 'tiktok', 'visible'])
+          && handle(request.resource.data.instagram)
+          && handle(request.resource.data.snapchat)
+          && handle(request.resource.data.tiktok)
+          && request.resource.data.visible is bool;
+      }
+
+      match /friends/{friendId} {
+        allow read: if signedIn() && me() == uid;
+        allow write: if false;
+      }
+
+      match /blocked/{otherId} {
+        allow read: if signedIn() && me() == uid;
+        allow write: if false;
+      }
+
+      // "Schon gesehen"-Liste für das Entdecken
+      match /seen/{otherId} {
+        allow read: if signedIn() && me() == uid;
+        allow create: if signedIn() && me() == uid
+          && request.resource.data.keys().hasOnly(['at', 'liked'])
+          && request.resource.data.liked == false;
+        allow delete: if signedIn() && me() == uid && resource.data.liked == false;
+        allow update: if false;
+      }
+    }
+
+    // Private Kontodaten (Geburtsdatum, Gems ...) – nur lesbar für den Besitzer
+    match /accounts/{uid} {
+      allow read: if signedIn() && me() == uid;
+      allow update: if signedIn() && me() == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['fcmToken'])
+        && request.resource.data.fcmToken is string
+        && request.resource.data.fcmToken.size() < 4096;
+      allow create, delete: if false;
+    }
+
+    match /requests/{requestId} {
+      allow read: if signedIn() && (resource.data.from == me() || resource.data.to == me());
+      allow write: if false;
+    }
+
+    match /chats/{chatId} {
+      allow read: if signedIn() && (me() in resource.data.members || admin());
+      // Nur der eigene Gelesen-Zeitstempel darf geändert werden
+      allow update: if active() && me() in resource.data.members
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['readAt'])
+        && request.resource.data.readAt.diff(resource.data.readAt).affectedKeys().hasOnly([me()]);
+      allow create, delete: if false;
+
+      match /messages/{messageId} {
+        allow read: if signedIn() && isMember(chatId);
+        allow create: if active()
+          && isMember(chatId)
+          && chatDoc(chatId).closed == false
+          && request.resource.data.senderId == me()
+          && request.resource.data.createdAt == request.time
+          && (
+            (request.resource.data.type == 'text'
+              && request.resource.data.keys().hasOnly(['senderId', 'type', 'text', 'createdAt'])
+              && request.resource.data.text is string
+              && request.resource.data.text.size() > 0
+              && request.resource.data.text.size() <= 1000)
+            ||
+            (request.resource.data.type == 'image'
+              && request.resource.data.keys().hasOnly(['senderId', 'type', 'text', 'imagePath', 'imageStatus', 'createdAt'])
+              && request.resource.data.text == ''
+              && request.resource.data.imageStatus == 'pending'
+              && request.resource.data.imagePath is string
+              && request.resource.data.imagePath.matches('^chatUploads/' + me() + '/[A-Za-z0-9-]+[.]jpg$'))
+          );
+        allow update, delete: if false;
+      }
+    }
+
+    // Lounge: getrennte Räume für 13–17 ("teen") und 18+ ("adult")
+    match /rooms/{roomGroup}/messages/{messageId} {
+      allow read: if active() && group() == roomGroup;
+      allow write: if false;
+    }
+
+    match /reports/{reportId} {
+      allow read: if admin();
+      allow write: if false;
+    }
+
+    match /moderationLog/{entryId} {
+      allow read: if admin();
+      allow write: if false;
+    }
+
+    // Alles andere (consents, inviteCodes, mail, slowmode ...) nur für den Server
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

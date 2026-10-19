@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- turp-Logo: zwei Sprechblasen, die sich überlappen = zwei neue Freunde -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FF5C8A"
+        android:pathData="M56,46 H72 A10,10 0 0 1 82,56 V64 A10,10 0 0 1 72,74 L75,82 L64,74 H56 A10,10 0 0 1 46,64 V56 A10,10 0 0 1 56,46 Z" />
+    <path
+        android:fillColor="#2DE1C2"
+        android:strokeColor="#0E0F1A"
+        android:strokeWidth="3"
+        android:pathData="M36,32 H52 A10,10 0 0 1 62,42 V50 A10,10 0 0 1 52,60 H44 L33,68 L36,60 A10,10 0 0 1 26,50 V42 A10,10 0 0 1 36,32 Z" />
+    <path
+        android:fillColor="#0E0F1A"
+        android:pathData="M37,46 m-3,0 a3,3 0 1 0 6,0 a3,3 0 1 0 -6,0 M44,46 m-3,0 a3,3 0 1 0 6,0 a3,3 0 1 0 -6,0 M51,46 m-3,0 a3,3 0 1 0 6,0 a3,3 0 1 0 -6,0" />
+</vector>

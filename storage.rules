@@ -1,0 +1,34 @@
+rules_version = '2';
+
+// turp – Storage-Sicherheitsregeln
+// Uploads landen zuerst in einem privaten Bereich. Erst nach der
+// automatischen Prüfung durch den Server gibt es einen Link zum Anzeigen.
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Profilfotos und -videos vor der Prüfung
+    match /uploads/{uid}/{fileName} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow create: if request.auth != null && request.auth.uid == uid
+        && (
+          (request.resource.contentType.matches('image/.*') && request.resource.size < 10 * 1024 * 1024)
+          || (request.resource.contentType.matches('video/.*') && request.resource.size < 40 * 1024 * 1024)
+        );
+    }
+
+    // Fotos im Chat vor der Prüfung
+    match /chatUploads/{uid}/{fileName} {
+      allow read: if false;
+      allow create: if request.auth != null && request.auth.uid == uid
+        && request.auth.token.get('active', false) == true
+        && request.resource.contentType.matches('image/.*')
+        && request.resource.size < 10 * 1024 * 1024;
+    }
+
+    // Geprüfte Medien: nur der Server schreibt, angezeigt wird über Download-Links
+    match /media/{uid}/{fileName} {
+      allow read, write: if false;
+    }
+  }
+}

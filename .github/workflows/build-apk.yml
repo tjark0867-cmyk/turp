@@ -1,0 +1,41 @@
+name: APK bauen
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: google-services.json aus dem Secret einsetzen
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -n "$GOOGLE_SERVICES_JSON" ]; then
+            printf '%s' "$GOOGLE_SERVICES_JSON" > app/google-services.json
+            echo "google-services.json eingesetzt"
+          else
+            echo "Kein Secret GOOGLE_SERVICES_JSON gefunden - App wird ohne Firebase gebaut"
+          fi
+
+      - name: APK bauen
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: APK hochladen
+        uses: actions/upload-artifact@v4
+        with:
+          name: turp-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
