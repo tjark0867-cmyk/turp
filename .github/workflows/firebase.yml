@@ -59,6 +59,7 @@ jobs:
         env:
           P: ${{ steps.check.outputs.project }}
           ADMIN: ${{ secrets.ADMIN_EMAILS }}
+          PLAY_PACKAGE: ${{ vars.PLAY_PACKAGE }}
           GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
         run: |
@@ -128,6 +129,8 @@ jobs:
 
             echo "== Admin-Adressen"
             printf 'ADMIN_EMAILS=%s\n' "$ADMIN" > functions/.env
+            # Paketname der App im Play Store (Variable PLAY_PACKAGE, sonst app.turp)
+            printf 'PLAY_PACKAGE=%s\n' "${PLAY_PACKAGE:-app.turp}" >> functions/.env
 
             echo "== Abhängigkeiten installieren"
             npm install --prefix functions --no-audit --no-fund
