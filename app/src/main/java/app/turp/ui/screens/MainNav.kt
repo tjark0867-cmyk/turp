@@ -1,6 +1,8 @@
 package app.turp.ui.screens
 
 import androidx.activity.compose.BackHandler
+import app.turp.data.Images
+import app.turp.data.ProfileRepo
 import app.turp.data.PresenceRepo
 import kotlinx.coroutines.delay
 import androidx.lifecycle.repeatOnLifecycle
@@ -67,6 +69,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -326,6 +329,18 @@ private fun MainTabs(
     val incoming by vm.incoming.collectAsState()
     val chats by vm.chats.collectAsState()
     val unread = chats.count { it.isUnread(session.uid) }
+    // Eigenes Profil bleibt für alle Tabs geladen (Kopfzeilen zeigen es sofort)
+    val me by remember(session.uid) { ProfileRepo.profile(session.uid) }.collectAsState()
+
+    // Profilbilder von Freunden und Anfragen schon vorladen, damit "Freunde" und "Chats" sofort fertig sind
+    LaunchedEffect(chats, incoming, me) {
+        Images.prefetch(
+            context,
+            me?.photos.orEmpty().take(1) +
+                incoming.map { it.fromPhoto } +
+                chats.map { it.other(session.uid).photo }
+        )
+    }
     BackHandler(enabled = tab == Tab.Profile) { tab = Tab.Discover }
 
     Scaffold(

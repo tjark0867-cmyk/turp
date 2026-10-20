@@ -28,7 +28,7 @@ const { clean } = require("./wordfilter");
 // Erlaubte Interessen (gleiche Liste wie in der App, InterestCatalog.kt)
 const ALLOWED_INTERESTS = new Set(require("./interests.json"));
 const MAX_INTERESTS = 8;
-const { isImageSafe, isVideoSafe } = require("./moderation");
+const { isStoredImageSafe, isVideoSafe, warmUp } = require("./moderation");
 
 initializeApp();
 const db = getFirestore();
@@ -832,7 +832,17 @@ exports.checkIn = onCall(async (req) => {
 
 // ---- Profilfotos & Video (mit automatischer Prüfung) ----------------------
 
-exports.addProfileMedia = onCall({ timeoutSeconds: 300, memory: "1GiB" }, async (req) => {
+// Bilder ändern sich nie (jedes bekommt eine neue Adresse) – darf lange zwischengespeichert werden
+const IMMUTABLE_CACHE = "private, max-age=31536000, immutable";
+
+exports.addProfileMedia = onCall({ timeoutSeconds: 300, memory: "1GiB", cpu: 1 }, async (req) => {
+  // Vorwärmen: Die App ruft das auf, während man noch ein Foto aussucht
+  if (req.data && req.data.warmup === true) {
+    requireAuth(req);
+    await warmUp();
+    return { ok: true };
+  }
+
   const uid = requireActive(req);
   const path = str(req.data && req.data.path, 300);
   const kind = req.data && req.data.kind === "video" ? "video" : "photo";
@@ -842,10 +852,12 @@ exports.addProfileMedia = onCall({ timeoutSeconds: 300, memory: "1GiB" }, async 
 
   const bucket = getStorage().bucket();
   const file = bucket.file(path);
-  const [exists] = await file.exists();
-  if (!exists) throw new HttpsError("not-found", "Upload nicht gefunden. Bitte versuch es noch einmal.");
-
-  const [meta] = await file.getMetadata();
+  let meta;
+  try {
+    [meta] = await file.getMetadata();
+  } catch (e) {
+    throw new HttpsError("not-found", "Upload nicht gefunden. Bitte versuch es noch einmal.");
+  }
   const type = String(meta.contentType || "");
   const size = Number(meta.size || 0);
   const fits = kind === "photo"
@@ -868,8 +880,7 @@ exports.addProfileMedia = onCall({ timeoutSeconds: 300, memory: "1GiB" }, async 
   let safe;
   try {
     if (kind === "photo") {
-      const [buf] = await file.download();
-      safe = await isImageSafe(buf, req.auth.token.ageGroup);
+      safe = await isStoredImageSafe(file, req.auth.token.ageGroup, (m, e) => logger.warn(m, e));
     } else {
       safe = await isVideoSafe(`gs://${bucket.name}/${path}`);
     }
@@ -890,6 +901,7 @@ exports.addProfileMedia = onCall({ timeoutSeconds: 300, memory: "1GiB" }, async 
   const destPath = `media/${uid}/${crypto.randomUUID()}.${ext}`;
   await file.move(destPath);
   const dest = bucket.file(destPath);
+  await dest.setMetadata({ cacheControl: IMMUTABLE_CACHE }).catch(() => {});
   const url = await downloadUrl(dest);
 
   if (kind === "photo") {
@@ -1076,7 +1088,7 @@ exports.deleteAccount = onCall({ timeoutSeconds: 300 }, async (req) => {
 // ---- Automatik: Chat-Nachrichten -----------------------------------------
 
 exports.onMessageCreated = onDocumentCreated(
-  { document: "chats/{chatId}/messages/{msgId}", timeoutSeconds: 120, memory: "512MiB" },
+  { document: "chats/{chatId}/messages/{msgId}", timeoutSeconds: 120, memory: "512MiB", cpu: 1 },
   async (event) => {
     const snap = event.data;
     if (!snap) return;
@@ -1094,9 +1106,9 @@ exports.onMessageCreated = onDocumentCreated(
       if (typeof path === "string" && path.startsWith(`chatUploads/${msg.senderId}/`)) {
         try {
           const file = getStorage().bucket().file(path);
-          const [buf] = await file.download();
-          ok = await isImageSafe(buf, chat.ageGroup);
+          ok = await isStoredImageSafe(file, chat.ageGroup, (m, e) => logger.warn(m, e));
           if (ok) {
+            await file.setMetadata({ cacheControl: IMMUTABLE_CACHE }).catch(() => {});
             url = await downloadUrl(file);
           } else {
             await file.delete().catch(() => {});

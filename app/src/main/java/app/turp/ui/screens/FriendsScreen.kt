@@ -180,7 +180,7 @@ fun FriendsScreen(
     LaunchedEffect(Unit) { vm.notices.collect { context.toast(it) } }
     LaunchedEffect(incoming) { vm.loadSenders(incoming.map { it.from }) }
 
-    val me by remember(session.uid) { ProfileRepo.profile(session.uid) }.collectAsState(initial = null)
+    val me by remember(session.uid) { ProfileRepo.profile(session.uid) }.collectAsState()
     val prefs = remember { context.getSharedPreferences("turp", Context.MODE_PRIVATE) }
     var inviteHidden by remember { mutableStateOf(prefs.getBoolean("inviteRowHidden", false)) }
 

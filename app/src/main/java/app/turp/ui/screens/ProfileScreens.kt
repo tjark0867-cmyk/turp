@@ -182,15 +182,21 @@ class ProfileViewModel : BaseViewModel() {
     var uploading by mutableStateOf(false)
         private set
 
+    /** Das gerade ausgewählte Foto – wird schon gezeigt, während der Server prüft */
+    var pendingPhoto by mutableStateOf<Uri?>(null)
+        private set
+
     fun addPhoto(appContext: Context, uri: Uri) {
         if (uploading) return
         uploading = true
+        pendingPhoto = uri
         launchSafe(showBusy = false) {
             try {
                 ProfileRepo.uploadPhoto(appContext, uri)
                 toast("Foto geprüft und hinzugefügt ✨")
             } finally {
                 uploading = false
+                pendingPhoto = null
             }
         }
     }
@@ -241,7 +247,7 @@ fun ProfileScreen(
 ) {
     val context = LocalContext.current
     LaunchedEffect(Unit) { vm.notices.collect { context.toast(it) } }
-    val profile by remember(session.uid) { ProfileRepo.profile(session.uid) }.collectAsState(initial = null)
+    val profile by remember(session.uid) { ProfileRepo.profile(session.uid) }.collectAsState()
     val account = session.account
     val p = profile
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -316,7 +322,10 @@ fun ProfileScreen(
                 if (p.photos.size < MAX_PHOTOS) {
                     item {
                         Surface(
-                            onClick = { picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
+                            onClick = {
+                                ProfileRepo.warmUpMedia()
+                                picker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                            },
                             enabled = !vm.uploading,
                             shape = RoundedCornerShape(16.dp),
                             color = InkElevated,
@@ -324,7 +333,7 @@ fun ProfileScreen(
                         ) {
                             Box(contentAlignment = Alignment.Center) {
                                 if (vm.uploading) {
-                                    CircularProgressIndicator(Modifier.size(24.dp), color = Teal, strokeWidth = 2.5.dp)
+                                    UploadPreview(vm.pendingPhoto)
                                 } else {
                                     Box(
                                         Modifier
@@ -508,22 +517,28 @@ private fun MenuRow(icon: ImageVector, label: String, tint: Color = TextHigh, on
 
 class EditProfileViewModel : BaseViewModel() {
     private val uid = Fb.uid
-    val profile = ProfileRepo.profile(uid).stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val profile = ProfileRepo.profile(uid)
     val socials = ProfileRepo.socials(uid).stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     /** "photo" oder "video", solange ein Upload läuft */
     var uploading by mutableStateOf<String?>(null)
         private set
 
+    /** Das gerade ausgewählte Foto – wird schon gezeigt, während der Server prüft */
+    var pendingPhoto by mutableStateOf<Uri?>(null)
+        private set
+
     fun addPhoto(appContext: Context, uri: Uri) {
         if (uploading != null) return
         uploading = "photo"
+        pendingPhoto = uri
         launchSafe(showBusy = false) {
             try {
                 ProfileRepo.uploadPhoto(appContext, uri)
                 toast("Foto geprüft und hinzugefügt ✨")
             } finally {
                 uploading = null
+                pendingPhoto = null
             }
         }
     }
@@ -729,7 +744,11 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
                                 .aspectRatio(0.78f)
                         ) {
                             if (url == null) {
-                                AddPhotoTile(uploading = vm.uploading == "photo") {
+                                AddPhotoTile(
+                                    uploading = vm.uploading == "photo",
+                                    preview = vm.pendingPhoto
+                                ) {
+                                    ProfileRepo.warmUpMedia()
                                     photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                                 }
                             } else {
@@ -978,7 +997,7 @@ private fun SocialInputRow(emoji: String, color: Color, placeholder: String, val
 }
 
 @Composable
-private fun AddPhotoTile(uploading: Boolean, onClick: () -> Unit) {
+private fun AddPhotoTile(uploading: Boolean, preview: Uri? = null, onClick: () -> Unit) {
     Surface(
         onClick = onClick,
         enabled = !uploading,
@@ -989,14 +1008,39 @@ private fun AddPhotoTile(uploading: Boolean, onClick: () -> Unit) {
     ) {
         Box(contentAlignment = Alignment.Center) {
             if (uploading) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    CircularProgressIndicator(Modifier.size(26.dp), color = Teal, strokeWidth = 2.5.dp)
-                    Spacer(Modifier.height(6.dp))
-                    Text("Wird geprüft…", style = MaterialTheme.typography.labelSmall, color = TextLow)
-                }
+                UploadPreview(preview)
             } else {
                 Icon(Icons.Rounded.AddAPhoto, contentDescription = "Foto hinzufügen", tint = Teal)
             }
+        }
+    }
+}
+
+/** Ausgewähltes Foto schon zeigen (abgedunkelt), während der Server es prüft */
+@Composable
+private fun UploadPreview(preview: Uri?) {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        if (preview != null) {
+            AsyncImage(
+                model = preview,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.45f))
+            )
+        }
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            CircularProgressIndicator(Modifier.size(26.dp), color = Teal, strokeWidth = 2.5.dp)
+            Spacer(Modifier.height(6.dp))
+            Text(
+                "Wird geprüft…",
+                style = MaterialTheme.typography.labelSmall,
+                color = if (preview != null) Color.White else TextLow
+            )
         }
     }
 }
@@ -1054,7 +1098,6 @@ private fun PhotoTile(url: String, isMain: Boolean, onRemove: () -> Unit, onMake
 
 class UserProfileViewModel(private val uid: String) : BaseViewModel() {
     val profile = ProfileRepo.profile(uid)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
     val friendChatId = ProfileRepo.friendChatId(uid)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
     val socials = friendChatId
@@ -1125,7 +1168,7 @@ fun UserProfileScreen(
     val p = profile
     val friendChat = chatId
     val isBlocked by vm.blocked.collectAsState()
-    val me by remember(session.uid) { ProfileRepo.profile(session.uid) }.collectAsState(initial = null)
+    val me by remember(session.uid) { ProfileRepo.profile(session.uid) }.collectAsState()
     val shared = if (isMe || p == null) emptySet() else p.interests.filter { it in me?.interests.orEmpty() }.toSet()
 
     Column(

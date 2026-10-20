@@ -1,0 +1,59 @@
+name: Server prüfen
+
+# Nur von Hand: testet die schnelle Bildprüfung und zeigt, wie lange
+# Foto-Uploads und Chat-Nachrichten auf dem Server zuletzt gebraucht haben.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Zugang
+        id: check
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          python3 .github/scripts/service_account.py "$RUNNER_TEMP/sa.json"
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Anmelden
+        run: |
+          gcloud auth activate-service-account --key-file="$RUNNER_TEMP/sa.json" --quiet
+          gcloud config set project "${{ steps.check.outputs.project }}" --quiet
+
+      - name: Bildprüfung über gs:// testen
+        env:
+          P: ${{ steps.check.outputs.project }}
+        run: |
+          TOKEN=$(gcloud auth print-access-token)
+          B=$(curl -sS -H "Authorization: Bearer $TOKEN" -H "X-Goog-User-Project: $P" \
+            "https://firebasestorage.googleapis.com/v1alpha/projects/$P/defaultBucket" | jq -r '.bucket.name // .name' | sed 's#.*/buckets/##')
+          echo "Bucket: $B"
+          # Kleines Testbild (16x16 Pixel, blau)
+          python3 -c "import base64,sys; sys.stdout.buffer.write(base64.b64decode('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAAQABADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDUooor1jzT/9k='))" > test.jpg
+          gcloud storage cp test.jpg "gs://$B/selftest/check.jpg" --quiet
+          START=$(date +%s%3N)
+          curl -sS -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+            "https://vision.googleapis.com/v1/images:annotate" \
+            -d "{\"requests\":[{\"image\":{\"source\":{\"gcsImageUri\":\"gs://$B/selftest/check.jpg\"}},\"features\":[{\"type\":\"SAFE_SEARCH_DETECTION\"}]}]}" | head -c 600; echo
+          echo "Dauer: $(( $(date +%s%3N) - START )) ms"
+          gcloud storage rm "gs://$B/selftest/check.jpg" --quiet || true
+
+      - name: Zeiten der letzten Uploads und Nachrichten
+        run: |
+          for SVC in addprofilemedia onmessagecreated; do
+            echo "== $SVC (Dauer pro Aufruf, neueste zuerst)"
+            gcloud logging read "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"$SVC\" AND httpRequest.latency:*" \
+              --freshness=3d --limit=25 --format="value(timestamp,httpRequest.latency,httpRequest.status)" || true
+            echo "== $SVC (Warnungen und Fehler)"
+            gcloud logging read "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"$SVC\" AND severity>=WARNING" \
+              --freshness=3d --limit=15 --format="value(timestamp,severity,textPayload,jsonPayload.message)" || true
+          done

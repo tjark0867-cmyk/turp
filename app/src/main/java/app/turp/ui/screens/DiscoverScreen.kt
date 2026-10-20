@@ -87,6 +87,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import app.turp.data.BaseViewModel
 import app.turp.data.DiscoverFilter
 import app.turp.data.DiscoverPrefs
+import app.turp.data.Images
 import app.turp.ui.components.InterestIcon
 import androidx.compose.foundation.layout.offset
 import app.turp.data.DiscoverRepo
@@ -223,12 +224,20 @@ fun DiscoverScreen(
     LaunchedEffect(Unit) { vm.notices.collect { context.toast(it) } }
 
     val cards by vm.cards.collectAsState()
-    val me by remember(session.uid) { ProfileRepo.profile(session.uid) }.collectAsState(initial = null)
+    val me by remember(session.uid) { ProfileRepo.profile(session.uid) }.collectAsState()
     var showFilter by remember { mutableStateOf(false) }
     var reporting by remember { mutableStateOf<UserProfile?>(null) }
     val myProfile = me
     val checkInOpen = session.account.lastCheckIn != todayBerlin()
     val myInterests = myProfile?.interests.orEmpty().toSet()
+
+    // Fotos der nächsten Karten schon vorladen, damit beim Wischen nichts nachlädt
+    LaunchedEffect(cards) {
+        Images.prefetch(
+            context,
+            cards.take(2).flatMap { it.photos } + cards.drop(2).take(8).mapNotNull { it.photos.firstOrNull() }
+        )
+    }
 
     // Erst laden, wenn das eigene Profil da ist (wegen "Mein Land")
     LaunchedEffect(myProfile) { myProfile?.let(vm::setMe) }

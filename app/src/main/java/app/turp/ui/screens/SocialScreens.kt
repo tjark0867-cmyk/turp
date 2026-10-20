@@ -20,6 +20,7 @@ import android.Manifest
 import java.io.File
 import app.turp.ui.components.rememberIsOnline
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import com.google.firebase.Timestamp
 import app.turp.ui.components.sameDay
@@ -93,6 +94,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -112,6 +114,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import app.turp.data.BaseViewModel
 import app.turp.data.Chat
 import app.turp.data.ChatRepo
+import app.turp.data.Images
 import app.turp.data.DEFAULT_COLOR
 import app.turp.data.Fb
 import app.turp.data.FriendRequest
@@ -157,7 +160,7 @@ fun ChatsScreen(
     testBusy: Boolean = false,
 ) {
     val me = session.uid
-    val myProfile by remember(me) { ProfileRepo.profile(me) }.collectAsState(initial = null)
+    val myProfile by remember(me) { ProfileRepo.profile(me) }.collectAsState()
     val friends = chats.filter { !it.closed }
 
     LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 16.dp)) {
@@ -331,14 +334,28 @@ class ChatViewModel(private val chatId: String) : BaseViewModel() {
         }
     }
 
+    /** Eigene Fotos (Pfad → Bilddaten): sofort sichtbar, auch solange der Server noch prüft */
+    val localImages = mutableStateMapOf<String, ByteArray>()
+    private val seeded = mutableSetOf<String>()
+
     fun sendImage(appContext: Context, uri: Uri) {
         if (sendingImage) return
         sendingImage = true
         launchSafe(showBusy = false) {
             try {
-                ChatRepo.sendImage(appContext, chatId, uri)
+                ChatRepo.sendImage(appContext, chatId, uri) { path, bytes -> localImages[path] = bytes }
             } finally {
                 sendingImage = false
+            }
+        }
+    }
+
+    /** Freigegebene eigene Fotos direkt im Bild-Speicher ablegen – kein erneuter Download */
+    fun seedApproved(appContext: Context, list: List<Message>) {
+        list.forEach { m ->
+            val bytes = localImages[m.imagePath] ?: return@forEach
+            if (m.type == "image" && m.imageStatus == "ok" && m.imageUrl.isNotBlank() && seeded.add(m.id)) {
+                viewModelScope.launch(Dispatchers.IO) { Images.seed(appContext, m.imageUrl, bytes) }
             }
         }
     }
@@ -463,6 +480,7 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
         }
     }
 
+    LaunchedEffect(messages) { vm.seedApproved(context.applicationContext, messages) }
     LaunchedEffect(messages.size) {
         if (messages.isNotEmpty()) {
             // Index 0 ist der Sicherheitshinweis, danach folgen die Nachrichten
@@ -631,6 +649,7 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
                         other = other,
                         showRead = m.id == lastReadId,
                         voice = voice,
+                        localImage = if (mine) vm.localImages[m.imagePath] else null,
                         onLongPress = {
                             if (!mine) {
                                 reportContext = when (m.type) {
@@ -718,6 +737,7 @@ private fun MessageRow(
     showRead: Boolean,
     voice: VoicePlayer,
     onLongPress: () -> Unit,
+    localImage: ByteArray? = null,
 ) {
     Row(
         Modifier
@@ -735,7 +755,7 @@ private fun MessageRow(
             Spacer(Modifier.width(8.dp))
         }
         Box {
-            Bubble(message, mine, lastInRun, voice, onLongPress)
+            Bubble(message, mine, lastInRun, voice, onLongPress, localImage)
             if (showRead && other != null) {
                 Avatar(
                     other.photo,
@@ -753,7 +773,14 @@ private fun MessageRow(
 }
 
 @Composable
-private fun Bubble(message: Message, mine: Boolean, lastInRun: Boolean, voice: VoicePlayer, onLongPress: () -> Unit) {
+private fun Bubble(
+    message: Message,
+    mine: Boolean,
+    lastInRun: Boolean,
+    voice: VoicePlayer,
+    onLongPress: () -> Unit,
+    localImage: ByteArray? = null,
+) {
     val round = 20.dp
     val tail = 6.dp
     val shape = RoundedCornerShape(
@@ -773,6 +800,38 @@ private fun Bubble(message: Message, mine: Boolean, lastInRun: Boolean, voice: V
             .combinedClickable(onClick = {}, onLongClick = onLongPress)
     ) {
         when {
+            // Eigenes Foto: sofort aus den lokalen Daten zeigen, während der Server noch prüft
+            message.type == "image" && message.imageStatus != "blocked" && localImage != null -> Box {
+                AsyncImage(
+                    model = localImage,
+                    contentDescription = "Foto",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(220.dp)
+                )
+                if (message.imageStatus != "ok") {
+                    Row(
+                        Modifier
+                            .align(Alignment.TopStart)
+                            .padding(8.dp)
+                            .background(Color.Black.copy(alpha = 0.55f), RoundedCornerShape(50))
+                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CircularProgressIndicator(color = Color.White, strokeWidth = 1.5.dp, modifier = Modifier.size(11.dp))
+                        Spacer(Modifier.width(6.dp))
+                        Text("Wird geprüft", color = Color.White, fontSize = 11.sp)
+                    }
+                }
+                Text(
+                    time,
+                    color = Color.White,
+                    fontSize = 11.sp,
+                    style = TextStyle(shadow = Shadow(Color.Black.copy(alpha = 0.7f), Offset(0f, 1f), 4f)),
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(8.dp)
+                )
+            }
             message.type == "image" && message.imageStatus == "ok" -> Box {
                 AsyncImage(
                     model = message.imageUrl,

@@ -9,8 +9,15 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.StorageMetadata
+import com.google.firebase.firestore.Source
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -25,13 +32,39 @@ private fun userRef(uid: String) = users().document(uid)
 
 object ProfileRepo {
 
-    fun profile(uid: String): Flow<UserProfile?> =
-        userRef(uid).asFlow().map { if (it.exists()) it.toProfile() else null }
+    /** Läuft so lange wie die App, damit Profile zwischen den Seiten im Speicher bleiben */
+    private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private val profiles = HashMap<String, StateFlow<UserProfile?>>()
 
-    /** Profil einmalig laden (null, wenn es nicht existiert oder nicht sichtbar ist) */
+    /**
+     * Profil live. Einmal geladen, ist es beim nächsten Öffnen einer Seite sofort da
+     * (die Verbindung bleibt nach dem Verlassen noch eine Minute offen, der letzte Stand immer).
+     */
+    fun profile(uid: String): StateFlow<UserProfile?> = synchronized(profiles) {
+        profiles.getOrPut(uid) {
+            userRef(uid).asFlow()
+                .map { if (it.exists()) it.toProfile() else null }
+                .stateIn(appScope, SharingStarted.WhileSubscribed(60_000), null)
+        }
+    }
+
+    /** Profil einmalig laden (null, wenn es nicht existiert oder nicht sichtbar ist) – zuerst aus dem Speicher */
     suspend fun get(uid: String): UserProfile? {
+        synchronized(profiles) { profiles[uid]?.value }?.let { return it }
+        val cached = runCatching { userRef(uid).get(Source.CACHE).await() }.getOrNull()
+        if (cached != null && cached.exists()) return cached.toProfile()
         val snap = userRef(uid).get().await()
         return if (snap.exists()) snap.toProfile() else null
+    }
+
+    /**
+     * Weckt die Bildprüfung auf dem Server schon auf, während man noch ein Foto aussucht.
+     * Fehler sind egal – es geht nur ums Vorwärmen.
+     */
+    fun warmUpMedia() {
+        appScope.launch {
+            runCatching { callFunction("addProfileMedia", mapOf("warmup" to true), timeoutSeconds = 30) }
+        }
     }
 
     fun account(uid: String): Flow<Account?> =
@@ -90,7 +123,10 @@ object ProfileRepo {
         val meta = StorageMetadata.Builder().setContentType("image/jpeg").build()
         Fb.storage.reference.child(path).putBytes(bytes, meta).await()
         val result = callFunction("addProfileMedia", mapOf("path" to path, "kind" to "photo"), timeoutSeconds = 120)
-        return result["url"] as? String ?: ""
+        val url = result["url"] as? String ?: ""
+        // Das eigene Foto liegt schon vor – direkt im Bild-Speicher ablegen statt neu herunterzuladen
+        withContext(Dispatchers.IO) { Images.seed(context, url, bytes) }
+        return url
     }
 
     suspend fun uploadVideo(context: Context, uri: Uri): String {
@@ -302,9 +338,11 @@ object ChatRepo {
         ).await()
     }
 
-    suspend fun sendImage(context: Context, chatId: String, uri: Uri) {
+    /** Lädt das Foto hoch und liefert Pfad und Bilddaten (für die Vorschau, solange der Server prüft) */
+    suspend fun sendImage(context: Context, chatId: String, uri: Uri, onPrepared: (String, ByteArray) -> Unit = { _, _ -> }) {
         val bytes = withContext(Dispatchers.IO) { MediaUtils.compressImage(context, uri, maxSide = 1280, quality = 80) }
         val path = "chatUploads/${Fb.uid}/${UUID.randomUUID()}.jpg"
+        onPrepared(path, bytes)
         val meta = StorageMetadata.Builder().setContentType("image/jpeg").build()
         Fb.storage.reference.child(path).putBytes(bytes, meta).await()
         chatRef(chatId).collection("messages").add(

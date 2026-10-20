@@ -3,9 +3,13 @@ package app.turp
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import coil.ImageLoader
+import coil.ImageLoaderFactory
+import coil.disk.DiskCache
+import coil.memory.MemoryCache
 import com.google.firebase.FirebaseApp
 
-class TurpApp : Application() {
+class TurpApp : Application(), ImageLoaderFactory {
 
     override fun onCreate() {
         super.onCreate()
@@ -20,6 +24,28 @@ class TurpApp : Application() {
         ).apply { description = "Neue Nachrichten und Freundschaftsanfragen" }
         getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
     }
+
+    /**
+     * Bilder-Lader für die ganze App. Jedes hochgeladene Bild bekommt eine neue Adresse,
+     * ein Bild ändert sich also nie – darum wird es aus dem Speicher gezeigt, ohne erst
+     * beim Server nachzufragen (die Server-Header würden sonst jedes Mal eine Anfrage erzwingen).
+     */
+    override fun newImageLoader(): ImageLoader =
+        ImageLoader.Builder(this)
+            .respectCacheHeaders(false)
+            .memoryCache {
+                MemoryCache.Builder(this)
+                    .maxSizePercent(0.25)
+                    .build()
+            }
+            .diskCache {
+                DiskCache.Builder()
+                    .directory(cacheDir.resolve("image_cache"))
+                    .maxSizeBytes(300L * 1024 * 1024)
+                    .build()
+            }
+            .crossfade(120)
+            .build()
 
     companion object {
         const val CHANNEL_ID = "turp_default"
