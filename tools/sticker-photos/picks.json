@@ -173,7 +173,7 @@
   "license": "CC BY 2.5",
   "artist": "Keitei",
   "page": "https://commons.wikimedia.org/wiki/File:Pointe_shoes.jpg",
-  "source": "2/tanzen/3"
+  "source": "9/tanzen/6"
  },
  "mode": {
   "title": "File:Leather handbag by Les cuirs d'Agathe (DSC07738).jpg",
@@ -1544,15 +1544,15 @@
   "source": "3/fussball/3"
  },
  "natur": {
-  "title": "File:Maple leaf. Shevchenko Garden in Kharkiv.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e6/Maple_leaf._Shevchenko_Garden_in_Kharkiv.jpg/330px-Maple_leaf._Shevchenko_Garden_in_Kharkiv.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/e/e6/Maple_leaf._Shevchenko_Garden_in_Kharkiv.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 4608,
-  "height": 3072,
-  "license": "CC BY-SA 4.0",
-  "artist": "Lystopad",
-  "page": "https://commons.wikimedia.org/wiki/File:Maple_leaf._Shevchenko_Garden_in_Kharkiv.jpg",
-  "source": "3/natur/2"
+  "title": "File:Solitary tree near Hellifield - geograph.org.uk - 5810333.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/Solitary_tree_near_Hellifield_-_geograph.org.uk_-_5810333.jpg/330px-Solitary_tree_near_Hellifield_-_geograph.org.uk_-_5810333.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Solitary_tree_near_Hellifield_-_geograph.org.uk_-_5810333.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "width": 1024,
+  "height": 768,
+  "license": "CC BY-SA 2.0",
+  "artist": "Stephen Craven",
+  "page": "https://commons.wikimedia.org/wiki/File:Solitary_tree_near_Hellifield_-_geograph.org.uk_-_5810333.jpg",
+  "source": "9/natur/9"
  },
  "radfahren": {
   "title": "File:Älteres Peugeot Mixte-Fahrrad in Freiburg i. B. (2025).jpg",
@@ -1795,5 +1795,27 @@
   "artist": "NMorales (WMF)",
   "page": "https://commons.wikimedia.org/wiki/File:Griswold_cast_iron_skillet.jpg",
   "source": "4/kochen/3"
+ },
+ "natur_b": {
+  "title": "File:Solitary tree on Totley Moor - geograph.org.uk - 2318926.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bb/Solitary_tree_on_Totley_Moor_-_geograph.org.uk_-_2318926.jpg/330px-Solitary_tree_on_Totley_Moor_-_geograph.org.uk_-_2318926.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Solitary_tree_on_Totley_Moor_-_geograph.org.uk_-_2318926.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "width": 1024,
+  "height": 768,
+  "license": "CC BY-SA 2.0",
+  "artist": "Graham Hogg",
+  "page": "https://commons.wikimedia.org/wiki/File:Solitary_tree_on_Totley_Moor_-_geograph.org.uk_-_2318926.jpg",
+  "source": "9/natur/8"
+ },
+ "tanzen_b": {
+  "title": "File:Ballet pointe shoes.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Ballet_pointe_shoes.jpg/330px-Ballet_pointe_shoes.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/e/ea/Ballet_pointe_shoes.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "width": 922,
+  "height": 1382,
+  "license": "CC BY 2.0",
+  "artist": "melalouise from East St Kilda, Australia",
+  "page": "https://commons.wikimedia.org/wiki/File:Ballet_pointe_shoes.jpg",
+  "source": "9/tanzen/3"
  }
 }
