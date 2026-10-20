@@ -384,18 +384,6 @@
   "page": "https://commons.wikimedia.org/wiki/File:Llama_at_Ashdown_Llama_Park_-_geograph.org.uk_-_2957753.jpg",
   "source": "2/fortnite/9"
  },
- "roblox": {
-  "title": "File:Colorful plastic building blocks scattered on a table.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/Colorful_plastic_building_blocks_scattered_on_a_table.jpg/330px-Colorful_plastic_building_blocks_scattered_on_a_table.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/4/4e/Colorful_plastic_building_blocks_scattered_on_a_table.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 6016,
-  "height": 4016,
-  "license": "CC BY 2.0",
-  "artist": "Shixart1985",
-  "page": "https://commons.wikimedia.org/wiki/File:Colorful_plastic_building_blocks_scattered_on_a_table.jpg",
-  "source": "2/roblox/7",
-  "nocut": true
- },
  "valorant": {
   "title": "File:Stereo headset.jpg",
   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/Stereo_headset.jpg/330px-Stereo_headset.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
@@ -407,17 +395,6 @@
   "page": "https://commons.wikimedia.org/wiki/File:Stereo_headset.jpg",
   "source": "2/valorant/4"
  },
- "lol": {
-  "title": "File:Løkken - Badehäuschen - Crystal Ball (2).jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/L%C3%B8kken_-_Badeh%C3%A4uschen_-_Crystal_Ball_%282%29.jpg/330px-L%C3%B8kken_-_Badeh%C3%A4uschen_-_Crystal_Ball_%282%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/6/65/L%C3%B8kken_-_Badeh%C3%A4uschen_-_Crystal_Ball_%282%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 4839,
-  "height": 3217,
-  "license": "CC BY-SA 4.0",
-  "artist": "Ragnar1904",
-  "page": "https://commons.wikimedia.org/wiki/File:L%C3%B8kken_-_Badeh%C3%A4uschen_-_Crystal_Ball_(2).jpg",
-  "source": "2/lol/4"
- },
  "genshin": {
   "title": "File:Amethyst Quartz Macro 1.JPG",
   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Amethyst_Quartz_Macro_1.JPG/330px-Amethyst_Quartz_Macro_1.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
@@ -428,17 +405,6 @@
   "artist": "“Jon Zander (Digon3)\"",
   "page": "https://commons.wikimedia.org/wiki/File:Amethyst_Quartz_Macro_1.JPG",
   "source": "2/genshin/1"
- },
- "gta": {
-  "title": "File:Police car Vienna Volkswagen Touran.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/13/Police_car_Vienna_Volkswagen_Touran.jpg/330px-Police_car_Vienna_Volkswagen_Touran.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/1/13/Police_car_Vienna_Volkswagen_Touran.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 3309,
-  "height": 2005,
-  "license": "CC0",
-  "artist": "Jebulon",
-  "page": "https://commons.wikimedia.org/wiki/File:Police_car_Vienna_Volkswagen_Touran.jpg",
-  "source": "2/gta/6"
  },
  "cod": {
   "title": "File:Brazilian military helmet.JPG",
@@ -461,29 +427,6 @@
   "artist": "Jebulon",
   "page": "https://commons.wikimedia.org/wiki/File:Crown_Kings_Bavaria_Munich.jpg",
   "source": "2/clashroyale/1"
- },
- "brawlstars": {
-  "title": "File:2023 Medal Komisji Edukacji Narodowej (awers).jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/2023_Medal_Komisji_Edukacji_Narodowej_%28awers%29.jpg/330px-2023_Medal_Komisji_Edukacji_Narodowej_%28awers%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/9/95/2023_Medal_Komisji_Edukacji_Narodowej_%28awers%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 1825,
-  "height": 3917,
-  "license": "Public domain",
-  "artist": "Jacek Halicki",
-  "page": "https://commons.wikimedia.org/wiki/File:2023_Medal_Komisji_Edukacji_Narodowej_(awers).jpg",
-  "source": "2/brawlstars/8"
- },
- "zelda": {
-  "title": "File:Portion of old map (1889) presenting location Kendjelska humka near Zabalj, Serbia.png",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/45/Portion_of_old_map_%281889%29_presenting_location_Kendjelska_humka_near_Zabalj%2C_Serbia.png/330px-Portion_of_old_map_%281889%29_presenting_location_Kendjelska_humka_near_Zabalj%2C_Serbia.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/4/45/Portion_of_old_map_%281889%29_presenting_location_Kendjelska_humka_near_Zabalj%2C_Serbia.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 673,
-  "height": 483,
-  "license": "Public domain",
-  "artist": "Jozefsu",
-  "page": "https://commons.wikimedia.org/wiki/File:Portion_of_old_map_(1889)_presenting_location_Kendjelska_humka_near_Zabalj,_Serbia.png",
-  "source": "2/zelda/5",
-  "nocut": true
  },
  "amongus": {
   "title": "File:Berkut spacesuit 1.JPG",
@@ -508,26 +451,27 @@
   "source": "2/sims/0"
  },
  "eafc": {
-  "title": "File:Football boots ARTEX Budapest Laslovarga (1).jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a0/Football_boots_ARTEX_Budapest_Laslovarga_%281%29.jpg/330px-Football_boots_ARTEX_Budapest_Laslovarga_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/a/a0/Football_boots_ARTEX_Budapest_Laslovarga_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 2048,
-  "height": 1536,
+  "title": "File:Association football goal in training football field.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/Association_football_goal_in_training_football_field.jpg/330px-Association_football_goal_in_training_football_field.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Association_football_goal_in_training_football_field.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "width": 3648,
+  "height": 2736,
   "license": "CC BY-SA 4.0",
-  "artist": "Laslovarga",
-  "page": "https://commons.wikimedia.org/wiki/File:Football_boots_ARTEX_Budapest_Laslovarga_(1).jpg",
-  "source": "2/eafc/2"
+  "artist": "Santeri Viinamäki",
+  "page": "https://commons.wikimedia.org/wiki/File:Association_football_goal_in_training_football_field.jpg",
+  "source": "7/eafc/2",
+  "nocut": true
  },
  "rocketleague": {
-  "title": "File:Time o launch a model rocket 2008.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/Time_o_launch_a_model_rocket_2008.jpg/330px-Time_o_launch_a_model_rocket_2008.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/6/68/Time_o_launch_a_model_rocket_2008.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 654,
-  "height": 640,
-  "license": "CC BY-SA 2.0",
-  "artist": "Nick Nguyen",
-  "page": "https://commons.wikimedia.org/wiki/File:Time_o_launch_a_model_rocket_2008.jpg",
-  "source": "2/rocketleague/6"
+  "title": "File:Radio controlled car on ground.JPG",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fc/Radio_controlled_car_on_ground.JPG/330px-Radio_controlled_car_on_ground.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Radio_controlled_car_on_ground.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "width": 4608,
+  "height": 3456,
+  "license": "CC0",
+  "artist": "Editor abcdef",
+  "page": "https://commons.wikimedia.org/wiki/File:Radio_controlled_car_on_ground.JPG",
+  "source": "7/rocketleague/9"
  },
  "overwatch": {
   "title": "File:Hrodna New Castle Shield 2023-06-25 5609.jpg",
@@ -552,15 +496,15 @@
   "source": "2/stardew/6"
  },
  "animalcrossing": {
-  "title": "File:Seashell museum Phuket - 2042.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/Seashell_museum_Phuket_-_2042.jpg/330px-Seashell_museum_Phuket_-_2042.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/e/e5/Seashell_museum_Phuket_-_2042.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 1095,
-  "height": 1200,
-  "license": "CC BY-SA 3.0",
-  "artist": "Amada44",
-  "page": "https://commons.wikimedia.org/wiki/File:Seashell_museum_Phuket_-_2042.jpg",
-  "source": "2/animalcrossing/4"
+  "title": "File:CSA-Tokyo-Turnips.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/CSA-Tokyo-Turnips.jpg/330px-CSA-Tokyo-Turnips.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/2/20/CSA-Tokyo-Turnips.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "width": 5550,
+  "height": 3090,
+  "license": "Public domain",
+  "artist": "Evan-Amos",
+  "page": "https://commons.wikimedia.org/wiki/File:CSA-Tokyo-Turnips.jpg",
+  "source": "8/animalcrossing/5"
  },
  "rap": {
   "title": "File:Sharp GF-777 Boombox - Ghettoblaster (edited and cropped).jpg",
@@ -772,15 +716,15 @@
   "source": "2/dualipa/2"
  },
  "oliviarodrigo": {
-  "title": "File:Common Lime Butterfly Papilio demoleus by Kadavoor.JPG",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/Common_Lime_Butterfly_Papilio_demoleus_by_Kadavoor.JPG/330px-Common_Lime_Butterfly_Papilio_demoleus_by_Kadavoor.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/9/99/Common_Lime_Butterfly_Papilio_demoleus_by_Kadavoor.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 2048,
-  "height": 1536,
-  "license": "CC BY-SA 4.0",
-  "artist": "Jeevan Jose, Kerala, India",
-  "page": "https://commons.wikimedia.org/wiki/File:Common_Lime_Butterfly_Papilio_demoleus_by_Kadavoor.JPG",
-  "source": "2/oliviarodrigo/8"
+  "title": "File:Butterfly Luc Viatour.JPG",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/Butterfly_Luc_Viatour.JPG/330px-Butterfly_Luc_Viatour.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/4/47/Butterfly_Luc_Viatour.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "width": 2070,
+  "height": 1554,
+  "license": "CC BY-SA 3.0",
+  "artist": "Luc Viatour",
+  "page": "https://commons.wikimedia.org/wiki/File:Butterfly_Luc_Viatour.JPG",
+  "source": "8/oliviarodrigo/9"
  },
  "apache207": {
   "title": "File:Sunglasses-1.jpg",
@@ -1157,26 +1101,27 @@
   "source": "2/jjk/8"
  },
  "aot": {
-  "title": "File:White rumped vulture flexing its wings.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a0/White_rumped_vulture_flexing_its_wings.jpg/330px-White_rumped_vulture_flexing_its_wings.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/a/a0/White_rumped_vulture_flexing_its_wings.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 3544,
-  "height": 1993,
+  "title": "File:Kotor City Wall.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Kotor_City_Wall.jpg/330px-Kotor_City_Wall.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Kotor_City_Wall.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "width": 10258,
+  "height": 6185,
   "license": "CC BY-SA 4.0",
-  "artist": "Prasan Shrestha",
-  "page": "https://commons.wikimedia.org/wiki/File:White_rumped_vulture_flexing_its_wings.jpg",
-  "source": "2/aot/3"
+  "artist": "Ingo Mehling",
+  "page": "https://commons.wikimedia.org/wiki/File:Kotor_City_Wall.jpg",
+  "source": "8/aot/1",
+  "nocut": true
  },
  "mha": {
-  "title": "File:Backpack (AM 2014.66.1-16).jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9f/Backpack_%28AM_2014.66.1-16%29.jpg/330px-Backpack_%28AM_2014.66.1-16%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Backpack_%28AM_2014.66.1-16%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 3016,
-  "height": 4032,
-  "license": "CC BY 4.0",
-  "artist": "Alexto Production",
-  "page": "https://commons.wikimedia.org/wiki/File:Backpack_(AM_2014.66.1-16).jpg",
-  "source": "2/mha/3"
+  "title": "File:Domino mask.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/Domino_mask.jpg/330px-Domino_mask.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/6/62/Domino_mask.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "width": 674,
+  "height": 600,
+  "license": "CC BY-SA 4.0",
+  "artist": "File:Lonerangermask.png:studio_hades derivative work: Hyju",
+  "page": "https://commons.wikimedia.org/wiki/File:Domino_mask.jpg",
+  "source": "7/mha/0"
  },
  "haikyuu": {
   "title": "File:Carrion crow with some berries (05931).jpg",
@@ -1212,38 +1157,27 @@
   "source": "2/dragonball/0"
  },
  "harrypotter": {
-  "title": "File:Hue Vietnam Broom-in-Càn-Thành-Palace-01.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ca/Hue_Vietnam_Broom-in-C%C3%A0n-Th%C3%A0nh-Palace-01.jpg/330px-Hue_Vietnam_Broom-in-C%C3%A0n-Th%C3%A0nh-Palace-01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Hue_Vietnam_Broom-in-C%C3%A0n-Th%C3%A0nh-Palace-01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 2848,
-  "height": 4272,
+  "title": "File:Schneeeule Bubo scandiacus Grugapark 2013.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Schneeeule_Bubo_scandiacus_Grugapark_2013.jpg/330px-Schneeeule_Bubo_scandiacus_Grugapark_2013.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/c/c4/Schneeeule_Bubo_scandiacus_Grugapark_2013.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "width": 1949,
+  "height": 2599,
   "license": "CC BY-SA 3.0",
-  "artist": "CEphoto, Uwe Aranas",
-  "page": "https://commons.wikimedia.org/wiki/File:Hue_Vietnam_Broom-in-C%C3%A0n-Th%C3%A0nh-Palace-01.jpg",
-  "source": "2/harrypotter/2"
- },
- "marvel": {
-  "title": "File:Captain Easy Comic Books.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/Captain_Easy_Comic_Books.jpg/330px-Captain_Easy_Comic_Books.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/b/ba/Captain_Easy_Comic_Books.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 1074,
-  "height": 900,
-  "license": "Public domain",
-  "artist": "Unknown authorUnknown author",
-  "page": "https://commons.wikimedia.org/wiki/File:Captain_Easy_Comic_Books.jpg",
-  "source": "2/marvel/2",
-  "nocut": true
+  "artist": "Tuxyso",
+  "page": "https://commons.wikimedia.org/wiki/File:Schneeeule_Bubo_scandiacus_Grugapark_2013.jpg",
+  "source": "8/harrypotter/5"
  },
  "starwars": {
-  "title": "File:Space shuttle model at the Museum of Flight.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/Space_shuttle_model_at_the_Museum_of_Flight.jpg/330px-Space_shuttle_model_at_the_Museum_of_Flight.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Space_shuttle_model_at_the_Museum_of_Flight.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 3553,
-  "height": 2347,
-  "license": "CC BY 2.0",
-  "artist": "Frank Kovalchek from Anchorage, Alaska, USA",
-  "page": "https://commons.wikimedia.org/wiki/File:Space_shuttle_model_at_the_Museum_of_Flight.jpg",
-  "source": "2/starwars/3"
+  "title": "File:Andromeda Galaxy 2025.png",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/05/Andromeda_Galaxy_2025.png/330px-Andromeda_Galaxy_2025.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/0/05/Andromeda_Galaxy_2025.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "width": 5827,
+  "height": 3803,
+  "license": "CC0",
+  "artist": "Brody Wesner",
+  "page": "https://commons.wikimedia.org/wiki/File:Andromeda_Galaxy_2025.png",
+  "source": "7/starwars/0",
+  "nocut": true
  },
  "disney": {
   "title": "File:Schloss Neuschwanstein 2013.jpg",
@@ -1675,38 +1609,16 @@
   "page": "https://commons.wikimedia.org/wiki/File:Mobile_phone_case.jpg",
   "source": "3/handyspiele/3"
  },
- "minecraft": {
-  "title": "File:Blade, pick axe (AM 650878-1).jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/Blade%2C_pick_axe_%28AM_650878-1%29.jpg/330px-Blade%2C_pick_axe_%28AM_650878-1%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/3/3f/Blade%2C_pick_axe_%28AM_650878-1%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 4103,
-  "height": 3648,
-  "license": "CC BY 4.0",
-  "artist": "Unknown authorUnknown author",
-  "page": "https://commons.wikimedia.org/wiki/File:Blade,_pick_axe_(AM_650878-1).jpg",
-  "source": "3/minecraft/1"
- },
- "pokemon": {
-  "title": "File:Club penguin CCG Card-Jitsu Card collection.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/Club_penguin_CCG_Card-Jitsu_Card_collection.jpg/330px-Club_penguin_CCG_Card-Jitsu_Card_collection.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Club_penguin_CCG_Card-Jitsu_Card_collection.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 3239,
-  "height": 2589,
-  "license": "CC BY 4.0",
-  "artist": "B3251",
-  "page": "https://commons.wikimedia.org/wiki/File:Club_penguin_CCG_Card-Jitsu_Card_collection.jpg",
-  "source": "3/pokemon/0"
- },
  "mariokart": {
-  "title": "File:Go-Kart (15942250813).jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/Go-Kart_%2815942250813%29.jpg/330px-Go-Kart_%2815942250813%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Go-Kart_%2815942250813%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 2000,
-  "height": 1236,
-  "license": "CC BY 2.0",
-  "artist": "dave_7 from Lethbridge, Canada",
-  "page": "https://commons.wikimedia.org/wiki/File:Go-Kart_(15942250813).jpg",
-  "source": "3/mariokart/3"
+  "title": "File:Cavendish Banana DS.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/Cavendish_Banana_DS.jpg/330px-Cavendish_Banana_DS.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/9/9b/Cavendish_Banana_DS.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "width": 3997,
+  "height": 2664,
+  "license": "CC BY-SA 3.0",
+  "artist": "Augustus Binu : flickr",
+  "page": "https://commons.wikimedia.org/wiki/File:Cavendish_Banana_DS.jpg",
+  "source": "7/mariokart/8"
  },
  "klavier": {
   "title": "File:Kurzweil Synthesizer and MIDI Keyboard Controller PC3K6.jpg",
@@ -1896,14 +1808,25 @@
   "source": "4/kochen/3"
  },
  "fantasy": {
-  "title": "File:12 3 2007 magic wand.png",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/12_3_2007_magic_wand.png/330px-12_3_2007_magic_wand.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/0/0b/12_3_2007_magic_wand.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 800,
-  "height": 451,
+  "title": "File:« Le secret des secrets, ou le véritable grimoire, par Tosgraec » - btv1b10882213j (092 of 103).jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/%C2%AB_Le_secret_des_secrets%2C_ou_le_v%C3%A9ritable_grimoire%2C_par_Tosgraec_%C2%BB_-_btv1b10882213j_%28092_of_103%29.jpg/330px-%C2%AB_Le_secret_des_secrets%2C_ou_le_v%C3%A9ritable_grimoire%2C_par_Tosgraec_%C2%BB_-_btv1b10882213j_%28092_of_103%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/1/1c/%C2%AB_Le_secret_des_secrets%2C_ou_le_v%C3%A9ritable_grimoire%2C_par_Tosgraec_%C2%BB_-_btv1b10882213j_%28092_of_103%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "width": 7604,
+  "height": 4953,
   "license": "Public domain",
-  "artist": "Martin Brož",
-  "page": "https://commons.wikimedia.org/wiki/File:12_3_2007_magic_wand.png",
-  "source": "4/fantasy/1"
+  "artist": "Tosgraec. Auteur du texte",
+  "page": "https://commons.wikimedia.org/wiki/File:%C2%AB_Le_secret_des_secrets,_ou_le_v%C3%A9ritable_grimoire,_par_Tosgraec_%C2%BB_-_btv1b10882213j_(092_of_103).jpg",
+  "source": "7/fantasy/0"
+ },
+ "oliviarodrigo_b": {
+  "title": "File:Peacock butterfly (Aglais io) 2.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a6/Peacock_butterfly_%28Aglais_io%29_2.jpg/330px-Peacock_butterfly_%28Aglais_io%29_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Peacock_butterfly_%28Aglais_io%29_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "width": 3792,
+  "height": 2528,
+  "license": "CC BY-SA 3.0",
+  "artist": "Charles J. Sharp",
+  "page": "https://commons.wikimedia.org/wiki/File:Peacock_butterfly_(Aglais_io)_2.jpg",
+  "source": "8/oliviarodrigo/0"
  }
 }
