@@ -57,11 +57,11 @@
   "fountain pen"
  ],
  "kochen": [
-  "frying pan",
-  "wok",
-  "whisk",
-  "wooden spoon",
-  "Kochtopf"
+  "cast iron skillet",
+  "saucepan",
+  "Kochlöffel",
+  "kitchen utensils",
+  "chef's knife"
  ],
  "tiere": [
   "hamster",
@@ -419,9 +419,10 @@
   "motorsport helmet"
  ],
  "handball": [
-  "handball ball",
-  "Handballball",
-  "Handball (ball)"
+  "handball balls",
+  "Ball Handball",
+  "handball (ball)",
+  "Handballball"
  ],
  "angeln": [
   "fishing reel",
@@ -510,9 +511,10 @@
   "flying saucer"
  ],
  "fantasy": [
-  "witch hat",
-  "pointed hat",
-  "Hexenhut"
+  "unicorn figurine",
+  "magic wand",
+  "fairy figurine",
+  "spell book"
  ],
  "romance": [
   "red roses",
