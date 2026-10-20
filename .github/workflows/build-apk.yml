@@ -14,6 +14,8 @@ on:
       - ".firebaserc"
       - ".github/workflows/firebase.yml"
       - ".github/workflows/server-check.yml"
+      - ".github/workflows/sticker-photos.yml"
+      - "tools/**"
       - ".github/scripts/last-run.txt"
 
 permissions:

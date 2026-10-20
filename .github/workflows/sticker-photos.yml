@@ -1,0 +1,66 @@
+name: Sticker-Fotos
+
+# Nur von Hand. Schritt "search": sucht freie Fotos bei Wikimedia Commons (Vorschauen).
+# Schritt "cutout": stellt die ausgewählten Fotos (tools/sticker-photos/picks.json) frei.
+# Das Ergebnis landet in einem eigenen Zweig (Standard: sticker-photos bzw. sticker-cutouts).
+
+on:
+  workflow_dispatch:
+    inputs:
+      step:
+        description: "search oder cutout"
+        required: true
+        default: "search"
+      keys:
+        description: "Nur diese Interessen (Komma-getrennt, leer = alle)"
+        required: false
+        default: ""
+      model:
+        description: "rembg-Modell für cutout"
+        required: false
+        default: "isnet-general-use"
+      branch:
+        description: "Zielzweig (leer = Standard)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fotos suchen
+        if: inputs.step == 'search'
+        run: python3 tools/sticker-photos/search.py out "${{ inputs.keys }}"
+
+      - name: Fotos freistellen
+        if: inputs.step == 'cutout'
+        run: |
+          pip install --quiet "rembg[cpu]" pillow
+          python3 tools/sticker-photos/cutout.py out "${{ inputs.model }}" "${{ inputs.keys }}"
+
+      - name: Ergebnis in Zweig speichern
+        run: |
+          BR="${{ inputs.branch }}"
+          if [ -z "$BR" ]; then
+            if [ "${{ inputs.step }}" = "search" ]; then BR=sticker-photos; else BR=sticker-cutouts; fi
+          fi
+          cp -r out /tmp/out
+          git config user.name "turp-bot"
+          git config user.email "turp-bot@users.noreply.github.com"
+          git checkout -q --orphan result-tmp
+          git rm -rf --quiet .
+          cp -r /tmp/out/. .
+          git add -A
+          git commit -q -m "Sticker-Fotos (${{ inputs.step }}) ${GITHUB_RUN_NUMBER}"
+          git push -f -q origin HEAD:refs/heads/$BR
+          echo "Gespeichert in $BR"
