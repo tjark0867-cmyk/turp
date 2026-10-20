@@ -4,11 +4,16 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 
 const val DEFAULT_COLOR = "#2DE1C2"
-const val REQUEST_COST = 3
+// Spielregeln – müssen zu functions/index.js passen
+const val REQUEST_COST = 10
+const val PLUS_REQUEST_COST = 5     // mit kumi+
 const val MAX_PHOTOS = 6
 const val MAX_INTERESTS = 8
-const val FRIEND_BONUS = 5          // muss zu functions/index.js passen
-const val INVITE_BONUS = 25         // Gems pro eingeladener Person
+const val FRIEND_BONUS = 5
+const val INVITE_BONUS = 50         // Gems pro eingeladener Person
+
+/** Was eine Freundschaftsanfrage kostet */
+fun requestCost(plus: Boolean): Int = if (plus) PLUS_REQUEST_COST else REQUEST_COST
 
 data class UserProfile(
     val uid: String = "",
@@ -22,6 +27,8 @@ data class UserProfile(
     val color: String = DEFAULT_COLOR,
     val ageGroup: String = "",
     val bot: Boolean = false,
+    /** hat kumi+ (für das goldene Plus am Namen) */
+    val plus: Boolean = false,
 )
 
 data class Account(
@@ -34,7 +41,12 @@ data class Account(
     val parentEmail: String = "",
     val plus: Boolean = false,
     val fcmToken: String = "",
-)
+    val plusUntil: Timestamp? = null,
+) {
+    /** kumi+ gerade aktiv (auch wenn der Tagesjob ein abgelaufenes Abo noch nicht beendet hat) */
+    val plusActive: Boolean
+        get() = plus && (plusUntil == null || plusUntil.toDate().time > System.currentTimeMillis())
+}
 
 data class Socials(
     val instagram: String = "",
@@ -154,6 +166,7 @@ fun DocumentSnapshot.toProfile() = UserProfile(
     color = s("color").ifBlank { DEFAULT_COLOR },
     ageGroup = s("ageGroup"),
     bot = b("bot"),
+    plus = b("plus"),
 )
 
 fun DocumentSnapshot.toAccount() = Account(
@@ -166,6 +179,7 @@ fun DocumentSnapshot.toAccount() = Account(
     parentEmail = s("parentEmail"),
     plus = b("plus"),
     fcmToken = s("fcmToken"),
+    plusUntil = ts("plusUntil"),
 )
 
 fun DocumentSnapshot.toSocials() = Socials(

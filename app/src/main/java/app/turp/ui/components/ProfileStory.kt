@@ -1,6 +1,11 @@
 package app.turp.ui.components
 
 import androidx.compose.foundation.BorderStroke
+import app.turp.R
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -258,7 +263,19 @@ fun ProfileNameStickers(profile: UserProfile, modifier: Modifier = Modifier, onC
             if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier
         )
     ) {
-        Sticker(profile.name, accent, rotation = -3f, fontSize = 30.sp)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Sticker(profile.name, accent, rotation = -3f, fontSize = 30.sp)
+            if (profile.plus) {
+                Image(
+                    painter = painterResource(R.drawable.gold_plus),
+                    contentDescription = "kumi+",
+                    modifier = Modifier
+                        .padding(start = 6.dp)
+                        .size(30.dp)
+                        .graphicsLayer { rotationZ = 8f }
+                )
+            }
+        }
         Spacer(Modifier.height(6.dp))
         Sticker(
             if (profile.bot) "🤖 Testprofil" else "${Countries.flag(profile.country)} ${profile.country}, ${profile.age}",

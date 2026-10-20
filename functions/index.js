@@ -29,6 +29,7 @@ const { clean } = require("./wordfilter");
 const ALLOWED_INTERESTS = new Set(require("./interests.json"));
 const MAX_INTERESTS = 8;
 const { isStoredImageSafe, isVideoSafe, warmUp } = require("./moderation");
+const billing = require("./billing");
 
 initializeApp();
 const db = getFirestore();
@@ -39,23 +40,34 @@ const REGION = "europe-west3";
 setGlobalOptions({ region: REGION, maxInstances: 10 });
 
 const ADMIN_EMAILS = defineString("ADMIN_EMAILS", { default: "" });
+// Paketname der App im Play Store (für die Prüfung von Käufen)
+const PLAY_PACKAGE = defineString("PLAY_PACKAGE", { default: "app.turp" });
 // SMTP-Zugang für die Eltern-E-Mails, z. B. smtps://adresse%40gmail.com:apppasswort@smtp.gmail.com:465
 // Wird vom GitHub-Workflow "Server einrichten" angelegt ("none" = noch nicht eingerichtet).
 const SMTP_URI = defineSecret("SMTP_URI");
 
 // ---- Spielregeln ---------------------------------------------------------
-const START_GEMS = 30;
-const REQUEST_COST = 3;
+// Muss zu app/src/main/java/app/turp/data/Models.kt passen
+const START_GEMS = 50;
+const REQUEST_COST = 10;
+const PLUS_REQUEST_COST = 5; // mit kumi+
 const CHECKIN_BASE = 10;
 const STREAK_BONUS = 2; // pro Tag Serie, höchstens 5 Tage
 const FRIEND_BONUS = 5;
-const INVITE_BONUS_INVITER = 25;
-const INVITE_BONUS_NEW = 10;
+const INVITE_BONUS_INVITER = 50;
+const INVITE_BONUS_NEW = 20;
 const SLOW_MODE_MS = 10 * 1000;
 const AUTO_HIDE_REPORTS = 3;
 const MAX_PHOTOS = 6;
 const DEFAULT_COLOR = "#2DE1C2";
 const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** Hat das Konto gerade kumi+? */
+function isPlus(acc) {
+  if (!acc || acc.get("plus") !== true) return false;
+  const until = acc.get("plusUntil");
+  return !until || until.toMillis() > Date.now();
+}
 
 // ---- Hilfsfunktionen -----------------------------------------------------
 
@@ -758,11 +770,12 @@ exports.sendRequest = onCall(async (req) => {
       throw new HttpsError("failed-precondition", "Eine Anfrage ist hier gerade nicht möglich.");
     }
     const current = acc.get("gems") || 0;
-    if (current < REQUEST_COST) {
+    const cost = isPlus(acc) ? PLUS_REQUEST_COST : REQUEST_COST;
+    if (current < cost) {
       throw new HttpsError("resource-exhausted",
-        `Nicht genug Gems – eine Anfrage kostet ${REQUEST_COST} 💎. Hol dir neue beim täglichen Check-in!`);
+        `Nicht genug Gems – eine Anfrage kostet ${cost} 💎. Hol dir neue beim täglichen Check-in oder im Shop!`);
     }
-    tx.update(accRef, { gems: current - REQUEST_COST });
+    tx.update(accRef, { gems: current - cost });
     tx.set(reqRef, {
       from: uid,
       to: toUid,
@@ -779,7 +792,7 @@ exports.sendRequest = onCall(async (req) => {
       toColor: other.get("color") || DEFAULT_COLOR,
     });
     tx.set(db.doc(`users/${uid}/seen/${toUid}`), { at: FieldValue.serverTimestamp(), liked: true });
-    return current - REQUEST_COST;
+    return current - cost;
   });
 
   await notify(toUid, "Neue Freundschaftsanfrage 👋", `${me.get("name")} möchte mit dir befreundet sein.`, { type: "request" });
@@ -824,7 +837,8 @@ exports.checkIn = onCall(async (req) => {
       throw new HttpsError("already-exists", "Du hast heute schon eingecheckt. Bis morgen! 👋");
     }
     const streak = acc.get("lastCheckIn") === yesterday ? (acc.get("streak") || 0) + 1 : 1;
-    const reward = CHECKIN_BASE + Math.min(streak - 1, 5) * STREAK_BONUS;
+    // kumi+: doppelte Belohnung
+    const reward = (CHECKIN_BASE + Math.min(streak - 1, 5) * STREAK_BONUS) * (isPlus(acc) ? 2 : 1);
     tx.update(ref, { lastCheckIn: today, streak, gems: FieldValue.increment(reward) });
     return { reward, streak };
   });
@@ -1046,6 +1060,135 @@ exports.unblockUser = onCall(async (req) => {
   return { ok: true };
 });
 
+// ---- Käufe (Google Play) ----------------------------------------------------
+
+function monthSpent(acc, month) {
+  const s = (acc && acc.get("spend")) || {};
+  return s.month === month ? Number(s.cents) || 0 : 0;
+}
+
+function playFailure(e) {
+  logger.error("Google-Play-Abfrage fehlgeschlagen", { status: e.status, message: e.message });
+  if (e.status === 401 || e.status === 403) {
+    return new HttpsError("failed-precondition",
+      "Käufe sind auf dem Server noch nicht freigeschaltet. Keine Sorge: Der Kauf wird beim nächsten Start gutgeschrieben.");
+  }
+  if (e.status === 400 || e.status === 404 || e.status === 410) {
+    return new HttpsError("not-found", "Diesen Kauf kennt Google nicht.");
+  }
+  return new HttpsError("unavailable", "Google Play ist gerade nicht erreichbar. Der Kauf wird beim nächsten Start nachgeholt.");
+}
+
+// Vor dem Kauf: Produkt gültig? Für 13–17 das Monatslimit prüfen.
+exports.purchaseCheck = onCall(async (req) => {
+  const uid = requireActive(req);
+  const productId = str(req.data && req.data.productId, 64);
+  const cents = billing.priceCents(productId);
+  if (cents === null) throw new HttpsError("invalid-argument", "Unbekanntes Produkt.");
+  if (req.auth.token.ageGroup === "teen") {
+    const acc = await db.doc(`accounts/${uid}`).get();
+    const spent = monthSpent(acc, todayBerlin().slice(0, 7));
+    if (spent + cents > billing.TEEN_MONTHLY_LIMIT_CENTS) {
+      const limit = (billing.TEEN_MONTHLY_LIMIT_CENTS / 100).toFixed(0);
+      throw new HttpsError("failed-precondition",
+        `Unter 18 kannst du bei kumi höchstens ${limit} € im Monat ausgeben. Nächsten Monat geht es wieder.`);
+    }
+  }
+  return { ok: true, accountTag: billing.accountTag(uid) };
+});
+
+// Nach dem Kauf: bei Google prüfen, dann Gems gutschreiben bzw. kumi+ freischalten.
+// Jeder Kauf wird nur einmal gutgeschrieben (Dokument purchases/{Hash des Tokens}).
+exports.verifyPurchase = onCall(async (req) => {
+  const uid = requireAuth(req);
+  const productId = str(req.data && req.data.productId, 64);
+  const token = str(req.data && req.data.purchaseToken, 2000);
+  if (token.length < 10) throw new HttpsError("invalid-argument", "Ungültiger Kauf.");
+  const pkg = PLAY_PACKAGE.value();
+  const tag = billing.accountTag(uid);
+  const month = todayBerlin().slice(0, 7);
+  const docRef = db.doc(`purchases/${billing.tokenKey(token)}`);
+  const accRef = db.doc(`accounts/${uid}`);
+
+  const pack = billing.GEM_PACKS[productId];
+  if (pack) {
+    let p;
+    try {
+      p = await billing.getProductPurchase(pkg, productId, token);
+    } catch (e) {
+      throw playFailure(e);
+    }
+    if (p.purchaseState === 2) return { status: "pending" };
+    if (p.purchaseState !== 0) throw new HttpsError("failed-precondition", "Dieser Kauf wurde storniert.");
+    if (p.obfuscatedExternalAccountId && p.obfuscatedExternalAccountId !== tag) {
+      throw new HttpsError("permission-denied", "Dieser Kauf gehört zu einem anderen Konto.");
+    }
+    const qty = Math.max(1, Number(p.quantity) || 1);
+    const credited = await db.runTransaction(async (tx) => {
+      const [doc, acc] = await Promise.all([tx.get(docRef), tx.get(accRef)]);
+      if (doc.exists) return 0;
+      if (!acc.exists) throw new HttpsError("not-found", "Konto nicht gefunden.");
+      const gems = pack.gems * qty;
+      const cents = pack.cents * qty;
+      tx.set(docRef, {
+        uid, productId, kind: "gems", gems, cents, orderId: p.orderId || "", at: FieldValue.serverTimestamp(),
+      });
+      tx.update(accRef, { gems: FieldValue.increment(gems), spend: { month, cents: monthSpent(acc, month) + cents } });
+      return gems;
+    });
+    // Verbrauchen, damit das Paket wieder gekauft werden kann
+    if (p.consumptionState !== 1) {
+      await billing.consumeProduct(pkg, productId, token)
+        .catch((e) => logger.warn("Kauf konnte nicht verbraucht werden", { status: e.status, message: e.message }));
+    }
+    return { status: "ok", gems: credited };
+  }
+
+  if (productId === billing.PLUS_PRODUCT) {
+    let sub;
+    try {
+      sub = await billing.getSubscription(pkg, token);
+    } catch (e) {
+      throw playFailure(e);
+    }
+    const ext = sub.externalAccountIdentifiers || {};
+    if (ext.obfuscatedExternalAccountId && ext.obfuscatedExternalAccountId !== tag) {
+      throw new HttpsError("permission-denied", "Dieses Abo gehört zu einem anderen Konto.");
+    }
+    if (sub.subscriptionState === "SUBSCRIPTION_STATE_PENDING") return { status: "pending" };
+    const expiry = Math.max(0, ...(sub.lineItems || [])
+      .filter((i) => i.productId === billing.PLUS_PRODUCT)
+      .map((i) => Date.parse(i.expiryTime) || 0));
+    const active = [
+      "SUBSCRIPTION_STATE_ACTIVE",
+      "SUBSCRIPTION_STATE_IN_GRACE_PERIOD",
+      "SUBSCRIPTION_STATE_CANCELED", // gekündigt, läuft aber noch bis zum Ende
+    ].includes(sub.subscriptionState) && expiry > Date.now();
+
+    await db.runTransaction(async (tx) => {
+      const [doc, acc] = await Promise.all([tx.get(docRef), tx.get(accRef)]);
+      if (!acc.exists) throw new HttpsError("not-found", "Konto nicht gefunden.");
+      const update = { plus: active, plusUntil: Timestamp.fromMillis(expiry || Date.now()) };
+      if (!doc.exists) {
+        tx.set(docRef, {
+          uid, productId, kind: "plus", cents: billing.PLUS_CENTS, orderId: sub.latestOrderId || "",
+          at: FieldValue.serverTimestamp(),
+        });
+        update.spend = { month, cents: monthSpent(acc, month) + billing.PLUS_CENTS };
+      }
+      tx.update(accRef, update);
+      tx.set(db.doc(`users/${uid}`), { plus: active }, { merge: true });
+    });
+    if (sub.acknowledgementState === "ACKNOWLEDGEMENT_STATE_PENDING") {
+      await billing.acknowledgeSubscription(pkg, billing.PLUS_PRODUCT, token)
+        .catch((e) => logger.warn("Abo konnte nicht bestätigt werden", { status: e.status, message: e.message }));
+    }
+    return { status: active ? "ok" : "expired", plusUntil: expiry };
+  }
+
+  throw new HttpsError("invalid-argument", "Unbekanntes Produkt.");
+});
+
 // ---- Konto löschen --------------------------------------------------------
 
 async function deleteUserData(uid) {
@@ -1256,6 +1399,16 @@ exports.dailyMaintenance = onSchedule(
         if (acc.ageGroup === "teen" && age >= 18) await moveToAdult(doc.id);
       } catch (e) {
         logger.error("Geburtstag konnte nicht verarbeitet werden", { uid: doc.id, error: e.message });
+      }
+    }
+
+    // Abgelaufene kumi+-Abos beenden (verlängerte Abos meldet die App beim nächsten Start neu)
+    const plusAccounts = await db.collection("accounts").where("plus", "==", true).get();
+    for (const doc of plusAccounts.docs) {
+      const until = doc.get("plusUntil");
+      if (until && until.toMillis() < Date.now()) {
+        await doc.ref.update({ plus: false }).catch(() => {});
+        await db.doc(`users/${doc.id}`).update({ plus: false }).catch(() => {});
       }
     }
 

@@ -130,6 +130,7 @@ import app.turp.data.MAX_INTERESTS
 import app.turp.data.MAX_PHOTOS
 import app.turp.data.ProfileRepo
 import app.turp.data.REQUEST_COST
+import app.turp.data.requestCost
 import app.turp.data.SafetyRepo
 import app.turp.data.SessionState
 import app.turp.data.SessionViewModel
@@ -297,7 +298,7 @@ fun ProfileScreen(
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(p.name, color = TextHigh, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold, maxLines = 1)
-                        if (account.plus) {
+                        if (account.plusActive) {
                             Spacer(Modifier.width(6.dp))
                             Text("kumi+", color = Sun, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                         }
@@ -1331,7 +1332,7 @@ fun UserProfileScreen(
                                         Spacer(Modifier.width(10.dp))
                                         GemIcon(15.dp)
                                         Spacer(Modifier.width(4.dp))
-                                        Text("$REQUEST_COST", color = Color.White.copy(alpha = 0.75f), fontWeight = FontWeight.SemiBold)
+                                        Text("${requestCost(session.account.plusActive)}", color = Color.White.copy(alpha = 0.75f), fontWeight = FontWeight.SemiBold)
                                     }
                                 }
                             }

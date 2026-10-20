@@ -24,12 +24,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBackIos
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
@@ -52,6 +54,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.turp.R
 import app.turp.data.BaseViewModel
+import app.turp.data.Billing
+import app.turp.data.PLUS_REQUEST_COST
+import app.turp.data.REQUEST_COST
+import app.turp.data.requestCost
 import app.turp.data.INVITE_BONUS
 import app.turp.data.ProfileRepo
 import app.turp.data.SessionState
@@ -71,20 +77,41 @@ import app.turp.ui.theme.Teal
 import app.turp.ui.theme.TextHigh
 import app.turp.ui.theme.TextLow
 import kotlinx.coroutines.delay
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import java.text.SimpleDateFormat
 import java.time.Duration
+import java.util.Locale
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
 private val Berlin: ZoneId = ZoneId.of("Europe/Berlin")
 
-/** Gems pro Tag der Serie – muss zu checkIn in functions/index.js passen (10 + 2 pro Tag, höchstens +10) */
-private fun dailyReward(day: Long): Long = 10 + minOf(day - 1, 5) * 2
+/** Gems pro Tag der Serie – muss zu checkIn in functions/index.js passen (10 + 2 pro Tag, höchstens +10; kumi+ doppelt) */
+private fun dailyReward(day: Long, plus: Boolean = false): Long = (10 + minOf(day - 1, 5) * 2) * (if (plus) 2 else 1)
 
 class ShopViewModel : BaseViewModel() {
+    /** Produkt, dessen Kauf gerade startet (Knopf zeigt Ladekreis) */
+    var starting by mutableStateOf<String?>(null)
+        private set
+
     fun claimDaily() = launchSafe {
         val (reward, streak) = ProfileRepo.checkIn()
         toast("+$reward 💎 · $streak ${if (streak == 1L) "Tag" else "Tage"} Serie 🔥")
+    }
+
+    fun buy(context: Context, productId: String) {
+        if (starting != null) return
+        starting = productId
+        launchSafe(showBusy = false) {
+            try {
+                Billing.buy(context, productId)
+            } finally {
+                starting = null
+            }
+        }
     }
 }
 
@@ -125,7 +152,7 @@ fun PlusBanner(modifier: Modifier = Modifier, onClick: (() -> Unit)? = null, but
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                "Mehr Gems, mehr Möglichkeiten.",
+                "Günstigere Anfragen, doppelte Belohnung.",
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -153,8 +180,21 @@ fun ShopScreen(session: SessionState.Active, onBack: () -> Unit, vm: ShopViewMod
     val context = LocalContext.current
     LaunchedEffect(Unit) { vm.notices.collect { context.toast(it) } }
     val account = session.account
-    var showBenefits by remember { mutableStateOf(false) }
-    fun soon() = context.toast("Käufe kommen bald – Gems gibt's schon jetzt gratis weiter unten 💎")
+    val ready by Billing.ready.collectAsState()
+    val products by Billing.products.collectAsState()
+    val storeOk = ready == true && products.isNotEmpty()
+    val isTeen = account.ageGroup == "teen"
+
+    fun buy(productId: String) {
+        if (Billing.canBuy(productId)) {
+            vm.buy(context, productId)
+        } else {
+            context.toast(
+                if (ready == null) "Verbinde mit Google Play …"
+                else "Käufe gehen nur mit kumi aus dem Play Store – bis dahin gibt's Gems gratis weiter unten 💎"
+            )
+        }
+    }
 
     Column(
         Modifier
@@ -182,33 +222,78 @@ fun ShopScreen(session: SessionState.Active, onBack: () -> Unit, vm: ShopViewMod
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            PlusBanner(
-                onClick = { showBenefits = !showBenefits },
-                buttonLabel = if (showBenefits) "Weniger" else "Mehr erfahren"
-            )
-            if (showBenefits) {
-                Surface(shape = RoundedCornerShape(20.dp), color = InkElevated) {
-                    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Benefit("💎", "Doppelte tägliche Belohnung")
-                        Benefit("⭐", "Dein Profil wird beim Entdecken öfter gezeigt")
-                        Benefit("🎨", "Exklusive Profilfarben")
-                        Benefit("🔁", "Übersprungene Profile zurückholen")
-                        Spacer(Modifier.height(4.dp))
-                        CandyButton(text = "Bald verfügbar", onClick = { soon() }, color = Sun, height = 46.dp)
+            PlusBanner()
+            Surface(shape = RoundedCornerShape(20.dp), color = InkElevated) {
+                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Benefit("✉️", "Anfragen kosten nur $PLUS_REQUEST_COST statt $REQUEST_COST Gems")
+                    Benefit("💎", "Doppelte tägliche Belohnung")
+                    Benefit("✨", "Goldenes Plus an deinem Namen")
+                    Spacer(Modifier.height(4.dp))
+                    if (account.plusActive) {
+                        val until = account.plusUntil?.toDate()
+                        Text(
+                            if (until != null) "kumi+ ist aktiv bis ${SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY).format(until)} ✨"
+                            else "kumi+ ist aktiv ✨",
+                            color = Sun,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 15.sp
+                        )
+                        CandyButton(
+                            text = "Abo verwalten",
+                            onClick = { openSubscriptions(context) },
+                            color = InkHigh,
+                            height = 44.dp
+                        )
+                    } else {
+                        val price = Billing.price(Billing.PLUS) ?: Billing.PLUS_LIST_PRICE
+                        CandyButton(
+                            text = "kumi+ holen · $price / Monat",
+                            onClick = { buy(Billing.PLUS) },
+                            loading = vm.starting == Billing.PLUS,
+                            color = Sun,
+                            height = 46.dp
+                        )
+                        Text(
+                            "Monatlich kündbar über Google Play. Verlängert sich automatisch, bis du kündigst.",
+                            color = TextLow,
+                            fontSize = 11.sp
+                        )
                     }
                 }
             }
 
             SectionHeading("Gems", Modifier.padding(top = 6.dp))
-            val packs = listOf(100 to false, 500 to true, 1000 to false, 2500 to false, 7500 to false)
-            packs.chunked(3).forEach { row ->
+            if (!storeOk && ready != null) {
+                Surface(shape = RoundedCornerShape(16.dp), color = InkHigh) {
+                    Text(
+                        "Gems kaufen geht, sobald du kumi aus dem Play Store hast. Bis dahin: Gems gratis per Einladung und täglicher Belohnung 👇",
+                        color = TextLow,
+                        fontSize = 13.sp,
+                        modifier = Modifier.padding(12.dp)
+                    )
+                }
+            }
+            Billing.PACKS.chunked(3).forEach { row ->
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    row.forEach { (amount, popular) ->
-                        GemPackTile(amount, popular, Modifier.weight(1f)) { soon() }
+                    row.forEach { pack ->
+                        GemPackTile(
+                            pack = pack,
+                            price = Billing.price(pack.id) ?: pack.listPrice,
+                            enabled = storeOk,
+                            loading = vm.starting == pack.id,
+                            requestCost = requestCost(account.plusActive),
+                            modifier = Modifier.weight(1f)
+                        ) { buy(pack.id) }
                     }
                     repeat(3 - row.size) { Spacer(Modifier.weight(1f)) }
                 }
             }
+            Text(
+                "Preise inkl. MwSt. Bezahlung über Google Play." +
+                    if (isTeen) " Unter 18 kannst du höchstens 30 € im Monat ausgeben – frag am besten vorher deine Eltern." else "",
+                color = TextLow,
+                fontSize = 11.sp
+            )
 
             SectionHeading("Gratis Gems", Modifier.padding(top = 6.dp))
             Surface(shape = RoundedCornerShape(20.dp), color = InkElevated) {
@@ -244,16 +329,28 @@ fun ShopScreen(session: SessionState.Active, onBack: () -> Unit, vm: ShopViewMod
             }
 
             SectionHeading("Tägliche Belohnung", Modifier.padding(top = 6.dp))
-            Text("Hol dir jeden Tag gratis Gems – je länger deine Serie, desto mehr.", color = TextLow, fontSize = 13.sp)
+            Text(
+                "Hol dir jeden Tag gratis Gems – je länger deine Serie, desto mehr." +
+                    if (account.plusActive) " Mit kumi+ doppelt!" else "",
+                color = TextLow,
+                fontSize = 13.sp
+            )
             DailyRewards(
                 streak = account.streak,
                 lastCheckIn = account.lastCheckIn,
                 busy = vm.busy,
+                plus = account.plusActive,
                 onClaim = { vm.claimDaily() }
             )
             Spacer(Modifier.height(24.dp))
         }
     }
+}
+
+/** Öffnet die Abo-Verwaltung von Google Play */
+private fun openSubscriptions(context: Context) {
+    val uri = Uri.parse("https://play.google.com/store/account/subscriptions?sku=${Billing.PLUS}&package=${context.packageName}")
+    runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, uri)) }
 }
 
 @Composable
@@ -266,37 +363,65 @@ private fun Benefit(emoji: String, text: String) {
 }
 
 @Composable
-private fun GemPackTile(amount: Int, popular: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) {
+private fun GemPackTile(
+    pack: Billing.Pack,
+    price: String,
+    enabled: Boolean,
+    loading: Boolean,
+    requestCost: Int,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    val highlight = pack.badge != null
     Box(modifier) {
         Surface(
             onClick = onClick,
             shape = RoundedCornerShape(18.dp),
             color = InkElevated,
-            border = if (popular) BorderStroke(1.5.dp, Teal) else null,
+            border = if (highlight) BorderStroke(1.5.dp, Teal) else null,
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(
-                Modifier.padding(vertical = 16.dp, horizontal = 8.dp),
+                Modifier.padding(top = 14.dp, bottom = 12.dp, start = 6.dp, end = 6.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                GemIcon(34.dp)
+                GemIcon(32.dp)
+                Spacer(Modifier.height(6.dp))
+                Text("${pack.gems}", color = TextHigh, fontWeight = FontWeight.ExtraBold, fontSize = 17.sp)
+                Text("= ${pack.gems / requestCost} Anfragen", color = TextLow, fontSize = 11.sp)
                 Spacer(Modifier.height(8.dp))
-                Text("$amount Gems", color = TextHigh, fontWeight = FontWeight.Bold, fontSize = 15.sp)
-                Spacer(Modifier.height(10.dp))
-                Text("Bald", color = TextLow, fontSize = 13.sp)
+                Box(
+                    Modifier
+                        .background(if (enabled) Teal else InkHigh, CircleShape)
+                        .padding(horizontal = 10.dp, vertical = 4.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (loading) {
+                        CircularProgressIndicator(color = Ink, strokeWidth = 2.dp, modifier = Modifier.size(14.dp))
+                    } else {
+                        Text(
+                            price,
+                            color = if (enabled) Ink else TextLow,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1
+                        )
+                    }
+                }
             }
         }
-        if (popular) {
+        if (pack.badge != null) {
             Text(
-                "BELIEBT",
+                pack.badge.uppercase(),
                 color = Ink,
-                fontSize = 10.sp,
+                fontSize = 9.sp,
                 fontWeight = FontWeight.ExtraBold,
+                maxLines = 1,
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .offset(y = 8.dp)
+                    .align(Alignment.TopCenter)
+                    .offset(y = (-7).dp)
                     .background(Teal, CircleShape)
-                    .padding(horizontal = 10.dp, vertical = 2.dp)
+                    .padding(horizontal = 8.dp, vertical = 2.dp)
             )
         }
     }
@@ -304,7 +429,7 @@ private fun GemPackTile(amount: Int, popular: Boolean, modifier: Modifier = Modi
 
 /** Tage der Serie mit ihren Belohnungen, darunter Abholen oder Countdown bis Mitternacht */
 @Composable
-private fun DailyRewards(streak: Long, lastCheckIn: String, busy: Boolean, onClaim: () -> Unit) {
+private fun DailyRewards(streak: Long, lastCheckIn: String, busy: Boolean, plus: Boolean, onClaim: () -> Unit) {
     val today = todayBerlin()
     val yesterday = LocalDate.now(Berlin).minusDays(1).toString()
     val claimedToday = lastCheckIn == today
@@ -340,7 +465,7 @@ private fun DailyRewards(streak: Long, lastCheckIn: String, busy: Boolean, onCla
                         GemIcon(26.dp, spin = isFocus && !claimedToday)
                         Spacer(Modifier.height(6.dp))
                         Text(
-                            "${dailyReward(day)}",
+                            "${dailyReward(day, plus)}",
                             color = if (done && !isFocus) TextLow else TextHigh,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold
@@ -351,7 +476,7 @@ private fun DailyRewards(streak: Long, lastCheckIn: String, busy: Boolean, onCla
             Spacer(Modifier.height(14.dp))
             if (!claimedToday) {
                 CandyButton(
-                    text = "Abholen · +${dailyReward(nextDay)} 💎",
+                    text = "Abholen · +${dailyReward(nextDay, plus)} 💎",
                     onClick = onClaim,
                     loading = busy,
                     color = Teal,

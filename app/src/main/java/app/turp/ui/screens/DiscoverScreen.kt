@@ -93,6 +93,7 @@ import androidx.compose.foundation.layout.offset
 import app.turp.data.DiscoverRepo
 import app.turp.data.ProfileRepo
 import app.turp.data.REQUEST_COST
+import app.turp.data.requestCost
 import app.turp.data.SessionState
 import app.turp.data.UserProfile
 import app.turp.data.toUserMessage
@@ -370,6 +371,7 @@ fun DiscoverScreen(
                     else -> CardStack(
                         cards = cards,
                         myInterests = myInterests,
+                        requestCost = requestCost(session.account.plusActive),
                         onSkip = vm::skip,
                         onLike = vm::like,
                         onOpen = onOpenUser,
@@ -397,6 +399,7 @@ fun DiscoverScreen(
 private fun CardStack(
     cards: List<UserProfile>,
     myInterests: Set<String>,
+    requestCost: Int,
     onSkip: (UserProfile) -> Unit,
     onLike: (UserProfile) -> Unit,
     onOpen: (String) -> Unit,
@@ -445,6 +448,7 @@ private fun CardStack(
             ProfileCard(
                 profile = top,
                 myInterests = myInterests,
+                requestCost = requestCost,
                 interactive = true,
                 onOpen = { onOpen(top.uid) },
                 onLike = { fling(true) },
@@ -495,6 +499,7 @@ private fun CardStack(
 private fun ProfileCard(
     profile: UserProfile,
     myInterests: Set<String>,
+    requestCost: Int = REQUEST_COST,
     interactive: Boolean,
     modifier: Modifier = Modifier,
     onOpen: () -> Unit = {},
@@ -611,7 +616,7 @@ private fun ProfileCard(
                         )
                         GemIcon(15.dp)
                         Spacer(Modifier.width(4.dp))
-                        Text("$REQUEST_COST", color = Color.White.copy(alpha = 0.75f), fontWeight = FontWeight.SemiBold)
+                        Text("$requestCost", color = Color.White.copy(alpha = 0.75f), fontWeight = FontWeight.SemiBold)
                     }
                 }
                 Spacer(Modifier.width(10.dp))

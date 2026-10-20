@@ -1,6 +1,7 @@
 package app.turp.ui.screens
 
 import androidx.activity.compose.BackHandler
+import app.turp.data.Billing
 import app.turp.data.Images
 import app.turp.data.ProfileRepo
 import app.turp.data.PresenceRepo
@@ -140,6 +141,23 @@ fun MainNav(
     val context = LocalContext.current
     val updateVm: UpdateViewModel = viewModel()
     LaunchedEffect(Unit) { updateVm.checkOnStart() }
+
+    // Google Play Billing: verbinden, offene Käufe nachholen, Ergebnisse anzeigen
+    LaunchedEffect(Unit) {
+        Billing.start(context)
+    }
+    LaunchedEffect(Unit) {
+        Billing.events.collect { e ->
+            context.toast(
+                when (e) {
+                    is Billing.Event.Credited -> "+${e.gems} 💎 gutgeschrieben – danke! 💛"
+                    Billing.Event.PlusActive -> "kumi+ ist aktiv ✨ Danke für deine Unterstützung!"
+                    Billing.Event.Pending -> "Zahlung ausstehend – die Gems kommen, sobald sie bestätigt ist."
+                    is Billing.Event.Failed -> e.message
+                }
+            )
+        }
+    }
 
     // "Zuletzt online" für Freunde: nur solange die App wirklich offen ist
     val lifecycleOwner = LocalLifecycleOwner.current
