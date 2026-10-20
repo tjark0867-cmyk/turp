@@ -50,8 +50,9 @@
   "TV set"
  ],
  "lesen": [
-  "books",
-  "stack of books"
+  "open book",
+  "opened book",
+  "aufgeschlagenes Buch"
  ],
  "schreiben": [
   "fountain pen"
@@ -68,10 +69,9 @@
   "guinea pig"
  ],
  "natur": [
-  "maple leaf",
-  "autumn leaf",
-  "monstera leaf",
-  "fern frond"
+  "solitary tree",
+  "lone tree",
+  "single oak tree"
  ],
  "reisen": [
   "suitcase",
@@ -79,11 +79,13 @@
  ],
  "tanzen": [
   "pointe shoes",
-  "ballet shoes"
+  "ballet shoes",
+  "Spitzenschuhe"
  ],
  "mode": [
   "handbag",
-  "high heels"
+  "leather handbag",
+  "Handtasche"
  ],
  "coden": [
   "laptop"
@@ -274,11 +276,9 @@
   "amplifier"
  ],
  "klavier": [
-  "upright piano",
   "grand piano",
-  "piano keyboard",
-  "Flügel",
-  "Klavier"
+  "Steinway grand",
+  "Flügel"
  ],
  "schlagzeug": [
   "drum kit",
@@ -334,7 +334,9 @@
   "rabbit"
  ],
  "travisscott": [
-  "cactus"
+  "roller coaster loop",
+  "roller coaster",
+  "Achterbahn"
  ],
  "drake": [
   "owl"
