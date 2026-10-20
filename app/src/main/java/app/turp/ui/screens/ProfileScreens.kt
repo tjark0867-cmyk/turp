@@ -71,6 +71,7 @@ import androidx.compose.material.icons.rounded.AddAPhoto
 import androidx.compose.material.icons.rounded.AdminPanelSettings
 import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.Block
+import androidx.compose.material.icons.rounded.PhotoLibrary
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.DeleteForever
 import androidx.compose.material.icons.rounded.Edit
@@ -418,6 +419,7 @@ fun SettingsScreen(
     onAdmin: () -> Unit,
     onCheckUpdate: () -> Unit,
     onBlocked: () -> Unit,
+    onCredits: () -> Unit,
     vm: ProfileViewModel = viewModel(),
 ) {
     val context = LocalContext.current
@@ -460,6 +462,7 @@ fun SettingsScreen(
             }
             SectionCard {
                 MenuRow(Icons.Rounded.Block, "Blockierte Nutzer", onClick = onBlocked)
+                MenuRow(Icons.Rounded.PhotoLibrary, "Bildnachweise", onClick = onCredits)
             }
             SectionCard {
                 MenuRow(Icons.AutoMirrored.Rounded.Logout, "Abmelden", onClick = { sessionVm.signOut() })
@@ -467,7 +470,7 @@ fun SettingsScreen(
             }
             Text(
                 "kumi ${BuildConfig.VERSION_NAME} · Dein Einladungscode: ${account.inviteCode.ifBlank { "–" }}\nGoldene Regel: Sei immer freundlich. 💛\n\n" +
-                    "Interessen-Sticker teils nach Noto Emoji (© Google, Apache 2.0 / SIL OFL 1.1). " +
+                    "Interessen-Fotos von Wikimedia Commons – Nachweise unter „Bildnachweise“. " +
                     "Namen von Spielen, Serien und Künstlern gehören ihren Inhabern; kumi steht in keiner Verbindung zu ihnen.",
                 style = MaterialTheme.typography.bodySmall,
                 color = TextLow,

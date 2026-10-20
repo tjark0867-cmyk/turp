@@ -231,7 +231,11 @@ fun MainNav(
                 onAdmin = { nav.navigate("admin") },
                 onCheckUpdate = { updateVm.checkManually() },
                 onBlocked = { nav.navigate("blocked") },
+                onCredits = { nav.navigate("credits") },
             )
+        }
+        composable("credits") {
+            CreditsScreen(onBack = { nav.popBackStack() })
         }
         composable("blocked") {
             BlockedScreen(
