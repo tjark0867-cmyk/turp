@@ -191,7 +191,9 @@
   "headset"
  ],
  "lol": [
-  "crystal ball"
+  "potion bottle",
+  "apothecary bottle",
+  "glass flask"
  ],
  "genshin": [
   "amethyst",
@@ -219,14 +221,14 @@
   "booster pack"
  ],
  "mariokart": [
-  "go kart",
-  "Gokart",
-  "go-kart"
+  "banana",
+  "bananas",
+  "Banane"
  ],
  "zelda": [
-  "treasure map",
-  "old map",
-  "antique map"
+  "treasure chest",
+  "wooden chest",
+  "Truhe"
  ],
  "amongus": [
   "spacesuit",
@@ -237,13 +239,14 @@
   "doll house"
  ],
  "eafc": [
-  "football boots",
-  "football boot",
-  "soccer cleats"
+  "football goal",
+  "soccer goal",
+  "Fußballtor"
  ],
  "rocketleague": [
-  "model rocket",
-  "toy rocket"
+  "radio-controlled car",
+  "RC car",
+  "toy car"
  ],
  "overwatch": [
   "shield"
@@ -252,9 +255,9 @@
   "watering can"
  ],
  "animalcrossing": [
-  "seashell",
-  "sea shell",
-  "conch"
+  "butterfly net",
+  "insect net",
+  "Kescher"
  ],
  "rap": [
   "boombox",
@@ -338,8 +341,9 @@
   "owl"
  ],
  "theweeknd": [
-  "Walkman",
-  "cassette player"
+  "compact cassette",
+  "cassette tape",
+  "audio cassette"
  ],
  "dualipa": [
   "disco ball",
@@ -512,10 +516,9 @@
   "flying saucer"
  ],
  "fantasy": [
-  "unicorn figurine",
-  "magic wand",
-  "fairy figurine",
-  "spell book"
+  "grimoire",
+  "antique book",
+  "leather bound book"
  ],
  "romance": [
   "red roses",
@@ -540,12 +543,14 @@
   "omamori"
  ],
  "aot": [
-  "wings",
-  "bird wing"
+  "white feather",
+  "bird feather",
+  "feather"
  ],
  "mha": [
-  "backpack",
-  "school bag"
+  "domino mask",
+  "eye mask",
+  "masquerade mask"
  ],
  "haikyuu": [
   "crow",
@@ -565,16 +570,18 @@
   "dragon figurine"
  ],
  "harrypotter": [
-  "broom",
-  "broomstick"
+  "quill pen",
+  "feather quill",
+  "Federkiel"
  ],
  "marvel": [
   "comic books",
   "comic book"
  ],
  "starwars": [
-  "toy spaceship",
-  "space shuttle model"
+  "spiral galaxy",
+  "Andromeda Galaxy",
+  "Whirlpool Galaxy"
  ],
  "disney": [
   "Neuschwanstein Castle"
