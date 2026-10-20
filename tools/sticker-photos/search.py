@@ -13,7 +13,7 @@ from pathlib import Path
 
 API = "https://commons.wikimedia.org/w/api.php"
 UA = "kumi-sticker-search/1.0 (https://github.com/tjark0867-cmyk/turp; interest stickers)"
-PER_KEY = 8
+PER_KEY = 10
 THUMB = 320
 
 HERE = Path(__file__).parent
@@ -55,7 +55,7 @@ def search(query):
         "action": "query",
         "format": "json",
         "generator": "search",
-        "gsrsearch": f"{query} filetype:bitmap",
+        "gsrsearch": query if "filetype:" in query else f"{query} filetype:bitmap",
         "gsrnamespace": 6,
         "gsrlimit": 25,
         "prop": "imageinfo",
@@ -87,8 +87,22 @@ def search(query):
     return found
 
 
+def build_queries(nouns):
+    """Zuerst geprüfte Qualitätsfotos, dann freigestellte, dann alles mit dem Begriff im Dateinamen"""
+    qs = []
+    for pattern in (
+        'intitle:"{n}" incategory:Quality_images',
+        'intitle:"{n}" intitle:isolated',
+        'intitle:"{n}" "white background"',
+        'intitle:"{n}"',
+    ):
+        qs += [pattern.format(n=n) for n in nouns]
+    return qs
+
+
 def main():
-    queries = json.loads((HERE / "queries.json").read_text())
+    nouns = json.loads((HERE / "nouns.json").read_text())
+    queries = {k: build_queries(v) for k, v in nouns.items()}
     result = {}
     for key, qs in queries.items():
         if ONLY and key not in ONLY:
