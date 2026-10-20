@@ -72,8 +72,10 @@ jobs:
               secretmanager.googleapis.com vision.googleapis.com videointelligence.googleapis.com \
               firebasestorage.googleapis.com firebaserules.googleapis.com storage.googleapis.com \
               fcm.googleapis.com firebaseinstallations.googleapis.com iam.googleapis.com \
-              cloudresourcemanager.googleapis.com androidpublisher.googleapis.com \
+              cloudresourcemanager.googleapis.com \
               --project "$P"
+            # Höchstens 20 Dienste pro Aufruf – weitere einzeln
+            gcloud services enable androidpublisher.googleapis.com --project "$P"
 
             echo "== Firebase hinzufügen (falls noch nicht geschehen)"
             npx --yes firebase-tools@latest projects:addfirebase "$P" --non-interactive || true
