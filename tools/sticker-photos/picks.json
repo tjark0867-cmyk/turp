@@ -1879,5 +1879,27 @@
   "artist": "NASA / JPL / Space Science Institute",
   "page": "https://commons.wikimedia.org/wiki/File:Saturn_during_Equinox_(rot45).jpg",
   "source": "3/1"
+ },
+ "kochen": {
+  "title": "File:Griswold cast iron skillet.jpg",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/Griswold_cast_iron_skillet.jpg/330px-Griswold_cast_iron_skillet.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/f/f7/Griswold_cast_iron_skillet.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "width": 3264,
+  "height": 2448,
+  "license": "CC BY-SA 4.0",
+  "artist": "NMorales (WMF)",
+  "page": "https://commons.wikimedia.org/wiki/File:Griswold_cast_iron_skillet.jpg",
+  "source": "4/3"
+ },
+ "fantasy": {
+  "title": "File:12 3 2007 magic wand.png",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/12_3_2007_magic_wand.png/330px-12_3_2007_magic_wand.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+  "url": "https://upload.wikimedia.org/wikipedia/commons/0/0b/12_3_2007_magic_wand.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+  "width": 800,
+  "height": 451,
+  "license": "Public domain",
+  "artist": "Martin Brož",
+  "page": "https://commons.wikimedia.org/wiki/File:12_3_2007_magic_wand.png",
+  "source": "4/1"
  }
 }
