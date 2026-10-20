@@ -175,10 +175,9 @@
   "dice set"
  ],
  "minecraft": [
+  "pickaxe",
   "pick axe",
-  "pickaxe tool",
-  "Spitzhacke",
-  "pickaxe"
+  "Spitzhacke"
  ],
  "fortnite": [
   "llama"
@@ -255,9 +254,9 @@
   "watering can"
  ],
  "animalcrossing": [
-  "butterfly net",
-  "insect net",
-  "Kescher"
+  "turnip",
+  "turnips",
+  "Brassica rapa"
  ],
  "rap": [
   "boombox",
@@ -350,7 +349,9 @@
   "mirror ball"
  ],
  "oliviarodrigo": [
-  "butterfly"
+  "butterfly",
+  "Morpho",
+  "Schmetterling"
  ],
  "apache207": [
   "sunglasses"
@@ -543,9 +544,9 @@
   "omamori"
  ],
  "aot": [
-  "white feather",
-  "bird feather",
-  "feather"
+  "city wall",
+  "town wall",
+  "Stadtmauer"
  ],
  "mha": [
   "domino mask",
@@ -570,9 +571,9 @@
   "dragon figurine"
  ],
  "harrypotter": [
-  "quill pen",
-  "feather quill",
-  "Federkiel"
+  "Bubo scandiacus",
+  "snowy owl",
+  "Schnee-Eule"
  ],
  "marvel": [
   "comic books",
