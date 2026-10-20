@@ -1,0 +1,926 @@
+[
+ {
+  "value": "🎤 Singen",
+  "title": "File:Shure SM57 microphone.jpg",
+  "artist": "E bailey",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Shure_SM57_microphone.jpg"
+ },
+ {
+  "value": "🎸 Instrumente",
+  "title": "File:Guitar Single Cutaway 01.jpg",
+  "artist": "Europe guitar collection Holzwurm52",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Guitar_Single_Cutaway_01.jpg"
+ },
+ {
+  "value": "🏀 Basketball",
+  "title": "File:Isolated basketball.png",
+  "artist": "User: MrX",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Isolated_basketball.png"
+ },
+ {
+  "value": "📸 Fotografie",
+  "title": "File:Beier Beirax folding camera.jpg",
+  "artist": "LoMit",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Beier_Beirax_folding_camera.jpg"
+ },
+ {
+  "value": "📺 Serien",
+  "title": "File:Television remote control - black 01.jpg",
+  "artist": "Dmitry Makeev",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Television_remote_control_-_black_01.jpg"
+ },
+ {
+  "value": "📚 Lesen",
+  "title": "File:Part of a bookshelf containing books by Aristotle (1).jpg",
+  "artist": "Roman Eisele",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Part_of_a_bookshelf_containing_books_by_Aristotle_(1).jpg"
+ },
+ {
+  "value": "✍️ Schreiben",
+  "title": "File:Pilot Urban MR Retro Pop M Fountain Pen (no clip) 2.jpg",
+  "artist": "Enrique Íñiguez Rodríguez (Qoan)",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Pilot_Urban_MR_Retro_Pop_M_Fountain_Pen_(no_clip)_2.jpg"
+ },
+ {
+  "value": "🍳 Kochen",
+  "title": "File:Griswold cast iron skillet.jpg",
+  "artist": "NMorales (WMF)",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Griswold_cast_iron_skillet.jpg"
+ },
+ {
+  "value": "🐶 Tiere",
+  "title": "File:Cream-colored long-hair pet Syrian hamster with watermelon 02.jpg",
+  "artist": "Bluerasberry",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Cream-colored_long-hair_pet_Syrian_hamster_with_watermelon_02.jpg"
+ },
+ {
+  "value": "🌱 Natur",
+  "title": "File:Maple leaf. Shevchenko Garden in Kharkiv.jpg",
+  "artist": "Lystopad",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Maple_leaf._Shevchenko_Garden_in_Kharkiv.jpg"
+ },
+ {
+  "value": "✈️ Reisen",
+  "title": "File:Belber Striped Suitcase.jpg",
+  "artist": "Sandrine Z",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Belber_Striped_Suitcase.jpg"
+ },
+ {
+  "value": "💃 Tanzen",
+  "title": "File:Pointe shoes.jpg",
+  "artist": "Keitei",
+  "license": "CC BY 2.5",
+  "url": "https://commons.wikimedia.org/wiki/File:Pointe_shoes.jpg"
+ },
+ {
+  "value": "👗 Mode",
+  "title": "File:Leather handbag by Les cuirs d'Agathe (DSC07738).jpg",
+  "artist": "Trougnouf (Benoit Brummer), Les cuirs d'Agathe",
+  "license": "CC BY 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Leather_handbag_by_Les_cuirs_d%27Agathe_(DSC07738).jpg"
+ },
+ {
+  "value": "💻 Coden",
+  "title": "File:HP Pavilion dv2000 laptop.jpg",
+  "artist": "Aaron Patterson from Redding CA",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:HP_Pavilion_dv2000_laptop.jpg"
+ },
+ {
+  "value": "🧪 Wissenschaft",
+  "title": "File:Olympus CH2 microscope 3.jpg",
+  "artist": "Amada44",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Olympus_CH2_microscope_3.jpg"
+ },
+ {
+  "value": "🌸 Anime",
+  "title": "File:Cherry Blossom in El Retiro Park, Madrid, Spain.jpg",
+  "artist": "Satdeep Gill",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Cherry_Blossom_in_El_Retiro_Park,_Madrid,_Spain.jpg"
+ },
+ {
+  "value": "🎲 Brettspiele",
+  "title": "File:Dice - 1-2-4-5-6.jpg",
+  "artist": "PierreSelim",
+  "license": "CC BY 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Dice_-_1-2-4-5-6.jpg"
+ },
+ {
+  "value": "🧘 Yoga",
+  "title": "File:Yoga mat.jpg",
+  "artist": "Gausanchennai",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Yoga_mat.jpg"
+ },
+ {
+  "value": "🏊 Schwimmen",
+  "title": "File:Swim goggles.jpg",
+  "artist": "Justus Blümer from Deutschland",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Swim_goggles.jpg"
+ },
+ {
+  "value": "🚴 Radfahren",
+  "title": "File:Älteres Peugeot Mixte-Fahrrad in Freiburg i. B. (2025).jpg",
+  "artist": "JoachimKohler-HB",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:%C3%84lteres_Peugeot_Mixte-Fahrrad_in_Freiburg_i._B._(2025).jpg"
+ },
+ {
+  "value": "🗣️ Sprachen",
+  "title": "File:Mini dictionaries.jpg",
+  "artist": "Ludmiła Pilecka",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Mini_dictionaries.jpg"
+ },
+ {
+  "value": "😂 Memes",
+  "title": "File:Rubber Duck with Emacs.jpg",
+  "artist": "Jakub T. Jankiewicz",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Rubber_Duck_with_Emacs.jpg"
+ },
+ {
+  "value": "🎧 Podcasts",
+  "title": "File:AKG C214 condenser microphone with H85 shock mount.jpg",
+  "artist": "Lucasbosch",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:AKG_C214_condenser_microphone_with_H85_shock_mount.jpg"
+ },
+ {
+  "value": "🎯 Shooter",
+  "title": "File:Dartboard (1502289625).jpg",
+  "artist": "Ananta Bhadra Lamichhane from Kathmandu, Nepal",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Dartboard_(1502289625).jpg"
+ },
+ {
+  "value": "🏎️ Rennspiele",
+  "title": "File:Tonka race car.jpg",
+  "artist": "Uberprutser",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Tonka_race_car.jpg"
+ },
+ {
+  "value": "🧩 Rätsel",
+  "title": "File:Question mark made of puzzle pieces (4273168957).jpg",
+  "artist": "Horia Varlan from Bucharest, Romania",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Question_mark_made_of_puzzle_pieces_(4273168957).jpg"
+ },
+ {
+  "value": "♟️ Schach",
+  "title": "File:Chess knight 0971.jpg",
+  "artist": "che (production: Nolanus, lighting assistance: Danny B.)",
+  "license": "CC BY-SA 2.5",
+  "url": "https://commons.wikimedia.org/wiki/File:Chess_knight_0971.jpg"
+ },
+ {
+  "value": "🃏 Kartenspiele",
+  "title": "File:Six-handed 500 playing cards.jpg",
+  "artist": "Countakeshi",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Six-handed_500_playing_cards.jpg"
+ },
+ {
+  "value": "📱 Handyspiele",
+  "title": "File:Mobile phone case.jpg",
+  "artist": "Tiia Monto",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Mobile_phone_case.jpg"
+ },
+ {
+  "value": "🏆 E-Sport",
+  "title": "File:The FA Cup Trophy.jpg",
+  "artist": "Carlos yo",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:The_FA_Cup_Trophy.jpg"
+ },
+ {
+  "value": "📜 Pen & Paper",
+  "title": "File:Self-made polyhedral dice 01.jpg",
+  "artist": "Stephan Sprinz",
+  "license": "CC BY 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Self-made_polyhedral_dice_01.jpg"
+ },
+ {
+  "value": "⛏️ Minecraft",
+  "title": "File:Blade, pick axe (AM 650878-1).jpg",
+  "artist": "Unknown authorUnknown author",
+  "license": "CC BY 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Blade,_pick_axe_(AM_650878-1).jpg"
+ },
+ {
+  "value": "🪂 Fortnite",
+  "title": "File:Llama at Ashdown Llama Park - geograph.org.uk - 2957753.jpg",
+  "artist": "Oast House Archive",
+  "license": "CC BY-SA 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Llama_at_Ashdown_Llama_Park_-_geograph.org.uk_-_2957753.jpg"
+ },
+ {
+  "value": "🧱 Roblox",
+  "title": "File:Colorful plastic building blocks scattered on a table.jpg",
+  "artist": "Shixart1985",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Colorful_plastic_building_blocks_scattered_on_a_table.jpg"
+ },
+ {
+  "value": "🔮 League of Legends",
+  "title": "File:Løkken - Badehäuschen - Crystal Ball (2).jpg",
+  "artist": "Ragnar1904",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:L%C3%B8kken_-_Badeh%C3%A4uschen_-_Crystal_Ball_(2).jpg"
+ },
+ {
+  "value": "🌠 Genshin Impact",
+  "title": "File:Amethyst Quartz Macro 1.JPG",
+  "artist": "“Jon Zander (Digon3)\"",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Amethyst_Quartz_Macro_1.JPG"
+ },
+ {
+  "value": "🪖 Call of Duty",
+  "title": "File:Brazilian military helmet.JPG",
+  "artist": "Mauro Cateb",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Brazilian_military_helmet.JPG"
+ },
+ {
+  "value": "⚡ Pokémon",
+  "title": "File:Club penguin CCG Card-Jitsu Card collection.jpg",
+  "artist": "B3251",
+  "license": "CC BY 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Club_penguin_CCG_Card-Jitsu_Card_collection.jpg"
+ },
+ {
+  "value": "🛞 Mario Kart",
+  "title": "File:Go-Kart (15942250813).jpg",
+  "artist": "dave_7 from Lethbridge, Canada",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Go-Kart_(15942250813).jpg"
+ },
+ {
+  "value": "🏡 Die Sims",
+  "title": "File:Astolat Dollhouse Castle before Time-Warner exhibition opened, November 2015.jpg",
+  "artist": "Appleeater95",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Astolat_Dollhouse_Castle_before_Time-Warner_exhibition_opened,_November_2015.jpg"
+ },
+ {
+  "value": "🥅 EA FC",
+  "title": "File:Football boots ARTEX Budapest Laslovarga (1).jpg",
+  "artist": "Laslovarga",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Football_boots_ARTEX_Budapest_Laslovarga_(1).jpg"
+ },
+ {
+  "value": "🚀 Rocket League",
+  "title": "File:Time o launch a model rocket 2008.jpg",
+  "artist": "Nick Nguyen",
+  "license": "CC BY-SA 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Time_o_launch_a_model_rocket_2008.jpg"
+ },
+ {
+  "value": "🛡️ Overwatch",
+  "title": "File:Hrodna New Castle Shield 2023-06-25 5609.jpg",
+  "artist": "Mike1979 Russia",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Hrodna_New_Castle_Shield_2023-06-25_5609.jpg"
+ },
+ {
+  "value": "🌾 Stardew Valley",
+  "title": "File:Metal watering can.jpg",
+  "artist": "Santeri Viinamäki",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Metal_watering_can.jpg"
+ },
+ {
+  "value": "🏝️ Animal Crossing",
+  "title": "File:Seashell museum Phuket - 2042.jpg",
+  "artist": "Amada44",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Seashell_museum_Phuket_-_2042.jpg"
+ },
+ {
+  "value": "💿 Pop",
+  "title": "File:Electrecord Red Vinyl Record.jpg",
+  "artist": "Alex:D",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Electrecord_Red_Vinyl_Record.jpg"
+ },
+ {
+  "value": "🔊 Rock",
+  "title": "File:Electric Guitar (Superstrat based on ESP KH - vertical) - with hint lines and numbers.png",
+  "artist": "Spike78",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Electric_Guitar_(Superstrat_based_on_ESP_KH_-_vertical)_-_with_hint_lines_and_numbers.png"
+ },
+ {
+  "value": "🤘 Metal",
+  "title": "File:Little Dot MK III Tube Headphone Amplifier Pre-amplifier.jpg",
+  "artist": "Shenzhenaudio",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Little_Dot_MK_III_Tube_Headphone_Amplifier_Pre-amplifier.jpg"
+ },
+ {
+  "value": "🎹 Klavier",
+  "title": "File:Kurzweil Synthesizer and MIDI Keyboard Controller PC3K6.jpg",
+  "artist": "Melissa Ursula Dawn Goldsmith",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Kurzweil_Synthesizer_and_MIDI_Keyboard_Controller_PC3K6.jpg"
+ },
+ {
+  "value": "🥁 Schlagzeug",
+  "title": "File:Drum kit parts.png",
+  "artist": "Syed Wamiq Ahmed Hashmi re-draw SVG FOX 52 re-draw with AI Sendtel +",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Drum_kit_parts.png"
+ },
+ {
+  "value": "🎻 Klassik",
+  "title": "File:German, maple Violin.JPG",
+  "artist": "Pianoplonkers",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:German,_maple_Violin.JPG"
+ },
+ {
+  "value": "🎛️ Techno",
+  "title": "File:Technics SL-120 turntable and pickup - front view (2019-04-28).jpg",
+  "artist": "Franz van Duns",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Technics_SL-120_turntable_and_pickup_-_front_view_(2019-04-28).jpg"
+ },
+ {
+  "value": "🫰 K-Pop",
+  "title": "File:2022-05-11 07 01 51 A light stick after being attached to a weather balloon and after being activated at the National Weather Service's Baltimore-Washington Weather Forecast Office in the Dulles section of Sterling, Loudoun County, Virginia.jpg",
+  "artist": "Famartin",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:2022-05-11_07_01_51_A_light_stick_after_being_attached_to_a_weather_balloon_and_after_being_activated_at_the_National_Weather_Service%27s_Baltimore-Washington_Weather_Forecast_Office_in_the_Dulles_section_of_Sterling,_Loudoun_County,_Virginia.jpg"
+ },
+ {
+  "value": "🎚️ Musik machen",
+  "title": "File:Samson Graphite 25 MIDI keyboard.jpg",
+  "artist": "Morn",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Samson_Graphite_25_MIDI_keyboard.jpg"
+ },
+ {
+  "value": "💫 Taylor Swift",
+  "title": "File:Friendship Bracelet special forms.jpg",
+  "artist": "Ra'ike (see also: de:Benutzer:Ra'ike)",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Friendship_Bracelet_special_forms.jpg"
+ },
+ {
+  "value": "💚 Billie Eilish",
+  "title": "File:Earphones BW 2011-12-10 15-49-08.JPG",
+  "artist": "Berthold Werner",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Earphones_BW_2011-12-10_15-49-08.JPG"
+ },
+ {
+  "value": "🎈 Ariana Grande",
+  "title": "File:Vintage Ornate Small Perfume Bottle Studded with Rhinestones, \"F\" Initial, (8636396544).jpg",
+  "artist": "Joe Haupt from USA",
+  "license": "CC BY-SA 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Vintage_Ornate_Small_Perfume_Bottle_Studded_with_Rhinestones,_%22F%22_Initial,_(8636396544).jpg"
+ },
+ {
+  "value": "🐰 Bad Bunny",
+  "title": "File:European Rabbit 09 05 2025 02.jpg",
+  "artist": "Alexis Lours",
+  "license": "CC BY 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:European_Rabbit_09_05_2025_02.jpg"
+ },
+ {
+  "value": "🌵 Travis Scott",
+  "title": "File:Cactus sculpture - César Manrique - Guatiza.JPG",
+  "artist": "H. Zell",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Cactus_sculpture_-_C%C3%A9sar_Manrique_-_Guatiza.JPG"
+ },
+ {
+  "value": "🦉 Drake",
+  "title": "File:Eurasian eagle-owl (44088).jpg",
+  "artist": "Rhododendrites",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Eurasian_eagle-owl_(44088).jpg"
+ },
+ {
+  "value": "🪩 Dua Lipa",
+  "title": "File:Disco ball in home.jpg",
+  "artist": "Santeri Viinamäki",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Disco_ball_in_home.jpg"
+ },
+ {
+  "value": "🦋 Olivia Rodrigo",
+  "title": "File:Common Lime Butterfly Papilio demoleus by Kadavoor.JPG",
+  "artist": "Jeevan Jose, Kerala, India",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Common_Lime_Butterfly_Papilio_demoleus_by_Kadavoor.JPG"
+ },
+ {
+  "value": "🕺 Apache 207",
+  "title": "File:Sunglasses-1.jpg",
+  "artist": "Lotus Head from Johannesburg, Gauteng, South Africa",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Sunglasses-1.jpg"
+ },
+ {
+  "value": "🎿 Ski Aggu",
+  "title": "File:Scott Ski goggles.jpg",
+  "artist": "Santeri Viinamäki",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Scott_Ski_goggles.jpg"
+ },
+ {
+  "value": "🏐 Volleyball",
+  "title": "File:Mikasa VLS300 official beach volleyball.jpg",
+  "artist": "Petar Milošević",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Mikasa_VLS300_official_beach_volleyball.jpg"
+ },
+ {
+  "value": "🎾 Tennis",
+  "title": "File:Tennis racket.jpg",
+  "artist": "Timothy Takemoto from Yamaguchi, Japan",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Tennis_racket.jpg"
+ },
+ {
+  "value": "🏒 Eishockey",
+  "title": "File:Ice hockey puck.jpg",
+  "artist": "Santeri Viinamäki",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Ice_hockey_puck.jpg"
+ },
+ {
+  "value": "🧗 Klettern",
+  "title": "File:Carabiner Orange.jpg",
+  "artist": "SMCgear",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Carabiner_Orange.jpg"
+ },
+ {
+  "value": "🏃 Laufen",
+  "title": "File:Campus Martin Running Shoes.jpg",
+  "artist": "dfgfdd",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Campus_Martin_Running_Shoes.jpg"
+ },
+ {
+  "value": "⛷️ Skifahren",
+  "title": "File:Skis crosscarver funcarver.jpg",
+  "artist": "Chianti",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Skis_crosscarver_funcarver.jpg"
+ },
+ {
+  "value": "🏄 Surfen",
+  "title": "File:Surf board leash.jpg",
+  "artist": "Bengt Nyman",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Surf_board_leash.jpg"
+ },
+ {
+  "value": "🤸 Turnen",
+  "title": "File:Gymnastic rings 20190613.jpg",
+  "artist": "Santeri Viinamäki",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Gymnastic_rings_20190613.jpg"
+ },
+ {
+  "value": "🏈 Football",
+  "title": "File:American Football EM 2014 - AUT-DEU - 068.JPG",
+  "artist": "AleXXw",
+  "license": "CC BY-SA 3.0 at",
+  "url": "https://commons.wikimedia.org/wiki/File:American_Football_EM_2014_-_AUT-DEU_-_068.JPG"
+ },
+ {
+  "value": "🏁 Formel 1",
+  "title": "File:Micheal Fitzgerald Arai Racing Helmet.jpg",
+  "artist": "Glen Duncombe",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Micheal_Fitzgerald_Arai_Racing_Helmet.jpg"
+ },
+ {
+  "value": "🎣 Angeln",
+  "title": "File:Fishing reel 2025 G1.jpg",
+  "artist": "George Chernilevsky",
+  "license": "CC BY 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Fishing_reel_2025_G1.jpg"
+ },
+ {
+  "value": "🏸 Badminton",
+  "title": "File:Federball (12337437734).jpg",
+  "artist": "Tim Reckmann from Hamm, Deutschland",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Federball_(12337437734).jpg"
+ },
+ {
+  "value": "🎭 Theater",
+  "title": "File:Black Venetian mask (4924949067).jpg",
+  "artist": "mags",
+  "license": "CC BY-SA 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Black_Venetian_mask_(4924949067).jpg"
+ },
+ {
+  "value": "🧶 Häkeln & Stricken",
+  "title": "File:Red thread (yarn).jpg",
+  "artist": "多多123",
+  "license": "CC BY 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Red_thread_(yarn).jpg"
+ },
+ {
+  "value": "🪡 Nähen",
+  "title": "File:Vesta sewing machine IMGP0718.jpg",
+  "artist": "Nikodem Nijaki",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Vesta_sewing_machine_IMGP0718.jpg"
+ },
+ {
+  "value": "✂️ Basteln",
+  "title": "File:Small pair of blue scissors.jpg",
+  "artist": "ZooFari",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Small_pair_of_blue_scissors.jpg"
+ },
+ {
+  "value": "🖼️ Kunst",
+  "title": "File:Various Used Wooden Paintbrushes - 41511977320.jpg",
+  "artist": "dejankrsmanovic",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Various_Used_Wooden_Paintbrushes_-_41511977320.jpg"
+ },
+ {
+  "value": "🏺 Töpfern",
+  "title": "File:Hittite pottery from Alaca Höyük.jpg",
+  "artist": "Bernard Gagnon",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Hittite_pottery_from_Alaca_H%C3%B6y%C3%BCk.jpg"
+ },
+ {
+  "value": "🎩 Zaubertricks",
+  "title": "File:Collapsible top hat IMGP9692.jpg",
+  "artist": "Nikodem Nijaki",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Collapsible_top_hat_IMGP9692.jpg"
+ },
+ {
+  "value": "📔 Journaling",
+  "title": "File:NO10 Notizbuch 80.jpg",
+  "artist": "Markmona",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:NO10_Notizbuch_80.jpg"
+ },
+ {
+  "value": "🖌️ Digital Art",
+  "title": "File:Wacom graphics tablet and pen.png",
+  "artist": "Wacom_Pen-tablet_without_mouse.jpg: *Wacom_Pen-tablet.jpg: photographed by Tobias Rütten,Metoc derivative work: Woookie (talk) derivative work: – Kerαunoςcopia◁galaxies",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Wacom_graphics_tablet_and_pen.png"
+ },
+ {
+  "value": "📐 Design",
+  "title": "File:Set-square (AM 2015.34.65-4).jpg",
+  "artist": "not researched",
+  "license": "CC BY 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Set-square_(AM_2015.34.65-4).jpg"
+ },
+ {
+  "value": "🦸 Superhelden",
+  "title": "File:Shamask Red Cape Front (6369453911).jpg",
+  "artist": "William J Sisti from Morristown, NJ, USA",
+  "license": "CC BY-SA 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Shamask_Red_Cape_Front_(6369453911).jpg"
+ },
+ {
+  "value": "🎞️ Dokus",
+  "title": "File:HALINA binoculars 7x50 10.jpg",
+  "artist": "Михаило Јовановић",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:HALINA_binoculars_7x50_10.jpg"
+ },
+ {
+  "value": "🥢 K-Dramas",
+  "title": "File:Chinese Plate with Chopsticks (b).jpg",
+  "artist": "Michael Johnson - http://www.thebusybrain.com",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Chinese_Plate_with_Chopsticks_(b).jpg"
+ },
+ {
+  "value": "📖 Manga",
+  "title": "File:ROC-NCL-AAC Inu Neko Jump! CHT tankobon 20170624.jpg",
+  "artist": "Solomon203",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:ROC-NCL-AAC_Inu_Neko_Jump!_CHT_tankobon_20170624.jpg"
+ },
+ {
+  "value": "👽 Sci-Fi",
+  "title": "File:Space Pilot X Ray Gun made by Taiyo.jpg",
+  "artist": "Joost J. Bakker from IJmuiden",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Space_Pilot_X_Ray_Gun_made_by_Taiyo.jpg"
+ },
+ {
+  "value": "💕 Romance",
+  "title": "File:A red rose with dewdrops 1.jpg",
+  "artist": "Broc",
+  "license": "CC BY 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:A_red_rose_with_dewdrops_1.jpg"
+ },
+ {
+  "value": "🔍 True Crime",
+  "title": "File:Magnifying glass with infinite focus.png",
+  "artist": "Niabot",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Magnifying_glass_with_infinite_focus.png"
+ },
+ {
+  "value": "📡 Streams",
+  "title": "File:Apple iSight Webcam.jpg",
+  "artist": "Nicolas Esposito from France",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Apple_iSight_Webcam.jpg"
+ },
+ {
+  "value": "🏴‍☠️ One Piece",
+  "title": "File:Straw hat, Vietnamese Women's Museum.jpg",
+  "artist": "Vietnamese Women's Museum",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Straw_hat,_Vietnamese_Women%27s_Museum.jpg"
+ },
+ {
+  "value": "🍥 Naruto",
+  "title": "File:Shoyu Ramen.jpg",
+  "artist": "Guilhem Vellut",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Shoyu_Ramen.jpg"
+ },
+ {
+  "value": "🌀 Jujutsu Kaisen",
+  "title": "File:Omamori Kitano Tenman-gū 2.JPG",
+  "artist": "FlipTable",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Omamori_Kitano_Tenman-g%C5%AB_2.JPG"
+ },
+ {
+  "value": "🪽 Attack on Titan",
+  "title": "File:White rumped vulture flexing its wings.jpg",
+  "artist": "Prasan Shrestha",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:White_rumped_vulture_flexing_its_wings.jpg"
+ },
+ {
+  "value": "🏫 My Hero Academia",
+  "title": "File:Backpack (AM 2014.66.1-16).jpg",
+  "artist": "Alexto Production",
+  "license": "CC BY 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Backpack_(AM_2014.66.1-16).jpg"
+ },
+ {
+  "value": "🐦‍⬛ Haikyuu",
+  "title": "File:Carrion crow with some berries (05931).jpg",
+  "artist": "Rhododendrites",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Carrion_crow_with_some_berries_(05931).jpg"
+ },
+ {
+  "value": "🍃 Studio Ghibli",
+  "title": "File:Acorns on the granite bench, October 2015 - Stacking.jpg",
+  "artist": "Laitche",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Acorns_on_the_granite_bench,_October_2015_-_Stacking.jpg"
+ },
+ {
+  "value": "🐉 Dragon Ball",
+  "title": "File:Golden dragon statue, Morrison Hill Road 28-06-2019.jpg",
+  "artist": "LN9267",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Golden_dragon_statue,_Morrison_Hill_Road_28-06-2019.jpg"
+ },
+ {
+  "value": "🧹 Harry Potter",
+  "title": "File:Hue Vietnam Broom-in-Càn-Thành-Palace-01.jpg",
+  "artist": "CEphoto, Uwe Aranas",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Hue_Vietnam_Broom-in-C%C3%A0n-Th%C3%A0nh-Palace-01.jpg"
+ },
+ {
+  "value": "🌌 Star Wars",
+  "title": "File:Space shuttle model at the Museum of Flight.jpg",
+  "artist": "Frank Kovalchek from Anchorage, Alaska, USA",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Space_shuttle_model_at_the_Museum_of_Flight.jpg"
+ },
+ {
+  "value": "🏰 Disney",
+  "title": "File:Schloss Neuschwanstein 2013.jpg",
+  "artist": "Thomas Wolf, www.foto-tw.de",
+  "license": "CC BY-SA 3.0 de",
+  "url": "https://commons.wikimedia.org/wiki/File:Schloss_Neuschwanstein_2013.jpg"
+ },
+ {
+  "value": "🧇 Stranger Things",
+  "title": "File:Waffles with maple syrup and butter.jpg",
+  "artist": "Evan Swigart from Chicago, USA",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Waffles_with_maple_syrup_and_butter.jpg"
+ },
+ {
+  "value": "🖤 Wednesday",
+  "title": "File:Cello study.jpg",
+  "artist": "MichaelMaggs",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Cello_study.jpg"
+ },
+ {
+  "value": "🦑 Squid Game",
+  "title": "File:Dalgona 1.jpg",
+  "artist": "PhareannaH[berhabuk]",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Dalgona_1.jpg"
+ },
+ {
+  "value": "🐱 Katzen",
+  "title": "File:Golden tabby and white kitten n01.jpg",
+  "artist": "Marie-Lan Nguyen",
+  "license": "CC BY 2.5",
+  "url": "https://commons.wikimedia.org/wiki/File:Golden_tabby_and_white_kitten_n01.jpg"
+ },
+ {
+  "value": "🐕 Hunde",
+  "title": "File:Samoyed dog two year old female dllu.jpg",
+  "artist": "Dllu",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Samoyed_dog_two_year_old_female_dllu.jpg"
+ },
+ {
+  "value": "🐴 Pferde",
+  "title": "File:Domestic horse at Suryachaur and the mountains in the back1.jpg",
+  "artist": "Shadow Ayush",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Domestic_horse_at_Suryachaur_and_the_mountains_in_the_back1.jpg"
+ },
+ {
+  "value": "🦖 Dinos",
+  "title": "File:Velociraptor mongoliensis (theropod dinosaur skull - sculpture) (Upper Cretaceous; Gobi Desert, Mongolia-China) 1 (33705450228).jpg",
+  "artist": "James St. John",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Velociraptor_mongoliensis_(theropod_dinosaur_skull_-_sculpture)_(Upper_Cretaceous;_Gobi_Desert,_Mongolia-China)_1_(33705450228).jpg"
+ },
+ {
+  "value": "🦎 Reptilien",
+  "title": "File:Hemidactylus platyurus (Flat-tailed House Gecko) on white background, focus stacking.jpg",
+  "artist": "Basile Morin",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Hemidactylus_platyurus_(Flat-tailed_House_Gecko)_on_white_background,_focus_stacking.jpg"
+ },
+ {
+  "value": "🍕 Foodie",
+  "title": "File:Pizza Tradición Napolitana.jpg",
+  "artist": "Rjcastillo",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Pizza_Tradici%C3%B3n_Napolitana.jpg"
+ },
+ {
+  "value": "🧋 Bubble Tea",
+  "title": "File:Bubble tea by Bumba (44 Ho Tung Mau Road, Cau Giay District, Hanoi, Vietnam).jpg",
+  "artist": "TaiwaneseWaveVN",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Bubble_tea_by_Bumba_(44_Ho_Tung_Mau_Road,_Cau_Giay_District,_Hanoi,_Vietnam).jpg"
+ },
+ {
+  "value": "🥦 Vegan",
+  "title": "File:Romanesco broccoli 2025 G1.jpg",
+  "artist": "George Chernilevsky",
+  "license": "CC BY 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Romanesco_broccoli_2025_G1.jpg"
+ },
+ {
+  "value": "🛍️ Shopping",
+  "title": "File:Dog with shopping cart isolated on white (33235359588).jpg",
+  "artist": "Jernej Furman from Slovenia",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Dog_with_shopping_cart_isolated_on_white_(33235359588).jpg"
+ },
+ {
+  "value": "👟 Sneaker",
+  "title": "File:Oca-low-washed-black-contrast-thread-canvas-sneaker.png",
+  "artist": "CARIUMA",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Oca-low-washed-black-contrast-thread-canvas-sneaker.png"
+ },
+ {
+  "value": "💄 Make-up",
+  "title": "File:Lipstick- My top 5! - 18072840654.jpg",
+  "artist": "Vanilla and lace",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Lipstick-_My_top_5!_-_18072840654.jpg"
+ },
+ {
+  "value": "🌙 Astrologie",
+  "title": "File:Full Moon Luc Viatour.jpg",
+  "artist": "Luc Viatour",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Full_Moon_Luc_Viatour.jpg"
+ },
+ {
+  "value": "🏕️ Camping",
+  "title": "File:Ruissalo Camping - tent.jpg",
+  "artist": "Tiia Monto",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Ruissalo_Camping_-_tent.jpg"
+ },
+ {
+  "value": "🛋️ Chillen",
+  "title": "File:Snowy hammock in Étalle (DSCF6709).jpg",
+  "artist": "Trougnouf (Benoit Brummer)",
+  "license": "CC BY 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Snowy_hammock_in_%C3%89talle_(DSCF6709).jpg"
+ },
+ {
+  "value": "🚗 Autos",
+  "title": "File:Porsche 911 No 1000000, 70 Years Porsche Sports Car, Berlin (1X7A3888).jpg",
+  "artist": "Matti Blume",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Porsche_911_No_1000000,_70_Years_Porsche_Sports_Car,_Berlin_(1X7A3888).jpg"
+ },
+ {
+  "value": "🏍️ Motorräder",
+  "title": "File:Volgograd Panorama Museum BMW R35 Motorcycle 2023-07-16 6585.jpg",
+  "artist": "Mike1979 Russia",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Volgograd_Panorama_Museum_BMW_R35_Motorcycle_2023-07-16_6585.jpg"
+ },
+ {
+  "value": "🪴 Pflanzen",
+  "title": "File:Houseplant 22.jpg",
+  "artist": "محمد بوعلام عصامي",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Houseplant_22.jpg"
+ },
+ {
+  "value": "🏛️ Geschichte",
+  "title": "File:Augustus denarius Armenia 90020170.jpg",
+  "artist": "Classical Numismatic Group",
+  "license": "CC BY-SA 2.5",
+  "url": "https://commons.wikimedia.org/wiki/File:Augustus_denarius_Armenia_90020170.jpg"
+ },
+ {
+  "value": "🧠 Psychologie",
+  "title": "File:Brain model 12.jpg",
+  "artist": "John Campbell",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Brain_model_12.jpg"
+ },
+ {
+  "value": "🧮 Mathe",
+  "title": "File:Abacus 2.jpg",
+  "artist": "Loadmaster (David R. Tribble) This image was made by Loadmaster (David R. Tribble). Email the author: David R. Tribble Also see my personal gallery at Google Photos",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Abacus_2.jpg"
+ },
+ {
+  "value": "🧬 Biologie",
+  "title": "File:Piece of the world's longest DNA model.jpg",
+  "artist": "Theodore Barons",
+  "license": "CC BY-SA 3.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Piece_of_the_world%27s_longest_DNA_model.jpg"
+ },
+ {
+  "value": "📈 Finanzen",
+  "title": "File:Pink Piggy Bank (5737823348).jpg",
+  "artist": "Ken Teegardin from Boulder, Boulder",
+  "license": "CC BY-SA 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Pink_Piggy_Bank_(5737823348).jpg"
+ },
+ {
+  "value": "🏗️ Architektur",
+  "title": "File:Architectural model of the Castro do Zambujal, Portugal.png",
+  "artist": "CriMen1",
+  "license": "CC BY-SA 4.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Architectural_model_of_the_Castro_do_Zambujal,_Portugal.png"
+ },
+ {
+  "value": "♻️ Umwelt",
+  "title": "File:Avocado Seedling.jpg",
+  "artist": "Predeterminado: propiedad com:SDC P170, Template:Autor faltante",
+  "license": "CC BY 2.5",
+  "url": "https://commons.wikimedia.org/wiki/File:Avocado_Seedling.jpg"
+ }
+]
