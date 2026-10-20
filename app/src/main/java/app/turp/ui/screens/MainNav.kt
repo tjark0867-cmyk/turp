@@ -123,8 +123,9 @@ class MainViewModel : BaseViewModel() {
 }
 
 private enum class Tab(val label: String, val icon: ImageVector, val iconOutlined: ImageVector) {
-    Discover("Entdecken", Icons.Rounded.Style, Icons.Outlined.Style),
+    // Reihenfolge = Reihenfolge in der unteren Leiste (Lounge links, Entdecken daneben)
     Lounge("Lounge", Icons.Rounded.Public, Icons.Outlined.Public),
+    Discover("Entdecken", Icons.Rounded.Style, Icons.Outlined.Style),
     Requests("Freunde", Icons.Rounded.EmojiEmotions, Icons.Outlined.EmojiEmotions),
     Chats("Chats", Icons.Rounded.ChatBubble, Icons.Outlined.ChatBubbleOutline),
     Profile("Profil", Icons.Rounded.Person, Icons.Outlined.Person),
