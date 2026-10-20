@@ -462,17 +462,6 @@
   "source": "7/eafc/2",
   "nocut": true
  },
- "rocketleague": {
-  "title": "File:Radio controlled car on ground.JPG",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fc/Radio_controlled_car_on_ground.JPG/330px-Radio_controlled_car_on_ground.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Radio_controlled_car_on_ground.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 4608,
-  "height": 3456,
-  "license": "CC0",
-  "artist": "Editor abcdef",
-  "page": "https://commons.wikimedia.org/wiki/File:Radio_controlled_car_on_ground.JPG",
-  "source": "7/rocketleague/9"
- },
  "overwatch": {
   "title": "File:Hrodna New Castle Shield 2023-06-25 5609.jpg",
   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/69/Hrodna_New_Castle_Shield_2023-06-25_5609.jpg/330px-Hrodna_New_Castle_Shield_2023-06-25_5609.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
@@ -1806,27 +1795,5 @@
   "artist": "NMorales (WMF)",
   "page": "https://commons.wikimedia.org/wiki/File:Griswold_cast_iron_skillet.jpg",
   "source": "4/kochen/3"
- },
- "fantasy": {
-  "title": "File:« Le secret des secrets, ou le véritable grimoire, par Tosgraec » - btv1b10882213j (092 of 103).jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/%C2%AB_Le_secret_des_secrets%2C_ou_le_v%C3%A9ritable_grimoire%2C_par_Tosgraec_%C2%BB_-_btv1b10882213j_%28092_of_103%29.jpg/330px-%C2%AB_Le_secret_des_secrets%2C_ou_le_v%C3%A9ritable_grimoire%2C_par_Tosgraec_%C2%BB_-_btv1b10882213j_%28092_of_103%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/1/1c/%C2%AB_Le_secret_des_secrets%2C_ou_le_v%C3%A9ritable_grimoire%2C_par_Tosgraec_%C2%BB_-_btv1b10882213j_%28092_of_103%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 7604,
-  "height": 4953,
-  "license": "Public domain",
-  "artist": "Tosgraec. Auteur du texte",
-  "page": "https://commons.wikimedia.org/wiki/File:%C2%AB_Le_secret_des_secrets,_ou_le_v%C3%A9ritable_grimoire,_par_Tosgraec_%C2%BB_-_btv1b10882213j_(092_of_103).jpg",
-  "source": "7/fantasy/0"
- },
- "oliviarodrigo_b": {
-  "title": "File:Peacock butterfly (Aglais io) 2.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a6/Peacock_butterfly_%28Aglais_io%29_2.jpg/330px-Peacock_butterfly_%28Aglais_io%29_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Peacock_butterfly_%28Aglais_io%29_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 3792,
-  "height": 2528,
-  "license": "CC BY-SA 3.0",
-  "artist": "Charles J. Sharp",
-  "page": "https://commons.wikimedia.org/wiki/File:Peacock_butterfly_(Aglais_io)_2.jpg",
-  "source": "8/oliviarodrigo/0"
  }
 }
