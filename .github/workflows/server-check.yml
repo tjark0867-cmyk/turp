@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   check:
@@ -33,6 +33,7 @@ jobs:
         env:
           P: ${{ steps.check.outputs.project }}
         run: |
+          exec > >(tee -a "$RUNNER_TEMP/check.log") 2>&1
           TOKEN=$(gcloud auth print-access-token)
           B=$(curl -sS -H "Authorization: Bearer $TOKEN" -H "X-Goog-User-Project: $P" \
             "https://firebasestorage.googleapis.com/v1alpha/projects/$P/defaultBucket" | jq -r '.bucket.name // .name' | sed 's#.*/buckets/##')
@@ -49,6 +50,7 @@ jobs:
 
       - name: Zeiten der letzten Uploads und Nachrichten
         run: |
+          exec > >(tee -a "$RUNNER_TEMP/check.log") 2>&1
           for SVC in addprofilemedia onmessagecreated; do
             echo "== $SVC (Dauer pro Aufruf, neueste zuerst)"
             gcloud logging read "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"$SVC\" AND httpRequest.latency:*" \
@@ -57,3 +59,17 @@ jobs:
             gcloud logging read "resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"$SVC\" AND severity>=WARNING" \
               --freshness=3d --limit=15 --format="value(timestamp,severity,textPayload,jsonPayload.message)" || true
           done
+
+      - name: Ergebnis speichern
+        if: always()
+        run: |
+          [ -f "$RUNNER_TEMP/check.log" ] || exit 0
+          cp "$RUNNER_TEMP/check.log" /tmp/check.log
+          git config user.name "turp-bot"
+          git config user.email "turp-bot@users.noreply.github.com"
+          git checkout -q --orphan check-tmp
+          git rm -rf --quiet .
+          cp /tmp/check.log check.log
+          git add check.log
+          git commit -q -m "Server-Prüfung ${GITHUB_RUN_NUMBER}"
+          git push -f -q origin HEAD:refs/heads/check-logs
