@@ -122,6 +122,7 @@ import app.turp.data.Message
 import app.turp.data.RequestRepo
 import app.turp.data.SafetyRepo
 import app.turp.ui.components.Avatar
+import app.turp.ui.components.ImageViewer
 import app.turp.ui.components.CandyButton
 import app.turp.ui.components.ConfirmDialog
 import app.turp.ui.components.Countries
@@ -389,6 +390,8 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
 
     val chat by vm.chat.collectAsState()
     val messages by vm.messages.collectAsState()
+    // Foto, das gerade groß angezeigt wird
+    var viewing by remember { mutableStateOf<Any?>(null) }
     val me = Fb.uid
     val current = chat
     val otherUid = current?.otherUid(me).orEmpty()
@@ -650,6 +653,7 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
                         showRead = m.id == lastReadId,
                         voice = voice,
                         localImage = if (mine) vm.localImages[m.imagePath] else null,
+                        onOpenImage = { viewing = it },
                         onLongPress = {
                             if (!mine) {
                                 reportContext = when (m.type) {
@@ -687,6 +691,8 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
             }
         )
     }
+    viewing?.let { model -> ImageViewer(model = model, onDismiss = { viewing = null }) }
+
     if (confirmBlock) {
         ConfirmDialog(
             title = "$otherName blockieren?",
@@ -738,6 +744,7 @@ private fun MessageRow(
     voice: VoicePlayer,
     onLongPress: () -> Unit,
     localImage: ByteArray? = null,
+    onOpenImage: (Any) -> Unit = {},
 ) {
     Row(
         Modifier
@@ -755,7 +762,7 @@ private fun MessageRow(
             Spacer(Modifier.width(8.dp))
         }
         Box {
-            Bubble(message, mine, lastInRun, voice, onLongPress, localImage)
+            Bubble(message, mine, lastInRun, voice, onLongPress, localImage, onOpenImage)
             if (showRead && other != null) {
                 Avatar(
                     other.photo,
@@ -780,7 +787,15 @@ private fun Bubble(
     voice: VoicePlayer,
     onLongPress: () -> Unit,
     localImage: ByteArray? = null,
+    onOpenImage: (Any) -> Unit = {},
 ) {
+    // Was beim Antippen groß angezeigt wird (nur bei Fotos)
+    val imageModel: Any? = when {
+        message.type != "image" || message.imageStatus == "blocked" -> null
+        localImage != null -> localImage
+        message.imageStatus == "ok" && message.imageUrl.isNotBlank() -> message.imageUrl
+        else -> null
+    }
     val round = 20.dp
     val tail = 6.dp
     val shape = RoundedCornerShape(
@@ -797,7 +812,7 @@ private fun Bubble(
             .widthIn(max = 280.dp)
             .clip(shape)
             .background(if (mine) Teal else InkHigh)
-            .combinedClickable(onClick = {}, onLongClick = onLongPress)
+            .combinedClickable(onClick = { imageModel?.let(onOpenImage) }, onLongClick = onLongPress)
     ) {
         when {
             // Eigenes Foto: sofort aus den lokalen Daten zeigen, während der Server noch prüft
