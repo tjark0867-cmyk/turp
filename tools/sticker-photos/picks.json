@@ -21,17 +21,6 @@
   "page": "https://commons.wikimedia.org/wiki/File:Action-Max-Stereo-Headphones.jpg",
   "source": "2/musik/1"
  },
- "singen": {
-  "title": "File:Shure SM57 microphone.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4a/Shure_SM57_microphone.jpg/330px-Shure_SM57_microphone.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Shure_SM57_microphone.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 5002,
-  "height": 3335,
-  "license": "CC BY-SA 4.0",
-  "artist": "E bailey",
-  "page": "https://commons.wikimedia.org/wiki/File:Shure_SM57_microphone.jpg",
-  "source": "2/singen/2"
- },
  "instrumente": {
   "title": "File:Guitar Single Cutaway 01.jpg",
   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/61/Guitar_Single_Cutaway_01.jpg/330px-Guitar_Single_Cutaway_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
@@ -109,28 +98,6 @@
   "page": "https://commons.wikimedia.org/wiki/File:Popcorn-Ball.jpg",
   "source": "2/filme/3"
  },
- "serien": {
-  "title": "File:Television remote control - black 01.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/Television_remote_control_-_black_01.jpg/330px-Television_remote_control_-_black_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/b/ba/Television_remote_control_-_black_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 856,
-  "height": 3300,
-  "license": "CC BY-SA 4.0",
-  "artist": "Dmitry Makeev",
-  "page": "https://commons.wikimedia.org/wiki/File:Television_remote_control_-_black_01.jpg",
-  "source": "2/serien/1"
- },
- "lesen": {
-  "title": "File:Part of a bookshelf containing books by Aristotle (1).jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Part_of_a_bookshelf_containing_books_by_Aristotle_%281%29.jpg/330px-Part_of_a_bookshelf_containing_books_by_Aristotle_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/c/c5/Part_of_a_bookshelf_containing_books_by_Aristotle_%281%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 7952,
-  "height": 5304,
-  "license": "CC BY-SA 4.0",
-  "artist": "Roman Eisele",
-  "page": "https://commons.wikimedia.org/wiki/File:Part_of_a_bookshelf_containing_books_by_Aristotle_(1).jpg",
-  "source": "2/lesen/0"
- },
  "schreiben": {
   "title": "File:Pilot Urban MR Retro Pop M Fountain Pen (no clip) 2.jpg",
   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/92/Pilot_Urban_MR_Retro_Pop_M_Fountain_Pen_%28no_clip%29_2.jpg/330px-Pilot_Urban_MR_Retro_Pop_M_Fountain_Pen_%28no_clip%29_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
@@ -163,28 +130,6 @@
   "artist": "Sandrine Z",
   "page": "https://commons.wikimedia.org/wiki/File:Belber_Striped_Suitcase.jpg",
   "source": "2/reisen/4"
- },
- "tanzen": {
-  "title": "File:Pointe shoes.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/Pointe_shoes.jpg/330px-Pointe_shoes.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Pointe_shoes.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 2304,
-  "height": 1728,
-  "license": "CC BY 2.5",
-  "artist": "Keitei",
-  "page": "https://commons.wikimedia.org/wiki/File:Pointe_shoes.jpg",
-  "source": "9/tanzen/6"
- },
- "mode": {
-  "title": "File:Leather handbag by Les cuirs d'Agathe (DSC07738).jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Leather_handbag_by_Les_cuirs_d%27Agathe_%28DSC07738%29.jpg/330px-Leather_handbag_by_Les_cuirs_d%27Agathe_%28DSC07738%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/a/a3/Leather_handbag_by_Les_cuirs_d%27Agathe_%28DSC07738%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 4426,
-  "height": 3673,
-  "license": "CC BY 4.0",
-  "artist": "Trougnouf (Benoit Brummer), Les cuirs d'Agathe",
-  "page": "https://commons.wikimedia.org/wiki/File:Leather_handbag_by_Les_cuirs_d%27Agathe_(DSC07738).jpg",
-  "source": "2/mode/0"
  },
  "coden": {
   "title": "File:HP Pavilion dv2000 laptop.jpg",
@@ -340,50 +285,6 @@
   "page": "https://commons.wikimedia.org/wiki/File:Six-handed_500_playing_cards.jpg",
   "source": "2/kartenspiele/6"
  },
- "pcgaming": {
-  "title": "File:Generic computer mouse with scrollwheel.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/Generic_computer_mouse_with_scrollwheel.jpg/330px-Generic_computer_mouse_with_scrollwheel.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Generic_computer_mouse_with_scrollwheel.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 738,
-  "height": 1025,
-  "license": "CC0",
-  "artist": "Peter Astbury",
-  "page": "https://commons.wikimedia.org/wiki/File:Generic_computer_mouse_with_scrollwheel.jpg",
-  "source": "2/pcgaming/0"
- },
- "esport": {
-  "title": "File:The FA Cup Trophy.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/The_FA_Cup_Trophy.jpg/330px-The_FA_Cup_Trophy.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/3/3f/The_FA_Cup_Trophy.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 1536,
-  "height": 2048,
-  "license": "CC BY-SA 4.0",
-  "artist": "Carlos yo",
-  "page": "https://commons.wikimedia.org/wiki/File:The_FA_Cup_Trophy.jpg",
-  "source": "2/esport/2"
- },
- "penandpaper": {
-  "title": "File:Self-made polyhedral dice 01.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/Self-made_polyhedral_dice_01.jpg/330px-Self-made_polyhedral_dice_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/f/f2/Self-made_polyhedral_dice_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 2048,
-  "height": 1362,
-  "license": "CC BY 4.0",
-  "artist": "Stephan Sprinz",
-  "page": "https://commons.wikimedia.org/wiki/File:Self-made_polyhedral_dice_01.jpg",
-  "source": "2/penandpaper/0"
- },
- "fortnite": {
-  "title": "File:Llama at Ashdown Llama Park - geograph.org.uk - 2957753.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b6/Llama_at_Ashdown_Llama_Park_-_geograph.org.uk_-_2957753.jpg/330px-Llama_at_Ashdown_Llama_Park_-_geograph.org.uk_-_2957753.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Llama_at_Ashdown_Llama_Park_-_geograph.org.uk_-_2957753.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 640,
-  "height": 480,
-  "license": "CC BY-SA 2.0",
-  "artist": "Oast House Archive",
-  "page": "https://commons.wikimedia.org/wiki/File:Llama_at_Ashdown_Llama_Park_-_geograph.org.uk_-_2957753.jpg",
-  "source": "2/fortnite/9"
- },
  "valorant": {
   "title": "File:Stereo headset.jpg",
   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/Stereo_headset.jpg/330px-Stereo_headset.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
@@ -394,17 +295,6 @@
   "artist": "Peter Astbury",
   "page": "https://commons.wikimedia.org/wiki/File:Stereo_headset.jpg",
   "source": "2/valorant/4"
- },
- "genshin": {
-  "title": "File:Amethyst Quartz Macro 1.JPG",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Amethyst_Quartz_Macro_1.JPG/330px-Amethyst_Quartz_Macro_1.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Amethyst_Quartz_Macro_1.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 2272,
-  "height": 1704,
-  "license": "CC BY-SA 3.0",
-  "artist": "“Jon Zander (Digon3)\"",
-  "page": "https://commons.wikimedia.org/wiki/File:Amethyst_Quartz_Macro_1.JPG",
-  "source": "2/genshin/1"
  },
  "cod": {
   "title": "File:Brazilian military helmet.JPG",
@@ -449,29 +339,6 @@
   "artist": "Appleeater95",
   "page": "https://commons.wikimedia.org/wiki/File:Astolat_Dollhouse_Castle_before_Time-Warner_exhibition_opened,_November_2015.jpg",
   "source": "2/sims/0"
- },
- "eafc": {
-  "title": "File:Association football goal in training football field.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/Association_football_goal_in_training_football_field.jpg/330px-Association_football_goal_in_training_football_field.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Association_football_goal_in_training_football_field.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 3648,
-  "height": 2736,
-  "license": "CC BY-SA 4.0",
-  "artist": "Santeri Viinamäki",
-  "page": "https://commons.wikimedia.org/wiki/File:Association_football_goal_in_training_football_field.jpg",
-  "source": "7/eafc/2",
-  "nocut": true
- },
- "overwatch": {
-  "title": "File:Hrodna New Castle Shield 2023-06-25 5609.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/69/Hrodna_New_Castle_Shield_2023-06-25_5609.jpg/330px-Hrodna_New_Castle_Shield_2023-06-25_5609.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/6/69/Hrodna_New_Castle_Shield_2023-06-25_5609.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 3073,
-  "height": 3073,
-  "license": "CC BY-SA 3.0",
-  "artist": "Mike1979 Russia",
-  "page": "https://commons.wikimedia.org/wiki/File:Hrodna_New_Castle_Shield_2023-06-25_5609.jpg",
-  "source": "2/overwatch/8"
  },
  "stardew": {
   "title": "File:Metal watering can.jpg",
@@ -572,17 +439,6 @@
   "page": "https://commons.wikimedia.org/wiki/File:Technics_SL-120_turntable_and_pickup_-_front_view_(2019-04-28).jpg",
   "source": "2/techno/3"
  },
- "kpop": {
-  "title": "File:2022-05-11 07 01 51 A light stick after being attached to a weather balloon and after being activated at the National Weather Service's Baltimore-Washington Weather Forecast Office in the Dulles section of Sterling, Loudoun County, Virginia.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4f/2022-05-11_07_01_51_A_light_stick_after_being_attached_to_a_weather_balloon_and_after_being_activated_at_the_National_Weather_Service%27s_Baltimore-Washington_Weather_Forecast_Office_in_the_Dulles_section_of_Sterling%2C_Loudoun_County%2C_Virginia.jpg/330px-thumbnail.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/4/4f/2022-05-11_07_01_51_A_light_stick_after_being_attached_to_a_weather_balloon_and_after_being_activated_at_the_National_Weather_Service%27s_Baltimore-Washington_Weather_Forecast_Office_in_the_Dulles_section_of_Sterling%2C_Loudoun_County%2C_Virginia.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 3024,
-  "height": 4032,
-  "license": "CC BY-SA 4.0",
-  "artist": "Famartin",
-  "page": "https://commons.wikimedia.org/wiki/File:2022-05-11_07_01_51_A_light_stick_after_being_attached_to_a_weather_balloon_and_after_being_activated_at_the_National_Weather_Service%27s_Baltimore-Washington_Weather_Forecast_Office_in_the_Dulles_section_of_Sterling,_Loudoun_County,_Virginia.jpg",
-  "source": "2/kpop/9"
- },
  "produzieren": {
   "title": "File:Samson Graphite 25 MIDI keyboard.jpg",
   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Samson_Graphite_25_MIDI_keyboard.jpg/330px-Samson_Graphite_25_MIDI_keyboard.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
@@ -604,28 +460,6 @@
   "artist": "Ra'ike (see also: de:Benutzer:Ra'ike)",
   "page": "https://commons.wikimedia.org/wiki/File:Friendship_Bracelet_special_forms.jpg",
   "source": "2/taylorswift/2"
- },
- "billieeilish": {
-  "title": "File:Earphones BW 2011-12-10 15-49-08.JPG",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1d/Earphones_BW_2011-12-10_15-49-08.JPG/330px-Earphones_BW_2011-12-10_15-49-08.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Earphones_BW_2011-12-10_15-49-08.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 3872,
-  "height": 2592,
-  "license": "CC BY-SA 3.0",
-  "artist": "Berthold Werner",
-  "page": "https://commons.wikimedia.org/wiki/File:Earphones_BW_2011-12-10_15-49-08.JPG",
-  "source": "2/billieeilish/0"
- },
- "bts": {
-  "title": "File:Toy balloons 2011 G2.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/Toy_balloons_2011_G2.jpg/330px-Toy_balloons_2011_G2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/1/16/Toy_balloons_2011_G2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 3360,
-  "height": 5040,
-  "license": "Public domain",
-  "artist": "George Chernilevsky",
-  "page": "https://commons.wikimedia.org/wiki/File:Toy_balloons_2011_G2.jpg",
-  "source": "2/bts/4"
  },
  "blackpink": {
   "title": "File:Pink balloon (3634758831).jpg",
@@ -659,17 +493,6 @@
   "artist": "Alexis Lours",
   "page": "https://commons.wikimedia.org/wiki/File:European_Rabbit_09_05_2025_02.jpg",
   "source": "2/badbunny/6"
- },
- "travisscott": {
-  "title": "File:Cactus sculpture - César Manrique - Guatiza.JPG",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f6/Cactus_sculpture_-_C%C3%A9sar_Manrique_-_Guatiza.JPG/330px-Cactus_sculpture_-_C%C3%A9sar_Manrique_-_Guatiza.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/f/f6/Cactus_sculpture_-_C%C3%A9sar_Manrique_-_Guatiza.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 2936,
-  "height": 4024,
-  "license": "CC BY-SA 3.0",
-  "artist": "H. Zell",
-  "page": "https://commons.wikimedia.org/wiki/File:Cactus_sculpture_-_C%C3%A9sar_Manrique_-_Guatiza.JPG",
-  "source": "2/travisscott/1"
  },
  "drake": {
   "title": "File:Eurasian eagle-owl (44088).jpg",
@@ -946,28 +769,6 @@
   "page": "https://commons.wikimedia.org/wiki/File:Wooden_Mannequin.jpg",
   "source": "2/cosplay/4"
  },
- "digitalart": {
-  "title": "File:Wacom graphics tablet and pen.png",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d4/Wacom_graphics_tablet_and_pen.png/330px-Wacom_graphics_tablet_and_pen.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Wacom_graphics_tablet_and_pen.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 1490,
-  "height": 955,
-  "license": "CC BY-SA 3.0",
-  "artist": "Wacom_Pen-tablet_without_mouse.jpg: *Wacom_Pen-tablet.jpg: photographed by Tobias Rütten,Metoc derivative work: Woookie (talk) derivative work: – Kerαunoςcopia◁galaxies",
-  "page": "https://commons.wikimedia.org/wiki/File:Wacom_graphics_tablet_and_pen.png",
-  "source": "2/digitalart/5"
- },
- "design": {
-  "title": "File:Set-square (AM 2015.34.65-4).jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/Set-square_%28AM_2015.34.65-4%29.jpg/330px-Set-square_%28AM_2015.34.65-4%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Set-square_%28AM_2015.34.65-4%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 5472,
-  "height": 3648,
-  "license": "CC BY 4.0",
-  "artist": "not researched",
-  "page": "https://commons.wikimedia.org/wiki/File:Set-square_(AM_2015.34.65-4).jpg",
-  "source": "2/design/1"
- },
  "horror": {
   "title": "File:Jack-O-Lantern at night.jpg",
   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/Jack-O-Lantern_at_night.jpg/330px-Jack-O-Lantern_at_night.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
@@ -1089,18 +890,6 @@
   "page": "https://commons.wikimedia.org/wiki/File:Omamori_Kitano_Tenman-g%C5%AB_2.JPG",
   "source": "2/jjk/8"
  },
- "aot": {
-  "title": "File:Kotor City Wall.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Kotor_City_Wall.jpg/330px-Kotor_City_Wall.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Kotor_City_Wall.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 10258,
-  "height": 6185,
-  "license": "CC BY-SA 4.0",
-  "artist": "Ingo Mehling",
-  "page": "https://commons.wikimedia.org/wiki/File:Kotor_City_Wall.jpg",
-  "source": "8/aot/1",
-  "nocut": true
- },
  "mha": {
   "title": "File:Domino mask.jpg",
   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/Domino_mask.jpg/330px-Domino_mask.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
@@ -1133,17 +922,6 @@
   "artist": "National Cancer Institute",
   "page": "https://commons.wikimedia.org/wiki/File:Peanuts_(1).png",
   "source": "2/spyxfamily/4"
- },
- "dragonball": {
-  "title": "File:Golden dragon statue, Morrison Hill Road 28-06-2019.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/18/Golden_dragon_statue%2C_Morrison_Hill_Road_28-06-2019.jpg/330px-Golden_dragon_statue%2C_Morrison_Hill_Road_28-06-2019.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/1/18/Golden_dragon_statue%2C_Morrison_Hill_Road_28-06-2019.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 1504,
-  "height": 2016,
-  "license": "CC BY-SA 4.0",
-  "artist": "LN9267",
-  "page": "https://commons.wikimedia.org/wiki/File:Golden_dragon_statue,_Morrison_Hill_Road_28-06-2019.jpg",
-  "source": "2/dragonball/0"
  },
  "harrypotter": {
   "title": "File:Schneeeule Bubo scandiacus Grugapark 2013.jpg",
@@ -1290,17 +1068,6 @@
   "page": "https://commons.wikimedia.org/wiki/File:Hostess-Cupcake-Whole.jpg",
   "source": "2/backen/2"
  },
- "kaffee": {
-  "title": "File:Cup of coffee with beans.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Cup_of_coffee_with_beans.jpg/330px-Cup_of_coffee_with_beans.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Cup_of_coffee_with_beans.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 1280,
-  "height": 853,
-  "license": "CC0",
-  "artist": "Petr Kratochvil",
-  "page": "https://commons.wikimedia.org/wiki/File:Cup_of_coffee_with_beans.jpg",
-  "source": "2/kaffee/8"
- },
  "bubbletea": {
   "title": "File:Bubble tea by Bumba (44 Ho Tung Mau Road, Cau Giay District, Hanoi, Vietnam).jpg",
   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1d/Bubble_tea_by_Bumba_%2844_Ho_Tung_Mau_Road%2C_Cau_Giay_District%2C_Hanoi%2C_Vietnam%29.jpg/330px-Bubble_tea_by_Bumba_%2844_Ho_Tung_Mau_Road%2C_Cau_Giay_District%2C_Hanoi%2C_Vietnam%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
@@ -1311,17 +1078,6 @@
   "artist": "TaiwaneseWaveVN",
   "page": "https://commons.wikimedia.org/wiki/File:Bubble_tea_by_Bumba_(44_Ho_Tung_Mau_Road,_Cau_Giay_District,_Hanoi,_Vietnam).jpg",
   "source": "2/bubbletea/7"
- },
- "vegan": {
-  "title": "File:Romanesco broccoli 2025 G1.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b6/Romanesco_broccoli_2025_G1.jpg/330px-Romanesco_broccoli_2025_G1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Romanesco_broccoli_2025_G1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 4100,
-  "height": 3800,
-  "license": "CC BY 4.0",
-  "artist": "George Chernilevsky",
-  "page": "https://commons.wikimedia.org/wiki/File:Romanesco_broccoli_2025_G1.jpg",
-  "source": "2/vegan/2"
  },
  "shopping": {
   "title": "File:Blokker shopping bags, Groningen (2019).jpg",
@@ -1455,17 +1211,6 @@
   "page": "https://commons.wikimedia.org/wiki/File:Brain_model_12.jpg",
   "source": "2/psychologie/7"
  },
- "technik": {
-  "title": "File:Curiosity - Robot Geologist and Chemist in One!.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/Curiosity_-_Robot_Geologist_and_Chemist_in_One%21.jpg/330px-Curiosity_-_Robot_Geologist_and_Chemist_in_One%21.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/d/de/Curiosity_-_Robot_Geologist_and_Chemist_in_One%21.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 6000,
-  "height": 3375,
-  "license": "Public domain",
-  "artist": "NASA/JPL-Caltech",
-  "page": "https://commons.wikimedia.org/wiki/File:Curiosity_-_Robot_Geologist_and_Chemist_in_One!.jpg",
-  "source": "2/technik/9"
- },
  "mathe": {
   "title": "File:Abacus 2.jpg",
   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2b/Abacus_2.jpg/330px-Abacus_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
@@ -1521,17 +1266,6 @@
   "page": "https://commons.wikimedia.org/wiki/File:Architectural_model_of_the_Castro_do_Zambujal,_Portugal.png",
   "source": "2/architektur/2"
  },
- "umwelt": {
-  "title": "File:Avocado Seedling.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2e/Avocado_Seedling.jpg/330px-Avocado_Seedling.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Avocado_Seedling.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 1503,
-  "height": 2364,
-  "license": "CC BY 2.5",
-  "artist": "Predeterminado: propiedad com:SDC P170, Template:Autor faltante",
-  "page": "https://commons.wikimedia.org/wiki/File:Avocado_Seedling.jpg",
-  "source": "2/umwelt/9"
- },
  "fussball": {
   "title": "File:Soccer ball on ground.jpg",
   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1e/Soccer_ball_on_ground.jpg/330px-Soccer_ball_on_ground.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
@@ -1542,17 +1276,6 @@
   "artist": "Petey21",
   "page": "https://commons.wikimedia.org/wiki/File:Soccer_ball_on_ground.jpg",
   "source": "3/fussball/3"
- },
- "natur": {
-  "title": "File:Solitary tree near Hellifield - geograph.org.uk - 5810333.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/Solitary_tree_near_Hellifield_-_geograph.org.uk_-_5810333.jpg/330px-Solitary_tree_near_Hellifield_-_geograph.org.uk_-_5810333.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Solitary_tree_near_Hellifield_-_geograph.org.uk_-_5810333.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 1024,
-  "height": 768,
-  "license": "CC BY-SA 2.0",
-  "artist": "Stephen Craven",
-  "page": "https://commons.wikimedia.org/wiki/File:Solitary_tree_near_Hellifield_-_geograph.org.uk_-_5810333.jpg",
-  "source": "9/natur/9"
  },
  "radfahren": {
   "title": "File:Älteres Peugeot Mixte-Fahrrad in Freiburg i. B. (2025).jpg",
@@ -1587,17 +1310,6 @@
   "page": "https://commons.wikimedia.org/wiki/File:Chess_knight_0971.jpg",
   "source": "3/schach/2"
  },
- "handyspiele": {
-  "title": "File:Mobile phone case.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/Mobile_phone_case.jpg/330px-Mobile_phone_case.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/6/62/Mobile_phone_case.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 1654,
-  "height": 1938,
-  "license": "CC BY-SA 4.0",
-  "artist": "Tiia Monto",
-  "page": "https://commons.wikimedia.org/wiki/File:Mobile_phone_case.jpg",
-  "source": "3/handyspiele/3"
- },
  "mariokart": {
   "title": "File:Cavendish Banana DS.jpg",
   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/Cavendish_Banana_DS.jpg/330px-Cavendish_Banana_DS.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
@@ -1608,17 +1320,6 @@
   "artist": "Augustus Binu : flickr",
   "page": "https://commons.wikimedia.org/wiki/File:Cavendish_Banana_DS.jpg",
   "source": "7/mariokart/8"
- },
- "klavier": {
-  "title": "File:Kurzweil Synthesizer and MIDI Keyboard Controller PC3K6.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Kurzweil_Synthesizer_and_MIDI_Keyboard_Controller_PC3K6.jpg/330px-Kurzweil_Synthesizer_and_MIDI_Keyboard_Controller_PC3K6.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Kurzweil_Synthesizer_and_MIDI_Keyboard_Controller_PC3K6.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 6000,
-  "height": 4000,
-  "license": "CC BY-SA 4.0",
-  "artist": "Melissa Ursula Dawn Goldsmith",
-  "page": "https://commons.wikimedia.org/wiki/File:Kurzweil_Synthesizer_and_MIDI_Keyboard_Controller_PC3K6.jpg",
-  "source": "2/produzieren/6"
  },
  "straykids": {
   "title": "File:Front view of a resting Canis lupus ssp.jpg",
@@ -1719,17 +1420,6 @@
   "page": "https://commons.wikimedia.org/wiki/File:NO10_Notizbuch_80.jpg",
   "source": "3/journaling/7"
  },
- "superhelden": {
-  "title": "File:Shamask Red Cape Front (6369453911).jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5f/Shamask_Red_Cape_Front_%286369453911%29.jpg/330px-Shamask_Red_Cape_Front_%286369453911%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Shamask_Red_Cape_Front_%286369453911%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 1936,
-  "height": 2592,
-  "license": "CC BY-SA 2.0",
-  "artist": "William J Sisti from Morristown, NJ, USA",
-  "page": "https://commons.wikimedia.org/wiki/File:Shamask_Red_Cape_Front_(6369453911).jpg",
-  "source": "3/superhelden/1"
- },
  "manga": {
   "title": "File:ROC-NCL-AAC Inu Neko Jump! CHT tankobon 20170624.jpg",
   "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/ROC-NCL-AAC_Inu_Neko_Jump%21_CHT_tankobon_20170624.jpg/330px-ROC-NCL-AAC_Inu_Neko_Jump%21_CHT_tankobon_20170624.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
@@ -1795,27 +1485,5 @@
   "artist": "NMorales (WMF)",
   "page": "https://commons.wikimedia.org/wiki/File:Griswold_cast_iron_skillet.jpg",
   "source": "4/kochen/3"
- },
- "natur_b": {
-  "title": "File:Solitary tree on Totley Moor - geograph.org.uk - 2318926.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bb/Solitary_tree_on_Totley_Moor_-_geograph.org.uk_-_2318926.jpg/330px-Solitary_tree_on_Totley_Moor_-_geograph.org.uk_-_2318926.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Solitary_tree_on_Totley_Moor_-_geograph.org.uk_-_2318926.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 1024,
-  "height": 768,
-  "license": "CC BY-SA 2.0",
-  "artist": "Graham Hogg",
-  "page": "https://commons.wikimedia.org/wiki/File:Solitary_tree_on_Totley_Moor_-_geograph.org.uk_-_2318926.jpg",
-  "source": "9/natur/8"
- },
- "tanzen_b": {
-  "title": "File:Ballet pointe shoes.jpg",
-  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Ballet_pointe_shoes.jpg/330px-Ballet_pointe_shoes.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-  "url": "https://upload.wikimedia.org/wikipedia/commons/e/ea/Ballet_pointe_shoes.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-  "width": 922,
-  "height": 1382,
-  "license": "CC BY 2.0",
-  "artist": "melalouise from East St Kilda, Australia",
-  "page": "https://commons.wikimedia.org/wiki/File:Ballet_pointe_shoes.jpg",
-  "source": "9/tanzen/3"
  }
 }

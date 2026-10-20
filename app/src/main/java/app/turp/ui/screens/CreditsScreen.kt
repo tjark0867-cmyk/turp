@@ -87,7 +87,7 @@ fun CreditsScreen(onBack: () -> Unit) {
                 Icon(Icons.AutoMirrored.Rounded.ArrowBackIos, contentDescription = "Zurück", tint = TextHigh, modifier = Modifier.size(22.dp))
             }
             Text(
-                "Bildnachweise",
+                "Lizenzen",
                 color = TextHigh,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.ExtraBold,
@@ -101,7 +101,7 @@ fun CreditsScreen(onBack: () -> Unit) {
         ) {
             item {
                 Text(
-                    "Die Interessen-Sticker beruhen auf freien Fotos von Wikimedia Commons. " +
+                    "Viele Interessen-Sticker sind selbst gestaltet, einige beruhen auf freien Fotos von Wikimedia Commons. " +
                         "Für die Sticker wurden die Fotos freigestellt, zugeschnitten und mit einem Rand versehen. " +
                         "Sticker nach Fotos unter „CC BY-SA“ stehen unter derselben Lizenz. " +
                         "Fotos ohne Eintrag hier sind gemeinfrei (CC0 / Public Domain) oder selbst erstellt. Tippen öffnet die Quelle.",

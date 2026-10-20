@@ -120,7 +120,6 @@ val INTEREST_CATALOG: List<InterestDef> = listOf(
     InterestDef("🔍 True Crime", "True Crime", InterestCategory.FILM, R.drawable.interest_truecrime, "krimi"),
     InterestDef("🦎 Reptilien", "Reptilien", InterestCategory.LIFESTYLE, R.drawable.interest_reptilien, ""),
     InterestDef("📈 Finanzen", "Finanzen", InterestCategory.WISSEN, R.drawable.interest_finanzen, "geld börse"),
-    InterestDef("📜 Pen & Paper", "Pen & Paper", InterestCategory.GAMES, R.drawable.interest_penandpaper, "rollenspiel dnd"),
     InterestDef("🎚️ Musik machen", "Musik machen", InterestCategory.MUSIK, R.drawable.interest_produzieren, "beats produzieren"),
     InterestDef("🏒 Eishockey", "Eishockey", InterestCategory.SPORT, R.drawable.interest_eishockey, "hockey"),
     InterestDef("🧝 Cosplay", "Cosplay", InterestCategory.KREATIV, R.drawable.interest_cosplay, ""),
@@ -210,4 +209,5 @@ val INTEREST_CATALOG: List<InterestDef> = listOf(
     InterestDef("🦑 Squid Game", "Squid Game", InterestCategory.FILM, R.drawable.interest_squidgame, ""),
     InterestDef("🌾 Stardew Valley", "Stardew Valley", InterestCategory.GAMES, R.drawable.interest_stardew, ""),
     InterestDef("🏝️ Animal Crossing", "Animal Crossing", InterestCategory.GAMES, R.drawable.interest_animalcrossing, "nintendo"),
+    InterestDef("🐻 FNAF", "FNAF", InterestCategory.GAMES, R.drawable.interest_fnaf, "five nights at freddys horror"),
 )
