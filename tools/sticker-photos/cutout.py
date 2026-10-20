@@ -52,7 +52,11 @@ def main():
         try:
             img = Image.open(io.BytesIO(get(big_url(p)))).convert("RGB")
             img.thumbnail((SIZE, SIZE))
-            cut = remove(img, session=session, post_process_mask=True)
+            if p.get("nocut"):
+                # flache Motive (Karte, Comic-Seiten …): ganzes Foto, kein Freistellen
+                cut = img.convert("RGBA")
+            else:
+                cut = remove(img, session=session, post_process_mask=True)
             box = cut.getchannel("A").point(lambda a: 255 if a > 20 else 0).getbbox()
             if box:
                 cut = cut.crop(box)
