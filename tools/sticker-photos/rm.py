@@ -261,3 +261,45 @@ def sd_slab(q, w, h, t, rc, re):
     d2 = sd_box2(q[:, 0], q[:, 1], w - rc, h - rc) - rc
     wx, wy = d2 + re, np.abs(q[:, 2]) - t + re
     return np.hypot(np.maximum(wx, 0), np.maximum(wy, 0)) + np.minimum(np.maximum(wx, wy), 0) - re
+
+
+def sd_tri2(px, py, a, b, c):
+    """2D-Dreieck (IQ), Ecken a,b,c als (x,y)."""
+    a, b, c = (np.asarray(v, float) for v in (a, b, c))
+    e0, e1, e2 = b - a, c - b, a - c
+    v0x, v0y = px - a[0], py - a[1]
+    v1x, v1y = px - b[0], py - b[1]
+    v2x, v2y = px - c[0], py - c[1]
+
+    def proj(vx, vy, e):
+        h = np.clip((vx * e[0] + vy * e[1]) / (e @ e), 0, 1)
+        return vx - e[0] * h, vy - e[1] * h
+    p0 = proj(v0x, v0y, e0); p1 = proj(v1x, v1y, e1); p2 = proj(v2x, v2y, e2)
+    s = np.sign(e0[0] * e2[1] - e0[1] * e2[0])
+    d0 = (p0[0] ** 2 + p0[1] ** 2, s * (v0x * e0[1] - v0y * e0[0]))
+    d1 = (p1[0] ** 2 + p1[1] ** 2, s * (v1x * e1[1] - v1y * e1[0]))
+    d2 = (p2[0] ** 2 + p2[1] ** 2, s * (v2x * e2[1] - v2y * e2[0]))
+    dd = np.minimum(np.minimum(d0[0], d1[0]), d2[0])
+    ss = np.minimum(np.minimum(d0[1], d1[1]), d2[1])
+    return -np.sqrt(dd) * np.sign(ss)
+
+
+def sd_round_cone(p, a, b, r1, r2):
+    a, b = np.asarray(a, float), np.asarray(b, float)
+    ba = b - a
+    l2 = ba @ ba
+    rr = r1 - r2
+    a2 = l2 - rr * rr
+    il2 = 1.0 / l2
+    pa = p - a
+    y = pa @ ba
+    z = y - l2
+    xv = pa * l2 - y[:, None] * ba
+    x2 = (xv * xv).sum(-1)
+    y2 = y * y * l2
+    z2 = z * z * l2
+    k = np.sign(rr) * rr * rr * x2
+    out = np.where(np.sign(z) * a2 * z2 > k, np.sqrt(x2 + z2) * il2 - r2,
+                   np.where(np.sign(y) * a2 * y2 < k, np.sqrt(x2 + y2) * il2 - r1,
+                            (np.sqrt(x2 * a2 * il2) + y * rr) * il2 - r1))
+    return out

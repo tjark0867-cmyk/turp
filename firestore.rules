@@ -34,7 +34,7 @@ service cloud.firestore {
              .hasOnly(['name', 'bio', 'interests', 'photos', 'videoUrl', 'color'])
         && request.resource.data.name is string
         && request.resource.data.name.size() >= 2 && request.resource.data.name.size() <= 30
-        && request.resource.data.bio is string && request.resource.data.bio.size() <= 300
+        && request.resource.data.bio is string && request.resource.data.bio.size() <= 500
         && request.resource.data.interests is list && request.resource.data.interests.size() <= 8
         // Fotos dürfen nur umsortiert oder entfernt werden – neue kommen über den Server (geprüft)
         && request.resource.data.photos is list

@@ -134,7 +134,7 @@ fun ProfileStory(
                 )
             }
             StoryPage.Info -> {
-                // Hintergrund: dasselbe Foto wie auf Seite 1, klar erkennbar, nur etwas dunkler
+                // Hintergrund: dasselbe Foto wie auf Seite 1, stark abgedunkelt, damit Bio und Sticker wirken
                 profile.photos.firstOrNull()?.let { url ->
                     AsyncImage(
                         model = url,
@@ -146,12 +146,12 @@ fun ProfileStory(
                 Box(
                     Modifier
                         .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.38f))
+                        .background(Color.Black.copy(alpha = 0.72f))
                         .background(
                             Brush.verticalGradient(
-                                0.0f to Color.Black.copy(alpha = 0.18f),
+                                0.0f to Color.Black.copy(alpha = 0.25f),
                                 0.45f to Color.Transparent,
-                                1.0f to Color.Black.copy(alpha = 0.30f)
+                                1.0f to Color.Black.copy(alpha = 0.35f)
                             )
                         )
                 )
@@ -199,7 +199,7 @@ private fun StoryBars(count: Int, current: Int, modifier: Modifier = Modifier) {
 /** Leichter Schatten, damit weiße Schrift auf jedem Foto lesbar bleibt */
 private val TextOnPhoto = TextStyle(shadow = Shadow(Color.Black.copy(alpha = 0.7f), Offset(0f, 2f), 10f))
 
-/** Seite 2: Bio groß und gut lesbar, darunter die Interessen als Sticker */
+/** Seite 2: Bio kompakt (Platz für längere Texte), darunter die Interessen als Sticker */
 @Composable
 private fun InfoPage(
     profile: UserProfile,
@@ -216,20 +216,20 @@ private fun InfoPage(
     ) {
         val bio = profile.bio.trim()
         if (bio.isNotEmpty()) {
-            val long = bio.length > 160
+            val long = bio.length > 200
             Text(
                 text = bio,
                 color = Color.White,
-                fontSize = if (long) 18.sp else 22.sp,
-                lineHeight = if (long) 25.sp else 30.sp,
-                fontWeight = FontWeight.Bold,
+                fontSize = if (long) 14.sp else 16.sp,
+                lineHeight = if (long) 20.sp else 22.sp,
+                fontWeight = FontWeight.Medium,
                 style = TextOnPhoto,
             )
         } else {
             Text(
                 text = "${profile.name} hat noch nichts über sich geschrieben.",
                 color = Color.White.copy(alpha = 0.7f),
-                fontSize = 17.sp,
+                fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
                 style = TextOnPhoto,
             )

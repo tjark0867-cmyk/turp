@@ -702,7 +702,7 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
                 Box(Modifier.padding(horizontal = 14.dp, vertical = 12.dp)) {
                     BasicTextField(
                         value = bio,
-                        onValueChange = { bio = it.take(300) },
+                        onValueChange = { bio = it.take(500) },
                         textStyle = TextStyle(color = TextHigh, fontSize = 15.sp, lineHeight = 21.sp),
                         cursorBrush = SolidColor(Teal),
                         modifier = Modifier
@@ -712,7 +712,7 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
                     if (bio.isEmpty()) Text("Erzähl etwas über dich …", color = TextLow, fontSize = 15.sp)
                 }
                 Text(
-                    "${bio.length}/300",
+                    "${bio.length}/500",
                     color = TextLow,
                     fontSize = 11.sp,
                     modifier = Modifier
