@@ -1,0 +1,282 @@
+281|Je kunt gems kopen zodra je kumi uit de Play Store hebt. Tot die tijd: gratis gems via uitnodigingen en dagelijkse beloningen 👇
+282|Prijzen incl. btw. Betaling via Google Play.
+283|Onder de 18 kun je maximaal € 30 per maand uitgeven – vraag het liefst eerst aan je ouders.
+284|Gratis gems
+285|😊 Vrienden uitnodigen
+286|Per persoon die zich aanmeldt met jouw code {0}
+287|Uitnodigen
+288|Dagelijkse beloning
+289|Haal elke dag gratis gems – hoe langer je streak, hoe meer je krijgt.
+290|Dubbel met kumi+!
+291|= {0} verzoeken
+292|Dag {0}
+293|Ophalen · +{0} 💎
+294|Volgende beloning over %02d:%02d:%02d ⏰
+295|Chats 💬
+296|Nog geen chats
+297|Zodra iemand je verzoek accepteert, kunnen jullie hier chatten.
+298|Mensen ontdekken
+299|Testchat met de kumi-bot
+300|Starten
+301|Chat gesloten
+302|Geblokkeerd. Jullie kunnen elkaar geen berichten meer sturen.
+303|Online
+304|Laatst online {0}
+305|Te kort – praat iets langer.
+306|Opnemen niet mogelijk.
+307|Sorry, zonder microfoontoestemming werkt het niet.
+308|Profiel bekijken
+309|Deze chat is gesloten.
+310|🛡️ Deel nooit je adres, wachtwoorden of naaktfoto's, en spreek nooit alleen af met mensen van internet. Houd een bericht ingedrukt om het te melden.
+311|[Spraakbericht]
+312|[Foto]
+313|Jullie kunnen elkaar dan niet meer zien of berichten sturen, en de chat wordt gesloten. Je kunt altijd deblokkeren in de instellingen onder "Geblokkeerde gebruikers".
+314|Controle
+315|🚫 Foto is geblokkeerd
+316|📷 Foto wordt gecontroleerd…
+317|Dit duurt langer dan normaal.
+318|Opnieuw proberen
+319|Bijna klaar!
+320|Deze kumi-versie is nog niet verbonden met je Firebase-project. Zet het bestand google-services.json in de map app/ en bouw de app opnieuw. De stappen staan in de README.
+321|Account geblokkeerd
+322|Je account is geblokkeerd omdat het onze regels heeft overtreden. Denk je dat dit een fout is, neem dan contact op met het kumi-team.
+323|Vul eerst je e-mailadres in.
+324|We hebben je een e-mail gestuurd om je wachtwoord te resetten.
+325|Inloggen met Google wordt nog ingesteld – gebruik voorlopig je e-mail.
+326|Er is geen Google-account ingesteld op deze telefoon.
+327|Inloggen met Google is niet gelukt – probeer het opnieuw.
+328|Inloggen met Google is niet gelukt.
+329|Vind vrienden die van dezelfde dingen houden als jij.
+330|Doorgaan met Google
+331|Doorgaan met e-mail
+332|Vanaf 13 · Gouden regel: wees altijd aardig. 💛
+333|Maak je account aan met e-mail
+334|Welkom terug!
+335|Nieuw hier
+336|Inloggen
+337|E-mail
+338|Wachtwoord (min. 6 tekens)
+339|Wachtwoord
+340|Account maken
+341|Wachtwoord vergeten?
+342|Hoe heet je?
+343|Voornaam of bijnaam – zo zien anderen je.
+344|Wanneer ben je jarig?
+345|Je leeftijd bepaalt wie je op kumi ontmoet. Die kan later niet worden aangepast.
+346|Maand
+347|Jaar
+348|Deze datum bestaat niet.
+349|kumi is pas toegestaan vanaf 13 jaar.
+350|Controleer het jaar nog eens.
+351|🎂  Je bent {0}
+352|🛡️ Je komt in de tienercommunity (13–17). Daar ontmoet je alleen mensen van je eigen leeftijd – volwassenen kunnen je niet zien of berichten sturen.
+353|👨‍👩‍👧 Omdat je jonger bent dan 16, moet een ouder toestemming geven. We sturen een e-mail naar dit adres.
+354|E-mail van een ouder
+355|Ik ben …
+356|Zo vinden de juiste mensen je in de zoekfunctie.
+357|✓ Zeg ik liever niet
+358|Zeg ik liever niet
+359|Waar woon je?
+360|Zo vind je sneller mensen bij jou in de buurt.
+361|tik om te wijzigen
+362|Uitnodigingscode
+363|🎁  Ik heb een uitnodigingscode
+364|Ik ga akkoord met de gebruiksvoorwaarden en het privacybeleid en houd me aan de gouden regel: wees altijd aardig.
+365|Aan de slag
+366|E-mail verstuurd ✉️
+367|We hebben een e-mail gestuurd naar {0}. Zodra een ouder akkoord gaat, kun je beginnen – de app werkt zichzelf bij.
+368|Ander e-mailadres van een ouder (optioneel)
+369|E-mail opnieuw sturen
+370|Games
+371|Muziek
+372|Sport
+373|Creatief
+374|Films & anime
+375|Lifestyle
+376|Kennis
+377|Gaming
+378|Voetbal
+379|Tekenen
+380|Films
+381|Koken
+382|Lezen
+383|Bordspellen
+384|Zingen
+385|Basketbal
+386|Fotografie
+387|Series
+388|Dieren
+389|Programmeren
+390|Retrogames
+391|Instrumenten
+392|Fitness
+393|Schrijven
+394|Anime
+395|Natuur
+396|Wetenschap
+397|Shooters
+398|Rap
+399|Skaten
+400|Theater
+401|Horror
+402|Reizen
+403|Talen
+404|RPG's
+405|Pop
+406|Dansen
+407|Haken & breien
+408|Superhelden
+409|Mode
+410|Ruimte
+411|Racegames
+412|Rock
+413|Yoga
+414|Naaien
+415|Documentaires
+416|Memes
+417|Geschiedenis
+418|Puzzels
+419|Metal
+420|Zwemmen
+421|Knutselen
+422|K-drama's
+423|Podcasts
+424|Psychologie
+425|Schaken
+426|Piano
+427|Fietsen
+428|Video's maken
+429|Manga
+430|Katten
+431|Tech & AI
+432|Kaartspellen
+433|Drums
+434|Volleybal
+435|Kunst
+436|Sciencefiction
+437|Honden
+438|Wiskunde
+439|Mobiele games
+440|Klassiek
+441|Tennis
+442|Pottenbakken
+443|Fantasy
+444|Paarden
+445|Biologie
+446|PC-gaming
+447|Techno
+448|Boksen
+449|Goocheltrucs
+450|Romantiek
+451|Dinosaurussen
+452|Filosofie
+453|E-sports
+454|Vechtsporten
+455|Journaling
+456|True crime
+457|Reptielen
+458|Financiën
+459|Muziek maken
+460|IJshockey
+461|Cosplay
+462|Streams
+463|Foodie
+464|Architectuur
+465|Tafeltennis
+466|Digitale kunst
+467|Bakken
+468|Milieu
+469|Paardrijden
+470|Design
+471|Koffie
+472|Klimmen
+473|Bubble tea
+474|Hardlopen
+475|Vegan
+476|Skiën
+477|Shoppen
+478|Surfen
+479|Sneakers
+480|Turnen
+481|Make-up
+482|American football
+483|Astrologie
+484|Formule 1
+485|Kamperen
+486|Handbal
+487|Chillen
+488|Vissen
+489|Feesten
+490|Badminton
+491|Auto's
+492|Motoren
+493|Planten
+494|De Sims
+495|The Simpsons
+496|Chats
+497|Intimidatie of pesten
+498|Seksuele inhoud
+499|Verkeerde leeftijd / nepprofiel
+500|Spam of oplichting
+501|Geweld of bedreiging
+502|Iets anders
+503|Log in.
+504|Je account is nog niet geactiveerd.
+505|Alleen voor admins.
+506|Vul een naam in van minstens 2 tekens.
+507|Vul een geldige geboortedatum in.
+508|Kies je land.
+509|Je moet minstens 13 jaar zijn om kumi te gebruiken.
+510|Vul het e-mailadres van een ouder in.
+511|Het e-mailadres van je ouder moet anders zijn dan dat van jou.
+512|Je hebt al een profiel.
+513|Je account heeft geen toestemming nodig.
+514|Wacht een paar minuten voordat je de e-mail opnieuw stuurt.
+515|Vul een geldig e-mailadres in.
+516|E-mails versturen is nog niet ingesteld. Neem contact op met het kumi-team.
+517|Geen admin-toegang voor dit account.
+518|Bevestig eerst je e-mailadres.
+519|Ongeldige actie.
+520|Melding niet gevonden.
+521|Deze vriendschap is niet mogelijk.
+522|Ongeldige persoon.
+523|Start de app opnieuw.
+524|Dit profiel is nu niet beschikbaar.
+525|Jullie zijn al vrienden.
+526|Je hebt al een verzoek gestuurd.
+527|Een verzoek is hier nu niet mogelijk.
+528|Niet genoeg gems – een verzoek kost {0} 💎. Haal er meer met de dagelijkse check-in of in de shop!
+529|Ongeldig verzoek.
+530|Dit verzoek bestaat niet meer.
+531|Account niet gevonden.
+532|Je hebt vandaag al ingecheckt. Tot morgen! 👋
+533|Ongeldig bestand.
+534|Upload niet gevonden. Probeer het opnieuw.
+535|Bestandstype of -grootte klopt niet.
+536|Je kunt maximaal {0} foto's hebben.
+537|De automatische controle is nu niet bereikbaar. Probeer het later opnieuw.
+538|Dit is in strijd met onze regels en is niet geüpload.
+539|Bestand niet gevonden.
+540|Het bericht is leeg.
+541|Slow mode: wacht nog {0} seconden.
+542|Profiel niet gevonden.
+543|Aankopen zijn nog niet geactiveerd op de server. Geen zorgen: de aankoop wordt bijgeschreven bij de volgende keer dat je de app opent.
+544|Google kent deze aankoop niet.
+545|Google Play is nu niet bereikbaar. De aankoop wordt afgerond bij de volgende keer dat je de app opent.
+546|Onbekend product.
+547|Onder de 18 kun je maximaal € {0} per maand uitgeven op kumi. Volgende maand kun je weer kopen.
+548|Ongeldige aankoop.
+549|Deze aankoop is geannuleerd.
+550|Deze aankoop hoort bij een ander account.
+551|Dit abonnement hoort bij een ander account.
+552|📷 Foto
+553|📷 Foto (geblokkeerd)
+554|🎤 Spraakbericht
+555|Jullie zijn nu vrienden 🎉
+556|{name} heeft jou ook toegevoegd. Zeg hoi!
+557|Nieuw vriendschapsverzoek 👋
+558|{name} wil vrienden met je worden.
+559|Verzoek geaccepteerd 🎉
+560|{name} heeft je verzoek geaccepteerd. Zeg hoi!
+561|Gefeliciteerd! 🎂
+562|Je bent nu 18 en gaat over naar de volwassenencommunity van kumi.

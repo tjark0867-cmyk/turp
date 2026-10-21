@@ -1,0 +1,282 @@
+281|Kamu bisa beli gem setelah punya kumi dari Play Store. Sampai saat itu: gem gratis lewat undangan dan hadiah harian 👇
+282|Harga sudah termasuk pajak. Pembayaran lewat Google Play.
+283|Di bawah 18 tahun kamu bisa belanja maksimal 30 € per bulan – sebaiknya tanya orang tuamu dulu.
+284|Gem gratis
+285|😊 Undang teman
+286|Per orang yang mendaftar dengan kodemu {0}
+287|Undang
+288|Hadiah harian
+289|Ambil gem gratis setiap hari – makin panjang streak-mu, makin banyak yang kamu dapat.
+290|Dobel dengan kumi+!
+291|= {0} permintaan
+292|Hari {0}
+293|Ambil · +{0} 💎
+294|Hadiah berikutnya dalam %02d:%02d:%02d ⏰
+295|Chat 💬
+296|Belum ada chat
+297|Begitu ada yang menerima permintaanmu, kalian bisa ngobrol di sini.
+298|Jelajahi orang
+299|Chat uji coba dengan bot kumi
+300|Mulai
+301|Chat ditutup
+302|Diblokir. Kalian tidak bisa saling mengirim pesan lagi.
+303|Online
+304|Terakhir online {0}
+305|Terlalu pendek – bicara sedikit lebih lama.
+306|Tidak bisa merekam.
+307|Maaf, tanpa izin mikrofon ini tidak bisa jalan.
+308|Lihat profil
+309|Chat ini sudah ditutup.
+310|🛡️ Jangan pernah membagikan alamat, kata sandi, atau foto telanjang, dan jangan pernah bertemu sendirian dengan orang dari internet. Tekan lama pesan untuk melaporkannya.
+311|[Pesan suara]
+312|[Foto]
+313|Kalian tidak akan bisa saling melihat atau mengirim pesan lagi, dan chat akan ditutup. Kamu bisa membuka blokir kapan saja di pengaturan di bagian "Pengguna yang diblokir".
+314|Memeriksa
+315|🚫 Foto diblokir
+316|📷 Memeriksa foto…
+317|Ini lebih lama dari biasanya.
+318|Coba lagi
+319|Hampir selesai!
+320|Versi kumi ini belum terhubung ke proyek Firebase kamu. Taruh file google-services.json di folder app/ dan build ulang aplikasinya. Langkah-langkahnya ada di README.
+321|Akun diblokir
+322|Akunmu diblokir karena melanggar aturan kami. Kalau menurutmu ini kesalahan, hubungi tim kumi.
+323|Masukkan alamat email kamu dulu.
+324|Kami sudah mengirim email untuk mengatur ulang kata sandi.
+325|Login Google sedang disiapkan – pakai email kamu dulu ya.
+326|Tidak ada akun Google di ponsel ini.
+327|Login Google gagal – coba lagi.
+328|Login Google gagal.
+329|Temukan teman yang suka hal yang sama denganmu.
+330|Lanjut dengan Google
+331|Lanjut dengan email
+332|Usia 13+ · Aturan emas: selalu bersikap baik. 💛
+333|Buat akun dengan email
+334|Selamat datang kembali!
+335|Baru di sini
+336|Login
+337|Email
+338|Kata sandi (min. 6 karakter)
+339|Kata sandi
+340|Buat akun
+341|Lupa kata sandi?
+342|Siapa namamu?
+343|Nama depan atau panggilan – begitulah orang lain melihatmu.
+344|Kapan ulang tahunmu?
+345|Usiamu menentukan siapa yang kamu temui di kumi. Tidak bisa diubah nanti.
+346|Bulan
+347|Tahun
+348|Tanggal itu tidak ada.
+349|kumi hanya boleh digunakan mulai usia 13 tahun.
+350|Cek lagi tahunnya ya.
+351|🎂  Kamu {0} tahun
+352|🛡️ Kamu akan masuk komunitas remaja (13–17). Di sana kamu hanya bertemu orang seusiamu – orang dewasa tidak bisa melihat atau mengirimimu pesan.
+353|👨‍👩‍👧 Karena usiamu di bawah 16 tahun, orang tua harus memberi izin. Kami akan mengirim email ke alamat ini.
+354|Email orang tua
+355|Saya …
+356|Supaya orang yang tepat bisa menemukanmu di pencarian.
+357|✓ Tidak ingin menyebutkan
+358|Lebih baik tidak kusebutkan
+359|Kamu tinggal di mana?
+360|Supaya kamu lebih cepat menemukan orang di dekatmu.
+361|ketuk untuk mengubah
+362|Kode undangan
+363|🎁  Saya punya kode undangan
+364|Saya menyetujui ketentuan penggunaan dan kebijakan privasi serta mengikuti aturan emas: selalu bersikap baik.
+365|Ayo mulai
+366|Email terkirim ✉️
+367|Kami sudah mengirim email ke {0}. Begitu orang tua setuju, kamu bisa mulai – aplikasinya akan update sendiri.
+368|Email orang tua lainnya (opsional)
+369|Kirim ulang email
+370|Game
+371|Musik
+372|Olahraga
+373|Kreatif
+374|Film & anime
+375|Gaya hidup
+376|Pengetahuan
+377|Gaming
+378|Sepak bola
+379|Menggambar
+380|Film
+381|Memasak
+382|Membaca
+383|Board game
+384|Menyanyi
+385|Basket
+386|Fotografi
+387|Serial
+388|Hewan
+389|Coding
+390|Game retro
+391|Alat musik
+392|Fitness
+393|Menulis
+394|Anime
+395|Alam
+396|Sains
+397|Game tembak-tembakan
+398|Rap
+399|Skateboard
+400|Teater
+401|Horor
+402|Traveling
+403|Bahasa
+404|RPG
+405|Pop
+406|Menari
+407|Merajut
+408|Superhero
+409|Fashion
+410|Luar angkasa
+411|Game balap
+412|Rock
+413|Yoga
+414|Menjahit
+415|Dokumenter
+416|Meme
+417|Sejarah
+418|Teka-teki
+419|Metal
+420|Berenang
+421|Kerajinan tangan
+422|Drakor
+423|Podcast
+424|Psikologi
+425|Catur
+426|Piano
+427|Bersepeda
+428|Bikin video
+429|Manga
+430|Kucing
+431|Teknologi & AI
+432|Game kartu
+433|Drum
+434|Voli
+435|Seni
+436|Fiksi ilmiah
+437|Anjing
+438|Matematika
+439|Game HP
+440|Musik klasik
+441|Tenis
+442|Gerabah
+443|Fantasi
+444|Kuda
+445|Biologi
+446|Gaming PC
+447|Techno
+448|Tinju
+449|Sulap
+450|Romansa
+451|Dinosaurus
+452|Filsafat
+453|E-sport
+454|Bela diri
+455|Journaling
+456|True crime
+457|Reptil
+458|Keuangan
+459|Bikin musik
+460|Hoki es
+461|Cosplay
+462|Streaming
+463|Kuliner
+464|Arsitektur
+465|Tenis meja
+466|Seni digital
+467|Membuat kue
+468|Lingkungan
+469|Berkuda
+470|Desain
+471|Kopi
+472|Panjat tebing
+473|Bubble tea
+474|Lari
+475|Vegan
+476|Ski
+477|Belanja
+478|Selancar
+479|Sneakers
+480|Senam
+481|Makeup
+482|Sepak bola Amerika
+483|Astrologi
+484|Formula 1
+485|Kemah
+486|Bola tangan
+487|Santai
+488|Memancing
+489|Pesta
+490|Bulu tangkis
+491|Mobil
+492|Motor
+493|Tanaman
+494|The Sims
+495|The Simpsons
+496|Chat
+497|Pelecehan atau perundungan
+498|Konten seksual
+499|Usia palsu / profil palsu
+500|Spam atau penipuan
+501|Kekerasan atau ancaman
+502|Lainnya
+503|Silakan login.
+504|Akunmu belum diaktifkan.
+505|Hanya untuk admin.
+506|Masukkan nama minimal 2 karakter.
+507|Masukkan tanggal lahir yang valid.
+508|Pilih negaramu.
+509|Kamu harus berusia minimal 13 tahun untuk memakai kumi.
+510|Masukkan alamat email orang tua.
+511|Email orang tua harus berbeda dari emailmu.
+512|Kamu sudah punya profil.
+513|Akunmu tidak memerlukan izin.
+514|Tunggu beberapa menit sebelum mengirim ulang email.
+515|Masukkan alamat email yang valid.
+516|Pengiriman email belum disiapkan. Hubungi tim kumi.
+517|Akun ini tidak punya akses admin.
+518|Konfirmasi alamat email kamu dulu.
+519|Tindakan tidak valid.
+520|Laporan tidak ditemukan.
+521|Pertemanan ini tidak memungkinkan.
+522|Orang tidak valid.
+523|Mulai ulang aplikasinya.
+524|Profil ini sedang tidak tersedia.
+525|Kalian sudah berteman.
+526|Kamu sudah mengirim permintaan.
+527|Permintaan tidak bisa dikirim di sini sekarang.
+528|Gem tidak cukup – satu permintaan butuh {0} 💎. Dapatkan lebih banyak lewat check-in harian atau di toko!
+529|Permintaan tidak valid.
+530|Permintaan ini sudah tidak ada.
+531|Akun tidak ditemukan.
+532|Kamu sudah check-in hari ini. Sampai besok! 👋
+533|File tidak valid.
+534|Unggahan tidak ditemukan. Coba lagi.
+535|Jenis atau ukuran file tidak sesuai.
+536|Kamu bisa punya maksimal {0} foto.
+537|Pemeriksaan otomatis sedang tidak bisa dihubungi. Coba lagi nanti.
+538|Ini melanggar aturan kami dan tidak diunggah.
+539|File tidak ditemukan.
+540|Pesannya kosong.
+541|Mode lambat: tunggu {0} detik lagi.
+542|Profil tidak ditemukan.
+543|Pembelian belum diaktifkan di server. Tenang: pembelian akan masuk saat kamu membuka aplikasi lagi.
+544|Google tidak mengenali pembelian ini.
+545|Google Play sedang tidak bisa dihubungi. Pembelian akan diselesaikan saat kamu membuka aplikasi lagi.
+546|Produk tidak dikenal.
+547|Di bawah 18 tahun kamu bisa belanja maksimal {0} € per bulan di kumi. Bulan depan kamu bisa beli lagi.
+548|Pembelian tidak valid.
+549|Pembelian ini dibatalkan.
+550|Pembelian ini milik akun lain.
+551|Langganan ini milik akun lain.
+552|📷 Foto
+553|📷 Foto (diblokir)
+554|🎤 Pesan suara
+555|Kalian sekarang berteman 🎉
+556|{name} juga menambahkanmu. Sapa dia!
+557|Permintaan pertemanan baru 👋
+558|{name} ingin berteman denganmu.
+559|Permintaan diterima 🎉
+560|{name} menerima permintaanmu. Sapa dia!
+561|Selamat ulang tahun! 🎂
+562|Sekarang kamu 18 tahun dan pindah ke komunitas dewasa kumi.

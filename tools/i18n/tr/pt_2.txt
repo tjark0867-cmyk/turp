@@ -1,0 +1,282 @@
+281|Você vai poder comprar gems quando tiver o kumi da Play Store. Até lá: gems grátis com convites e recompensas diárias 👇
+282|Preços com impostos inclusos. Pagamento pelo Google Play.
+283|Com menos de 18 anos você pode gastar no máximo 30 € por mês – melhor perguntar antes aos seus pais.
+284|Gems grátis
+285|😊 Convidar amigos
+286|Por pessoa que se cadastrar com seu código {0}
+287|Convidar
+288|Recompensa diária
+289|Ganhe gems grátis todo dia – quanto maior sua sequência, mais você ganha.
+290|Em dobro com kumi+!
+291|= {0} pedidos
+292|Dia {0}
+293|Resgatar · +{0} 💎
+294|Próxima recompensa em %02d:%02d:%02d ⏰
+295|Chats 💬
+296|Nenhum chat ainda
+297|Assim que alguém aceitar seu pedido, vocês podem conversar aqui.
+298|Descobrir pessoas
+299|Chat de teste com o bot do kumi
+300|Começar
+301|Chat encerrado
+302|Bloqueado. Vocês não podem mais trocar mensagens.
+303|Online
+304|Online {0}
+305|Curto demais – fale um pouco mais.
+306|Não foi possível gravar.
+307|Desculpe, não funciona sem permissão do microfone.
+308|Ver perfil
+309|Este chat está encerrado.
+310|🛡️ Nunca compartilhe seu endereço, senhas ou fotos íntimas, e nunca encontre sozinho pessoas da internet. Segure uma mensagem para denunciá-la.
+311|[Mensagem de voz]
+312|[Foto]
+313|Vocês não vão mais poder se ver nem trocar mensagens, e o chat será encerrado. Você pode desbloquear quando quiser nas configurações, em "Usuários bloqueados".
+314|Verificando
+315|🚫 A foto foi bloqueada
+316|📷 Verificando foto…
+317|Está demorando mais do que o normal.
+318|Tentar de novo
+319|Quase pronto!
+320|Esta versão do kumi ainda não está conectada ao seu projeto Firebase. Coloque o arquivo google-services.json na pasta app/ e compile o app de novo. Os passos estão no README.
+321|Conta banida
+322|Sua conta foi banida porque violou nossas regras. Se você acha que foi um erro, fale com a equipe do kumi.
+323|Primeiro digite seu e-mail.
+324|Mandamos um e-mail para redefinir sua senha.
+325|O login com Google está sendo configurado – use seu e-mail por enquanto.
+326|Não há nenhuma conta Google configurada neste celular.
+327|O login com Google não funcionou – tente de novo.
+328|O login com Google não funcionou.
+329|Encontre amigos que amam as mesmas coisas que você.
+330|Continuar com Google
+331|Continuar com e-mail
+332|A partir de 13 anos · Regra de ouro: seja sempre gentil. 💛
+333|Crie sua conta com e-mail
+334|Que bom te ver de novo!
+335|Sou novo
+336|Entrar
+337|E-mail
+338|Senha (mín. 6 caracteres)
+339|Senha
+340|Criar conta
+341|Esqueceu a senha?
+342|Como você se chama?
+343|Nome ou apelido – é assim que os outros vão te ver.
+344|Quando é seu aniversário?
+345|Sua idade define quem você conhece no kumi. Não dá para mudar depois.
+346|Mês
+347|Ano
+348|Essa data não existe.
+349|O kumi só é permitido a partir dos 13 anos.
+350|Confira o ano de novo.
+351|🎂  Você tem {0} anos
+352|🛡️ Você vai entrar na comunidade teen (13–17). Lá você só conhece pessoas da sua idade – adultos não podem te ver nem te mandar mensagem.
+353|👨‍👩‍👧 Como você tem menos de 16 anos, um responsável precisa autorizar. Vamos mandar um e-mail para este endereço.
+354|E-mail de um responsável
+355|Eu sou …
+356|Assim as pessoas certas te encontram na busca.
+357|✓ Prefiro não dizer
+358|Prefiro não dizer
+359|Onde você mora?
+360|Assim você encontra mais rápido pessoas perto de você.
+361|toque para mudar
+362|Código de convite
+363|🎁  Tenho um código de convite
+364|Aceito os termos de uso e a política de privacidade e sigo a regra de ouro: seja sempre gentil.
+365|Bora
+366|E-mail enviado ✉️
+367|Mandamos um e-mail para {0}. Assim que um responsável autorizar, você pode começar – o app atualiza sozinho.
+368|Outro e-mail de responsável (opcional)
+369|Enviar e-mail de novo
+370|Jogos
+371|Música
+372|Esporte
+373|Criativo
+374|Filmes e anime
+375|Lifestyle
+376|Conhecimento
+377|Games
+378|Futebol
+379|Desenhar
+380|Filmes
+381|Cozinhar
+382|Ler
+383|Jogos de tabuleiro
+384|Cantar
+385|Basquete
+386|Fotografia
+387|Séries
+388|Animais
+389|Programar
+390|Jogos retrô
+391|Instrumentos
+392|Fitness
+393|Escrever
+394|Anime
+395|Natureza
+396|Ciência
+397|Jogos de tiro
+398|Rap
+399|Skate
+400|Teatro
+401|Terror
+402|Viajar
+403|Idiomas
+404|RPGs
+405|Pop
+406|Dançar
+407|Crochê e tricô
+408|Super-heróis
+409|Moda
+410|Espaço
+411|Jogos de corrida
+412|Rock
+413|Yoga
+414|Costura
+415|Documentários
+416|Memes
+417|História
+418|Quebra-cabeças
+419|Metal
+420|Natação
+421|Artesanato
+422|K-dramas
+423|Podcasts
+424|Psicologia
+425|Xadrez
+426|Piano
+427|Ciclismo
+428|Fazer vídeos
+429|Mangá
+430|Gatos
+431|Tecnologia e IA
+432|Jogos de cartas
+433|Bateria
+434|Vôlei
+435|Arte
+436|Ficção científica
+437|Cachorros
+438|Matemática
+439|Jogos de celular
+440|Música clássica
+441|Tênis
+442|Cerâmica
+443|Fantasia
+444|Cavalos
+445|Biologia
+446|Games de PC
+447|Techno
+448|Boxe
+449|Truques de mágica
+450|Romance
+451|Dinossauros
+452|Filosofia
+453|eSports
+454|Artes marciais
+455|Journaling
+456|True crime
+457|Répteis
+458|Finanças
+459|Fazer música
+460|Hóquei no gelo
+461|Cosplay
+462|Lives
+463|Foodie
+464|Arquitetura
+465|Tênis de mesa
+466|Arte digital
+467|Confeitaria
+468|Meio ambiente
+469|Equitação
+470|Design
+471|Café
+472|Escalada
+473|Bubble tea
+474|Corrida
+475|Vegano
+476|Esqui
+477|Compras
+478|Surfe
+479|Sneakers
+480|Ginástica
+481|Maquiagem
+482|Futebol americano
+483|Astrologia
+484|Fórmula 1
+485|Camping
+486|Handebol
+487|De boa
+488|Pesca
+489|Festas
+490|Badminton
+491|Carros
+492|Motos
+493|Plantas
+494|The Sims
+495|Os Simpsons
+496|Chats
+497|Assédio ou bullying
+498|Conteúdo sexual
+499|Idade falsa / perfil falso
+500|Spam ou golpe
+501|Violência ou ameaças
+502|Outro
+503|Faça login.
+504|Sua conta ainda não está ativada.
+505|Só para admins.
+506|Digite um nome com pelo menos 2 caracteres.
+507|Digite uma data de nascimento válida.
+508|Escolha seu país.
+509|Você precisa ter pelo menos 13 anos para usar o kumi.
+510|Digite o e-mail de um responsável.
+511|O e-mail do responsável precisa ser diferente do seu.
+512|Você já tem um perfil.
+513|Sua conta não precisa de autorização.
+514|Espere alguns minutos antes de enviar o e-mail de novo.
+515|Digite um e-mail válido.
+516|O envio de e-mails ainda não está configurado. Fale com a equipe do kumi.
+517|Esta conta não tem acesso de admin.
+518|Confirme seu e-mail primeiro.
+519|Ação inválida.
+520|Denúncia não encontrada.
+521|Essa amizade não é possível.
+522|Pessoa inválida.
+523|Reinicie o app.
+524|Este perfil não está disponível agora.
+525|Vocês já são amigos.
+526|Você já mandou um pedido.
+527|Não é possível mandar um pedido aqui agora.
+528|Gems insuficientes – um pedido custa {0} 💎. Ganhe mais com o check-in diário ou na loja!
+529|Pedido inválido.
+530|Este pedido não existe mais.
+531|Conta não encontrada.
+532|Você já fez o check-in hoje. Até amanhã! 👋
+533|Arquivo inválido.
+534|Envio não encontrado. Tente de novo.
+535|Tipo ou tamanho do arquivo não é compatível.
+536|Você pode ter no máximo {0} fotos.
+537|A verificação automática não está disponível agora. Tente de novo mais tarde.
+538|Isso viola nossas regras e não foi enviado.
+539|Arquivo não encontrado.
+540|A mensagem está vazia.
+541|Modo lento: espere mais {0} segundos.
+542|Perfil não encontrado.
+543|As compras ainda não estão ativadas no servidor. Fica tranquilo: a compra será creditada na próxima vez que você abrir o app.
+544|O Google não reconhece esta compra.
+545|O Google Play não está disponível agora. A compra será concluída na próxima vez que você abrir o app.
+546|Produto desconhecido.
+547|Com menos de 18 anos você pode gastar no máximo {0} € por mês no kumi. No mês que vem você pode comprar de novo.
+548|Compra inválida.
+549|Esta compra foi cancelada.
+550|Esta compra pertence a outra conta.
+551|Esta assinatura pertence a outra conta.
+552|📷 Foto
+553|📷 Foto (bloqueada)
+554|🎤 Mensagem de voz
+555|Vocês agora são amigos 🎉
+556|{name} também te adicionou. Diga oi!
+557|Novo pedido de amizade 👋
+558|{name} quer ser seu amigo.
+559|Pedido aceito 🎉
+560|{name} aceitou seu pedido. Diga oi!
+561|Feliz aniversário! 🎂
+562|Agora você tem 18 anos e vai para a comunidade adulta do kumi.

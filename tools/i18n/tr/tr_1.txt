@@ -1,0 +1,281 @@
+0|Mesajlar ve istekler
+1|Yeni mesajlar ve arkadaşlık istekleri
+2|Popüler
+3|En iyi fiyat
+4|Satın alma başlatılamadı.
+5|Google Play bağlı değil.
+6|Satın almalar yalnızca Play Store'daki kumi ile çalışır.
+7|Satın alma başlatılamadı ({0}).
+8|Satın alma başarısız oldu ({0}). Hiçbir ücret alınmadı.
+9|Bu giriş yöntemi henüz etkin değil – şimdilik e-postanı kullan.
+10|Sunucu hatası – birazdan tekrar dene.
+11|Sunucuya ulaşılamıyor – birazdan tekrar dene.
+12|Bunu yapma iznin yok.
+13|Bu özellik şu anda kullanılamıyor.
+14|Bir şeyler ters gitti.
+15|Şifre çok zayıf (en az 6 karakter).
+16|Bu e-posta zaten kayıtlı. Giriş yap.
+17|Bu e-postayla aktif bir hesap bulunamadı.
+18|E-posta veya şifre yanlış.
+19|İnternet bağlantısı yok.
+20|Kaydedilemedi – tekrar dene.
+21|Yüklenemedi – tekrar dene.
+22|Geçersiz giriş.
+23|Görsel okunamadı.
+24|Bilinmiyor
+25|Video en fazla 30 saniye olabilir.
+26|Video çok büyük (en fazla 40 MB).
+27|Test sohbeti başlatılamadı.
+28|İndirme başarısız (hata {0}).
+29|Güncellemeler yalnızca GitHub sürümü için mevcut.
+30|Zaten en yeni sürüme sahipsin ✅
+31|Bir mesaj yaz…
+32|Fotoğraf çek
+33|Fotoğraf gönder
+34|Sesli mesaj kaydet
+35|Gönder
+36|Ülke seç
+37|Ara…
+38|Tüm ülkeler
+39|Kapat
+40|Özel renk
+41|{0} kişisini bildir
+42|Ne oldu? (isteğe bağlı)
+43|Bildirimin anonimdir. Tehlikedeysen güvendiğin bir yetişkinle de konuş veya polisi ara.
+44|Bildir
+45|İptal
+46|Fotoğraf
+47|Üzgünüz, kamera izni olmadan çalışmıyor.
+48|Kamera şu anda kullanılamıyor.
+49|Fotoğraf çekilemedi.
+50|Kamerayı değiştir
+51|Fotoğraf çekildi
+52|Tekrar çek
+53|Seçildi
+54|Aramayı temizle
+55|Tümü
+56|Böyle bir ilgi alanı henüz yok 🤔
+57|Kaldır
+58|Ortak
+59|{0} henüz kendisi hakkında bir şey yazmadı.
+60|İlgi alanları
+61|🤖 Test profili
+62|dün
+63|şimdi
+64|{0} dk
+65|{0} sa
+66|1 gün
+67|{0} gün
+68|{0} g
+69|7 g+
+70|{0} dk önce
+71|{0} sa önce
+72|1 gün önce
+73|{0} gün önce
+74|{0} tarihinde
+75|Bugün
+76|Dün
+77|Duraklat
+78|Oynat
+79|At
+80|Kaydediliyor …
+81|{0} artık engelli değil.
+82|Geri
+83|Engellenen kullanıcılar
+84|Kimse engellenmedi
+85|Birini engellediğinde burada görünür – istediğin zaman engeli kaldırabilirsin.
+86|Engellenen kişiler seni göremez ve sana yazamaz. Birinin engelini kaldırırsan seni yeniden bulabilir ve istek gönderebilir.
+87|{0} seni Keşfet'te yeniden görebilir ve istek gönderebilir. Önceki arkadaşlık otomatik olarak geri gelmez.
+88|Engeli kaldır
+89|Engellendi · {0}
+90|Lisanslar
+91|İlgi alanı çıkartmalarının çoğu kendi tasarımımız, bazıları Wikimedia Commons'taki serbest fotoğraflara dayanıyor. Çıkartmalar için fotoğraflar kesildi, kırpıldı ve kenarlık eklendi. "CC BY-SA" lisanslı fotoğraflara dayanan çıkartmalar aynı lisansa sahiptir. Burada kaydı olmayan fotoğraflar kamu malıdır (CC0 / Public Domain) ya da bize aittir. Kaynağı açmak için dokun.
+92|Fotoğraf: {0} · {1}
+93|bilinmiyor
+94|Keşfet
+95|Teşekkürler! Ekibimiz buna bakacak. 💛
+96|🤖 {0} hemen kabul etti – sohbetlerine bak!
+97|🎉 Artık arkadaşsınız – {0} da sana istek göndermişti!
+98|👋 {0} kişisine istek gönderildi
+99|Arama ayarları
+100|Başkalarının seni görebilmesi için bir fotoğraf ekle.
+101|Düzenle
+102|Profiller yükleniyor
+103|Şu anda aramana uyan kimse yok
+104|Başka ilgi alanları, başka bir ülke veya daha geniş bir yaş aralığı dene.
+105|Aramayı değiştir
+106|Tüm filtreleri sıfırla
+107|Şu anda yeni kimse yok
+108|Daha sonra tekrar gel veya arama ayarlarını değiştir.
+109|Geçilenleri tekrar göster
+110|İstek gönder
+111|Sonraki
+112|1 ortak nokta
+113|{0} ortak nokta
+114|Hesap engellendi.
+115|Bildirim reddedildi.
+116|Bildirimler
+117|Hepsi tamam
+118|Açık bildirim yok.
+119|Genç topluluğundan gelen bildirimler en üstte. 3 veya daha fazla kişi tarafından bildirilen profiller otomatik olarak gizlenir.
+120|Hesap hemen engellenir, Keşfet'ten kaldırılır ve tüm sohbetler kapatılır.
+121|Engelle
+122|Gençler 13–17
+123|Bildirilen: {0}
+124|Profil
+125|🎉 Sen ve {0} artık arkadaşsınız! +{1} 💎
+126|Arkadaşlar
+127|Tüm arkadaşlar
+128|Yeni arkadaşlar
+129|İstekler
+130|En yeni
+131|Henüz istek yok
+132|Biri seni eklemek istediğinde burada göreceksin.
+133|Yeni arkadaşlar bul
+134|Arkadaşlarını davet et: kişi başı +{0} 💎
+135|Gizle
+136|Paylaş
+137|Reddet
+138|Kabul et
+139|En iyi eşleşme
+140|Tüm arkadaşlar 👯
+141|İsimle ara
+142|Henüz arkadaş yok
+143|Kimse bulunamadı
+144|İstekleri kabul et veya Keşfet'te kendin gönder.
+145|Başka bir isim dene.
+146|🤖 Test botu
+147|Sohbet
+148|Dilini seç
+149|Daha sonra ayarlardan değiştirebilirsin.
+150|+{0} 💎 eklendi – teşekkürler! 💛
+151|kumi+ aktif ✨ Desteğin için teşekkürler!
+152|Ödeme bekleniyor – onaylanınca taşlar gelecek.
+153|Bir kez yeniden yükle
+154|kumi {0} yüklü sürümün yerini doğrudan alamıyor. Yeni sürümü indir, kumi'yi sil ve sonra yükle. Hesabın, arkadaşların ve sohbetlerin korunur – sadece tekrar giriş yapman yeterli.
+155|İndir
+156|Sonra
+157|Yeni sürüm mevcut
+158|kumi {0} çıktı.
+159|Yükleniyor … %{0}
+160|Şimdi güncelle
+161|Fotoğraf kontrol edildi ve eklendi ✨
+162|+{0} 💎 · {1} {2} seri 🔥
+163|gün
+164|gün
+165|Önce e-postanı onayla – sana bir bağlantı gönderdik. Sonra tekrar dokun.
+166|Admin erişimi etkinleştirildi 🛡️
+167|kumi'ye katıl ve yeni arkadaşlar bul! 🌍 Kayıt olurken kodumu {0} gir, 10 bonus taş kazan 💎
+168|kumi'yi paylaş
+169|Ayarlar
+170|Önizleme
+171|{0} medya
+172|Fotoğraf ekle
+173|Yükselt ⭐
+174|Taşların: {0}
+175|Daha fazla arkadaş bulmak için kullan.
+176|Daha fazla bilgi
+177|Profili düzenle
+178|Mağaza ve kumi+
+179|Arkadaş davet et (+{0} 💎)
+180|Admin alanı
+181|Güncellemeleri kontrol et
+182|Dil · {0}
+183|Çıkış yap
+184|Hesabı sil
+185|kumi {0} · Davet kodun: {1}\nAltın kural: her zaman nazik ol. 💛\n\nOyun, dizi ve sanatçı adları sahiplerine aittir; kumi'nin onlarla bir bağlantısı yoktur.
+186|Admin misin? Erişimi kontrol et
+187|Hesap silinsin mi?
+188|Profilin, fotoğrafların, sohbetlerin ve arkadaşlıkların kalıcı olarak silinecek. Bu geri alınamaz.
+189|Kalıcı olarak sil
+190|Video kontrol edildi ve eklendi 🎬
+191|İsim en az 2 karakter olmalı.
+192|Kaydedildi ✅
+193|Kaydet
+194|İsim
+195|Adın
+196|Yaş
+197|Profil rengi
+198|Ben
+199|Erkek
+200|Erkek
+201|Kadın
+202|Kız
+203|Söylememeyi tercih ederim
+204|Ülke
+205|Bio
+206|Kendinden bahset …
+207|İlgi alanlarım
+208|Seç
+209|Medya
+210|Fotoğraflar ve videolar otomatik olarak kontrol edilir. Ana fotoğraf yapmak için ⭐'a dokun.
+211|Profil videosu
+212|Profil videosu (en fazla 30 sn)
+213|Sosyal medya
+214|Snapchat ekle
+215|Instagram ekle
+216|TikTok ekle
+217|Arkadaşlara görünür
+218|Sosyal medyanı sadece arkadaşların görebilir – o da sadece sen izin verirsen. Kiminle paylaştığını iyi düşün.
+219|Sosyal medyanı sadece kumi'deki arkadaşların görebilir – o da sadece sen izin verirsen.
+220|Profil rengi 🎨
+221|İsim etiketin için bir renk seç
+222|Sevdiklerine dokun – böylece aynı ilgi alanlarına sahip kişiler seni bulur.
+223|Ara, ör. Minecraft
+224|En fazla {0} ilgi alanı.
+225|Tamam
+226|Kontrol ediliyor…
+227|Ana fotoğraf
+228|Ana fotoğraf yap
+229|🎉 Artık arkadaşsınız!
+230|👋 İstek gönderildi
+231|Engellendi. İstediğin zaman ayarlardan geri alabilirsin.
+232|Engel kaldırıldı.
+233|Daha fazla
+234|Engelle
+235|Profil mevcut değil
+236|Bu kişiye şu anda ulaşılamıyor.
+237|Engellendi · Engeli kaldır
+238|Sohbeti aç
+239|İstek gönderildi ✓
+240|Artık birbirinizi göremez ve birbirinize yazamazsınız. Engeli istediğin zaman ayarlarda "Engellenen kullanıcılar" altından kaldırabilirsin.
+241|Bağlantı açılamadı.
+242|▶  Videoyu izle
+243|🔒 Arkadaş olduğunuzda görünür.
+244|Paylaşılan sosyal medya yok.
+245|Lounge: {0}
+246|Lounge
+247|Yaş grubun için grup sohbeti · Yavaş mod 10 sn
+248|Burası henüz sessiz
+249|Merhaba de ve sohbeti başlat!
+250|Lounge'a yaz…
+251|En fazla {0} – kaldırmak için yukarıdakilerden birine dokun.
+252|Sıfırla
+253|Bunu seven arkadaşlar bul
+254|En fazla {0} ilgi alanı seç
+255|Bana göster
+256|👥 Herkes
+257|🙋‍♂️ Erkekler
+258|🙋‍♂️ Erkekler
+259|🙋‍♀️ Kadınlar
+260|🙋‍♀️ Kızlar
+261|Yaşadıkları yer
+262|{0} Ülkem
+263|🌍 Her yer
+264|🧭 Diğer
+265|kumi'de sadece 13 ile 17 yaş arası kişileri görürsün – yetişkinler ayrıdır.
+266|🤝 Önce ortak noktalar
+267|Seninle aynı ilgi alanlarına sahip kişiler önce görünür
+268|Daha ucuz istekler, iki kat ödül.
+269|Google Play'e bağlanılıyor …
+270|Satın almalar yalnızca Play Store'daki kumi ile çalışır – o zamana kadar aşağıda ücretsiz taşlar var 💎
+271|Mağaza
+272|İstekler {1} yerine sadece {0} taş
+273|İki kat günlük ödül
+274|Adının yanında altın artı
+275|kumi+ {0} tarihine kadar aktif ✨
+276|kumi+ aktif ✨
+277|Aboneliği yönet
+278|kumi+ al · {0} / ay
+279|Google Play üzerinden aylık iptal edilebilir. İptal edilene kadar otomatik yenilenir.
+280|Taşlar

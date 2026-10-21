@@ -1,0 +1,282 @@
+281|kumi'yi Play Store'dan aldığında taş satın alabilirsin. O zamana kadar: davetler ve günlük ödüllerle ücretsiz taşlar 👇
+282|Fiyatlara KDV dahildir. Ödeme Google Play üzerinden.
+283|18 yaşından küçüksen ayda en fazla 30 € harcayabilirsin – önce ailene sormak en iyisi.
+284|Ücretsiz taşlar
+285|😊 Arkadaş davet et
+286|{0} kodunla kayıt olan her kişi için
+287|Davet et
+288|Günlük ödül
+289|Her gün ücretsiz taş al – serin ne kadar uzun olursa o kadar çok alırsın.
+290|kumi+ ile iki kat!
+291|= {0} istek
+292|{0}. gün
+293|Al · +{0} 💎
+294|Sonraki ödül %02d:%02d:%02d sonra ⏰
+295|Sohbetler 💬
+296|Henüz sohbet yok
+297|Biri isteğini kabul eder etmez burada yazışabilirsiniz.
+298|İnsanları keşfet
+299|kumi botu ile test sohbeti
+300|Başlat
+301|Sohbet kapandı
+302|Engellendi. Artık birbirinize yazamazsınız.
+303|Çevrimiçi
+304|Son görülme {0}
+305|Çok kısa – biraz daha uzun konuş.
+306|Kayıt yapılamıyor.
+307|Üzgünüz, mikrofon izni olmadan çalışmıyor.
+308|Profili gör
+309|Bu sohbet kapandı.
+310|🛡️ Adresini, şifrelerini veya çıplak fotoğraflarını asla paylaşma ve internetten tanıdığın kişilerle asla yalnız buluşma. Bildirmek için bir mesaja basılı tut.
+311|[Sesli mesaj]
+312|[Fotoğraf]
+313|Artık birbirinizi göremez ve yazamazsınız, sohbet kapatılır. Engeli istediğin zaman ayarlarda "Engellenen kullanıcılar" altından kaldırabilirsin.
+314|Kontrol
+315|🚫 Fotoğraf engellendi
+316|📷 Fotoğraf kontrol ediliyor…
+317|Bu normalden uzun sürüyor.
+318|Tekrar dene
+319|Neredeyse bitti!
+320|Bu kumi sürümü henüz Firebase projene bağlı değil. google-services.json dosyasını app/ klasörüne koy ve uygulamayı yeniden derle. Adımlar README'de.
+321|Hesap engellendi
+322|Hesabın kurallarımızı ihlal ettiği için engellendi. Bunun bir hata olduğunu düşünüyorsan kumi ekibiyle iletişime geç.
+323|Önce e-posta adresini gir.
+324|Şifreni sıfırlaman için sana bir e-posta gönderdik.
+325|Google ile giriş ayarlanıyor – şimdilik e-postanı kullan.
+326|Bu telefonda ayarlanmış bir Google hesabı yok.
+327|Google ile giriş çalışmadı – tekrar dene.
+328|Google ile giriş çalışmadı.
+329|Seninle aynı şeyleri seven arkadaşlar bul.
+330|Google ile devam et
+331|E-posta ile devam et
+332|13 yaş ve üzeri · Altın kural: her zaman nazik ol. 💛
+333|E-postayla hesabını oluştur
+334|Tekrar hoş geldin!
+335|Yeniyim
+336|Giriş yap
+337|E-posta
+338|Şifre (en az 6 karakter)
+339|Şifre
+340|Hesap oluştur
+341|Şifreni mi unuttun?
+342|Adın ne?
+343|Ad veya takma ad – başkaları seni böyle görür.
+344|Doğum günün ne zaman?
+345|Yaşın kumi'de kiminle tanışacağını belirler. Sonradan değiştirilemez.
+346|Ay
+347|Yıl
+348|Bu tarih yok.
+349|kumi'yi sadece 13 yaşından itibaren kullanabilirsin.
+350|Yılı bir daha kontrol et.
+351|🎂  {0} yaşındasın
+352|🛡️ Genç topluluğuna (13–17) katılıyorsun. Orada sadece yaşıtlarınla tanışırsın – yetişkinler seni göremez ve sana yazamaz.
+353|👨‍👩‍👧 16 yaşından küçük olduğun için bir ebeveynin onay vermesi gerekiyor. Bu adrese bir e-posta göndereceğiz.
+354|Ebeveyn e-postası
+355|Ben …
+356|Böylece doğru kişiler seni aramada bulur.
+357|✓ Söylememeyi tercih ederim
+358|Söylemesem daha iyi
+359|Nerede yaşıyorsun?
+360|Böylece yakınındaki insanları daha hızlı bulursun.
+361|değiştirmek için dokun
+362|Davet kodu
+363|🎁  Davet kodum var
+364|Kullanım koşullarını ve gizlilik politikasını kabul ediyorum ve altın kurala uyuyorum: her zaman nazik ol.
+365|Hadi başlayalım
+366|E-posta gönderildi ✉️
+367|{0} adresine bir e-posta gönderdik. Bir ebeveyn onay verir vermez başlayabilirsin – uygulama kendiliğinden güncellenir.
+368|Başka bir ebeveyn e-postası (isteğe bağlı)
+369|E-postayı tekrar gönder
+370|Oyunlar
+371|Müzik
+372|Spor
+373|Yaratıcılık
+374|Film ve anime
+375|Yaşam tarzı
+376|Bilgi
+377|Oyun
+378|Futbol
+379|Çizim
+380|Filmler
+381|Yemek yapmak
+382|Okumak
+383|Kutu oyunları
+384|Şarkı söylemek
+385|Basketbol
+386|Fotoğrafçılık
+387|Diziler
+388|Hayvanlar
+389|Kodlama
+390|Retro oyunlar
+391|Enstrümanlar
+392|Fitness
+393|Yazmak
+394|Anime
+395|Doğa
+396|Bilim
+397|Nişancı oyunları
+398|Rap
+399|Kaykay
+400|Tiyatro
+401|Korku
+402|Seyahat
+403|Diller
+404|Rol yapma oyunları
+405|Pop
+406|Dans
+407|Tığ işi ve örgü
+408|Süper kahramanlar
+409|Moda
+410|Uzay
+411|Yarış oyunları
+412|Rock
+413|Yoga
+414|Dikiş
+415|Belgeseller
+416|Mimler
+417|Tarih
+418|Bulmacalar
+419|Metal
+420|Yüzme
+421|El işi
+422|K-dramalar
+423|Podcast'ler
+424|Psikoloji
+425|Satranç
+426|Piyano
+427|Bisiklet
+428|Video çekmek
+429|Manga
+430|Kediler
+431|Teknoloji ve YZ
+432|Kart oyunları
+433|Davul
+434|Voleybol
+435|Sanat
+436|Bilim kurgu
+437|Köpekler
+438|Matematik
+439|Mobil oyunlar
+440|Klasik müzik
+441|Tenis
+442|Seramik
+443|Fantastik
+444|Atlar
+445|Biyoloji
+446|PC oyunları
+447|Tekno
+448|Boks
+449|Sihirbazlık
+450|Romantik
+451|Dinozorlar
+452|Felsefe
+453|E-spor
+454|Dövüş sanatları
+455|Günlük tutmak
+456|Gerçek suç
+457|Sürüngenler
+458|Finans
+459|Müzik yapmak
+460|Buz hokeyi
+461|Cosplay
+462|Yayınlar
+463|Gurme
+464|Mimarlık
+465|Masa tenisi
+466|Dijital sanat
+467|Pasta yapmak
+468|Çevre
+469|Binicilik
+470|Tasarım
+471|Kahve
+472|Tırmanış
+473|Bubble tea
+474|Koşu
+475|Vegan
+476|Kayak
+477|Alışveriş
+478|Sörf
+479|Sneaker
+480|Jimnastik
+481|Makyaj
+482|Amerikan futbolu
+483|Astroloji
+484|Formula 1
+485|Kamp
+486|Hentbol
+487|Kafa dinlemek
+488|Balık tutmak
+489|Parti
+490|Badminton
+491|Arabalar
+492|Motosikletler
+493|Bitkiler
+494|The Sims
+495|Simpsonlar
+496|Sohbetler
+497|Taciz veya zorbalık
+498|Cinsel içerik
+499|Yanlış yaş / sahte profil
+500|Spam veya dolandırıcılık
+501|Şiddet veya tehdit
+502|Diğer
+503|Lütfen giriş yap.
+504|Hesabın henüz etkinleştirilmedi.
+505|Sadece adminler için.
+506|En az 2 karakterli bir isim gir.
+507|Geçerli bir doğum tarihi gir.
+508|Ülkeni seç.
+509|kumi'yi kullanmak için en az 13 yaşında olmalısın.
+510|Bir ebeveynin e-posta adresini gir.
+511|Ebeveyn e-postası seninkinden farklı olmalı.
+512|Zaten bir profilin var.
+513|Hesabının onaya ihtiyacı yok.
+514|E-postayı tekrar göndermeden önce birkaç dakika bekle.
+515|Geçerli bir e-posta adresi gir.
+516|E-posta gönderimi henüz ayarlanmadı. kumi ekibiyle iletişime geç.
+517|Bu hesabın admin erişimi yok.
+518|Önce e-posta adresini onayla.
+519|Geçersiz işlem.
+520|Bildirim bulunamadı.
+521|Bu arkadaşlık mümkün değil.
+522|Geçersiz kişi.
+523|Uygulamayı yeniden başlat.
+524|Bu profil şu anda mevcut değil.
+525|Zaten arkadaşsınız.
+526|Zaten bir istek gönderdin.
+527|Şu anda burada istek gönderilemiyor.
+528|Yeterli taş yok – bir istek {0} 💎. Günlük check-in ile veya mağazadan daha fazla al!
+529|Geçersiz istek.
+530|Bu istek artık yok.
+531|Hesap bulunamadı.
+532|Bugün zaten check-in yaptın. Yarın görüşürüz! 👋
+533|Geçersiz dosya.
+534|Yükleme bulunamadı. Tekrar dene.
+535|Dosya türü veya boyutu uygun değil.
+536|En fazla {0} fotoğrafın olabilir.
+537|Otomatik kontrole şu anda ulaşılamıyor. Daha sonra tekrar dene.
+538|Bu kurallarımızı ihlal ediyor ve yüklenmedi.
+539|Dosya bulunamadı.
+540|Mesaj boş.
+541|Yavaş mod: {0} saniye daha bekle.
+542|Profil bulunamadı.
+543|Satın almalar sunucuda henüz etkin değil. Merak etme: satın alma, uygulamayı bir sonraki açışında hesabına eklenecek.
+544|Google bu satın almayı tanımıyor.
+545|Google Play'e şu anda ulaşılamıyor. Satın alma, uygulamayı bir sonraki açışında tamamlanacak.
+546|Bilinmeyen ürün.
+547|18 yaşından küçüksen kumi'de ayda en fazla {0} € harcayabilirsin. Gelecek ay tekrar satın alabilirsin.
+548|Geçersiz satın alma.
+549|Bu satın alma iptal edildi.
+550|Bu satın alma başka bir hesaba ait.
+551|Bu abonelik başka bir hesaba ait.
+552|📷 Fotoğraf
+553|📷 Fotoğraf (engellendi)
+554|🎤 Sesli mesaj
+555|Artık arkadaşsınız 🎉
+556|{name} de seni ekledi. Merhaba de!
+557|Yeni arkadaşlık isteği 👋
+558|{name} seninle arkadaş olmak istiyor.
+559|İstek kabul edildi 🎉
+560|{name} isteğini kabul etti. Merhaba de!
+561|İyi ki doğdun! 🎂
+562|Artık 18 yaşındasın ve kumi'nin yetişkin topluluğuna geçiyorsun.

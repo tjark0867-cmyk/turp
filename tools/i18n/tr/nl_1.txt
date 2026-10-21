@@ -1,0 +1,281 @@
+0|Berichten en verzoeken
+1|Nieuwe berichten en vriendschapsverzoeken
+2|Populair
+3|Beste prijs
+4|Aankoop kon niet worden gestart.
+5|Google Play is niet verbonden.
+6|Aankopen werken alleen met kumi uit de Play Store.
+7|Aankoop kon niet worden gestart ({0}).
+8|De aankoop is niet gelukt ({0}). Er is niets afgeschreven.
+9|Deze inlogmethode is nog niet geactiveerd – gebruik voorlopig je e-mail.
+10|Serverfout – probeer het zo opnieuw.
+11|Server niet bereikbaar – probeer het zo opnieuw.
+12|Je hebt geen toestemming om dit te doen.
+13|Deze functie is nu niet beschikbaar.
+14|Er ging iets mis.
+15|Het wachtwoord is te zwak (minstens 6 tekens).
+16|Dit e-mailadres is al geregistreerd. Log in.
+17|Geen actief account gevonden met dit e-mailadres.
+18|E-mail of wachtwoord klopt niet.
+19|Geen internetverbinding.
+20|Opslaan mislukt – probeer opnieuw.
+21|Uploaden mislukt – probeer opnieuw.
+22|Ongeldige invoer.
+23|Afbeelding kon niet worden gelezen.
+24|Onbekend
+25|De video mag maximaal 30 seconden duren.
+26|De video is te groot (max. 40 MB).
+27|Testchat kon niet worden gestart.
+28|Downloaden mislukt (fout {0}).
+29|Updates zijn alleen beschikbaar voor de GitHub-versie.
+30|Je hebt al de nieuwste versie ✅
+31|Schrijf een bericht…
+32|Foto maken
+33|Foto versturen
+34|Spraakbericht opnemen
+35|Versturen
+36|Kies een land
+37|Zoeken…
+38|Alle landen
+39|Sluiten
+40|Eigen kleur
+41|{0} melden
+42|Wat is er gebeurd? (optioneel)
+43|Je melding is anoniem. Ben je in gevaar, praat dan ook met een volwassene die je vertrouwt of bel de politie.
+44|Melden
+45|Annuleren
+46|Foto
+47|Sorry, zonder cameratoestemming werkt het niet.
+48|De camera is nu niet beschikbaar.
+49|Foto kon niet worden gemaakt.
+50|Camera wisselen
+51|Foto gemaakt
+52|Opnieuw
+53|Geselecteerd
+54|Zoekopdracht wissen
+55|Alle
+56|Zo'n interesse bestaat nog niet 🤔
+57|Verwijderen
+58|Gemeenschappelijk
+59|{0} heeft nog niets over zichzelf geschreven.
+60|Interesses
+61|🤖 Testprofiel
+62|gisteren
+63|nu
+64|{0} min
+65|{0} u
+66|1 dag
+67|{0} dagen
+68|{0} d
+69|7 d+
+70|{0} min geleden
+71|{0} u geleden
+72|1 dag geleden
+73|{0} dagen geleden
+74|op {0}
+75|Vandaag
+76|Gisteren
+77|Pauze
+78|Afspelen
+79|Weggooien
+80|Opnemen …
+81|{0} is gedeblokkeerd.
+82|Terug
+83|Geblokkeerde gebruikers
+84|Niemand geblokkeerd
+85|Als je iemand blokkeert, verschijnt diegene hier – en je kunt altijd weer deblokkeren.
+86|Geblokkeerde mensen kunnen je niet zien of berichten sturen. Als je iemand deblokkeert, kan diegene je weer vinden en een verzoek sturen.
+87|{0} kan je dan weer zien bij Ontdekken en je een verzoek sturen. Een eerdere vriendschap komt niet automatisch terug.
+88|Deblokkeren
+89|Geblokkeerd · {0}
+90|Licenties
+91|Veel interesse-stickers zijn eigen ontwerpen, sommige zijn gebaseerd op vrije foto's van Wikimedia Commons. Voor de stickers zijn de foto's uitgeknipt, bijgesneden en van een rand voorzien. Stickers op basis van foto's met een "CC BY-SA"-licentie vallen onder dezelfde licentie. Foto's zonder vermelding hier zijn rechtenvrij (CC0 / Public Domain) of zelf gemaakt. Tik om de bron te openen.
+92|Foto: {0} · {1}
+93|onbekend
+94|Ontdekken
+95|Bedankt! Ons team kijkt ernaar. 💛
+96|🤖 {0} heeft meteen geaccepteerd – kijk in je chats!
+97|🎉 Jullie zijn nu vrienden – {0} had jou ook een verzoek gestuurd!
+98|👋 Verzoek verstuurd naar {0}
+99|Zoekinstellingen
+100|Voeg een foto toe zodat anderen je kunnen zien.
+101|Bewerken
+102|Profielen laden
+103|Niemand past nu bij je zoekopdracht
+104|Probeer andere interesses, een ander land of een grotere leeftijdsgroep.
+105|Zoekopdracht aanpassen
+106|Alle filters resetten
+107|Nu geen nieuwe mensen
+108|Kom later terug of pas je zoekinstellingen aan.
+109|Overgeslagen profielen weer tonen
+110|Verzoek sturen
+111|Volgende
+112|1 overeenkomst
+113|{0} overeenkomsten
+114|Account geblokkeerd.
+115|Melding afgewezen.
+116|Meldingen
+117|Alles afgehandeld
+118|Geen openstaande meldingen.
+119|Meldingen uit de tienercommunity staan bovenaan. Profielen met 3 of meer melders worden automatisch verborgen.
+120|Het account wordt meteen geblokkeerd, uit Ontdekken gehaald en alle chats worden gesloten.
+121|Blokkeren
+122|Tieners 13–17
+123|Gemeld: {0}
+124|Profiel
+125|🎉 Jij en {0} zijn nu vrienden! +{1} 💎
+126|Vrienden
+127|Alle vrienden
+128|Nieuwe vrienden
+129|Verzoeken
+130|Nieuwste
+131|Nog geen verzoeken
+132|Als iemand je wil toevoegen, zie je dat hier.
+133|Vind nieuwe vrienden
+134|Nodig vrienden uit: +{0} 💎 per persoon
+135|Verbergen
+136|Delen
+137|Weigeren
+138|Accepteren
+139|Topmatch
+140|Alle vrienden 👯
+141|Zoeken op naam
+142|Nog geen vrienden
+143|Niemand gevonden
+144|Accepteer verzoeken of stuur er zelf een paar in Ontdekken.
+145|Probeer een andere naam.
+146|🤖 Testbot
+147|Chat
+148|Kies je taal
+149|Je kunt dit later in de instellingen aanpassen.
+150|+{0} 💎 bijgeschreven – bedankt! 💛
+151|kumi+ is actief ✨ Bedankt voor je steun!
+152|Betaling in behandeling – de gems komen zodra ze bevestigd is.
+153|Eenmalig opnieuw installeren
+154|kumi {0} kan de geïnstalleerde versie niet direct vervangen. Download de nieuwe versie, verwijder kumi en installeer hem dan. Je account, vrienden en chats blijven bewaard – je hoeft alleen opnieuw in te loggen.
+155|Downloaden
+156|Later
+157|Nieuwe versie beschikbaar
+158|kumi {0} is er.
+159|Laden … {0} %
+160|Nu bijwerken
+161|Foto gecontroleerd en toegevoegd ✨
+162|+{0} 💎 · {1} {2} streak 🔥
+163|dag
+164|dagen
+165|Bevestig eerst je e-mail – we hebben je een link gestuurd. Tik daarna opnieuw.
+166|Admin-toegang geactiveerd 🛡️
+167|Kom naar kumi en vind nieuwe vrienden! 🌍 Vul bij het registreren mijn code {0} in, dan krijg je 10 bonus-gems 💎
+168|kumi delen
+169|Instellingen
+170|Voorbeeld
+171|{0} media
+172|Foto toevoegen
+173|Upgrade ⭐
+174|Jouw gems: {0}
+175|Gebruik ze om nog meer vrienden te vinden.
+176|Meer info
+177|Profiel bewerken
+178|Shop & kumi+
+179|Vrienden uitnodigen (+{0} 💎)
+180|Admin-gedeelte
+181|Naar updates zoeken
+182|Taal · {0}
+183|Uitloggen
+184|Account verwijderen
+185|kumi {0} · Jouw uitnodigingscode: {1}\nGouden regel: wees altijd aardig. 💛\n\nNamen van games, series en artiesten zijn van hun eigenaars; kumi is niet met hen verbonden.
+186|Admin? Toegang controleren
+187|Account verwijderen?
+188|Je profiel, foto's, chats en vriendschappen worden voorgoed verwijderd. Dit kan niet ongedaan worden gemaakt.
+189|Voorgoed verwijderen
+190|Video gecontroleerd en toegevoegd 🎬
+191|Je naam moet minstens 2 tekens hebben.
+192|Opgeslagen ✅
+193|Opslaan
+194|Naam
+195|Je naam
+196|Leeftijd
+197|Profielkleur
+198|Ik ben
+199|Man
+200|Jongen
+201|Vrouw
+202|Meisje
+203|Zeg ik liever niet
+204|Land
+205|Bio
+206|Vertel iets over jezelf …
+207|Mijn interesses
+208|Kiezen
+209|Media
+210|Foto's en video's worden automatisch gecontroleerd. Tik op ⭐ om er je hoofdfoto van te maken.
+211|Profielvideo
+212|Profielvideo (max. 30 s)
+213|Socials
+214|Snapchat toevoegen
+215|Instagram toevoegen
+216|TikTok toevoegen
+217|Zichtbaar voor vrienden
+218|Alleen je vrienden kunnen je socials zien – en alleen als je dat toestaat. Denk goed na met wie je ze deelt.
+219|Alleen je vrienden op kumi kunnen je socials zien – en alleen als je dat toestaat.
+220|Profielkleur 🎨
+221|Kies een kleur voor je naambordje
+222|Tik aan wat je leuk vindt – zo vinden mensen met dezelfde interesses je.
+223|Zoeken, bijv. Minecraft
+224|Maximaal {0} interesses.
+225|Klaar
+226|Controleren…
+227|Hoofdfoto
+228|Als hoofdfoto instellen
+229|🎉 Jullie zijn nu vrienden!
+230|👋 Verzoek verstuurd
+231|Geblokkeerd. Je kunt dit altijd ongedaan maken in de instellingen.
+232|Niet meer geblokkeerd.
+233|Meer
+234|Blokkeren
+235|Profiel niet beschikbaar
+236|Deze persoon is nu niet bereikbaar.
+237|Geblokkeerd · Deblokkeren
+238|Chat openen
+239|Verzoek verstuurd ✓
+240|Jullie kunnen elkaar dan niet meer zien of berichten sturen. Je kunt altijd deblokkeren in de instellingen onder "Geblokkeerde gebruikers".
+241|Link kon niet worden geopend.
+242|▶  Video bekijken
+243|🔒 Zichtbaar zodra jullie vrienden zijn.
+244|Geen socials gedeeld.
+245|Lounge: {0}
+246|Lounge
+247|Groepschat voor je leeftijdsgroep · Slow mode 10 s
+248|Het is hier nog rustig
+249|Zeg hoi en begin het gesprek!
+250|Schrijf in de lounge…
+251|Maximaal {0} – tik er bovenaan een aan om te verwijderen.
+252|Resetten
+253|Vrienden vinden die dit ook leuk vinden
+254|Kies tot {0} interesses
+255|Laat me zien
+256|👥 Iedereen
+257|🙋‍♂️ Mannen
+258|🙋‍♂️ Jongens
+259|🙋‍♀️ Vrouwen
+260|🙋‍♀️ Meisjes
+261|Die wonen in
+262|{0} Mijn land
+263|🌍 Overal
+264|🧭 Anders
+265|Op kumi zie je alleen mensen tussen 13 en 17 – volwassenen zijn gescheiden.
+266|🤝 Overeenkomsten eerst
+267|Mensen met dezelfde interesses als jij komen eerst
+268|Goedkopere verzoeken, dubbele beloningen.
+269|Verbinden met Google Play …
+270|Aankopen werken alleen met kumi uit de Play Store – tot die tijd vind je hieronder gratis gems 💎
+271|Shop
+272|Verzoeken kosten maar {0} in plaats van {1} gems
+273|Dubbele dagelijkse beloning
+274|Gouden plus naast je naam
+275|kumi+ is actief tot {0} ✨
+276|kumi+ is actief ✨
+277|Abonnement beheren
+278|kumi+ nemen · {0} / maand
+279|Maandelijks opzegbaar via Google Play. Wordt automatisch verlengd tot je opzegt.
+280|Gems

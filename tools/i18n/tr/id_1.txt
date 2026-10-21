@@ -1,0 +1,281 @@
+0|Pesan dan permintaan
+1|Pesan baru dan permintaan pertemanan
+2|Populer
+3|Harga terbaik
+4|Pembelian tidak bisa dimulai.
+5|Google Play tidak terhubung.
+6|Pembelian hanya bisa dilakukan dengan kumi dari Play Store.
+7|Pembelian tidak bisa dimulai ({0}).
+8|Pembelian gagal ({0}). Tidak ada biaya yang ditagih.
+9|Metode login ini belum aktif – pakai email kamu dulu ya.
+10|Server error – coba lagi sebentar lagi.
+11|Server tidak bisa dihubungi – coba lagi sebentar lagi.
+12|Kamu tidak punya izin untuk melakukan ini.
+13|Fitur ini sedang tidak tersedia.
+14|Terjadi kesalahan.
+15|Kata sandi terlalu lemah (minimal 6 karakter).
+16|Email ini sudah terdaftar. Silakan login.
+17|Tidak ada akun aktif dengan email ini.
+18|Email atau kata sandi salah.
+19|Tidak ada koneksi internet.
+20|Gagal menyimpan – coba lagi.
+21|Gagal mengunggah – coba lagi.
+22|Input tidak valid.
+23|Gambar tidak bisa dibaca.
+24|Tidak diketahui
+25|Video maksimal 30 detik.
+26|Video terlalu besar (maks. 40 MB).
+27|Chat uji coba tidak bisa dimulai.
+28|Unduhan gagal (error {0}).
+29|Update hanya tersedia untuk versi GitHub.
+30|Kamu sudah punya versi terbaru ✅
+31|Tulis pesan…
+32|Ambil foto
+33|Kirim foto
+34|Rekam pesan suara
+35|Kirim
+36|Pilih negara
+37|Cari…
+38|Semua negara
+39|Tutup
+40|Warna kustom
+41|Laporkan {0}
+42|Apa yang terjadi? (opsional)
+43|Laporanmu anonim. Kalau kamu dalam bahaya, ceritakan juga ke orang dewasa yang kamu percaya atau hubungi polisi.
+44|Laporkan
+45|Batal
+46|Foto
+47|Maaf, tanpa izin kamera ini tidak bisa jalan.
+48|Kamera sedang tidak tersedia.
+49|Foto tidak bisa diambil.
+50|Ganti kamera
+51|Foto diambil
+52|Ulangi
+53|Dipilih
+54|Hapus pencarian
+55|Semua
+56|Belum ada minat seperti itu 🤔
+57|Hapus
+58|Sama
+59|{0} belum menulis apa pun tentang dirinya.
+60|Minat
+61|🤖 Profil uji coba
+62|kemarin
+63|sekarang
+64|{0} mnt
+65|{0} j
+66|1 hari
+67|{0} hari
+68|{0} h
+69|7 h+
+70|{0} mnt lalu
+71|{0} j lalu
+72|1 hari lalu
+73|{0} hari lalu
+74|pada {0}
+75|Hari ini
+76|Kemarin
+77|Jeda
+78|Putar
+79|Buang
+80|Merekam …
+81|{0} sudah tidak diblokir.
+82|Kembali
+83|Pengguna yang diblokir
+84|Tidak ada yang diblokir
+85|Kalau kamu memblokir seseorang, dia akan muncul di sini – dan kamu bisa membuka blokirnya kapan saja.
+86|Orang yang diblokir tidak bisa melihat atau mengirimimu pesan. Kalau kamu membuka blokir seseorang, dia bisa menemukanmu lagi dan mengirim permintaan.
+87|{0} bisa melihatmu lagi di Jelajahi dan mengirim permintaan. Pertemanan sebelumnya tidak kembali otomatis.
+88|Buka blokir
+89|Diblokir · {0}
+90|Lisensi
+91|Banyak stiker minat adalah desain kami sendiri, beberapa berdasarkan foto bebas dari Wikimedia Commons. Untuk stiker, foto-foto dipotong, dirapikan, dan diberi bingkai. Stiker berdasarkan foto berlisensi "CC BY-SA" memakai lisensi yang sama. Foto tanpa catatan di sini adalah domain publik (CC0 / Public Domain) atau buatan kami. Ketuk untuk membuka sumbernya.
+92|Foto: {0} · {1}
+93|tidak diketahui
+94|Jelajahi
+95|Makasih! Tim kami akan memeriksanya. 💛
+96|🤖 {0} langsung menerima – cek chat kamu!
+97|🎉 Kalian sekarang berteman – {0} juga sudah mengirimimu permintaan!
+98|👋 Permintaan terkirim ke {0}
+99|Pengaturan pencarian
+100|Tambahkan foto supaya orang lain bisa melihatmu.
+101|Edit
+102|Memuat profil
+103|Belum ada yang cocok dengan pencarianmu
+104|Coba minat lain, negara lain, atau rentang usia yang lebih luas.
+105|Ubah pencarian
+106|Atur ulang semua filter
+107|Belum ada orang baru
+108|Kembali lagi nanti atau ubah pengaturan pencarianmu.
+109|Tampilkan lagi yang dilewati
+110|Kirim permintaan
+111|Berikutnya
+112|1 kesamaan
+113|{0} kesamaan
+114|Akun diblokir.
+115|Laporan ditolak.
+116|Laporan
+117|Semua beres
+118|Tidak ada laporan terbuka.
+119|Laporan dari komunitas remaja ada di atas. Profil dengan 3 pelapor atau lebih otomatis disembunyikan.
+120|Akun akan langsung diblokir, dihapus dari Jelajahi, dan semua chat ditutup.
+121|Blokir akun
+122|Remaja 13–17
+123|Dilaporkan: {0}
+124|Profil
+125|🎉 Kamu dan {0} sekarang berteman! +{1} 💎
+126|Teman
+127|Semua teman
+128|Teman baru
+129|Permintaan
+130|Terbaru
+131|Belum ada permintaan
+132|Kalau ada yang ingin menambahkanmu, kamu akan melihatnya di sini.
+133|Cari teman baru
+134|Undang teman: +{0} 💎 per orang
+135|Sembunyikan
+136|Bagikan
+137|Tolak
+138|Terima
+139|Paling cocok
+140|Semua teman 👯
+141|Cari berdasarkan nama
+142|Belum ada teman
+143|Tidak ada yang ditemukan
+144|Terima permintaan atau kirim sendiri di Jelajahi.
+145|Coba nama lain.
+146|🤖 Bot uji coba
+147|Chat
+148|Pilih bahasamu
+149|Kamu bisa mengubahnya nanti di pengaturan.
+150|+{0} 💎 masuk – makasih! 💛
+151|kumi+ aktif ✨ Makasih atas dukunganmu!
+152|Pembayaran diproses – gem akan masuk setelah dikonfirmasi.
+153|Instal ulang sekali
+154|kumi {0} tidak bisa langsung menggantikan versi yang terpasang. Unduh versi baru, hapus kumi, lalu instal. Akun, teman, dan chat kamu tetap aman – tinggal login lagi.
+155|Unduh
+156|Nanti
+157|Versi baru tersedia
+158|kumi {0} sudah hadir.
+159|Memuat … {0} %
+160|Update sekarang
+161|Foto diperiksa dan ditambahkan ✨
+162|+{0} 💎 · streak {1} {2} 🔥
+163|hari
+164|hari
+165|Konfirmasi email kamu dulu – kami sudah mengirim tautan. Lalu ketuk lagi.
+166|Akses admin aktif 🛡️
+167|Gabung ke kumi dan temukan teman baru! 🌍 Masukkan kodeku {0} saat daftar dan dapatkan 10 gem bonus 💎
+168|Bagikan kumi
+169|Pengaturan
+170|Pratinjau
+171|{0} media
+172|Tambah foto
+173|Upgrade ⭐
+174|Gem kamu: {0}
+175|Pakai untuk menemukan lebih banyak teman.
+176|Pelajari lebih lanjut
+177|Edit profil
+178|Toko & kumi+
+179|Undang teman (+{0} 💎)
+180|Area admin
+181|Cek update
+182|Bahasa · {0}
+183|Keluar
+184|Hapus akun
+185|kumi {0} · Kode undanganmu: {1}\nAturan emas: selalu bersikap baik. 💛\n\nNama game, serial, dan artis adalah milik pemiliknya masing-masing; kumi tidak terkait dengan mereka.
+186|Admin? Cek akses
+187|Hapus akun?
+188|Profil, foto, chat, dan pertemananmu akan dihapus permanen. Ini tidak bisa dibatalkan.
+189|Hapus permanen
+190|Video diperiksa dan ditambahkan 🎬
+191|Nama harus minimal 2 karakter.
+192|Tersimpan ✅
+193|Simpan
+194|Nama
+195|Namamu
+196|Usia
+197|Warna profil
+198|Saya
+199|Pria
+200|Cowok
+201|Wanita
+202|Cewek
+203|Tidak ingin menyebutkan
+204|Negara
+205|Bio
+206|Ceritakan sesuatu tentang dirimu …
+207|Minatku
+208|Pilih
+209|Media
+210|Foto dan video diperiksa otomatis. Ketuk ⭐ untuk menjadikannya foto utama.
+211|Video profil
+212|Video profil (maks. 30 dtk)
+213|Media sosial
+214|Tambah Snapchat
+215|Tambah Instagram
+216|Tambah TikTok
+217|Terlihat oleh teman
+218|Hanya temanmu yang bisa melihat media sosialmu – dan hanya kalau kamu izinkan. Pikirkan baik-baik dengan siapa kamu membagikannya.
+219|Hanya temanmu di kumi yang bisa melihat media sosialmu – dan hanya kalau kamu izinkan.
+220|Warna profil 🎨
+221|Pilih warna untuk papan namamu
+222|Ketuk yang kamu suka – begitulah orang dengan minat yang sama menemukanmu.
+223|Cari, mis. Minecraft
+224|Maksimal {0} minat.
+225|Selesai
+226|Memeriksa…
+227|Foto utama
+228|Jadikan utama
+229|🎉 Kalian sekarang berteman!
+230|👋 Permintaan terkirim
+231|Diblokir. Kamu bisa membatalkannya kapan saja di pengaturan.
+232|Tidak diblokir lagi.
+233|Lainnya
+234|Blokir
+235|Profil tidak tersedia
+236|Orang ini sedang tidak bisa dihubungi.
+237|Diblokir · Buka blokir
+238|Buka chat
+239|Permintaan terkirim ✓
+240|Kalian tidak akan bisa saling melihat atau mengirim pesan lagi. Kamu bisa membuka blokir kapan saja di pengaturan di bagian "Pengguna yang diblokir".
+241|Tautan tidak bisa dibuka.
+242|▶  Tonton video
+243|🔒 Terlihat setelah kalian berteman.
+244|Tidak ada media sosial yang dibagikan.
+245|Lounge: {0}
+246|Lounge
+247|Chat grup untuk kelompok usiamu · Mode lambat 10 dtk
+248|Masih sepi di sini
+249|Sapa dan mulai obrolannya!
+250|Tulis di lounge…
+251|Maksimal {0} – ketuk salah satu di atas untuk menghapus.
+252|Atur ulang
+253|Cari teman yang suka ini
+254|Pilih hingga {0} minat
+255|Tampilkan
+256|👥 Semua orang
+257|🙋‍♂️ Pria
+258|🙋‍♂️ Cowok
+259|🙋‍♀️ Wanita
+260|🙋‍♀️ Cewek
+261|Yang tinggal di
+262|{0} Negaraku
+263|🌍 Di mana saja
+264|🧭 Lainnya
+265|Di kumi kamu hanya melihat orang berusia 13 sampai 17 tahun – orang dewasa dipisahkan.
+266|🤝 Kesamaan duluan
+267|Orang dengan minat yang sama denganmu muncul lebih dulu
+268|Permintaan lebih murah, hadiah dobel.
+269|Menghubungkan ke Google Play …
+270|Pembelian hanya bisa dengan kumi dari Play Store – sampai saat itu, ambil gem gratis di bawah 💎
+271|Toko
+272|Permintaan hanya {0} bukan {1} gem
+273|Hadiah harian dobel
+274|Plus emas di samping namamu
+275|kumi+ aktif sampai {0} ✨
+276|kumi+ aktif ✨
+277|Kelola langganan
+278|Dapatkan kumi+ · {0} / bulan
+279|Bisa dibatalkan tiap bulan lewat Google Play. Diperpanjang otomatis sampai dibatalkan.
+280|Gem

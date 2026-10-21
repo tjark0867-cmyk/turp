@@ -1,0 +1,281 @@
+0|Messaggi e richieste
+1|Nuovi messaggi e richieste di amicizia
+2|Popolare
+3|Miglior prezzo
+4|Impossibile avviare l'acquisto.
+5|Google Play non è collegato.
+6|Gli acquisti funzionano solo con kumi dal Play Store.
+7|Impossibile avviare l'acquisto ({0}).
+8|L'acquisto non è andato a buon fine ({0}). Non ti è stato addebitato nulla.
+9|Questo metodo di accesso non è ancora attivo – per ora usa la tua email.
+10|Errore del server – riprova tra poco.
+11|Impossibile raggiungere il server – riprova tra poco.
+12|Non hai il permesso di farlo.
+13|Questa funzione non è disponibile al momento.
+14|Qualcosa è andato storto.
+15|La password è troppo debole (almeno 6 caratteri).
+16|Questa email è già registrata. Accedi.
+17|Nessun account attivo trovato con questa email.
+18|Email o password errata.
+19|Nessuna connessione internet.
+20|Salvataggio non riuscito – riprova.
+21|Caricamento non riuscito – riprova.
+22|Inserimento non valido.
+23|Impossibile leggere l'immagine.
+24|Sconosciuto
+25|Il video può durare al massimo 30 secondi.
+26|Il video è troppo grande (max. 40 MB).
+27|Impossibile avviare la chat di prova.
+28|Download non riuscito (errore {0}).
+29|Gli aggiornamenti sono disponibili solo per la versione GitHub.
+30|Hai già la versione più recente ✅
+31|Scrivi un messaggio…
+32|Scatta una foto
+33|Invia foto
+34|Registra messaggio vocale
+35|Invia
+36|Scegli un paese
+37|Cerca…
+38|Tutti i paesi
+39|Chiudi
+40|Colore personalizzato
+41|Segnala {0}
+42|Cos'è successo? (facoltativo)
+43|La tua segnalazione è anonima. Se sei in pericolo, parlane anche con un adulto di fiducia o chiama la polizia.
+44|Segnala
+45|Annulla
+46|Foto
+47|Scusa, senza il permesso della fotocamera non funziona.
+48|La fotocamera non è disponibile al momento.
+49|Impossibile scattare la foto.
+50|Cambia fotocamera
+51|Foto scattata
+52|Rifai
+53|Selezionato
+54|Cancella ricerca
+55|Tutti
+56|Non c'è ancora un interesse così 🤔
+57|Rimuovi
+58|In comune
+59|{0} non ha ancora scritto niente su di sé.
+60|Interessi
+61|🤖 Profilo di prova
+62|ieri
+63|ora
+64|{0} min
+65|{0} h
+66|1 giorno
+67|{0} giorni
+68|{0} g
+69|7 g+
+70|{0} min fa
+71|{0} h fa
+72|1 giorno fa
+73|{0} giorni fa
+74|il {0}
+75|Oggi
+76|Ieri
+77|Pausa
+78|Riproduci
+79|Elimina
+80|Registrazione …
+81|{0} non è più bloccato.
+82|Indietro
+83|Utenti bloccati
+84|Nessun utente bloccato
+85|Quando blocchi qualcuno, appare qui – e puoi sbloccarlo quando vuoi.
+86|Le persone bloccate non possono vederti né scriverti. Se sblocchi qualcuno, potrà ritrovarti e mandarti una richiesta.
+87|{0} potrà di nuovo vederti in Scopri e mandarti una richiesta. Un'amicizia precedente non torna automaticamente.
+88|Sblocca
+89|Bloccato · {0}
+90|Licenze
+91|Molti sticker degli interessi sono creazioni nostre, alcuni si basano su foto libere di Wikimedia Commons. Per gli sticker le foto sono state scontornate, ritagliate e incorniciate con un bordo. Gli sticker basati su foto con licenza «CC BY-SA» hanno la stessa licenza. Le foto senza voce qui sono di pubblico dominio (CC0 / Public Domain) o create da noi. Tocca per aprire la fonte.
+92|Foto: {0} · {1}
+93|sconosciuto
+94|Scopri
+95|Grazie! Il nostro team darà un'occhiata. 💛
+96|🤖 {0} ha accettato subito – guarda le tue chat!
+97|🎉 Ora siete amici – anche {0} ti aveva mandato una richiesta!
+98|👋 Richiesta inviata a {0}
+99|Impostazioni di ricerca
+100|Carica una foto così gli altri possono vederti.
+101|Modifica
+102|Caricamento profili
+103|Al momento nessuno corrisponde alla tua ricerca
+104|Prova altri interessi, un altro paese o una fascia d'età più ampia.
+105|Modifica la ricerca
+106|Reimposta tutti i filtri
+107|Al momento non ci sono persone nuove
+108|Torna più tardi o modifica le impostazioni di ricerca.
+109|Mostra di nuovo i profili saltati
+110|Invia richiesta
+111|Avanti
+112|1 cosa in comune
+113|{0} cose in comune
+114|Account sospeso.
+115|Segnalazione respinta.
+116|Segnalazioni
+117|Tutto fatto
+118|Nessuna segnalazione aperta.
+119|Le segnalazioni della community teen sono in alto. I profili segnalati da 3 o più persone vengono nascosti automaticamente.
+120|L'account verrà sospeso subito, rimosso da Scopri e tutte le chat verranno chiuse.
+121|Sospendi
+122|Teen 13–17
+123|Segnalato: {0}
+124|Profilo
+125|🎉 Tu e {0} ora siete amici! +{1} 💎
+126|Amici
+127|Tutti gli amici
+128|Nuovi amici
+129|Richieste
+130|Più recenti
+131|Ancora nessuna richiesta
+132|Quando qualcuno vorrà aggiungerti, lo vedrai qui.
+133|Trova nuovi amici
+134|Invita amici: +{0} 💎 a persona
+135|Nascondi
+136|Condividi
+137|Rifiuta
+138|Accetta
+139|Top match
+140|Tutti gli amici 👯
+141|Cerca per nome
+142|Ancora nessun amico
+143|Nessuno trovato
+144|Accetta le richieste o mandane tu in Scopri.
+145|Prova un altro nome.
+146|🤖 Bot di prova
+147|Chat
+148|Scegli la tua lingua
+149|Puoi cambiarla più tardi nelle impostazioni.
+150|+{0} 💎 accreditate – grazie! 💛
+151|kumi+ è attivo ✨ Grazie per il tuo supporto!
+152|Pagamento in attesa – le gemme arriveranno appena sarà confermato.
+153|Reinstalla una volta
+154|kumi {0} non può sostituire direttamente la versione installata. Scarica la nuova versione, elimina kumi e poi installala. Account, amici e chat restano – devi solo accedere di nuovo.
+155|Scarica
+156|Più tardi
+157|Nuova versione disponibile
+158|È arrivato kumi {0}.
+159|Caricamento … {0} %
+160|Aggiorna ora
+161|Foto controllata e aggiunta ✨
+162|+{0} 💎 · serie di {1} {2} 🔥
+163|giorno
+164|giorni
+165|Prima conferma la tua email – ti abbiamo mandato un link. Poi tocca di nuovo.
+166|Accesso admin attivato 🛡️
+167|Unisciti a kumi e trova nuovi amici! 🌍 Inserisci il mio codice {0} alla registrazione e riceverai 10 gemme bonus 💎
+168|Condividi kumi
+169|Impostazioni
+170|Anteprima
+171|{0} media
+172|Aggiungi foto
+173|Upgrade ⭐
+174|Le tue gemme: {0}
+175|Usale per trovare ancora più amici.
+176|Scopri di più
+177|Modifica profilo
+178|Negozio e kumi+
+179|Invita amici (+{0} 💎)
+180|Area admin
+181|Cerca aggiornamenti
+182|Lingua · {0}
+183|Esci
+184|Elimina account
+185|kumi {0} · Il tuo codice invito: {1}\nRegola d'oro: sii sempre gentile. 💛\n\nI nomi di giochi, serie e artisti appartengono ai rispettivi proprietari; kumi non ha alcun legame con loro.
+186|Admin? Verifica accesso
+187|Eliminare l'account?
+188|Profilo, foto, chat e amicizie verranno eliminati per sempre. Non si può annullare.
+189|Elimina per sempre
+190|Video controllato e aggiunto 🎬
+191|Il nome deve avere almeno 2 caratteri.
+192|Salvato ✅
+193|Salva
+194|Nome
+195|Il tuo nome
+196|Età
+197|Colore del profilo
+198|Sono
+199|Uomo
+200|Ragazzo
+201|Donna
+202|Ragazza
+203|Preferisco non dirlo
+204|Paese
+205|Bio
+206|Racconta qualcosa di te …
+207|I miei interessi
+208|Scegli
+209|Media
+210|Foto e video vengono controllati automaticamente. Tocca ⭐ per renderla la tua foto principale.
+211|Video del profilo
+212|Video del profilo (max. 30 s)
+213|Social
+214|Aggiungi Snapchat
+215|Aggiungi Instagram
+216|Aggiungi TikTok
+217|Visibile agli amici
+218|Solo i tuoi amici possono vedere i tuoi social – e solo se lo permetti. Pensa bene con chi li condividi.
+219|Solo i tuoi amici su kumi possono vedere i tuoi social – e solo se lo permetti.
+220|Colore del profilo 🎨
+221|Scegli un colore per il tuo cartellino
+222|Tocca quello che ti piace – così ti trovano persone con gli stessi interessi.
+223|Cerca, ad es. Minecraft
+224|Massimo {0} interessi.
+225|Fatto
+226|Controllo…
+227|Foto principale
+228|Rendi principale
+229|🎉 Ora siete amici!
+230|👋 Richiesta inviata
+231|Bloccato. Puoi annullarlo quando vuoi nelle impostazioni.
+232|Non più bloccato.
+233|Altro
+234|Blocca
+235|Profilo non disponibile
+236|Questa persona al momento non è raggiungibile.
+237|Bloccato · Sblocca
+238|Apri chat
+239|Richiesta inviata ✓
+240|Non potrete più vedervi né scrivervi. Puoi sbloccare quando vuoi nelle impostazioni, in «Utenti bloccati».
+241|Impossibile aprire il link.
+242|▶  Guarda il video
+243|🔒 Visibile quando sarete amici.
+244|Nessun social condiviso.
+245|Lounge: {0}
+246|Lounge
+247|Chat di gruppo per la tua fascia d'età · Modalità lenta 10 s
+248|Qui è ancora tranquillo
+249|Saluta e inizia la conversazione!
+250|Scrivi nella lounge…
+251|Massimo {0} – toccane uno in alto per rimuoverlo.
+252|Reimposta
+253|Trova amici a cui piace questo
+254|Scegli fino a {0} interessi
+255|Mostrami
+256|👥 Tutti
+257|🙋‍♂️ Uomini
+258|🙋‍♂️ Ragazzi
+259|🙋‍♀️ Donne
+260|🙋‍♀️ Ragazze
+261|Che vivono in
+262|{0} Il mio paese
+263|🌍 Ovunque
+264|🧭 Altro
+265|Su kumi vedi solo persone tra i 13 e i 17 anni – gli adulti sono separati.
+266|🤝 Prima chi ha cose in comune
+267|Le persone con i tuoi stessi interessi appaiono per prime
+268|Richieste più economiche, ricompense doppie.
+269|Connessione a Google Play …
+270|Gli acquisti funzionano solo con kumi dal Play Store – nel frattempo trovi gemme gratis qui sotto 💎
+271|Negozio
+272|Le richieste costano solo {0} invece di {1} gemme
+273|Ricompensa giornaliera doppia
+274|Plus dorato accanto al tuo nome
+275|kumi+ è attivo fino al {0} ✨
+276|kumi+ è attivo ✨
+277|Gestisci abbonamento
+278|Ottieni kumi+ · {0} / mese
+279|Disdicibile ogni mese tramite Google Play. Si rinnova automaticamente fino alla disdetta.
+280|Gemme

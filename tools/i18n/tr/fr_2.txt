@@ -1,0 +1,282 @@
+281|Tu pourras acheter des gems dès que tu auras kumi du Play Store. En attendant : des gems gratuits avec les invitations et la récompense quotidienne 👇
+282|Prix TTC. Paiement via Google Play.
+283|Avant 18 ans, tu peux dépenser au maximum 30 € par mois – demande d'abord à tes parents.
+284|Gems gratuits
+285|😊 Inviter des amis
+286|Par personne qui s'inscrit avec ton code {0}
+287|Inviter
+288|Récompense quotidienne
+289|Récupère des gems gratuits chaque jour – plus ta série est longue, plus tu en gagnes.
+290|Doublé avec kumi+ !
+291|= {0} demandes
+292|Jour {0}
+293|Récupérer · +{0} 💎
+294|Prochaine récompense dans %02d:%02d:%02d ⏰
+295|Chats 💬
+296|Pas encore de chats
+297|Dès que quelqu'un accepte ta demande, vous pourrez écrire ici.
+298|Découvrir des gens
+299|Chat de test avec le bot kumi
+300|Démarrer
+301|Chat fermé
+302|Bloqué. Vous ne pouvez plus vous écrire.
+303|En ligne
+304|Vu en ligne {0}
+305|Trop court – parle un peu plus longtemps.
+306|Enregistrement impossible.
+307|Désolé, ça ne marche pas sans l'autorisation du micro.
+308|Voir le profil
+309|Ce chat est fermé.
+310|🛡️ Ne partage jamais ton adresse, tes mots de passe ou des photos nues, et ne rencontre jamais seul des gens d'internet. Appuie longuement sur un message pour le signaler.
+311|[Message vocal]
+312|[Photo]
+313|Vous ne pourrez plus vous voir ni vous écrire, et le chat sera fermé. Tu peux débloquer à tout moment dans les paramètres, sous « Utilisateurs bloqués ».
+314|Vérification
+315|🚫 La photo a été bloquée
+316|📷 Vérification de la photo…
+317|Ça prend plus de temps que d'habitude.
+318|Réessayer
+319|Presque fini !
+320|Cette version de kumi n'est pas encore connectée à ton projet Firebase. Place le fichier google-services.json dans le dossier app/ et recompile l'app. Les étapes sont dans le README.
+321|Compte suspendu
+322|Ton compte a été suspendu car il a enfreint nos règles. Si tu penses que c'est une erreur, contacte l'équipe kumi.
+323|Entre d'abord ton adresse e-mail.
+324|On t'a envoyé un e-mail pour réinitialiser ton mot de passe.
+325|La connexion Google est en cours de configuration – utilise ton e-mail pour l'instant.
+326|Aucun compte Google n'est configuré sur ce téléphone.
+327|La connexion Google n'a pas marché – réessaie.
+328|La connexion Google n'a pas marché.
+329|Trouve des amis qui aiment les mêmes choses que toi.
+330|Continuer avec Google
+331|Continuer avec l'e-mail
+332|Dès 13 ans · Règle d'or : sois toujours gentil. 💛
+333|Crée ton compte avec ton e-mail
+334|Content de te revoir !
+335|Nouveau ici
+336|Se connecter
+337|E-mail
+338|Mot de passe (6 caractères min.)
+339|Mot de passe
+340|Créer un compte
+341|Mot de passe oublié ?
+342|Comment tu t'appelles ?
+343|Prénom ou surnom – c'est ce que les autres verront.
+344|C'est quand ton anniversaire ?
+345|Ton âge détermine qui tu rencontres sur kumi. Il ne pourra pas être modifié plus tard.
+346|Mois
+347|Année
+348|Cette date n'existe pas.
+349|kumi n'est autorisé qu'à partir de 13 ans.
+350|Vérifie l'année encore une fois.
+351|🎂  Tu as {0} ans
+352|🛡️ Tu rejoins la communauté ados (13–17). Tu n'y rencontres que des gens de ton âge – les adultes ne peuvent pas te voir ni t'écrire.
+353|👨‍👩‍👧 Comme tu as moins de 16 ans, un parent doit donner son accord. On enverra un e-mail à cette adresse.
+354|E-mail d'un parent
+355|Je suis …
+356|Pour que les bonnes personnes te trouvent dans la recherche.
+357|✓ Je préfère ne pas le dire
+358|Je préfère ne pas le dire
+359|Tu habites où ?
+360|Comme ça, tu trouves plus vite des gens près de chez toi.
+361|touche pour changer
+362|Code d'invitation
+363|🎁  J'ai un code d'invitation
+364|J'accepte les conditions d'utilisation et la politique de confidentialité et je respecte la règle d'or : sois toujours gentil.
+365|C'est parti
+366|E-mail envoyé ✉️
+367|On a envoyé un e-mail à {0}. Dès qu'un parent accepte, c'est parti – l'app se met à jour toute seule.
+368|Autre e-mail d'un parent (facultatif)
+369|Renvoyer l'e-mail
+370|Jeux
+371|Musique
+372|Sport
+373|Créatif
+374|Films & anime
+375|Lifestyle
+376|Savoir
+377|Gaming
+378|Football
+379|Dessin
+380|Films
+381|Cuisine
+382|Lecture
+383|Jeux de société
+384|Chant
+385|Basket
+386|Photographie
+387|Séries
+388|Animaux
+389|Code
+390|Jeux rétro
+391|Instruments
+392|Fitness
+393|Écriture
+394|Anime
+395|Nature
+396|Sciences
+397|Jeux de tir
+398|Rap
+399|Skate
+400|Théâtre
+401|Horreur
+402|Voyages
+403|Langues
+404|Jeux de rôle
+405|Pop
+406|Danse
+407|Crochet & tricot
+408|Super-héros
+409|Mode
+410|Espace
+411|Jeux de course
+412|Rock
+413|Yoga
+414|Couture
+415|Documentaires
+416|Mèmes
+417|Histoire
+418|Énigmes
+419|Metal
+420|Natation
+421|Bricolage
+422|K-dramas
+423|Podcasts
+424|Psychologie
+425|Échecs
+426|Piano
+427|Vélo
+428|Faire des vidéos
+429|Manga
+430|Chats
+431|Tech & IA
+432|Jeux de cartes
+433|Batterie
+434|Volley
+435|Art
+436|Science-fiction
+437|Chiens
+438|Maths
+439|Jeux mobiles
+440|Classique
+441|Tennis
+442|Poterie
+443|Fantasy
+444|Chevaux
+445|Biologie
+446|Gaming PC
+447|Techno
+448|Boxe
+449|Tours de magie
+450|Romance
+451|Dinosaures
+452|Philosophie
+453|E-sport
+454|Arts martiaux
+455|Journaling
+456|True crime
+457|Reptiles
+458|Finance
+459|Faire de la musique
+460|Hockey sur glace
+461|Cosplay
+462|Streams
+463|Foodie
+464|Architecture
+465|Ping-pong
+466|Art numérique
+467|Pâtisserie
+468|Environnement
+469|Équitation
+470|Design
+471|Café
+472|Escalade
+473|Bubble tea
+474|Course à pied
+475|Vegan
+476|Ski
+477|Shopping
+478|Surf
+479|Sneakers
+480|Gymnastique
+481|Maquillage
+482|Football américain
+483|Astrologie
+484|Formule 1
+485|Camping
+486|Handball
+487|Chill
+488|Pêche
+489|Faire la fête
+490|Badminton
+491|Voitures
+492|Motos
+493|Plantes
+494|Les Sims
+495|Les Simpson
+496|Chats
+497|Harcèlement
+498|Contenu sexuel
+499|Faux âge / faux profil
+500|Spam ou arnaque
+501|Violence ou menaces
+502|Autre
+503|Connecte-toi.
+504|Ton compte n'est pas encore activé.
+505|Réservé aux admins.
+506|Entre un nom d'au moins 2 caractères.
+507|Entre une date de naissance valide.
+508|Choisis ton pays.
+509|Tu dois avoir au moins 13 ans pour utiliser kumi.
+510|Entre l'adresse e-mail d'un parent.
+511|L'e-mail du parent doit être différent du tien.
+512|Tu as déjà un profil.
+513|Ton compte n'a pas besoin d'accord parental.
+514|Attends quelques minutes avant de renvoyer l'e-mail.
+515|Entre une adresse e-mail valide.
+516|L'envoi d'e-mails n'est pas encore configuré. Contacte l'équipe kumi.
+517|Pas d'accès admin pour ce compte.
+518|Confirme d'abord ton adresse e-mail.
+519|Action invalide.
+520|Signalement introuvable.
+521|Cette amitié n'est pas possible.
+522|Personne invalide.
+523|Redémarre l'app.
+524|Ce profil n'est pas disponible pour le moment.
+525|Vous êtes déjà amis.
+526|Tu as déjà envoyé une demande.
+527|Une demande n'est pas possible ici pour le moment.
+528|Pas assez de gems – une demande coûte {0} 💎. Récupères-en avec le check-in quotidien ou dans la boutique !
+529|Demande invalide.
+530|Cette demande n'existe plus.
+531|Compte introuvable.
+532|Tu as déjà fait ton check-in aujourd'hui. À demain ! 👋
+533|Fichier invalide.
+534|Envoi introuvable. Réessaie.
+535|Le type ou la taille du fichier ne convient pas.
+536|Tu peux avoir au maximum {0} photos.
+537|La vérification automatique n'est pas joignable pour le moment. Réessaie plus tard.
+538|Ça enfreint nos règles et n'a pas été envoyé.
+539|Fichier introuvable.
+540|Le message est vide.
+541|Mode lent : attends encore {0} secondes.
+542|Profil introuvable.
+543|Les achats ne sont pas encore activés sur le serveur. Pas d'inquiétude : l'achat sera crédité au prochain lancement.
+544|Google ne connaît pas cet achat.
+545|Google Play n'est pas joignable pour le moment. L'achat sera finalisé au prochain lancement.
+546|Produit inconnu.
+547|Avant 18 ans, tu peux dépenser au maximum {0} € par mois sur kumi. Ce sera de nouveau possible le mois prochain.
+548|Achat invalide.
+549|Cet achat a été annulé.
+550|Cet achat appartient à un autre compte.
+551|Cet abonnement appartient à un autre compte.
+552|📷 Photo
+553|📷 Photo (bloquée)
+554|🎤 Message vocal
+555|Vous êtes amis 🎉
+556|{name} t'a ajouté aussi. Dis bonjour !
+557|Nouvelle demande d'ami 👋
+558|{name} veut être ton ami.
+559|Demande acceptée 🎉
+560|{name} a accepté ta demande. Dis bonjour !
+561|Joyeux anniversaire ! 🎂
+562|Tu as maintenant 18 ans et tu passes dans la communauté adulte de kumi.

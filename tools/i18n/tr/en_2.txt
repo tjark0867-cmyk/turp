@@ -1,0 +1,282 @@
+281|You can buy gems once you have kumi from the Play Store. Until then: free gems via invites and daily rewards 👇
+282|Prices incl. VAT. Payment via Google Play.
+283|Under 18 you can spend at most €30 per month – best ask your parents first.
+284|Free gems
+285|😊 Invite friends
+286|Per person who signs up with your code {0}
+287|Invite
+288|Daily reward
+289|Get free gems every day – the longer your streak, the more you get.
+290|Double with kumi+!
+291|= {0} requests
+292|Day {0}
+293|Claim · +{0} 💎
+294|Next reward in %02d:%02d:%02d ⏰
+295|Chats 💬
+296|No chats yet
+297|As soon as someone accepts your request, you can chat here.
+298|Discover people
+299|Test chat with the kumi bot
+300|Start
+301|Chat closed
+302|Blocked. You can't message each other anymore.
+303|Online
+304|Last online {0}
+305|Too short – talk a bit longer.
+306|Recording not possible.
+307|Sorry, this doesn't work without microphone permission.
+308|View profile
+309|This chat is closed.
+310|🛡️ Don't share your address, passwords or nude pictures, and never meet people from the internet alone. Press and hold a message to report it.
+311|[Voice message]
+312|[Photo]
+313|You won't be able to see or message each other anymore, and the chat will be closed. You can unblock anytime in the settings under "Blocked users".
+314|Checking
+315|🚫 Photo was blocked
+316|📷 Checking photo…
+317|This is taking longer than usual.
+318|Try again
+319|Almost done!
+320|This kumi version isn't connected to your Firebase project yet. Put the file google-services.json into the app/ folder and rebuild the app. The individual steps are in the README.
+321|Account banned
+322|Your account was banned because it broke our rules. If you think this is a mistake, contact the kumi team.
+323|Enter your email address first.
+324|We sent you an email to reset your password.
+325|Google sign-in is being set up – please use your email for now.
+326|There's no Google account set up on this phone.
+327|Google sign-in didn't work – please try again.
+328|Google sign-in didn't work.
+329|Find friends who love the same things as you.
+330|Continue with Google
+331|Continue with email
+332|13+ · Golden rule: always be kind. 💛
+333|Create your account with email
+334|Welcome back!
+335|New here
+336|Log in
+337|Email
+338|Password (min. 6 characters)
+339|Password
+340|Create account
+341|Forgot password?
+342|What's your name?
+343|First name or nickname – that's how others see you.
+344|When's your birthday?
+345|Your age decides who you meet on kumi. It can't be changed later.
+346|Month
+347|Year
+348|That date doesn't exist.
+349|kumi is only allowed from age 13.
+350|Please check the year again.
+351|🎂  You're {0}
+352|🛡️ You'll join the teen community (13–17). There you only meet people your age – adults can't see you or message you.
+353|👨‍👩‍👧 Because you're under 16, a parent has to agree. We'll send an email to this address.
+354|A parent's email
+355|I am …
+356|So the right people find you in search.
+357|✓ Prefer not to say
+358|I'd rather not say
+359|Where do you live?
+360|That way you'll find people near you faster.
+361|tap to change
+362|Invite code
+363|🎁  I have an invite code
+364|I accept the terms of use and the privacy policy and follow the golden rule: always be kind.
+365|Let's go
+366|Email sent ✉️
+367|We sent an email to {0}. As soon as a parent agrees, you're good to go – the app will update by itself.
+368|Other parent email (optional)
+369|Send email again
+370|Games
+371|Music
+372|Sports
+373|Creative
+374|Movies & anime
+375|Lifestyle
+376|Knowledge
+377|Gaming
+378|Soccer
+379|Drawing
+380|Movies
+381|Cooking
+382|Reading
+383|Board games
+384|Singing
+385|Basketball
+386|Photography
+387|TV shows
+388|Animals
+389|Coding
+390|Retro games
+391|Instruments
+392|Fitness
+393|Writing
+394|Anime
+395|Nature
+396|Science
+397|Shooters
+398|Rap
+399|Skating
+400|Theater
+401|Horror
+402|Travel
+403|Languages
+404|RPGs
+405|Pop
+406|Dancing
+407|Crochet & knitting
+408|Superheroes
+409|Fashion
+410|Space
+411|Racing games
+412|Rock
+413|Yoga
+414|Sewing
+415|Documentaries
+416|Memes
+417|History
+418|Puzzles
+419|Metal
+420|Swimming
+421|Crafts
+422|K-dramas
+423|Podcasts
+424|Psychology
+425|Chess
+426|Piano
+427|Cycling
+428|Making videos
+429|Manga
+430|Cats
+431|Tech & AI
+432|Card games
+433|Drums
+434|Volleyball
+435|Art
+436|Sci-fi
+437|Dogs
+438|Math
+439|Mobile games
+440|Classical
+441|Tennis
+442|Pottery
+443|Fantasy
+444|Horses
+445|Biology
+446|PC gaming
+447|Techno
+448|Boxing
+449|Magic tricks
+450|Romance
+451|Dinosaurs
+452|Philosophy
+453|Esports
+454|Martial arts
+455|Journaling
+456|True crime
+457|Reptiles
+458|Finance
+459|Making music
+460|Ice hockey
+461|Cosplay
+462|Streams
+463|Foodie
+464|Architecture
+465|Table tennis
+466|Digital art
+467|Baking
+468|Environment
+469|Horse riding
+470|Design
+471|Coffee
+472|Climbing
+473|Bubble tea
+474|Running
+475|Vegan
+476|Skiing
+477|Shopping
+478|Surfing
+479|Sneakers
+480|Gymnastics
+481|Make-up
+482|American football
+483|Astrology
+484|Formula 1
+485|Camping
+486|Handball
+487|Chilling
+488|Fishing
+489|Partying
+490|Badminton
+491|Cars
+492|Motorcycles
+493|Plants
+494|The Sims
+495|The Simpsons
+496|Chats
+497|Harassment or bullying
+498|Sexual content
+499|Wrong age / fake profile
+500|Spam or scam
+501|Violence or threats
+502|Other
+503|Please log in.
+504|Your account hasn't been activated yet.
+505|Admins only.
+506|Please enter a name with at least 2 characters.
+507|Please enter a valid date of birth.
+508|Please choose your country.
+509|You must be at least 13 years old to use kumi.
+510|Please enter a parent's email address.
+511|The parent's email must be different from your own.
+512|You already have a profile.
+513|Your account doesn't need consent.
+514|Please wait a few minutes before sending the email again.
+515|Please enter a valid email address.
+516|Email sending isn't set up yet. Please contact the kumi team.
+517|No admin access for this account.
+518|Please confirm your email address first.
+519|Invalid action.
+520|Report not found.
+521|This friendship isn't possible.
+522|Invalid person.
+523|Please restart the app.
+524|This profile isn't available right now.
+525|You're already friends.
+526|You already sent a request.
+527|A request isn't possible here right now.
+528|Not enough gems – a request costs {0} 💎. Get more with the daily check-in or in the shop!
+529|Invalid request.
+530|This request doesn't exist anymore.
+531|Account not found.
+532|You already checked in today. See you tomorrow! 👋
+533|Invalid file.
+534|Upload not found. Please try again.
+535|File type or size doesn't fit.
+536|You can have at most {0} photos.
+537|The automatic check isn't reachable right now. Please try again later.
+538|This breaks our rules and wasn't uploaded.
+539|File not found.
+540|The message is empty.
+541|Slow mode: wait {0} more seconds.
+542|Profile not found.
+543|Purchases aren't enabled on the server yet. Don't worry: the purchase will be credited the next time you start the app.
+544|Google doesn't know this purchase.
+545|Google Play isn't reachable right now. The purchase will be completed the next time you start the app.
+546|Unknown product.
+547|Under 18 you can spend at most €{0} per month on kumi. You can buy again next month.
+548|Invalid purchase.
+549|This purchase was canceled.
+550|This purchase belongs to another account.
+551|This subscription belongs to another account.
+552|📷 Photo
+553|📷 Photo (blocked)
+554|🎤 Voice message
+555|You're friends now 🎉
+556|{name} added you back. Say hi!
+557|New friend request 👋
+558|{name} wants to be friends with you.
+559|Request accepted 🎉
+560|{name} accepted your request. Say hi!
+561|Happy Birthday! 🎂
+562|You're 18 now and moving to the adult community of kumi.

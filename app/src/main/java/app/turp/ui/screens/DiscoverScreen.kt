@@ -79,6 +79,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.absolutePadding
+import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -615,8 +617,8 @@ private fun ProfileCard(
                 contentDescription = null,
                 // wie bei purp: erscheint auf der Seite, von der die Karte wegzieht (hier links)
                 modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .padding(start = 20.dp)
+                    .align(AbsoluteAlignment.CenterLeft)
+                    .absolutePadding(left = 20.dp)
                     .size(124.dp)
                     .graphicsLayer {
                         val p = likeProgress().coerceIn(0f, 1f)
@@ -631,8 +633,8 @@ private fun ProfileCard(
                 contentDescription = null,
                 // beim Wischen nach links rechts auf der Karte
                 modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(end = 20.dp)
+                    .align(AbsoluteAlignment.CenterRight)
+                    .absolutePadding(right = 20.dp)
                     .size(124.dp)
                     .graphicsLayer {
                         val p = (-likeProgress()).coerceIn(0f, 1f)
