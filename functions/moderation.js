@@ -116,4 +116,4 @@ async function isVideoSafe(gcsUri) {
   return !frames.some((f) => LIKELY.has(f.pornographyLikelihood));
 }
 
-module.exports = { isImageSafe, isStoredImageSafe, isVideoSafe, warmUp };
+module.exports = { isImageSafe, isStoredImageSafe, isVideoSafe, warmUp, accessToken };

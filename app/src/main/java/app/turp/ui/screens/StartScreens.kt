@@ -41,6 +41,7 @@ import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.NoCredentialException
 import app.turp.R
 import app.turp.data.findActivity
+import app.turp.data.callFunction
 import app.turp.ui.components.Sticker
 import app.turp.ui.theme.Sky
 import app.turp.ui.theme.Sun
@@ -273,6 +274,7 @@ class AuthViewModel : BaseViewModel() {
     /** Google-Konto auswählen lassen und damit bei Firebase anmelden */
     fun signInWithGoogle(activity: Activity) = launchSafe {
         val clientId = googleWebClientId(activity)
+            ?: runCatching { callFunction("googleClientId")["clientId"] as? String }.getOrNull()?.takeIf { it.isNotBlank() }
         if (clientId == null) {
             toast("Die Google-Anmeldung wird gerade eingerichtet – nutze bitte so lange deine E-Mail.")
             return@launchSafe

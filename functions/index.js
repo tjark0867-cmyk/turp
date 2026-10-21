@@ -28,7 +28,7 @@ const { clean } = require("./wordfilter");
 // Erlaubte Interessen (gleiche Liste wie in der App, InterestCatalog.kt)
 const ALLOWED_INTERESTS = new Set(require("./interests.json"));
 const MAX_INTERESTS = 8;
-const { isStoredImageSafe, isVideoSafe, warmUp } = require("./moderation");
+const { isStoredImageSafe, isVideoSafe, warmUp, accessToken } = require("./moderation");
 const billing = require("./billing");
 
 initializeApp();
@@ -1426,3 +1426,27 @@ exports.dailyMaintenance = onSchedule(
       await w.close();
     }
   });
+
+// ---- Anmelden mit Google ----------------------------------------------------
+
+// Web-Client-ID für „Mit Google“. Steht in google-services.json, sobald Google-Login
+// in Firebase eingeschaltet ist – so klappt es auch ohne neue App-Version.
+let googleWebClient = "";
+exports.googleClientId = onCall(async () => {
+  if (googleWebClient) return { clientId: googleWebClient };
+  try {
+    const project = process.env.GCLOUD_PROJECT || JSON.parse(process.env.FIREBASE_CONFIG || "{}").projectId;
+    const headers = { Authorization: `Bearer ${await accessToken()}` };
+    const apps = await (await fetch(`https://firebase.googleapis.com/v1beta1/projects/${project}/androidApps`, { headers })).json();
+    const app = (apps.apps || []).find((a) => a.packageName === "app.turp");
+    if (!app) return { clientId: "" };
+    const cfg = await (await fetch(`https://firebase.googleapis.com/v1beta1/${app.name}/config`, { headers })).json();
+    const json = JSON.parse(Buffer.from(cfg.configFileContents || "", "base64").toString("utf8") || "{}");
+    const clients = (((json.client || [])[0] || {}).oauth_client) || [];
+    const web = clients.find((c) => c.client_type === 3);
+    googleWebClient = web ? web.client_id : "";
+  } catch (e) {
+    logger.warn("Google-Client-ID nicht gefunden", e.message);
+  }
+  return { clientId: googleWebClient };
+});
