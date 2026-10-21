@@ -29,6 +29,8 @@ data class UserProfile(
     val bot: Boolean = false,
     /** hat kumi+ (für das goldene Plus am Namen) */
     val plus: Boolean = false,
+    /** "male", "female", "other" oder leer (ältere Konten) */
+    val gender: String = "",
 )
 
 data class Account(
@@ -167,6 +169,7 @@ fun DocumentSnapshot.toProfile() = UserProfile(
     ageGroup = s("ageGroup"),
     bot = b("bot"),
     plus = b("plus"),
+    gender = s("gender"),
 )
 
 fun DocumentSnapshot.toAccount() = Account(

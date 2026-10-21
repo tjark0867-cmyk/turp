@@ -623,6 +623,8 @@ fun EmptyState(
     modifier: Modifier = Modifier,
     actionLabel: String? = null,
     onAction: (() -> Unit)? = null,
+    secondaryLabel: String? = null,
+    onSecondary: (() -> Unit)? = null,
 ) {
     Column(
         modifier
@@ -639,6 +641,9 @@ fun EmptyState(
         if (actionLabel != null && onAction != null) {
             Spacer(Modifier.height(16.dp))
             OutlinedButton(onClick = onAction) { Text(actionLabel) }
+        }
+        if (secondaryLabel != null && onSecondary != null) {
+            TextButton(onClick = onSecondary) { Text(secondaryLabel, color = TextLow) }
         }
     }
 }

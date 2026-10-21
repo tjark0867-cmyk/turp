@@ -153,6 +153,7 @@ class DiscoverViewModel : BaseViewModel() {
             // "80" heißt beim oberen Regler: 80 und älter
             val upper = if (f.maxAge >= 80) 200 else f.maxAge
             val list = DiscoverRepo.candidates(group, f.countryCode(myCountry), f.minAge, upper, f.interests)
+                .filter { f.gender.isEmpty() || it.bot || it.gender == f.gender }
             cards.value = rank(list, f)
         } finally {
             loaded = true
@@ -244,7 +245,7 @@ fun DiscoverScreen(
     LaunchedEffect(myProfile) { myProfile?.let(vm::setMe) }
     LaunchedEffect(session.account.ageGroup, myProfile != null) {
         if (myProfile != null) {
-            vm.init(session.account.ageGroup) { bounds -> DiscoverPrefs.load(context, bounds) }
+            vm.init(session.account.ageGroup) { bounds -> DiscoverPrefs.load(context, session.uid, bounds) }
         }
     }
 
@@ -306,7 +307,7 @@ fun DiscoverScreen(
                 myCountry = myProfile?.country.orEmpty(),
                 onClose = { showFilter = false },
                 onSave = { f ->
-                    DiscoverPrefs.save(context, vm.ageBounds, f)
+                    DiscoverPrefs.save(context, session.uid, vm.ageBounds, f)
                     showFilter = false
                     vm.apply(f)
                 },
@@ -358,7 +359,13 @@ fun DiscoverScreen(
                         text = "Probier andere Interessen, ein anderes Land oder ein größeres Alter.",
                         modifier = Modifier.align(Alignment.Center),
                         actionLabel = "Such-Einstellungen ändern",
-                        onAction = { showFilter = true }
+                        onAction = { showFilter = true },
+                        secondaryLabel = "Alle Filter zurücksetzen",
+                        onSecondary = {
+                            val d = DiscoverFilter.defaults(vm.ageBounds)
+                            DiscoverPrefs.save(context, session.uid, vm.ageBounds, d)
+                            vm.apply(d)
+                        }
                     )
                     cards.isEmpty() -> EmptyState(
                         emoji = "🌍",

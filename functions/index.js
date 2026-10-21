@@ -204,6 +204,8 @@ async function notify(uid, title, body, data = {}) {
   }
 }
 
+const GENDERS = new Set(["male", "female", "other"]);
+
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 function randomCode(len = 6) {
   const bytes = crypto.randomBytes(len);
@@ -222,6 +224,8 @@ exports.createProfile = onCall({ secrets: [SMTP_URI] }, async (req) => {
   const country = str(data.country, 2).toUpperCase();
   const parentEmail = str(data.parentEmail, 200).toLowerCase();
   const inviteCode = str(data.inviteCode, 12).toUpperCase();
+  // Geschlecht (ältere App-Versionen schicken keins)
+  const gender = GENDERS.has(str(data.gender, 10)) ? str(data.gender, 10) : "";
 
   if (name.length < 2) throw new HttpsError("invalid-argument", "Bitte gib einen Namen mit mindestens 2 Zeichen ein.");
   if (!isValidIsoDate(birthDate)) throw new HttpsError("invalid-argument", "Bitte gib ein gültiges Geburtsdatum ein.");
@@ -293,6 +297,7 @@ exports.createProfile = onCall({ secrets: [SMTP_URI] }, async (req) => {
     name,
     age,
     country,
+    gender,
     bio: "",
     interests: [],
     photos: [],

@@ -568,7 +568,7 @@ class EditProfileViewModel : BaseViewModel() {
         launchSafe { ProfileRepo.updateProfile(mapOf("photos" to listOf(url) + (p.photos - url))) }
     }
 
-    fun save(name: String, bio: String, interests: List<String>, color: String, socials: Socials, onDone: () -> Unit) =
+    fun save(name: String, bio: String, interests: List<String>, color: String, gender: String, socials: Socials, onDone: () -> Unit) =
         launchSafe {
             if (name.trim().length < 2) {
                 toast("Der Name braucht mindestens 2 Zeichen.")
@@ -580,7 +580,7 @@ class EditProfileViewModel : BaseViewModel() {
                     "bio" to bio.trim(),
                     "interests" to interests,
                     "color" to color,
-                )
+                ) + (if (gender.isNotEmpty()) mapOf("gender" to gender) else emptyMap())
             )
             ProfileRepo.saveSocials(socials)
             toast("Gespeichert ✅")
@@ -609,6 +609,7 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
     var bio by remember { mutableStateOf(p.bio) }
     var interests by remember { mutableStateOf(p.interests) }
     var color by remember { mutableStateOf(p.color) }
+    var gender by remember { mutableStateOf(p.gender) }
     val socialsLoaded = socials != null
     var instagram by remember(socialsLoaded) { mutableStateOf(socials?.instagram.orEmpty()) }
     var snapchat by remember(socialsLoaded) { mutableStateOf(socials?.snapchat.orEmpty()) }
@@ -626,7 +627,7 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
     }
 
     fun doSave() {
-        vm.save(name, bio, interests, color, Socials(instagram, snapchat, tiktok, visible), onDone = onBack)
+        vm.save(name, bio, interests, color, gender, Socials(instagram, snapchat, tiktok, visible), onDone = onBack)
     }
 
     Column(
@@ -692,6 +693,32 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
                             .size(18.dp)
                             .background(parseColor(color), CircleShape)
                     )
+                }
+                RowDivider()
+                FieldRow("Ich bin") {
+                    val adult = p.ageGroup == "adult"
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        listOf(
+                            "male" to if (adult) "Mann" else "Junge",
+                            "female" to if (adult) "Frau" else "Mädchen",
+                            "other" to "Keine Angabe",
+                        ).forEach { (value, label) ->
+                            val sel = gender == value
+                            Surface(
+                                onClick = { gender = value },
+                                shape = CircleShape,
+                                color = if (sel) Teal else InkHigh,
+                            ) {
+                                Text(
+                                    label,
+                                    color = if (sel) Ink else TextLow,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                                )
+                            }
+                        }
+                    }
                 }
                 RowDivider()
                 FieldRow("Land") { Text("${Countries.flag(p.country)} ${Countries.name(p.country)}", color = TextLow, fontSize = 15.sp) }

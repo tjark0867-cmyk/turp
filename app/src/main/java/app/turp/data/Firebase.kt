@@ -80,7 +80,10 @@ fun Query.asFlow(): Flow<List<DocumentSnapshot>> {
 }
 
 /** Verständliche Fehlermeldung auf Deutsch */
-fun Throwable.toUserMessage(): String = when (this) {
+fun Throwable.toUserMessage(): String =
+    if (this is com.google.firebase.auth.FirebaseAuthException && errorCode == "ERROR_OPERATION_NOT_ALLOWED")
+        "Diese Anmeldeart ist noch nicht freigeschaltet – nutze bitte vorerst deine E-Mail."
+    else when (this) {
     is FirebaseFunctionsException -> when {
         code == FirebaseFunctionsException.Code.INTERNAL || code == FirebaseFunctionsException.Code.UNKNOWN ->
             "Serverfehler – bitte versuch es gleich noch einmal."

@@ -99,6 +99,34 @@ jobs:
               -d '{"signIn":{"email":{"enabled":true,"passwordRequired":true}}}' > auth.json
             if grep -q '"enabled": true' auth.json; then echo "E-Mail/Passwort-Login ist aktiv"; else cat auth.json; echo "::warning title=Login::E-Mail/Passwort-Login konnte nicht automatisch eingeschaltet werden."; fi
 
+            echo "== Google-Login vorbereiten"
+            # Fingerabdrücke des App-Signaturschlüssels (öffentlich, keine Geheimnisse) –
+            # ohne sie gibt Google der App keinen Anmelde-Token.
+            FB="npx --yes firebase-tools@latest"
+            APP=$($FB apps:list ANDROID --project "$P" --json 2>/dev/null \
+              | jq -r '.result[]? | select(.packageName=="app.turp" or .namespace=="app.turp") | .appId' | head -n 1 || true)
+            if [ -n "$APP" ]; then
+              EXIST=$($FB apps:android:sha:list "$APP" --project "$P" --json 2>/dev/null | jq -r '.result[]?.shaHash' | tr 'A-Z' 'a-z' || true)
+              for SHA in 77db7b9143833074a7f4a774661bbb2fd9d8e2c8 50648b4c69a709fdb6ffb102c7267a7429f1875ecf4fb8ad2d59fb4139987295; do
+                if printf '%s' "$EXIST" | tr -d ':' | grep -q "$SHA"; then
+                  echo "Fingerabdruck ${SHA:0:8}… ist eingetragen"
+                elif $FB apps:android:sha:create "$APP" "$SHA" --project "$P" > /dev/null 2>&1; then
+                  echo "Fingerabdruck ${SHA:0:8}… wurde eingetragen"
+                else
+                  echo "::warning title=Google-Login::Fingerabdruck ${SHA:0:8}… konnte nicht eingetragen werden."
+                fi
+              done
+              $FB apps:sdkconfig ANDROID "$APP" --project "$P" --json 2>/dev/null \
+                | jq -r '.result.fileContents // empty' | jq -r '[.client[0].oauth_client[]?.client_type] | "OAuth-Clients (Typen): \(.)"' || true
+            fi
+            GOOGLE=$(curl -sS "${HDR[@]}" "$API/admin/v2/projects/$P/defaultSupportedIdpConfigs/google.com" || true)
+            if printf '%s' "$GOOGLE" | jq -e '.enabled == true' > /dev/null 2>&1; then
+              echo "Google-Login ist aktiv"
+            else
+              echo "Google-Login ist noch aus"
+              echo "::warning title=Google-Login::Bitte in der Firebase-Konsole unter Authentication > Anmeldemethode > Google einschalten (Support-E-Mail auswählen, speichern)."
+            fi
+
             echo "== Rechte für die Server-Funktionen"
             NUM=$(gcloud projects describe "$P" --format='value(projectNumber)')
             for ROLE in roles/editor roles/cloudbuild.builds.builder roles/secretmanager.secretAccessor; do

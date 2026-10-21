@@ -86,6 +86,7 @@ fun SearchPreferences(
     var other by remember { mutableStateOf(initial.otherCountry) }
     var range by remember { mutableStateOf(initial.minAge.toFloat()..initial.maxAge.toFloat()) }
     var sharedFirst by remember { mutableStateOf(initial.sharedFirst) }
+    var gender by remember { mutableStateOf(initial.gender) }
     var query by remember { mutableStateOf("") }
     var category by remember { mutableStateOf<InterestCategory?>(null) }
     var searchFocused by remember { mutableStateOf(false) }
@@ -102,6 +103,7 @@ fun SearchPreferences(
         minAge = range.start.roundToInt(),
         maxAge = range.endInclusive.roundToInt(),
         sharedFirst = sharedFirst,
+        gender = gender,
     )
 
     fun toggle(def: InterestDef) {
@@ -148,6 +150,7 @@ fun SearchPreferences(
                     other = ""
                     range = d.minAge.toFloat()..d.maxAge.toFloat()
                     sharedFirst = d.sharedFirst
+                    gender = d.gender
                 }) { Text("Zurücksetzen", color = TextLow, fontSize = 13.sp) }
             }
         }
@@ -194,6 +197,15 @@ fun SearchPreferences(
             ) {
                 InterestRows(items = items, selected = interests, onToggle = ::toggle)
                 Spacer(Modifier.height(14.dp))
+
+                PrefLabel("Zeig mir")
+                val adults = bounds.first >= 18
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OptionPill("👥 Alle", gender.isEmpty(), Modifier.weight(1f)) { gender = "" }
+                    OptionPill(if (adults) "🙋‍♂️ Männer" else "🙋‍♂️ Jungs", gender == "male", Modifier.weight(1f)) { gender = "male" }
+                    OptionPill(if (adults) "🙋‍♀️ Frauen" else "🙋‍♀️ Mädchen", gender == "female", Modifier.weight(1f)) { gender = "female" }
+                }
+                Spacer(Modifier.height(18.dp))
 
                 PrefLabel("Die wohnen in")
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {

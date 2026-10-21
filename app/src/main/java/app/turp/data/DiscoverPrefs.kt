@@ -14,6 +14,8 @@ data class DiscoverFilter(
     val maxAge: Int = 17,
     /** Leute mit gleichen Interessen wie im eigenen Profil zuerst zeigen */
     val sharedFirst: Boolean = true,
+    /** "" = alle, sonst nur "male" oder "female" */
+    val gender: String = "",
 ) {
     /** Ländercode für die Abfrage, null = weltweit */
     fun countryCode(myCountry: String): String? = when (countryMode) {
@@ -25,7 +27,7 @@ data class DiscoverFilter(
     /** Weicht von den Standard-Einstellungen ab? (für den Punkt am Filter-Symbol) */
     fun isActive(bounds: IntRange): Boolean =
         interests.isNotEmpty() || countryMode != CountryMode.WORLD ||
-            minAge > bounds.first || maxAge < bounds.last
+            minAge > bounds.first || maxAge < bounds.last || gender.isNotEmpty()
 
     companion object {
         const val MAX_SEARCH_INTERESTS = 4
@@ -35,10 +37,11 @@ data class DiscoverFilter(
 }
 
 object DiscoverPrefs {
-    private const val FILE = "discover_prefs"
+    /** Pro Konto eigene Datei – sonst übernimmt ein neues Konto die Filter des alten */
+    private fun file(uid: String) = "discover_prefs_$uid"
 
-    fun load(context: Context, bounds: IntRange): DiscoverFilter {
-        val p = context.getSharedPreferences(FILE, Context.MODE_PRIVATE)
+    fun load(context: Context, uid: String, bounds: IntRange): DiscoverFilter {
+        val p = context.getSharedPreferences(file(uid), Context.MODE_PRIVATE)
         val group = "${bounds.first}-${bounds.last}"
         // Nach dem Wechsel der Altersgruppe (18. Geburtstag) passen die alten Werte nicht mehr
         val sameGroup = p.getString("group", null) == group
@@ -53,11 +56,12 @@ object DiscoverPrefs {
             minAge = min.coerceIn(bounds),
             maxAge = max.coerceIn(bounds).coerceAtLeast(min.coerceIn(bounds)),
             sharedFirst = p.getBoolean("sharedFirst", true),
+            gender = p.getString("gender", "").orEmpty(),
         )
     }
 
-    fun save(context: Context, bounds: IntRange, f: DiscoverFilter) {
-        context.getSharedPreferences(FILE, Context.MODE_PRIVATE).edit()
+    fun save(context: Context, uid: String, bounds: IntRange, f: DiscoverFilter) {
+        context.getSharedPreferences(file(uid), Context.MODE_PRIVATE).edit()
             .putString("group", "${bounds.first}-${bounds.last}")
             .putString("interests", f.interests.joinToString("\n"))
             .putString("countryMode", f.countryMode.name)
@@ -65,6 +69,7 @@ object DiscoverPrefs {
             .putInt("minAge", f.minAge)
             .putInt("maxAge", f.maxAge)
             .putBoolean("sharedFirst", f.sharedFirst)
+            .putString("gender", f.gender)
             .apply()
     }
 }

@@ -85,6 +85,7 @@ object ProfileRepo {
         country: String,
         parentEmail: String,
         inviteCode: String,
+        gender: String,
     ) {
         callFunction(
             "createProfile",
@@ -94,6 +95,7 @@ object ProfileRepo {
                 "country" to country,
                 "parentEmail" to parentEmail,
                 "inviteCode" to inviteCode,
+                "gender" to gender,
             )
         )
     }

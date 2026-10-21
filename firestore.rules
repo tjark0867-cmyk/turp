@@ -31,7 +31,7 @@ service cloud.firestore {
 
       allow update: if signedIn() && me() == uid
         && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['name', 'bio', 'interests', 'photos', 'videoUrl', 'color'])
+             .hasOnly(['name', 'bio', 'interests', 'photos', 'videoUrl', 'color', 'gender'])
         && request.resource.data.name is string
         && request.resource.data.name.size() >= 2 && request.resource.data.name.size() <= 30
         && request.resource.data.bio is string && request.resource.data.bio.size() <= 500
@@ -42,7 +42,8 @@ service cloud.firestore {
         && request.resource.data.photos.hasOnly(resource.data.photos)
         && (request.resource.data.videoUrl == resource.data.videoUrl || request.resource.data.videoUrl == '')
         && request.resource.data.color is string
-        && request.resource.data.color.matches('^#[0-9A-Fa-f]{6}$');
+        && request.resource.data.color.matches('^#[0-9A-Fa-f]{6}$')
+        && (!('gender' in request.resource.data) || request.resource.data.gender in ['male', 'female', 'other', '']);
 
       allow create, delete: if false;
 
