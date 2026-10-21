@@ -494,8 +494,8 @@ private fun CardStack(
                         translationX = offsetX.value
                         translationY = offsetY.value
                         // kippt um einen Punkt unter der Karte – wie ein Stapel Karten in der Hand
-                        transformOrigin = TransformOrigin(0.5f, 1.25f)
-                        rotationZ = offsetX.value / widthPx * 22f
+                        transformOrigin = TransformOrigin(0.5f, 1.1f)
+                        rotationZ = offsetX.value / widthPx * 34f
                     }
                     .pointerInput(top.uid) {
                         val tracker = VelocityTracker()
