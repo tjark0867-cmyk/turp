@@ -1,5 +1,7 @@
 package app.turp.ui.components
 
+import app.turp.data.t
+
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.ui.graphics.Color
@@ -43,12 +45,12 @@ fun shortTime(ts: Timestamp?): String {
     val then = Calendar.getInstance().apply { time = date }
     val sameDay = now.get(Calendar.YEAR) == then.get(Calendar.YEAR) &&
         now.get(Calendar.DAY_OF_YEAR) == then.get(Calendar.DAY_OF_YEAR)
-    if (sameDay) return SimpleDateFormat("HH:mm", Locale.GERMANY).format(date)
+    if (sameDay) return SimpleDateFormat("HH:mm", app.turp.data.I18n.locale()).format(date)
     now.add(Calendar.DAY_OF_YEAR, -1)
     val yesterday = now.get(Calendar.YEAR) == then.get(Calendar.YEAR) &&
         now.get(Calendar.DAY_OF_YEAR) == then.get(Calendar.DAY_OF_YEAR)
-    if (yesterday) return "gestern"
-    return SimpleDateFormat("dd.MM.", Locale.GERMANY).format(date)
+    if (yesterday) return t("gestern")
+    return SimpleDateFormat("dd.MM.", app.turp.data.I18n.locale()).format(date)
 }
 
 /** Wie lange her: "jetzt", "5 Min.", "4 Std.", "2 Tage", danach das Datum */
@@ -56,11 +58,11 @@ fun timeAgo(ts: Timestamp?): String {
     if (ts == null) return ""
     val minutes = ((System.currentTimeMillis() - ts.toDate().time) / 60_000).coerceAtLeast(0)
     return when {
-        minutes < 1 -> "jetzt"
-        minutes < 60 -> "$minutes Min."
-        minutes < 24 * 60 -> "${minutes / 60} Std."
-        minutes < 7 * 24 * 60 -> (minutes / (24 * 60)).let { if (it == 1L) "1 Tag" else "$it Tage" }
-        else -> SimpleDateFormat("dd.MM.", Locale.GERMANY).format(ts.toDate())
+        minutes < 1 -> t("jetzt")
+        minutes < 60 -> t("{0} Min.", minutes)
+        minutes < 24 * 60 -> t("{0} Std.", minutes / 60)
+        minutes < 7 * 24 * 60 -> (minutes / (24 * 60)).let { if (it == 1L) t("1 Tag") else t("{0} Tage", it) }
+        else -> SimpleDateFormat("dd.MM.", app.turp.data.I18n.locale()).format(ts.toDate())
     }
 }
 
@@ -69,11 +71,11 @@ fun chatAge(ts: Timestamp?): String {
     if (ts == null) return ""
     val minutes = ((System.currentTimeMillis() - ts.toDate().time) / 60_000).coerceAtLeast(0)
     return when {
-        minutes < 1 -> "jetzt"
-        minutes < 60 -> "$minutes Min."
-        minutes < 24 * 60 -> "${minutes / 60} Std."
-        minutes < 7 * 24 * 60 -> "${minutes / (24 * 60)} T."
-        else -> "7 T.+"
+        minutes < 1 -> t("jetzt")
+        minutes < 60 -> t("{0} Min.", minutes)
+        minutes < 24 * 60 -> t("{0} Std.", minutes / 60)
+        minutes < 7 * 24 * 60 -> t("{0} T.", minutes / (24 * 60))
+        else -> t("7 T.+")
     }
 }
 
@@ -84,10 +86,10 @@ const val ONLINE_WINDOW_MS = 4 * 60_000L
 fun lastOnline(ts: Timestamp): String {
     val minutes = ((System.currentTimeMillis() - ts.toDate().time) / 60_000).coerceAtLeast(1)
     return when {
-        minutes < 60 -> "vor $minutes Min."
-        minutes < 24 * 60 -> "vor ${minutes / 60} Std."
-        minutes < 7 * 24 * 60 -> (minutes / (24 * 60)).let { if (it == 1L) "vor 1 Tag" else "vor $it Tagen" }
-        else -> "am " + SimpleDateFormat("dd.MM.", Locale.GERMANY).format(ts.toDate())
+        minutes < 60 -> t("vor {0} Min.", minutes)
+        minutes < 24 * 60 -> t("vor {0} Std.", minutes / 60)
+        minutes < 7 * 24 * 60 -> (minutes / (24 * 60)).let { if (it == 1L) t("vor 1 Tag") else t("vor {0} Tagen", it) }
+        else -> t("am {0}", SimpleDateFormat("dd.MM.", app.turp.data.I18n.locale()).format(ts.toDate()))
     }
 }
 
@@ -101,29 +103,29 @@ fun sameDay(a: Timestamp?, b: Timestamp?): Boolean {
 
 /** Datum für die Trenner im Chat: "Heute", "Gestern" oder "03. Okt. 2026" */
 fun dayLabel(ts: Timestamp?): String {
-    if (ts == null) return "Heute"
+    if (ts == null) return t("Heute")
     val now = Timestamp.now()
-    if (sameDay(ts, now)) return "Heute"
+    if (sameDay(ts, now)) return t("Heute")
     val yesterday = Timestamp(java.util.Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000L))
-    if (sameDay(ts, yesterday)) return "Gestern"
-    return SimpleDateFormat("dd. MMM yyyy", Locale.GERMANY).format(ts.toDate())
+    if (sameDay(ts, yesterday)) return t("Gestern")
+    return SimpleDateFormat("dd. MMM yyyy", app.turp.data.I18n.locale()).format(ts.toDate())
 }
 
 fun timeOfDay(ts: Timestamp?): String =
-    if (ts == null) "" else SimpleDateFormat("HH:mm", Locale.GERMANY).format(ts.toDate())
+    if (ts == null) "" else SimpleDateFormat("HH:mm", app.turp.data.I18n.locale()).format(ts.toDate())
 
 object Countries {
     data class Country(val code: String, val name: String)
 
     val all: List<Country> by lazy {
-        val collator = Collator.getInstance(Locale.GERMAN)
+        val collator = Collator.getInstance(app.turp.data.I18n.locale())
         Locale.getISOCountries()
             .map { Country(it, name(it)) }
             .sortedWith { a, b -> collator.compare(a.name, b.name) }
     }
 
     fun name(code: String): String =
-        if (code.length != 2) "" else Locale("", code).getDisplayCountry(Locale.GERMAN)
+        if (code.length != 2) "" else Locale("", code).getDisplayCountry(app.turp.data.I18n.locale())
 
     fun flag(code: String): String {
         if (code.length != 2 || !code.all { it in 'A'..'Z' || it in 'a'..'z' }) return "🌍"
@@ -139,6 +141,7 @@ object Countries {
     }
 }
 
+/** Meldegründe – gespeichert wird der deutsche Text, angezeigt die Übersetzung */
 val REPORT_REASONS = listOf(
     "Belästigung oder Mobbing",
     "Sexuelle Inhalte",

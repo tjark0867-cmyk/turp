@@ -1,5 +1,7 @@
 package app.turp
 
+import app.turp.data.t
+
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -20,9 +22,9 @@ class TurpApp : Application(), ImageLoaderFactory {
 
         val channel = NotificationChannel(
             CHANNEL_ID,
-            "Nachrichten & Anfragen",
+            t("Nachrichten & Anfragen"),
             NotificationManager.IMPORTANCE_HIGH
-        ).apply { description = "Neue Nachrichten und Freundschaftsanfragen" }
+        ).apply { description = t("Neue Nachrichten und Freundschaftsanfragen") }
         getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
     }
 

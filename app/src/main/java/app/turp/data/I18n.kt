@@ -81,7 +81,9 @@ object I18n {
     /** Context mit der gewählten Sprache (Datumsauswahl, Schreibrichtung usw.) */
     fun wrap(base: Context): Context {
         val code = savedLang(base) ?: return base
-        val loc = locale(code)
+        // Land vom Handy behalten (für den Länder-Vorschlag), nur die Sprache tauschen
+        val country = base.resources.configuration.locales[0].country
+        val loc = Locale.Builder().setLanguage(code).setRegion(country.takeIf { it.length == 2 } ?: "").build()
         Locale.setDefault(loc)
         val cfg = Configuration(base.resources.configuration)
         cfg.setLocale(loc)
@@ -111,6 +113,22 @@ object I18n {
         val text = ctx.assets.open(path).bufferedReader().use { it.readText() }
         val arr = JSONArray(text)
         return List(arr.length()) { arr.optString(it) }
+    }
+
+    /** Meldung vom Server übersetzen – auch solche mit Zahlen darin („… höchstens 6 Fotos …“) */
+    fun tServer(msg: String): String {
+        val table = table(lang)
+        table[msg]?.let { return it }
+        for (src in sources) {
+            if (!src.contains("{0}")) continue
+            val pattern = Regex.escape(src).replace(Regex("\\{(\\d)\\}"), "\\\\E(.+?)\\\\Q")
+            val m = Regex("^$pattern$").find(msg) ?: continue
+            val tr = table[src] ?: return msg
+            var out = tr
+            m.groupValues.drop(1).forEachIndexed { i, v -> out = out.replace("{$i}", v) }
+            return out
+        }
+        return msg
     }
 
     /** Übersetzt einen deutschen Text; {0}, {1} … werden durch [args] ersetzt */

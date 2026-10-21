@@ -82,32 +82,33 @@ fun Query.asFlow(): Flow<List<DocumentSnapshot>> {
 /** Verständliche Fehlermeldung auf Deutsch */
 fun Throwable.toUserMessage(): String =
     if (this is com.google.firebase.auth.FirebaseAuthException && errorCode == "ERROR_OPERATION_NOT_ALLOWED")
-        "Diese Anmeldeart ist noch nicht freigeschaltet – nutze bitte vorerst deine E-Mail."
+        t("Diese Anmeldeart ist noch nicht freigeschaltet – nutze bitte vorerst deine E-Mail.")
     else when (this) {
     is FirebaseFunctionsException -> when {
         code == FirebaseFunctionsException.Code.INTERNAL || code == FirebaseFunctionsException.Code.UNKNOWN ->
-            "Serverfehler – bitte versuch es gleich noch einmal."
+            t("Serverfehler – bitte versuch es gleich noch einmal.")
         // Keine eigene Meldung vom Server (z. B. nur "UNAUTHENTICATED"): verständlich übersetzen
         message.isNullOrBlank() || message == code.name -> when (code) {
             FirebaseFunctionsException.Code.UNAUTHENTICATED,
             FirebaseFunctionsException.Code.UNAVAILABLE,
             FirebaseFunctionsException.Code.DEADLINE_EXCEEDED ->
-                "Verbindung zum Server fehlgeschlagen – bitte gleich noch einmal versuchen."
-            FirebaseFunctionsException.Code.PERMISSION_DENIED -> "Dafür fehlt dir die Berechtigung."
-            FirebaseFunctionsException.Code.NOT_FOUND -> "Diese Funktion ist gerade nicht verfügbar."
-            else -> "Etwas ist schiefgelaufen."
+                t("Verbindung zum Server fehlgeschlagen – bitte gleich noch einmal versuchen.")
+            FirebaseFunctionsException.Code.PERMISSION_DENIED -> t("Dafür fehlt dir die Berechtigung.")
+            FirebaseFunctionsException.Code.NOT_FOUND -> t("Diese Funktion ist gerade nicht verfügbar.")
+            else -> t("Etwas ist schiefgelaufen.")
         }
-        else -> message ?: "Etwas ist schiefgelaufen."
+        // Meldungen vom Server kommen auf Deutsch und werden hier übersetzt
+        else -> message?.let { I18n.tServer(it) } ?: t("Etwas ist schiefgelaufen.")
     }
-    is FirebaseAuthWeakPasswordException -> "Das Passwort ist zu schwach (mindestens 6 Zeichen)."
-    is FirebaseAuthUserCollisionException -> "Diese E-Mail-Adresse ist schon registriert. Log dich ein."
-    is FirebaseAuthInvalidUserException -> "Kein aktives Konto mit dieser E-Mail gefunden."
-    is FirebaseAuthInvalidCredentialsException -> "E-Mail oder Passwort ist falsch."
-    is FirebaseNetworkException -> "Keine Internetverbindung."
+    is FirebaseAuthWeakPasswordException -> t("Das Passwort ist zu schwach (mindestens 6 Zeichen).")
+    is FirebaseAuthUserCollisionException -> t("Diese E-Mail-Adresse ist schon registriert. Log dich ein.")
+    is FirebaseAuthInvalidUserException -> t("Kein aktives Konto mit dieser E-Mail gefunden.")
+    is FirebaseAuthInvalidCredentialsException -> t("E-Mail oder Passwort ist falsch.")
+    is FirebaseNetworkException -> t("Keine Internetverbindung.")
     is FirebaseFirestoreException ->
-        if (code == FirebaseFirestoreException.Code.PERMISSION_DENIED) "Dafür fehlt dir die Berechtigung."
-        else "Speichern fehlgeschlagen – bitte versuch es noch einmal."
-    is StorageException -> "Upload fehlgeschlagen – bitte versuch es noch einmal."
-    is IllegalArgumentException -> message ?: "Ungültige Eingabe."
-    else -> message ?: "Etwas ist schiefgelaufen."
+        if (code == FirebaseFirestoreException.Code.PERMISSION_DENIED) t("Dafür fehlt dir die Berechtigung.")
+        else t("Speichern fehlgeschlagen – bitte versuch es noch einmal.")
+    is StorageException -> t("Upload fehlgeschlagen – bitte versuch es noch einmal.")
+    is IllegalArgumentException -> message ?: t("Ungültige Eingabe.")
+    else -> message ?: t("Etwas ist schiefgelaufen.")
 }

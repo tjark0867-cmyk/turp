@@ -1,5 +1,7 @@
 package app.turp.ui.screens
 
+import app.turp.data.t
+
 import app.turp.ui.components.todayBerlin
 import app.turp.ui.components.chatAge
 import app.turp.ui.components.TabHeader
@@ -167,7 +169,7 @@ fun ChatsScreen(
     LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 16.dp)) {
         item {
             TabHeader(
-                title = "Chats 💬",
+                title = t("Chats 💬"),
                 me = myProfile,
                 gems = session.account.gems,
                 showDot = session.account.lastCheckIn != todayBerlin(),
@@ -176,7 +178,7 @@ fun ChatsScreen(
             )
         }
         if (friends.isNotEmpty()) {
-            item { SectionHeading("Freunde", Modifier.padding(start = 16.dp, top = 4.dp, bottom = 10.dp)) }
+            item { SectionHeading(t("Freunde"), Modifier.padding(start = 16.dp, top = 4.dp, bottom = 10.dp)) }
             item {
                 LazyRow(
                     contentPadding = PaddingValues(horizontal = 16.dp),
@@ -193,9 +195,9 @@ fun ChatsScreen(
             item {
                 EmptyState(
                     emoji = "💬",
-                    title = "Noch keine Chats",
-                    text = "Sobald jemand deine Anfrage annimmt, könnt ihr hier schreiben.",
-                    actionLabel = "Leute entdecken",
+                    title = t("Noch keine Chats"),
+                    text = t("Sobald jemand deine Anfrage annimmt, könnt ihr hier schreiben."),
+                    actionLabel = t("Leute entdecken"),
                     onAction = onDiscover,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
@@ -216,7 +218,7 @@ fun ChatsScreen(
                     Text("🤖", fontSize = 22.sp)
                     Spacer(Modifier.width(12.dp))
                     Text(
-                        "Test-Chat mit dem kumi Bot",
+                        t("Test-Chat mit dem kumi Bot"),
                         color = TextLow,
                         fontSize = 14.sp,
                         modifier = Modifier.weight(1f)
@@ -224,7 +226,7 @@ fun ChatsScreen(
                     if (testBusy) {
                         CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp, color = Teal)
                     } else {
-                        Text("Start", color = Teal, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+                        Text(t("Start"), color = Teal, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
                     }
                 }
             }
@@ -282,7 +284,7 @@ private fun ChatRow(chat: Chat, me: String, onClick: () -> Unit) {
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                if (chat.closed) "Chat geschlossen" else chat.lastMessage,
+                if (chat.closed) t("Chat geschlossen") else chat.lastMessage,
                 color = if (unread) TextHigh else TextLow,
                 fontSize = 14.sp,
                 fontWeight = if (unread) FontWeight.Bold else FontWeight.Normal,
@@ -372,19 +374,19 @@ class ChatViewModel(private val chatId: String) : BaseViewModel() {
 
     fun report(targetUid: String, reason: String, details: String, context: String) = launchSafe {
         SafetyRepo.report(targetUid, reason, details, context)
-        toast("Danke! Unser Team schaut sich das an. 💛")
+        toast(t("Danke! Unser Team schaut sich das an. 💛"))
     }
 
     fun block(targetUid: String, onDone: () -> Unit) = launchSafe {
         SafetyRepo.block(targetUid)
-        toast("Blockiert. Ihr könnt euch nicht mehr schreiben.")
+        toast(t("Blockiert. Ihr könnt euch nicht mehr schreiben."))
         onDone()
     }
 }
 
 @Composable
 fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit) {
-    val vm: ChatViewModel = viewModel(key = "chat_$chatId") { ChatViewModel(chatId) }
+    val vm: ChatViewModel = viewModel(key = "chat_${chatId}") { ChatViewModel(chatId) }
     val context = LocalContext.current
     LaunchedEffect(Unit) { vm.notices.collect { context.toast(it) } }
 
@@ -412,8 +414,8 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
     val seen = lastActive
     val online = isBot || (seen != null && now - seen.toDate().time < ONLINE_WINDOW_MS)
     val status = when {
-        online -> "Online"
-        seen != null -> "Zuletzt online ${lastOnline(seen)}"
+        online -> t("Online")
+        seen != null -> t("Zuletzt online {0}", lastOnline(seen))
         else -> ""
     }
 
@@ -456,18 +458,18 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
             return
         }
         val result = recorder.stop()
-        if (result == null) context.toast("Zu kurz – sprich etwas länger.") else vm.sendAudio(result.first, result.second)
+        if (result == null) context.toast(t("Zu kurz – sprich etwas länger.")) else vm.sendAudio(result.first, result.second)
     }
     fun startRecording() {
         if (recorder.start()) {
             recordMs = 0L
             recording = true
         } else {
-            context.toast("Aufnahme nicht möglich.")
+            context.toast(t("Aufnahme nicht möglich."))
         }
     }
     val micPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { ok ->
-        if (ok) startRecording() else context.toast("Ohne Mikrofon-Erlaubnis geht das leider nicht.")
+        if (ok) startRecording() else context.toast(t("Ohne Mikrofon-Erlaubnis geht das leider nicht."))
     }
     LaunchedEffect(recording) {
         while (recording) {
@@ -508,7 +510,7 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
                 IconButton(onClick = onBack) {
                     Icon(
                         Icons.AutoMirrored.Rounded.ArrowBackIos,
-                        contentDescription = "Zurück",
+                        contentDescription = t("Zurück"),
                         tint = TextHigh,
                         modifier = Modifier.size(24.dp)
                     )
@@ -545,11 +547,11 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
                 }
                 Box {
                     IconButton(onClick = { menuOpen = true }, enabled = otherUid.isNotEmpty()) {
-                        Icon(Icons.Rounded.MoreVert, contentDescription = "Mehr", tint = TextHigh, modifier = Modifier.size(26.dp))
+                        Icon(Icons.Rounded.MoreVert, contentDescription = t("Mehr"), tint = TextHigh, modifier = Modifier.size(26.dp))
                     }
                     DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                         DropdownMenuItem(
-                            text = { Text("Profil ansehen") },
+                            text = { Text(t("Profil ansehen")) },
                             leadingIcon = { Icon(Icons.Rounded.Person, contentDescription = null) },
                             onClick = {
                                 menuOpen = false
@@ -557,7 +559,7 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
                             }
                         )
                         DropdownMenuItem(
-                            text = { Text("Melden") },
+                            text = { Text(t("Melden")) },
                             leadingIcon = { Icon(Icons.Rounded.Flag, contentDescription = null) },
                             onClick = {
                                 menuOpen = false
@@ -565,7 +567,7 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
                             }
                         )
                         DropdownMenuItem(
-                            text = { Text("Blockieren", color = Coral) },
+                            text = { Text(t("Blockieren"), color = Coral) },
                             leadingIcon = { Icon(Icons.Rounded.Block, contentDescription = null, tint = Coral) },
                             onClick = {
                                 menuOpen = false
@@ -580,7 +582,7 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
             if (current?.closed == true) {
                 Surface(color = InkElevated, modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        "Dieser Chat ist geschlossen.",
+                        t("Dieser Chat ist geschlossen."),
                         modifier = Modifier
                             .fillMaxWidth()
                             .windowInsetsPadding(WindowInsets.navigationBars)
@@ -624,8 +626,7 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
         ) {
             item {
                 Text(
-                    "🛡️ Teile keine Adresse, Passwörter oder Nacktbilder und triff dich nie allein mit Leuten aus dem Internet. " +
-                        "Halte eine Nachricht gedrückt, um sie zu melden.",
+                    t("🛡️ Teile keine Adresse, Passwörter oder Nacktbilder und triff dich nie allein mit Leuten aus dem Internet. Halte eine Nachricht gedrückt, um sie zu melden."),
                     fontSize = 12.sp,
                     lineHeight = 16.sp,
                     color = TextLow,
@@ -658,8 +659,8 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
                             if (!mine) {
                                 reportContext = when (m.type) {
                                     "text" -> m.text
-                                    "audio" -> "[Sprachnachricht]"
-                                    else -> "[Foto]"
+                                    "audio" -> t("[Sprachnachricht]")
+                                    else -> t("[Foto]")
                                 }
                             }
                         }
@@ -695,10 +696,9 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
 
     if (confirmBlock) {
         ConfirmDialog(
-            title = "$otherName blockieren?",
-            text = "Ihr könnt euch dann nicht mehr sehen oder schreiben, und der Chat wird geschlossen. " +
-                "Entblocken kannst du jederzeit in den Einstellungen unter „Blockierte Nutzer“.",
-            confirmLabel = "Blockieren",
+            title = "${otherName} blockieren?",
+            text = t("Ihr könnt euch dann nicht mehr sehen oder schreiben, und der Chat wird geschlossen. Entblocken kannst du jederzeit in den Einstellungen unter „Blockierte Nutzer“."),
+            confirmLabel = t("Blockieren"),
             onDismiss = { confirmBlock = false },
             onConfirm = {
                 confirmBlock = false
@@ -819,7 +819,7 @@ private fun Bubble(
             message.type == "image" && message.imageStatus != "blocked" && localImage != null -> Box {
                 AsyncImage(
                     model = localImage,
-                    contentDescription = "Foto",
+                    contentDescription = t("Foto"),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(220.dp)
                 )
@@ -834,7 +834,7 @@ private fun Bubble(
                     ) {
                         CircularProgressIndicator(color = Color.White, strokeWidth = 1.5.dp, modifier = Modifier.size(11.dp))
                         Spacer(Modifier.width(6.dp))
-                        Text("Wird geprüft", color = Color.White, fontSize = 11.sp)
+                        Text(t("Wird geprüft"), color = Color.White, fontSize = 11.sp)
                     }
                 }
                 Text(
@@ -850,7 +850,7 @@ private fun Bubble(
             message.type == "image" && message.imageStatus == "ok" -> Box {
                 AsyncImage(
                     model = message.imageUrl,
-                    contentDescription = "Foto",
+                    contentDescription = t("Foto"),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(220.dp)
                 )
@@ -879,8 +879,8 @@ private fun Bubble(
                 onToggle = { voice.toggle(message.id, message.audioUrl) }
             )
             message.type == "image" && message.imageStatus == "blocked" ->
-                BubbleText("🚫 Foto wurde blockiert", time, fg, timeColor, italic = true)
-            message.type == "image" -> BubbleText("📷 Foto wird geprüft…", time, fg, timeColor, italic = true)
+                BubbleText(t("🚫 Foto wurde blockiert"), time, fg, timeColor, italic = true)
+            message.type == "image" -> BubbleText(t("📷 Foto wird geprüft…"), time, fg, timeColor, italic = true)
             else -> BubbleText(message.text, time, fg, timeColor)
         }
     }

@@ -1,5 +1,7 @@
 package app.turp.ui.components
 
+import app.turp.data.t
+
 import androidx.compose.material.icons.rounded.Mic
 import androidx.compose.material.icons.rounded.PhotoCamera
 import androidx.compose.animation.core.animateFloatAsState
@@ -494,7 +496,7 @@ fun GemPill(gems: Long, showDot: Boolean, modifier: Modifier = Modifier) {
         ) {
             GemIcon(26.dp, spin = true)
             Spacer(Modifier.width(6.dp))
-            Text("$gems", color = TextHigh, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Text("${gems}", color = TextHigh, fontSize = 18.sp, fontWeight = FontWeight.Bold)
         }
         if (showDot) {
             Box(
@@ -565,7 +567,7 @@ fun Avatar(
 fun GemChip(gems: Long, modifier: Modifier = Modifier) {
     Surface(shape = CircleShape, color = InkHigh, modifier = modifier) {
         Text(
-            text = "💎 $gems",
+            text = "💎 ${gems}",
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
             fontWeight = FontWeight.Bold
         )
@@ -702,7 +704,7 @@ fun PrimaryButton(
 fun MessageInput(
     onSend: (String) -> Unit,
     modifier: Modifier = Modifier,
-    placeholder: String = "Nachricht schreiben…",
+    placeholder: String = t("Nachricht schreiben…"),
     enabled: Boolean = true,
     sendHint: String? = null,
     onPickImage: (() -> Unit)? = null,
@@ -720,7 +722,7 @@ fun MessageInput(
         ) {
             if (onCamera != null) {
                 IconButton(onClick = onCamera, enabled = enabled && !imageBusy) {
-                    Icon(Icons.Rounded.PhotoCamera, contentDescription = "Foto aufnehmen", tint = Teal)
+                    Icon(Icons.Rounded.PhotoCamera, contentDescription = t("Foto aufnehmen"), tint = Teal)
                 }
             }
             if (onPickImage != null) {
@@ -728,7 +730,7 @@ fun MessageInput(
                     if (imageBusy) {
                         CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp, color = Teal)
                     } else {
-                        Icon(Icons.Rounded.Image, contentDescription = "Foto senden", tint = Teal)
+                        Icon(Icons.Rounded.Image, contentDescription = t("Foto senden"), tint = Teal)
                     }
                 }
             }
@@ -758,7 +760,7 @@ fun MessageInput(
                 )
             } else if (onMic != null && text.isBlank()) {
                 IconButton(onClick = onMic, enabled = enabled) {
-                    Icon(Icons.Rounded.Mic, contentDescription = "Sprachnachricht aufnehmen", tint = Teal)
+                    Icon(Icons.Rounded.Mic, contentDescription = t("Sprachnachricht aufnehmen"), tint = Teal)
                 }
             } else {
                 val canSend = enabled && text.isNotBlank()
@@ -771,7 +773,7 @@ fun MessageInput(
                 ) {
                     Icon(
                         Icons.AutoMirrored.Rounded.Send,
-                        contentDescription = "Senden",
+                        contentDescription = t("Senden"),
                         tint = if (canSend) Teal else TextLow
                     )
                 }
@@ -794,26 +796,26 @@ fun CountryPickerDialog(
     Dialog(onDismissRequest = onDismiss) {
         Surface(shape = RoundedCornerShape(28.dp), color = InkElevated) {
             Column(Modifier.padding(20.dp)) {
-                Text("Land wählen", style = MaterialTheme.typography.titleLarge)
+                Text(t("Land wählen"), style = MaterialTheme.typography.titleLarge)
                 Spacer(Modifier.height(12.dp))
                 OutlinedTextField(
                     value = query,
                     onValueChange = { query = it },
-                    placeholder = { Text("Suchen…") },
+                    placeholder = { Text(t("Suchen…")) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(Modifier.height(8.dp))
                 LazyColumn(Modifier.heightIn(max = 380.dp)) {
                     if (allowAll && query.isBlank()) {
-                        item { CountryRow("🌍", "Alle Länder") { onPick(null) } }
+                        item { CountryRow("🌍", t("Alle Länder")) { onPick(null) } }
                     }
                     items(list, key = { it.code }) { c ->
                         CountryRow(Countries.flag(c.code), c.name) { onPick(c.code) }
                     }
                 }
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    TextButton(onClick = onDismiss) { Text("Schließen") }
+                    TextButton(onClick = onDismiss) { Text(t("Schließen")) }
                 }
             }
         }
@@ -862,7 +864,7 @@ fun ColorPicker(selected: String, onSelect: (String) -> Unit) {
             }
         }
         Spacer(Modifier.height(14.dp))
-        Text("Eigener Farbton", style = MaterialTheme.typography.labelMedium, color = TextLow)
+        Text(t("Eigener Farbton"), style = MaterialTheme.typography.labelMedium, color = TextLow)
         Box(contentAlignment = Alignment.Center) {
             Box(
                 Modifier
@@ -896,7 +898,7 @@ fun ReportDialog(name: String, onDismiss: () -> Unit, onSubmit: (reason: String,
     var details by remember { mutableStateOf("") }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("$name melden") },
+        title = { Text(t("{0} melden", name)) },
         text = {
             Column(Modifier.verticalScroll(rememberScrollState())) {
                 REPORT_REASONS.forEach { r ->
@@ -909,20 +911,20 @@ fun ReportDialog(name: String, onDismiss: () -> Unit, onSubmit: (reason: String,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         RadioButton(selected = reason == r, onClick = { reason = r })
-                        Text(r)
+                        Text(t(r))
                     }
                 }
                 Spacer(Modifier.height(8.dp))
                 OutlinedTextField(
                     value = details,
                     onValueChange = { details = it.take(500) },
-                    label = { Text("Was ist passiert? (optional)") },
+                    label = { Text(t("Was ist passiert? (optional)")) },
                     minLines = 3,
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    "Deine Meldung ist anonym. Bei Gefahr wende dich bitte auch an eine erwachsene Vertrauensperson oder die Polizei (110).",
+                    t("Deine Meldung ist anonym. Bei Gefahr wende dich bitte auch an eine erwachsene Vertrauensperson oder die Polizei (110)."),
                     style = MaterialTheme.typography.bodySmall,
                     color = TextLow
                 )
@@ -932,9 +934,9 @@ fun ReportDialog(name: String, onDismiss: () -> Unit, onSubmit: (reason: String,
             Button(
                 onClick = { onSubmit(reason, details.trim()) },
                 colors = ButtonDefaults.buttonColors(containerColor = Coral)
-            ) { Text("Melden") }
+            ) { Text(t("Melden")) }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Abbrechen") } }
+        dismissButton = { TextButton(onClick = onDismiss) { Text(t("Abbrechen")) } }
     )
 }
 
@@ -957,7 +959,7 @@ fun ConfirmDialog(
                 colors = ButtonDefaults.buttonColors(containerColor = if (danger) Coral else Teal, contentColor = Ink)
             ) { Text(confirmLabel) }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Abbrechen") } }
+        dismissButton = { TextButton(onClick = onDismiss) { Text(t("Abbrechen")) } }
     )
 }
 

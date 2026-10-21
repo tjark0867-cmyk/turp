@@ -1,5 +1,7 @@
 package app.turp.ui.screens
 
+import app.turp.data.t
+
 import app.turp.ui.components.InterestIcon
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.ModalBottomSheet
@@ -195,7 +197,7 @@ class ProfileViewModel : BaseViewModel() {
         launchSafe(showBusy = false) {
             try {
                 ProfileRepo.uploadPhoto(appContext, uri)
-                toast("Foto geprüft und hinzugefügt ✨")
+                toast(t("Foto geprüft und hinzugefügt ✨"))
             } finally {
                 uploading = false
                 pendingPhoto = null
@@ -205,7 +207,7 @@ class ProfileViewModel : BaseViewModel() {
 
     fun checkIn() = launchSafe {
         val (reward, streak) = ProfileRepo.checkIn()
-        toast("+$reward 💎 · $streak ${if (streak == 1L) "Tag" else "Tage"} Serie 🔥")
+        toast(t("+{0} 💎 · {1} {2} Serie 🔥", reward, streak, if (streak == 1L) t("Tag") else t("Tage")))
     }
 
     fun claimAdmin(onDone: () -> Unit) = launchSafe {
@@ -213,12 +215,12 @@ class ProfileViewModel : BaseViewModel() {
         user.reload().await()
         if (!user.isEmailVerified) {
             user.sendEmailVerification().await()
-            toast("Bitte bestätige zuerst deine E-Mail – wir haben dir einen Link geschickt. Tippe danach erneut.")
+            toast(t("Bitte bestätige zuerst deine E-Mail – wir haben dir einen Link geschickt. Tippe danach erneut."))
             return@launchSafe
         }
         user.getIdToken(true).await()
         ProfileRepo.claimAdmin()
-        toast("Admin-Zugang aktiviert 🛡️")
+        toast(t("Admin-Zugang aktiviert 🛡️"))
         onDone()
     }
 
@@ -228,13 +230,12 @@ class ProfileViewModel : BaseViewModel() {
 }
 
 internal fun shareInvite(context: Context, code: String) {
-    val text = "Komm zu kumi und finde neue Freunde! 🌍 Gib bei der Anmeldung meinen Code $code ein, " +
-        "dann bekommst du 10 Bonus-Gems 💎"
+    val text = t("Komm zu kumi und finde neue Freunde! 🌍 Gib bei der Anmeldung meinen Code {0} ein, dann bekommst du 10 Bonus-Gems 💎", code)
     val intent = Intent(Intent.ACTION_SEND).apply {
         type = "text/plain"
         putExtra(Intent.EXTRA_TEXT, text)
     }
-    context.startActivity(Intent.createChooser(intent, "kumi teilen"))
+    context.startActivity(Intent.createChooser(intent, t("kumi teilen")))
 }
 
 @Composable
@@ -268,17 +269,17 @@ fun ProfileScreen(
                 .padding(horizontal = 4.dp, vertical = 2.dp)
         ) {
             IconButton(onClick = onBack, modifier = Modifier.align(Alignment.CenterStart)) {
-                Icon(Icons.AutoMirrored.Rounded.ArrowBackIos, contentDescription = "Zurück", tint = TextHigh, modifier = Modifier.size(22.dp))
+                Icon(Icons.AutoMirrored.Rounded.ArrowBackIos, contentDescription = t("Zurück"), tint = TextHigh, modifier = Modifier.size(22.dp))
             }
             Text(
-                "Profil",
+                t("Profil"),
                 color = TextHigh,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.ExtraBold,
                 modifier = Modifier.align(Alignment.Center)
             )
             IconButton(onClick = onSettings, modifier = Modifier.align(Alignment.CenterEnd)) {
-                Icon(Icons.Rounded.Settings, contentDescription = "Einstellungen", tint = TextHigh, modifier = Modifier.size(26.dp))
+                Icon(Icons.Rounded.Settings, contentDescription = t("Einstellungen"), tint = TextHigh, modifier = Modifier.size(26.dp))
             }
         }
 
@@ -306,15 +307,15 @@ fun ProfileScreen(
                     }
                     Spacer(Modifier.height(8.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        PillButton(Icons.Rounded.Edit, "Bearbeiten", onEdit)
-                        PillButton(Icons.Rounded.Visibility, "Vorschau", onPreview)
+                        PillButton(Icons.Rounded.Edit, t("Bearbeiten"), onEdit)
+                        PillButton(Icons.Rounded.Visibility, t("Vorschau"), onPreview)
                     }
                 }
             }
 
             // Medien
             SectionHeading(
-                "${p.photos.size + (if (p.videoUrl.isNotBlank()) 1 else 0)} Medien",
+                t("{0} Medien", p.photos.size + (if (p.videoUrl.isNotBlank()) 1 else 0)),
                 Modifier.padding(start = 16.dp, top = 18.dp, bottom = 10.dp)
             )
             LazyRow(
@@ -343,7 +344,7 @@ fun ProfileScreen(
                                             .background(Teal, CircleShape),
                                         contentAlignment = Alignment.Center
                                     ) {
-                                        Icon(Icons.Rounded.Add, contentDescription = "Foto hinzufügen", tint = Ink)
+                                        Icon(Icons.Rounded.Add, contentDescription = t("Foto hinzufügen"), tint = Ink)
                                     }
                                 }
                             }
@@ -366,7 +367,7 @@ fun ProfileScreen(
         }
 
         // Upgrade
-        SectionHeading("Upgrade ⭐", Modifier.padding(start = 16.dp, top = 22.dp, bottom = 10.dp))
+        SectionHeading(t("Upgrade ⭐"), Modifier.padding(start = 16.dp, top = 22.dp, bottom = 10.dp))
         Surface(
             onClick = onShop,
             shape = RoundedCornerShape(18.dp),
@@ -379,8 +380,8 @@ fun ProfileScreen(
                 GemIcon(30.dp, spin = true)
                 Spacer(Modifier.width(10.dp))
                 Column(Modifier.weight(1f)) {
-                    Text("Deine Gems: ${account.gems}", color = Ink, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
-                    Text("Nutze sie, um noch mehr Freunde zu finden.", color = Ink.copy(alpha = 0.75f), fontSize = 13.sp)
+                    Text(t("Deine Gems: {0}", account.gems), color = Ink, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
+                    Text(t("Nutze sie, um noch mehr Freunde zu finden."), color = Ink.copy(alpha = 0.75f), fontSize = 13.sp)
                 }
                 Icon(Icons.AutoMirrored.Rounded.KeyboardArrowRight, contentDescription = null, tint = Ink)
             }
@@ -389,7 +390,7 @@ fun ProfileScreen(
         PlusBanner(
             modifier = Modifier.padding(horizontal = 16.dp),
             onClick = onShop,
-            buttonLabel = "Mehr erfahren"
+            buttonLabel = t("Mehr erfahren")
         )
         Spacer(Modifier.height(24.dp))
     }
@@ -441,10 +442,10 @@ fun SettingsScreen(
                 .padding(horizontal = 4.dp, vertical = 2.dp)
         ) {
             IconButton(onClick = onBack, modifier = Modifier.align(Alignment.CenterStart)) {
-                Icon(Icons.AutoMirrored.Rounded.ArrowBackIos, contentDescription = "Zurück", tint = TextHigh, modifier = Modifier.size(22.dp))
+                Icon(Icons.AutoMirrored.Rounded.ArrowBackIos, contentDescription = t("Zurück"), tint = TextHigh, modifier = Modifier.size(22.dp))
             }
             Text(
-                "Einstellungen",
+                t("Einstellungen"),
                 color = TextHigh,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.ExtraBold,
@@ -453,25 +454,24 @@ fun SettingsScreen(
         }
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             SectionCard {
-                MenuRow(Icons.Rounded.Edit, "Profil bearbeiten", onClick = onEdit)
-                MenuRow(Icons.Rounded.AutoAwesome, "Shop & kumi+", onClick = onShop)
-                MenuRow(Icons.Rounded.PersonAdd, "Freunde einladen (+$INVITE_BONUS 💎)", onClick = {
+                MenuRow(Icons.Rounded.Edit, t("Profil bearbeiten"), onClick = onEdit)
+                MenuRow(Icons.Rounded.AutoAwesome, t("Shop & kumi+"), onClick = onShop)
+                MenuRow(Icons.Rounded.PersonAdd, t("Freunde einladen (+{0} 💎)", INVITE_BONUS), onClick = {
                     if (account.inviteCode.isNotBlank()) shareInvite(context, account.inviteCode)
                 })
-                if (session.isAdmin) MenuRow(Icons.Rounded.AdminPanelSettings, "Admin-Bereich", onClick = onAdmin)
-                MenuRow(Icons.Rounded.SystemUpdate, "Nach Updates suchen", onClick = onCheckUpdate)
+                if (session.isAdmin) MenuRow(Icons.Rounded.AdminPanelSettings, t("Admin-Bereich"), onClick = onAdmin)
+                MenuRow(Icons.Rounded.SystemUpdate, t("Nach Updates suchen"), onClick = onCheckUpdate)
             }
             SectionCard {
-                MenuRow(Icons.Rounded.Language, "Sprache · ${app.turp.data.I18n.LANGS.firstOrNull { it.code == app.turp.data.I18n.lang }?.name.orEmpty()}", onClick = onLanguage)
-                MenuRow(Icons.Rounded.Block, "Blockierte Nutzer", onClick = onBlocked)
+                MenuRow(Icons.Rounded.Language, t("Sprache · {0}", app.turp.data.I18n.LANGS.firstOrNull { it.code == app.turp.data.I18n.lang }?.name.orEmpty()), onClick = onLanguage)
+                MenuRow(Icons.Rounded.Block, t("Blockierte Nutzer"), onClick = onBlocked)
             }
             SectionCard {
-                MenuRow(Icons.AutoMirrored.Rounded.Logout, "Abmelden", onClick = { sessionVm.signOut() })
-                MenuRow(Icons.Rounded.DeleteForever, "Konto löschen", tint = Coral, onClick = { confirmDelete = true })
+                MenuRow(Icons.AutoMirrored.Rounded.Logout, t("Abmelden"), onClick = { sessionVm.signOut() })
+                MenuRow(Icons.Rounded.DeleteForever, t("Konto löschen"), tint = Coral, onClick = { confirmDelete = true })
             }
             Text(
-                "kumi ${BuildConfig.VERSION_NAME} · Dein Einladungscode: ${account.inviteCode.ifBlank { "–" }}\nGoldene Regel: Sei immer freundlich. 💛\n\n" +
-                    "Namen von Spielen, Serien und Künstlern gehören ihren Inhabern; kumi steht in keiner Verbindung zu ihnen.",
+                t("kumi {0} · Dein Einladungscode: {1}\nGoldene Regel: Sei immer freundlich. 💛\n\nNamen von Spielen, Serien und Künstlern gehören ihren Inhabern; kumi steht in keiner Verbindung zu ihnen.", BuildConfig.VERSION_NAME, account.inviteCode.ifBlank { "–" }),
                 style = MaterialTheme.typography.bodySmall,
                 color = TextLow,
                 textAlign = TextAlign.Center,
@@ -480,22 +480,21 @@ fun SettingsScreen(
             TextButton(
                 onClick = onCredits,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) { Text("Lizenzen", color = TextLow, style = MaterialTheme.typography.labelSmall) }
+            ) { Text(t("Lizenzen"), color = TextLow, style = MaterialTheme.typography.labelSmall) }
             if (!session.isAdmin) {
                 TextButton(
                     onClick = { vm.claimAdmin(onDone = { sessionVm.refreshClaims() }) },
                     modifier = Modifier.align(Alignment.CenterHorizontally)
-                ) { Text("Admin? Zugang prüfen", color = TextLow, style = MaterialTheme.typography.labelSmall) }
+                ) { Text(t("Admin? Zugang prüfen"), color = TextLow, style = MaterialTheme.typography.labelSmall) }
             }
         }
     }
 
     if (confirmDelete) {
         ConfirmDialog(
-            title = "Konto löschen?",
-            text = "Dein Profil, deine Fotos, Chats und Freundschaften werden endgültig gelöscht. " +
-                "Das kann nicht rückgängig gemacht werden.",
-            confirmLabel = "Endgültig löschen",
+            title = t("Konto löschen?"),
+            text = t("Dein Profil, deine Fotos, Chats und Freundschaften werden endgültig gelöscht. Das kann nicht rückgängig gemacht werden."),
+            confirmLabel = t("Endgültig löschen"),
             onDismiss = { confirmDelete = false },
             onConfirm = {
                 confirmDelete = false
@@ -543,7 +542,7 @@ class EditProfileViewModel : BaseViewModel() {
         launchSafe(showBusy = false) {
             try {
                 ProfileRepo.uploadPhoto(appContext, uri)
-                toast("Foto geprüft und hinzugefügt ✨")
+                toast(t("Foto geprüft und hinzugefügt ✨"))
             } finally {
                 uploading = null
                 pendingPhoto = null
@@ -557,7 +556,7 @@ class EditProfileViewModel : BaseViewModel() {
         launchSafe(showBusy = false) {
             try {
                 ProfileRepo.uploadVideo(appContext, uri)
-                toast("Video geprüft und hinzugefügt 🎬")
+                toast(t("Video geprüft und hinzugefügt 🎬"))
             } finally {
                 uploading = null
             }
@@ -574,7 +573,7 @@ class EditProfileViewModel : BaseViewModel() {
     fun save(name: String, bio: String, interests: List<String>, color: String, gender: String, socials: Socials, onDone: () -> Unit) =
         launchSafe {
             if (name.trim().length < 2) {
-                toast("Der Name braucht mindestens 2 Zeichen.")
+                toast(t("Der Name braucht mindestens 2 Zeichen."))
                 return@launchSafe
             }
             ProfileRepo.updateProfile(
@@ -586,7 +585,7 @@ class EditProfileViewModel : BaseViewModel() {
                 ) + (if (gender.isNotEmpty()) mapOf("gender" to gender) else emptyMap())
             )
             ProfileRepo.saveSocials(socials)
-            toast("Gespeichert ✅")
+            toast(t("Gespeichert ✅"))
             onDone()
         }
 }
@@ -646,10 +645,10 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
                 .padding(horizontal = 4.dp, vertical = 2.dp)
         ) {
             IconButton(onClick = onBack, modifier = Modifier.align(Alignment.CenterStart)) {
-                Icon(Icons.AutoMirrored.Rounded.ArrowBackIos, contentDescription = "Zurück", tint = TextHigh, modifier = Modifier.size(22.dp))
+                Icon(Icons.AutoMirrored.Rounded.ArrowBackIos, contentDescription = t("Zurück"), tint = TextHigh, modifier = Modifier.size(22.dp))
             }
             Text(
-                "Profil bearbeiten",
+                t("Profil bearbeiten"),
                 color = TextHigh,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.ExtraBold,
@@ -665,7 +664,7 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
                     .padding(end = 8.dp)
             ) {
                 Text(
-                    "Speichern",
+                    t("Speichern"),
                     color = Teal,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
@@ -684,13 +683,13 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
         ) {
             // Angaben wie in einer Liste
             GroupCard {
-                FieldRow("Name") {
-                    InlineField(name, { name = it.take(30) }, "Dein Name")
+                FieldRow(t("Name")) {
+                    InlineField(name, { name = it.take(30) }, t("Dein Name"))
                 }
                 RowDivider()
-                FieldRow("Alter") { Text("${p.age}", color = TextLow, fontSize = 15.sp) }
+                FieldRow(t("Alter")) { Text("${p.age}", color = TextLow, fontSize = 15.sp) }
                 RowDivider()
-                FieldRow("Profilfarbe", onClick = { showColors = true }) {
+                FieldRow(t("Profilfarbe"), onClick = { showColors = true }) {
                     Box(
                         Modifier
                             .size(18.dp)
@@ -698,13 +697,13 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
                     )
                 }
                 RowDivider()
-                FieldRow("Ich bin") {
+                FieldRow(t("Ich bin")) {
                     val adult = p.ageGroup == "adult"
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         listOf(
-                            "male" to if (adult) "Mann" else "Junge",
-                            "female" to if (adult) "Frau" else "Mädchen",
-                            "other" to "Keine Angabe",
+                            "male" to if (adult) t("Mann") else t("Junge"),
+                            "female" to if (adult) t("Frau") else t("Mädchen"),
+                            "other" to t("Keine Angabe"),
                         ).forEach { (value, label) ->
                             val sel = gender == value
                             Surface(
@@ -724,10 +723,10 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
                     }
                 }
                 RowDivider()
-                FieldRow("Land") { Text("${Countries.flag(p.country)} ${Countries.name(p.country)}", color = TextLow, fontSize = 15.sp) }
+                FieldRow(t("Land")) { Text("${Countries.flag(p.country)} ${Countries.name(p.country)}", color = TextLow, fontSize = 15.sp) }
             }
 
-            FieldLabel("Bio")
+            FieldLabel(t("Bio"))
             GroupCard {
                 Box(Modifier.padding(horizontal = 14.dp, vertical = 12.dp)) {
                     BasicTextField(
@@ -739,7 +738,7 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
                             .fillMaxWidth()
                             .heightIn(min = 72.dp)
                     )
-                    if (bio.isEmpty()) Text("Erzähl etwas über dich …", color = TextLow, fontSize = 15.sp)
+                    if (bio.isEmpty()) Text(t("Erzähl etwas über dich …"), color = TextLow, fontSize = 15.sp)
                 }
                 Text(
                     "${bio.length}/500",
@@ -752,9 +751,9 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
             }
 
             GroupCard {
-                FieldRow("Meine Interessen", onClick = { showInterests = true }) {
+                FieldRow(t("Meine Interessen"), onClick = { showInterests = true }) {
                     if (interests.isEmpty()) {
-                        Text("Auswählen", color = TextLow, fontSize = 15.sp)
+                        Text(t("Auswählen"), color = TextLow, fontSize = 15.sp)
                     } else {
                         Row(horizontalArrangement = Arrangement.spacedBy((-6).dp)) {
                             interests.take(5).forEach { InterestIcon(it, 28.dp) }
@@ -764,7 +763,7 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
                 }
             }
 
-            FieldLabel("Medien")
+            FieldLabel(t("Medien"))
             // null = Feld zum Hinzufügen
             val slots: List<String?> = buildList {
                 addAll(p.photos)
@@ -800,18 +799,18 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
                 }
             }
             Text(
-                "Fotos und Videos werden automatisch geprüft. Tippe auf ⭐, um ein Foto zum Hauptfoto zu machen.",
+                t("Fotos und Videos werden automatisch geprüft. Tippe auf ⭐, um ein Foto zum Hauptfoto zu machen."),
                 fontSize = 12.sp,
                 color = TextLow
             )
             GroupCard {
                 if (p.videoUrl.isNotBlank()) {
-                    FieldRow("Profilvideo", onClick = { vm.removeMedia(p.videoUrl) }) {
-                        Text("Entfernen", color = Coral, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                    FieldRow(t("Profilvideo"), onClick = { vm.removeMedia(p.videoUrl) }) {
+                        Text(t("Entfernen"), color = Coral, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
                     }
                 } else {
                     FieldRow(
-                        "Profilvideo (max. 30 s)",
+                        t("Profilvideo (max. 30 s)"),
                         onClick = {
                             if (vm.uploading == null) {
                                 videoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly))
@@ -827,12 +826,12 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
                 }
             }
 
-            FieldLabel("Socials")
-            SocialInputRow("👻", Color(0xFFFFFC00), "Snapchat hinzufügen", snapchat) { snapchat = it }
-            SocialInputRow("📷", Color(0xFFDD2A7B), "Instagram hinzufügen", instagram) { instagram = it }
-            SocialInputRow("🎵", Color(0xFF111114), "TikTok hinzufügen", tiktok) { tiktok = it }
+            FieldLabel(t("Socials"))
+            SocialInputRow("👻", Color(0xFFFFFC00), t("Snapchat hinzufügen"), snapchat) { snapchat = it }
+            SocialInputRow("📷", Color(0xFFDD2A7B), t("Instagram hinzufügen"), instagram) { instagram = it }
+            SocialInputRow("🎵", Color(0xFF111114), t("TikTok hinzufügen"), tiktok) { tiktok = it }
             GroupCard {
-                FieldRow("Für Freunde sichtbar") {
+                FieldRow(t("Für Freunde sichtbar")) {
                     Switch(
                         checked = visible,
                         onCheckedChange = { visible = it },
@@ -842,15 +841,15 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
             }
             Text(
                 if (isTeen) {
-                    "Nur deine Freunde können deine Socials sehen – und nur, wenn du sie freigibst. Überleg gut, mit wem du sie teilst."
+                    t("Nur deine Freunde können deine Socials sehen – und nur, wenn du sie freigibst. Überleg gut, mit wem du sie teilst.")
                 } else {
-                    "Nur deine Freunde auf kumi können deine Socials sehen – und nur, wenn du sie freigibst."
+                    t("Nur deine Freunde auf kumi können deine Socials sehen – und nur, wenn du sie freigibst.")
                 },
                 fontSize = 12.sp,
                 color = TextLow
             )
             Spacer(Modifier.height(4.dp))
-            PrimaryButton(text = "Speichern", onClick = { doSave() }, loading = vm.busy)
+            PrimaryButton(text = t("Speichern"), onClick = { doSave() }, loading = vm.busy)
             Spacer(Modifier.height(24.dp))
         }
     }
@@ -861,18 +860,18 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
                 Column(Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Box(Modifier.fillMaxWidth()) {
                         Text(
-                            "Profilfarbe 🎨",
+                            t("Profilfarbe 🎨"),
                             color = TextHigh,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.ExtraBold,
                             modifier = Modifier.align(Alignment.Center)
                         )
                         IconButton(onClick = { showColors = false }, modifier = Modifier.align(Alignment.CenterEnd)) {
-                            Icon(Icons.Rounded.Close, contentDescription = "Schließen", tint = TextHigh)
+                            Icon(Icons.Rounded.Close, contentDescription = t("Schließen"), tint = TextHigh)
                         }
                     }
                     Text(
-                        "Wähle eine Farbe für dein Namensschild",
+                        t("Wähle eine Farbe für dein Namensschild"),
                         color = TextLow,
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center
@@ -902,25 +901,25 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        "Meine Interessen",
+                        t("Meine Interessen"),
                         color = TextHigh,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.ExtraBold,
                         modifier = Modifier.weight(1f)
                     )
                     Text(
-                        "${interests.size}/$MAX_INTERESTS",
+                        "${interests.size}/${MAX_INTERESTS}",
                         color = if (interests.size >= MAX_INTERESTS) Teal else TextLow,
                         fontWeight = FontWeight.Bold
                     )
                 }
                 Text(
-                    "Tippe an, was du magst – so finden dich Leute mit denselben Interessen.",
+                    t("Tippe an, was du magst – so finden dich Leute mit denselben Interessen."),
                     color = TextLow,
                     fontSize = 13.sp
                 )
                 Spacer(Modifier.height(10.dp))
-                InterestSearchField(query = query, onQuery = { query = it }, placeholder = "Suchen, z. B. Minecraft")
+                InterestSearchField(query = query, onQuery = { query = it }, placeholder = t("Suchen, z. B. Minecraft"))
                 Spacer(Modifier.height(10.dp))
                 InterestCategoryChips(selected = category, onSelect = { category = it })
                 InterestGrid(
@@ -931,7 +930,7 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
                         interests = when {
                             selected -> interests - def.value
                             interests.size >= MAX_INTERESTS -> {
-                                context.toast("Höchstens $MAX_INTERESTS Interessen.")
+                                context.toast(t("Höchstens {0} Interessen.", MAX_INTERESTS))
                                 interests
                             }
                             else -> interests + def.value
@@ -942,7 +941,7 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
                         .weight(1f, fill = false)
                 )
                 Spacer(Modifier.height(8.dp))
-                PrimaryButton(text = "Fertig", onClick = { showInterests = false })
+                PrimaryButton(text = t("Fertig"), onClick = { showInterests = false })
                 Spacer(Modifier.height(24.dp))
             }
         }
@@ -1045,7 +1044,7 @@ private fun AddPhotoTile(uploading: Boolean, preview: Uri? = null, onClick: () -
             if (uploading) {
                 UploadPreview(preview)
             } else {
-                Icon(Icons.Rounded.AddAPhoto, contentDescription = "Foto hinzufügen", tint = Teal)
+                Icon(Icons.Rounded.AddAPhoto, contentDescription = t("Foto hinzufügen"), tint = Teal)
             }
         }
     }
@@ -1072,7 +1071,7 @@ private fun UploadPreview(preview: Uri?) {
             CircularProgressIndicator(Modifier.size(26.dp), color = Teal, strokeWidth = 2.5.dp)
             Spacer(Modifier.height(6.dp))
             Text(
-                "Wird geprüft…",
+                t("Wird geprüft…"),
                 style = MaterialTheme.typography.labelSmall,
                 color = if (preview != null) Color.White else TextLow
             )
@@ -1104,7 +1103,7 @@ private fun PhotoTile(url: String, isMain: Boolean, onRemove: () -> Unit, onMake
                 .size(28.dp)
         ) {
             Box(contentAlignment = Alignment.Center) {
-                Icon(Icons.Rounded.Close, contentDescription = "Entfernen", tint = Color.White, modifier = Modifier.size(16.dp))
+                Icon(Icons.Rounded.Close, contentDescription = t("Entfernen"), tint = Color.White, modifier = Modifier.size(16.dp))
             }
         }
         Surface(
@@ -1120,7 +1119,7 @@ private fun PhotoTile(url: String, isMain: Boolean, onRemove: () -> Unit, onMake
             Box(contentAlignment = Alignment.Center) {
                 Icon(
                     Icons.Rounded.Star,
-                    contentDescription = if (isMain) "Hauptfoto" else "Als Hauptfoto",
+                    contentDescription = if (isMain) t("Hauptfoto") else t("Als Hauptfoto"),
                     tint = if (isMain) Ink else Color.White,
                     modifier = Modifier.size(16.dp)
                 )
@@ -1158,12 +1157,12 @@ class UserProfileViewModel(private val uid: String) : BaseViewModel() {
     fun sendRequest() = launchSafe {
         val matched = DiscoverRepo.sendRequest(uid)
         requested = true
-        toast(if (matched) "🎉 Ihr seid jetzt Freunde!" else "👋 Anfrage gesendet")
+        toast(if (matched) t("🎉 Ihr seid jetzt Freunde!") else t("👋 Anfrage gesendet"))
     }
 
     fun report(reason: String, details: String) = launchSafe {
-        SafetyRepo.report(uid, reason, details, "Profil")
-        toast("Danke! Unser Team schaut sich das an. 💛")
+        SafetyRepo.report(uid, reason, details, t("Profil"))
+        toast(t("Danke! Unser Team schaut sich das an. 💛"))
     }
 
     val blocked = SafetyRepo.isBlocked(uid)
@@ -1171,13 +1170,13 @@ class UserProfileViewModel(private val uid: String) : BaseViewModel() {
 
     fun block(onDone: () -> Unit) = launchSafe {
         SafetyRepo.block(uid)
-        toast("Blockiert. Du kannst das in den Einstellungen jederzeit rückgängig machen.")
+        toast(t("Blockiert. Du kannst das in den Einstellungen jederzeit rückgängig machen."))
         onDone()
     }
 
     fun unblock() = launchSafe {
         SafetyRepo.unblock(uid)
-        toast("Nicht mehr blockiert.")
+        toast(t("Nicht mehr blockiert."))
     }
 }
 
@@ -1188,7 +1187,7 @@ fun UserProfileScreen(
     onBack: () -> Unit,
     onOpenChat: (String) -> Unit,
 ) {
-    val vm: UserProfileViewModel = viewModel(key = "user_$uid") { UserProfileViewModel(uid) }
+    val vm: UserProfileViewModel = viewModel(key = "user_${uid}") { UserProfileViewModel(uid) }
     val context = LocalContext.current
     LaunchedEffect(Unit) { vm.notices.collect { context.toast(it) } }
 
@@ -1223,7 +1222,7 @@ fun UserProfileScreen(
             IconButton(onClick = onBack) {
                 Icon(
                     Icons.AutoMirrored.Rounded.ArrowBackIos,
-                    contentDescription = "Zurück",
+                    contentDescription = t("Zurück"),
                     tint = TextHigh,
                     modifier = Modifier.size(24.dp)
                 )
@@ -1232,11 +1231,11 @@ fun UserProfileScreen(
             if (!isMe && p != null) {
                 Box {
                     IconButton(onClick = { menuOpen = true }) {
-                        Icon(Icons.Rounded.MoreVert, contentDescription = "Mehr", tint = TextHigh, modifier = Modifier.size(26.dp))
+                        Icon(Icons.Rounded.MoreVert, contentDescription = t("Mehr"), tint = TextHigh, modifier = Modifier.size(26.dp))
                     }
                     DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                         DropdownMenuItem(
-                            text = { Text("Melden") },
+                            text = { Text(t("Melden")) },
                             leadingIcon = { Icon(Icons.Rounded.Flag, contentDescription = null) },
                             onClick = {
                                 menuOpen = false
@@ -1245,7 +1244,7 @@ fun UserProfileScreen(
                         )
                         if (isBlocked) {
                             DropdownMenuItem(
-                                text = { Text("Entblocken", color = Teal) },
+                                text = { Text(t("Entblocken"), color = Teal) },
                                 leadingIcon = { Icon(Icons.Rounded.Block, contentDescription = null, tint = Teal) },
                                 onClick = {
                                     menuOpen = false
@@ -1254,7 +1253,7 @@ fun UserProfileScreen(
                             )
                         } else {
                             DropdownMenuItem(
-                                text = { Text("Blockieren", color = Coral) },
+                                text = { Text(t("Blockieren"), color = Coral) },
                                 leadingIcon = { Icon(Icons.Rounded.Block, contentDescription = null, tint = Coral) },
                                 onClick = {
                                     menuOpen = false
@@ -1278,8 +1277,8 @@ fun UserProfileScreen(
             when {
                 p == null && vm.unavailable -> EmptyState(
                     emoji = "🙈",
-                    title = "Profil nicht verfügbar",
-                    text = "Diese Person ist gerade nicht erreichbar.",
+                    title = t("Profil nicht verfügbar"),
+                    text = t("Diese Person ist gerade nicht erreichbar."),
                     modifier = Modifier.align(Alignment.Center)
                 )
                 p == null -> LoadingBox()
@@ -1326,7 +1325,7 @@ fun UserProfileScreen(
                                 } else {
                                     Icon(Icons.Rounded.Block, contentDescription = null, tint = Teal, modifier = Modifier.size(22.dp))
                                     Spacer(Modifier.width(10.dp))
-                                    Text("Blockiert · Entblocken", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                                    Text(t("Blockiert · Entblocken"), color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
                                 }
                             }
                         }
@@ -1355,14 +1354,14 @@ fun UserProfileScreen(
                                     friendChat != null -> {
                                         Icon(Icons.Rounded.ChatBubble, contentDescription = null, tint = Teal, modifier = Modifier.size(22.dp))
                                         Spacer(Modifier.width(10.dp))
-                                        Text("Chat öffnen", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                                        Text(t("Chat öffnen"), color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
                                     }
-                                    requested -> Text("Anfrage gesendet ✓", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                                    requested -> Text(t("Anfrage gesendet ✓"), color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
                                     vm.busy -> CircularProgressIndicator(color = Teal, strokeWidth = 2.dp, modifier = Modifier.size(22.dp))
                                     else -> {
                                         Icon(Icons.AutoMirrored.Rounded.Send, contentDescription = null, tint = Teal, modifier = Modifier.size(22.dp))
                                         Spacer(Modifier.width(10.dp))
-                                        Text("Anfrage senden", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                                        Text(t("Anfrage senden"), color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
                                         Spacer(Modifier.width(10.dp))
                                         GemIcon(15.dp)
                                         Spacer(Modifier.width(4.dp))
@@ -1407,8 +1406,8 @@ fun UserProfileScreen(
     if (confirmBlock && p != null) {
         ConfirmDialog(
             title = "${p.name} blockieren?",
-            text = "Ihr könnt euch dann nicht mehr sehen oder schreiben. Entblocken kannst du jederzeit in den Einstellungen unter „Blockierte Nutzer“.",
-            confirmLabel = "Blockieren",
+            text = t("Ihr könnt euch dann nicht mehr sehen oder schreiben. Entblocken kannst du jederzeit in den Einstellungen unter „Blockierte Nutzer“."),
+            confirmLabel = t("Blockieren"),
             onDismiss = { confirmBlock = false },
             onConfirm = {
                 confirmBlock = false
@@ -1434,21 +1433,21 @@ private fun ProfileExtras(
         try {
             uriHandler.openUri(url)
         } catch (e: Exception) {
-            context.toast("Link konnte nicht geöffnet werden.")
+            context.toast(t("Link konnte nicht geöffnet werden."))
         }
     }
     val shadow = TextStyle(shadow = Shadow(Color.Black.copy(alpha = 0.7f), Offset(0f, 2f), 10f))
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         if (hasVideo) {
-            OverlayChip("▶  Video ansehen", onVideo)
+            OverlayChip(t("▶  Video ansehen"), onVideo)
         }
         if (showSocials) {
-            Sticker("Socials", accent, rotation = -3f, fontSize = 20.sp)
+            Sticker(t("Socials"), accent, rotation = -3f, fontSize = 20.sp)
             val s = socials
             when {
-                !isFriend -> Text("🔒 Sichtbar, sobald ihr Freunde seid.", color = Color.White.copy(alpha = 0.85f), fontSize = 15.sp, style = shadow)
+                !isFriend -> Text(t("🔒 Sichtbar, sobald ihr Freunde seid."), color = Color.White.copy(alpha = 0.85f), fontSize = 15.sp, style = shadow)
                 s == null || (s.instagram.isBlank() && s.snapchat.isBlank() && s.tiktok.isBlank()) ->
-                    Text("Keine Socials freigegeben.", color = Color.White.copy(alpha = 0.85f), fontSize = 15.sp, style = shadow)
+                    Text(t("Keine Socials freigegeben."), color = Color.White.copy(alpha = 0.85f), fontSize = 15.sp, style = shadow)
                 else -> FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)

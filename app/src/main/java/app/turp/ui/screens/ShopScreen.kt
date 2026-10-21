@@ -1,5 +1,7 @@
 package app.turp.ui.screens
 
+import app.turp.data.t
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -99,7 +101,7 @@ class ShopViewModel : BaseViewModel() {
 
     fun claimDaily() = launchSafe {
         val (reward, streak) = ProfileRepo.checkIn()
-        toast("+$reward 💎 · $streak ${if (streak == 1L) "Tag" else "Tage"} Serie 🔥")
+        toast(t("+{0} 💎 · {1} {2} Serie 🔥", reward, streak, if (streak == 1L) t("Tag") else t("Tage")))
     }
 
     fun buy(context: Context, productId: String) {
@@ -152,7 +154,7 @@ fun PlusBanner(modifier: Modifier = Modifier, onClick: (() -> Unit)? = null, but
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                "Günstigere Anfragen, doppelte Belohnung.",
+                t("Günstigere Anfragen, doppelte Belohnung."),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -190,8 +192,8 @@ fun ShopScreen(session: SessionState.Active, onBack: () -> Unit, vm: ShopViewMod
             vm.buy(context, productId)
         } else {
             context.toast(
-                if (ready == null) "Verbinde mit Google Play …"
-                else "Käufe gehen nur mit kumi aus dem Play Store – bis dahin gibt's Gems gratis weiter unten 💎"
+                if (ready == null) t("Verbinde mit Google Play …")
+                else t("Käufe gehen nur mit kumi aus dem Play Store – bis dahin gibt's Gems gratis weiter unten 💎")
             )
         }
     }
@@ -209,9 +211,9 @@ fun ShopScreen(session: SessionState.Active, onBack: () -> Unit, vm: ShopViewMod
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = onBack) {
-                Icon(Icons.AutoMirrored.Rounded.ArrowBackIos, contentDescription = "Zurück", tint = TextHigh, modifier = Modifier.size(22.dp))
+                Icon(Icons.AutoMirrored.Rounded.ArrowBackIos, contentDescription = t("Zurück"), tint = TextHigh, modifier = Modifier.size(22.dp))
             }
-            Text("Shop", color = TextHigh, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold, modifier = Modifier.weight(1f))
+            Text(t("Shop"), color = TextHigh, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold, modifier = Modifier.weight(1f))
             GemPill(gems = account.gems, showDot = false)
         }
 
@@ -225,21 +227,21 @@ fun ShopScreen(session: SessionState.Active, onBack: () -> Unit, vm: ShopViewMod
             PlusBanner()
             Surface(shape = RoundedCornerShape(20.dp), color = InkElevated) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Benefit("✉️", "Anfragen kosten nur $PLUS_REQUEST_COST statt $REQUEST_COST Gems")
-                    Benefit("💎", "Doppelte tägliche Belohnung")
-                    Benefit("✨", "Goldenes Plus an deinem Namen")
+                    Benefit("✉️", t("Anfragen kosten nur {0} statt {1} Gems", PLUS_REQUEST_COST, REQUEST_COST))
+                    Benefit("💎", t("Doppelte tägliche Belohnung"))
+                    Benefit("✨", t("Goldenes Plus an deinem Namen"))
                     Spacer(Modifier.height(4.dp))
                     if (account.plusActive) {
                         val until = account.plusUntil?.toDate()
                         Text(
-                            if (until != null) "kumi+ ist aktiv bis ${SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY).format(until)} ✨"
-                            else "kumi+ ist aktiv ✨",
+                            if (until != null) t("kumi+ ist aktiv bis {0} ✨", SimpleDateFormat("dd.MM.yyyy", app.turp.data.I18n.locale()).format(until))
+                            else t("kumi+ ist aktiv ✨"),
                             color = Sun,
                             fontWeight = FontWeight.Bold,
                             fontSize = 15.sp
                         )
                         CandyButton(
-                            text = "Abo verwalten",
+                            text = t("Abo verwalten"),
                             onClick = { openSubscriptions(context) },
                             color = InkHigh,
                             height = 44.dp
@@ -247,14 +249,14 @@ fun ShopScreen(session: SessionState.Active, onBack: () -> Unit, vm: ShopViewMod
                     } else {
                         val price = Billing.price(Billing.PLUS) ?: Billing.PLUS_LIST_PRICE
                         CandyButton(
-                            text = "kumi+ holen · $price / Monat",
+                            text = t("kumi+ holen · {0} / Monat", price),
                             onClick = { buy(Billing.PLUS) },
                             loading = vm.starting == Billing.PLUS,
                             color = Sun,
                             height = 46.dp
                         )
                         Text(
-                            "Monatlich kündbar über Google Play. Verlängert sich automatisch, bis du kündigst.",
+                            t("Monatlich kündbar über Google Play. Verlängert sich automatisch, bis du kündigst."),
                             color = TextLow,
                             fontSize = 11.sp
                         )
@@ -262,11 +264,11 @@ fun ShopScreen(session: SessionState.Active, onBack: () -> Unit, vm: ShopViewMod
                 }
             }
 
-            SectionHeading("Gems", Modifier.padding(top = 6.dp))
+            SectionHeading(t("Gems"), Modifier.padding(top = 6.dp))
             if (!storeOk && ready != null) {
                 Surface(shape = RoundedCornerShape(16.dp), color = InkHigh) {
                     Text(
-                        "Gems kaufen geht, sobald du kumi aus dem Play Store hast. Bis dahin: Gems gratis per Einladung und täglicher Belohnung 👇",
+                        t("Gems kaufen geht, sobald du kumi aus dem Play Store hast. Bis dahin: Gems gratis per Einladung und täglicher Belohnung 👇"),
                         color = TextLow,
                         fontSize = 13.sp,
                         modifier = Modifier.padding(12.dp)
@@ -289,24 +291,24 @@ fun ShopScreen(session: SessionState.Active, onBack: () -> Unit, vm: ShopViewMod
                 }
             }
             Text(
-                "Preise inkl. MwSt. Bezahlung über Google Play." +
-                    if (isTeen) " Unter 18 kannst du höchstens 30 € im Monat ausgeben – frag am besten vorher deine Eltern." else "",
+                t("Preise inkl. MwSt. Bezahlung über Google Play.") +
+                    if (isTeen) " " + t("Unter 18 kannst du höchstens 30 € im Monat ausgeben – frag am besten vorher deine Eltern.") else "",
                 color = TextLow,
                 fontSize = 11.sp
             )
 
-            SectionHeading("Gratis Gems", Modifier.padding(top = 6.dp))
+            SectionHeading(t("Gratis Gems"), Modifier.padding(top = 6.dp))
             Surface(shape = RoundedCornerShape(20.dp), color = InkElevated) {
                 Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.weight(1f)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text("😊 Freunde einladen", color = TextHigh, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                            Text(t("😊 Freunde einladen"), color = TextHigh, fontWeight = FontWeight.Bold, fontSize = 15.sp)
                             Spacer(Modifier.width(8.dp))
                             GemIcon(14.dp)
-                            Text(" +$INVITE_BONUS", color = TextHigh, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                            Text(" +${INVITE_BONUS}", color = TextHigh, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
                         }
                         Text(
-                            "Pro Person, die sich mit deinem Code ${account.inviteCode.ifBlank { "–" }} anmeldet",
+                            t("Pro Person, die sich mit deinem Code {0} anmeldet", account.inviteCode.ifBlank { "–" }),
                             color = TextLow,
                             fontSize = 12.sp
                         )
@@ -318,7 +320,7 @@ fun ShopScreen(session: SessionState.Active, onBack: () -> Unit, vm: ShopViewMod
                         color = Teal
                     ) {
                         Text(
-                            "Einladen",
+                            t("Einladen"),
                             color = Ink,
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp,
@@ -328,10 +330,10 @@ fun ShopScreen(session: SessionState.Active, onBack: () -> Unit, vm: ShopViewMod
                 }
             }
 
-            SectionHeading("Tägliche Belohnung", Modifier.padding(top = 6.dp))
+            SectionHeading(t("Tägliche Belohnung"), Modifier.padding(top = 6.dp))
             Text(
-                "Hol dir jeden Tag gratis Gems – je länger deine Serie, desto mehr." +
-                    if (account.plusActive) " Mit kumi+ doppelt!" else "",
+                t("Hol dir jeden Tag gratis Gems – je länger deine Serie, desto mehr.") +
+                    if (account.plusActive) " " + t("Mit kumi+ doppelt!") else "",
                 color = TextLow,
                 fontSize = 13.sp
             )
@@ -388,7 +390,7 @@ private fun GemPackTile(
                 GemIcon(32.dp)
                 Spacer(Modifier.height(6.dp))
                 Text("${pack.gems}", color = TextHigh, fontWeight = FontWeight.ExtraBold, fontSize = 17.sp)
-                Text("= ${pack.gems / requestCost} Anfragen", color = TextLow, fontSize = 11.sp)
+                Text(t("= {0} Anfragen", pack.gems / requestCost), color = TextLow, fontSize = 11.sp)
                 Spacer(Modifier.height(8.dp))
                 Box(
                     Modifier
@@ -456,7 +458,7 @@ private fun DailyRewards(streak: Long, lastCheckIn: String, busy: Boolean, plus:
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            (if (done) "✓ " else "") + "Tag $day",
+                            (if (done) "✓ " else "") + t("Tag {0}", day),
                             color = if (done) Teal else TextHigh,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold
@@ -476,7 +478,7 @@ private fun DailyRewards(streak: Long, lastCheckIn: String, busy: Boolean, plus:
             Spacer(Modifier.height(14.dp))
             if (!claimedToday) {
                 CandyButton(
-                    text = "Abholen · +${dailyReward(nextDay, plus)} 💎",
+                    text = t("Abholen · +{0} 💎", dailyReward(nextDay, plus)),
                     onClick = onClaim,
                     loading = busy,
                     color = Teal,
@@ -493,7 +495,7 @@ private fun DailyRewards(streak: Long, lastCheckIn: String, busy: Boolean, plus:
                     }
                 }
                 Text(
-                    "Nächste Belohnung in %02d:%02d:%02d ⏰".format(left / 3600, (left % 3600) / 60, left % 60),
+                    t("Nächste Belohnung in %02d:%02d:%02d ⏰").format(left / 3600, (left % 3600) / 60, left % 60),
                     color = TextLow,
                     fontSize = 13.sp,
                     textAlign = TextAlign.Center,

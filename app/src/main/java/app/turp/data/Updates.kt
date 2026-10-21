@@ -52,7 +52,7 @@ object Updates {
             if (code <= BuildConfig.VERSION_CODE) return@withContext null
             UpdateInfo(
                 versionCode = code,
-                versionName = json.optString("versionName", "1.0.$code"),
+                versionName = json.optString("versionName", "1.0.${code}"),
                 apkUrl = baseUrl + json.optString("apk", "turp.apk"),
                 notes = json.optString("notes", ""),
             )
@@ -71,7 +71,7 @@ object Updates {
             connection.readTimeout = 30000
             try {
                 if (connection.responseCode != 200) {
-                    throw IllegalStateException("Download fehlgeschlagen (Fehler ${connection.responseCode}).")
+                    throw IllegalStateException(t("Download fehlgeschlagen (Fehler {0}).", connection.responseCode))
                 }
                 val total = connection.contentLengthLong
                 var done = 0L
@@ -168,11 +168,11 @@ class UpdateViewModel : BaseViewModel() {
 
     fun checkManually() = launchSafe(showBusy = false) {
         if (!Updates.enabled) {
-            toast("Updates gibt es nur für die Version von GitHub.")
+            toast(t("Updates gibt es nur für die Version von GitHub."))
             return@launchSafe
         }
         val info = Updates.check()
-        if (info == null) toast("Du hast schon die neueste Version ✅") else available = info
+        if (info == null) toast(t("Du hast schon die neueste Version ✅")) else available = info
     }
 
     fun dismiss() {

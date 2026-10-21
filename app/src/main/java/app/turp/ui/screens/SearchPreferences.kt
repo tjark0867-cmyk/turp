@@ -1,5 +1,7 @@
 package app.turp.ui.screens
 
+import app.turp.data.t
+
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -110,7 +112,7 @@ fun SearchPreferences(
         interests = when {
             def.value in interests -> interests - def.value
             interests.size >= max -> {
-                context.toast("Höchstens $max – tippe oben eins an, um es zu entfernen.")
+                context.toast(t("Höchstens {0} – tippe oben eins an, um es zu entfernen.", max))
                 interests
             }
             else -> interests + def.value
@@ -130,13 +132,13 @@ fun SearchPreferences(
             IconButton(onClick = onClose) {
                 Icon(
                     Icons.Rounded.KeyboardArrowDown,
-                    contentDescription = "Schließen",
+                    contentDescription = t("Schließen"),
                     tint = TextHigh,
                     modifier = Modifier.size(32.dp)
                 )
             }
             Text(
-                "Such-Einstellungen",
+                t("Such-Einstellungen"),
                 color = TextHigh,
                 fontSize = 23.sp,
                 fontWeight = FontWeight.ExtraBold,
@@ -151,11 +153,11 @@ fun SearchPreferences(
                     range = d.minAge.toFloat()..d.maxAge.toFloat()
                     sharedFirst = d.sharedFirst
                     gender = d.gender
-                }) { Text("Zurücksetzen", color = TextLow, fontSize = 13.sp) }
+                }) { Text(t("Zurücksetzen"), color = TextLow, fontSize = 13.sp) }
             }
         }
         Text(
-            "Freunde finden, die das mögen",
+            t("Freunde finden, die das mögen"),
             color = TextLow,
             fontSize = 14.sp,
             modifier = Modifier.padding(start = 4.dp, bottom = 10.dp)
@@ -166,12 +168,12 @@ fun SearchPreferences(
             InterestSearchField(
                 query = query,
                 onQuery = { query = it },
-                placeholder = "Bis zu $max Interessen wählen",
+                placeholder = t("Bis zu {0} Interessen wählen", max),
                 onFocus = { searchFocused = it },
                 modifier = Modifier.weight(1f)
             )
             if (searching) {
-                TextButton(onClick = ::closeSearch) { Text("Fertig", color = Teal, fontWeight = FontWeight.Bold) }
+                TextButton(onClick = ::closeSearch) { Text(t("Fertig"), color = Teal, fontWeight = FontWeight.Bold) }
             }
         }
         Spacer(Modifier.height(10.dp))
@@ -198,25 +200,25 @@ fun SearchPreferences(
                 InterestRows(items = items, selected = interests, onToggle = ::toggle)
                 Spacer(Modifier.height(14.dp))
 
-                PrefLabel("Zeig mir")
+                PrefLabel(t("Zeig mir"))
                 val adults = bounds.first >= 18
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    OptionPill("👥 Alle", gender.isEmpty(), Modifier.weight(1f)) { gender = "" }
-                    OptionPill(if (adults) "🙋‍♂️ Männer" else "🙋‍♂️ Jungs", gender == "male", Modifier.weight(1f)) { gender = "male" }
-                    OptionPill(if (adults) "🙋‍♀️ Frauen" else "🙋‍♀️ Mädchen", gender == "female", Modifier.weight(1f)) { gender = "female" }
+                    OptionPill(t("👥 Alle"), gender.isEmpty(), Modifier.weight(1f)) { gender = "" }
+                    OptionPill(if (adults) t("🙋‍♂️ Männer") else t("🙋‍♂️ Jungs"), gender == "male", Modifier.weight(1f)) { gender = "male" }
+                    OptionPill(if (adults) t("🙋‍♀️ Frauen") else t("🙋‍♀️ Mädchen"), gender == "female", Modifier.weight(1f)) { gender = "female" }
                 }
                 Spacer(Modifier.height(18.dp))
 
-                PrefLabel("Die wohnen in")
+                PrefLabel(t("Die wohnen in"))
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     OptionPill(
-                        "${Countries.flag(myCountry)} Mein Land",
+                        t("{0} Mein Land", Countries.flag(myCountry)),
                         mode == CountryMode.MINE,
                         Modifier.weight(1f)
                     ) { mode = CountryMode.MINE }
-                    OptionPill("🌍 Weltweit", mode == CountryMode.WORLD, Modifier.weight(1f)) { mode = CountryMode.WORLD }
+                    OptionPill(t("🌍 Weltweit"), mode == CountryMode.WORLD, Modifier.weight(1f)) { mode = CountryMode.WORLD }
                     OptionPill(
-                        if (other.isNotBlank()) "${Countries.flag(other)} ${Countries.name(other)}" else "🧭 Anderes",
+                        if (other.isNotBlank()) "${Countries.flag(other)} ${Countries.name(other)}" else t("🧭 Anderes"),
                         mode == CountryMode.OTHER,
                         Modifier.weight(1f)
                     ) { pickCountry = true }
@@ -224,10 +226,10 @@ fun SearchPreferences(
                 Spacer(Modifier.height(18.dp))
 
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    PrefLabel("Alter", Modifier.weight(1f))
+                    PrefLabel(t("Alter"), Modifier.weight(1f))
                     val hi = range.endInclusive.roundToInt()
                     Text(
-                        "${range.start.roundToInt()} – ${if (hi >= 80) "80+" else "$hi"}",
+                        "${range.start.roundToInt()} – ${if (hi >= 80) "80+" else "${hi}"}",
                         color = TextHigh,
                         fontWeight = FontWeight.Bold,
                         fontSize = 15.sp
@@ -248,7 +250,7 @@ fun SearchPreferences(
                 )
                 if (bounds.first == 13) {
                     Text(
-                        "Bei kumi siehst du nur Leute zwischen 13 und 17 – Erwachsene sind getrennt.",
+                        t("Bei kumi siehst du nur Leute zwischen 13 und 17 – Erwachsene sind getrennt."),
                         color = TextLow,
                         fontSize = 12.sp
                     )
@@ -265,9 +267,9 @@ fun SearchPreferences(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(Modifier.weight(1f)) {
-                        Text("🤝 Gemeinsamkeiten zuerst", color = TextHigh, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                        Text(t("🤝 Gemeinsamkeiten zuerst"), color = TextHigh, fontWeight = FontWeight.Bold, fontSize = 15.sp)
                         Text(
-                            "Leute mit denselben Interessen wie du kommen zuerst",
+                            t("Leute mit denselben Interessen wie du kommen zuerst"),
                             color = TextLow,
                             fontSize = 12.sp
                         )
@@ -281,7 +283,7 @@ fun SearchPreferences(
                 }
                 Spacer(Modifier.height(14.dp))
             }
-            PrimaryButton(text = "Speichern", onClick = { onSave(current()) })
+            PrimaryButton(text = t("Speichern"), onClick = { onSave(current()) })
             Spacer(Modifier.height(4.dp))
         }
     }

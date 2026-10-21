@@ -1,5 +1,7 @@
 package app.turp.ui.screens
 
+import app.turp.data.t
+
 import app.turp.R
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.geometry.Offset
@@ -84,7 +86,7 @@ private fun SimpleTopBar(title: String, onBack: () -> Unit) {
         title = { Text(title) },
         navigationIcon = {
             IconButton(onClick = onBack) {
-                Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Zurück")
+                Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = t("Zurück"))
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
@@ -104,7 +106,7 @@ class AdminViewModel : BaseViewModel() {
 
     fun act(reportId: String, action: String) = launchSafe {
         AdminRepo.act(reportId, action)
-        toast(if (action == "ban") "Konto gesperrt." else "Meldung verworfen.")
+        toast(if (action == "ban") t("Konto gesperrt.") else t("Meldung verworfen."))
     }
 }
 
@@ -117,7 +119,7 @@ fun AdminScreen(onBack: () -> Unit, onOpenUser: (String) -> Unit, vm: AdminViewM
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
-        topBar = { SimpleTopBar("Meldungen", onBack) }
+        topBar = { SimpleTopBar(t("Meldungen"), onBack) }
     ) { padding ->
         val list = reports
         Box(
@@ -129,8 +131,8 @@ fun AdminScreen(onBack: () -> Unit, onOpenUser: (String) -> Unit, vm: AdminViewM
                 list == null -> LoadingBox()
                 list.isEmpty() -> EmptyState(
                     emoji = "✅",
-                    title = "Alles erledigt",
-                    text = "Keine offenen Meldungen.",
+                    title = t("Alles erledigt"),
+                    text = t("Keine offenen Meldungen."),
                     modifier = Modifier.align(Alignment.Center)
                 )
                 else -> LazyColumn(
@@ -139,7 +141,7 @@ fun AdminScreen(onBack: () -> Unit, onOpenUser: (String) -> Unit, vm: AdminViewM
                 ) {
                     item {
                         Text(
-                            "Meldungen aus der Jugend-Community stehen oben. Profile mit 3 oder mehr Meldern sind automatisch versteckt.",
+                            t("Meldungen aus der Jugend-Community stehen oben. Profile mit 3 oder mehr Meldern sind automatisch versteckt."),
                             style = MaterialTheme.typography.bodySmall,
                             color = TextLow
                         )
@@ -162,8 +164,8 @@ fun AdminScreen(onBack: () -> Unit, onOpenUser: (String) -> Unit, vm: AdminViewM
     if (ban != null) {
         ConfirmDialog(
             title = "${ban.targetName} sperren?",
-            text = "Das Konto wird sofort gesperrt, aus dem Entdecken entfernt und alle Chats werden geschlossen.",
-            confirmLabel = "Sperren",
+            text = t("Das Konto wird sofort gesperrt, aus dem Entdecken entfernt und alle Chats werden geschlossen."),
+            confirmLabel = t("Sperren"),
             onDismiss = { confirmBan = null },
             onConfirm = {
                 confirmBan = null
@@ -180,7 +182,7 @@ private fun ReportCard(report: Report, busy: Boolean, onOpen: () -> Unit, onDism
         Row(verticalAlignment = Alignment.CenterVertically) {
             Surface(shape = CircleShape, color = (if (teen) Coral else Lilac).copy(alpha = 0.2f)) {
                 Text(
-                    if (teen) "Jugend 13–17" else "18+",
+                    if (teen) t("Jugend 13–17") else "18+",
                     color = if (teen) Coral else Lilac,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.labelMedium,
@@ -192,7 +194,7 @@ private fun ReportCard(report: Report, busy: Boolean, onOpen: () -> Unit, onDism
         }
         Spacer(Modifier.height(8.dp))
         Text(report.reason, style = MaterialTheme.typography.titleMedium)
-        Text("Gemeldet: ${report.targetName}", color = TextLow)
+        Text(t("Gemeldet: {0}", report.targetName), color = TextLow)
         if (report.details.isNotBlank()) {
             Spacer(Modifier.height(6.dp))
             Text("„${report.details}“")
@@ -205,14 +207,14 @@ private fun ReportCard(report: Report, busy: Boolean, onOpen: () -> Unit, onDism
         }
         Spacer(Modifier.height(10.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-            TextButton(onClick = onOpen) { Text("Profil") }
+            TextButton(onClick = onOpen) { Text(t("Profil")) }
             Spacer(Modifier.weight(1f))
-            OutlinedButton(onClick = onDismiss, enabled = !busy) { Text("Verwerfen") }
+            OutlinedButton(onClick = onDismiss, enabled = !busy) { Text(t("Verwerfen")) }
             Button(
                 onClick = onBan,
                 enabled = !busy,
                 colors = ButtonDefaults.buttonColors(containerColor = Coral, contentColor = Ink)
-            ) { Text("Sperren") }
+            ) { Text(t("Sperren")) }
         }
     }
 }

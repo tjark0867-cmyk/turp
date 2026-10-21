@@ -1,5 +1,7 @@
 package app.turp.ui.screens
 
+import app.turp.data.t
+
 import androidx.activity.compose.BackHandler
 import app.turp.data.Billing
 import app.turp.data.Images
@@ -151,9 +153,9 @@ fun MainNav(
         Billing.events.collect { e ->
             context.toast(
                 when (e) {
-                    is Billing.Event.Credited -> "+${e.gems} 💎 gutgeschrieben – danke! 💛"
-                    Billing.Event.PlusActive -> "kumi+ ist aktiv ✨ Danke für deine Unterstützung!"
-                    Billing.Event.Pending -> "Zahlung ausstehend – die Gems kommen, sobald sie bestätigt ist."
+                    is Billing.Event.Credited -> t("+{0} 💎 gutgeschrieben – danke! 💛", e.gems)
+                    Billing.Event.PlusActive -> t("kumi+ ist aktiv ✨ Danke für deine Unterstützung!")
+                    Billing.Event.Pending -> t("Zahlung ausstehend – die Gems kommen, sobald sie bestätigt ist.")
                     is Billing.Event.Failed -> e.message
                 }
             )
@@ -186,7 +188,7 @@ fun MainNav(
 
     LaunchedEffect(pendingChatId) {
         val id = pendingChatId ?: return@LaunchedEffect
-        nav.navigate("chat/$id")
+        nav.navigate("chat/${id}")
         onChatHandled()
     }
 
@@ -205,7 +207,7 @@ fun MainNav(
             ChatScreen(
                 chatId = entry.arguments?.getString("chatId").orEmpty(),
                 onBack = { nav.popBackStack() },
-                onOpenUser = { nav.navigate("user/$it") },
+                onOpenUser = { nav.navigate("user/${it}") },
             )
         }
         composable("user/{uid}") { entry ->
@@ -213,7 +215,7 @@ fun MainNav(
                 uid = entry.arguments?.getString("uid").orEmpty(),
                 session = sessionState.value,
                 onBack = { nav.popBackStack() },
-                onOpenChat = { nav.navigate("chat/$it") },
+                onOpenChat = { nav.navigate("chat/${it}") },
             )
         }
         composable("editProfile") {
@@ -249,20 +251,20 @@ fun MainNav(
         composable("blocked") {
             BlockedScreen(
                 onBack = { nav.popBackStack() },
-                onOpenUser = { nav.navigate("user/$it") },
+                onOpenUser = { nav.navigate("user/${it}") },
             )
         }
         composable("friends") {
             AllFriendsScreen(
                 onClose = { nav.popBackStack() },
-                onOpenChat = { nav.navigate("chat/$it") },
-                onOpenUser = { nav.navigate("user/$it") },
+                onOpenChat = { nav.navigate("chat/${it}") },
+                onOpenUser = { nav.navigate("user/${it}") },
             )
         }
         composable("admin") {
             AdminScreen(
                 onBack = { nav.popBackStack() },
-                onOpenUser = { nav.navigate("user/$it") },
+                onOpenUser = { nav.navigate("user/${it}") },
             )
         }
     }
@@ -290,21 +292,19 @@ fun MainNav(
 private fun ReinstallDialog(info: UpdateInfo, onDownload: () -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Einmal neu installieren") },
+        title = { Text(t("Einmal neu installieren")) },
         text = {
             Text(
-                "kumi ${info.versionName} kann die installierte Version nicht direkt ersetzen. " +
-                    "Lade die neue Version herunter, lösche kumi und installiere sie dann. " +
-                    "Dein Konto, deine Freunde und Chats bleiben erhalten – du meldest dich einfach wieder an."
+                t("kumi {0} kann die installierte Version nicht direkt ersetzen. Lade die neue Version herunter, lösche kumi und installiere sie dann. Dein Konto, deine Freunde und Chats bleiben erhalten – du meldest dich einfach wieder an.", info.versionName)
             )
         },
         confirmButton = {
             TextButton(onClick = onDownload) {
-                Text("Herunterladen", color = Teal, fontWeight = FontWeight.SemiBold)
+                Text(t("Herunterladen"), color = Teal, fontWeight = FontWeight.SemiBold)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Später", color = TextLow) }
+            TextButton(onClick = onDismiss) { Text(t("Später"), color = TextLow) }
         }
     )
 }
@@ -313,10 +313,10 @@ private fun ReinstallDialog(info: UpdateInfo, onDownload: () -> Unit, onDismiss:
 private fun UpdateDialog(info: UpdateInfo, progress: Float?, onUpdate: () -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Neue Version verfügbar") },
+        title = { Text(t("Neue Version verfügbar")) },
         text = {
             Column {
-                Text("kumi ${info.versionName} ist da.")
+                Text(t("kumi {0} ist da.", info.versionName))
                 if (info.notes.isNotBlank()) {
                     Spacer(Modifier.height(6.dp))
                     Text(info.notes, color = TextLow, style = MaterialTheme.typography.bodySmall)
@@ -330,17 +330,17 @@ private fun UpdateDialog(info: UpdateInfo, progress: Float?, onUpdate: () -> Uni
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(Modifier.height(6.dp))
-                    Text("Wird geladen … ${(progress * 100).toInt()} %", color = TextLow, style = MaterialTheme.typography.bodySmall)
+                    Text(t("Wird geladen … {0} %", (progress * 100).toInt()), color = TextLow, style = MaterialTheme.typography.bodySmall)
                 }
             }
         },
         confirmButton = {
             TextButton(onClick = onUpdate, enabled = progress == null) {
-                Text("Jetzt aktualisieren", color = if (progress == null) Teal else TextLow, fontWeight = FontWeight.SemiBold)
+                Text(t("Jetzt aktualisieren"), color = if (progress == null) Teal else TextLow, fontWeight = FontWeight.SemiBold)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss, enabled = progress == null) { Text("Später", color = TextLow) }
+            TextButton(onClick = onDismiss, enabled = progress == null) { Text(t("Später"), color = TextLow) }
         }
     )
 }
@@ -393,7 +393,7 @@ private fun MainTabs(
             when (tab) {
                 Tab.Discover -> DiscoverScreen(
                     session = session,
-                    onOpenUser = { nav.navigate("user/$it") },
+                    onOpenUser = { nav.navigate("user/${it}") },
                     onEditProfile = { nav.navigate("editProfile") },
                     onOpenProfile = { tab = Tab.Profile },
                     onOpenShop = { nav.navigate("premium") },
@@ -402,8 +402,8 @@ private fun MainTabs(
                     session = session,
                     incoming = incoming,
                     chats = chats,
-                    onOpenUser = { nav.navigate("user/$it") },
-                    onOpenChat = { nav.navigate("chat/$it") },
+                    onOpenUser = { nav.navigate("user/${it}") },
+                    onOpenChat = { nav.navigate("chat/${it}") },
                     onOpenProfile = { tab = Tab.Profile },
                     onDiscover = { tab = Tab.Discover },
                     onAllFriends = { nav.navigate("friends") },
@@ -412,12 +412,12 @@ private fun MainTabs(
                 Tab.Chats -> ChatsScreen(
                     session = session,
                     chats = chats,
-                    onOpenChat = { nav.navigate("chat/$it") },
+                    onOpenChat = { nav.navigate("chat/${it}") },
                     onDiscover = { tab = Tab.Discover },
                     onOpenProfile = { tab = Tab.Profile },
                     onOpenShop = { nav.navigate("premium") },
                     onStartTestChat = if (BuildConfig.DEBUG) {
-                        { vm.startTestChat { chatId -> nav.navigate("chat/$chatId") } }
+                        { vm.startTestChat { chatId -> nav.navigate("chat/${chatId}") } }
                     } else {
                         null
                     },
@@ -425,7 +425,7 @@ private fun MainTabs(
                 )
                 Tab.Lounge -> RoomScreen(
                     session = session,
-                    onOpenUser = { nav.navigate("user/$it") },
+                    onOpenUser = { nav.navigate("user/${it}") },
                 )
                 Tab.Profile -> ProfileScreen(
                     session = session,
@@ -455,19 +455,19 @@ private fun TurpBottomBar(selected: Tab, onSelect: (Tab) -> Unit, badges: Map<Ta
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Profil erreicht man über das eigene Bild oben links, darum nicht in der Leiste
-                Tab.entries.filter { it != Tab.Profile }.forEach { t ->
-                    val isSelected = t == selected
+                Tab.entries.filter { it != Tab.Profile }.forEach { tab ->
+                    val isSelected = tab == selected
                     val scale by animateFloatAsState(if (isSelected) 1.08f else 1f, label = "tabScale")
                     Box(
                         Modifier
                             .size(58.dp)
                             .clip(CircleShape)
-                            .clickable { onSelect(t) },
+                            .clickable { onSelect(tab) },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            if (isSelected) t.icon else t.iconOutlined,
-                            contentDescription = t.label,
+                            if (isSelected) tab.icon else tab.iconOutlined,
+                            contentDescription = t(tab.label),
                             tint = if (isSelected) Teal else TextLow,
                             modifier = Modifier
                                 .size(28.dp)
@@ -476,7 +476,7 @@ private fun TurpBottomBar(selected: Tab, onSelect: (Tab) -> Unit, badges: Map<Ta
                                     scaleY = scale
                                 }
                         )
-                        val count = badges[t] ?: 0
+                        val count = badges[tab] ?: 0
                         if (count > 0) {
                             Box(
                                 Modifier
@@ -488,7 +488,7 @@ private fun TurpBottomBar(selected: Tab, onSelect: (Tab) -> Unit, badges: Map<Ta
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    if (count > 9) "9+" else "$count",
+                                    if (count > 9) "9+" else "${count}",
                                     color = Color.White,
                                     fontSize = 10.sp,
                                     fontWeight = FontWeight.Bold

@@ -1,5 +1,7 @@
 package app.turp.ui.components
 
+import app.turp.data.t
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -246,7 +248,7 @@ private fun InfoPage(
                             )
                         } else {
                             Text(
-                                text = "${profile.name} hat noch nichts über sich geschrieben.",
+                                text = t("{0} hat noch nichts über sich geschrieben.", profile.name),
                                 color = Color.White.copy(alpha = 0.7f),
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Medium,
@@ -257,7 +259,7 @@ private fun InfoPage(
                     // 2) Interessen (+ Extra)
                     Column {
                         if (profile.interests.isNotEmpty()) {
-                            Sticker("Interessen", accent, rotation = -3f, fontSize = 16.sp)
+                            Sticker(t("Interessen"), accent, rotation = -3f, fontSize = 16.sp)
                             Spacer(Modifier.height(10.dp))
                             InterestGridOnCard(
                                 interests = profile.interests.sortedByDescending { it in highlight },
@@ -313,7 +315,7 @@ private fun InterestGridOnCard(interests: List<String>, highlight: Set<String>) 
                             ) {
                                 androidx.compose.material3.Icon(
                                     androidx.compose.material.icons.Icons.Rounded.Check,
-                                    contentDescription = "Gemeinsam",
+                                    contentDescription = t("Gemeinsam"),
                                     tint = Color.Black,
                                     modifier = Modifier.size(12.dp)
                                 )
@@ -358,7 +360,7 @@ fun ProfileNameStickers(profile: UserProfile, modifier: Modifier = Modifier, onC
         }
         Spacer(Modifier.height(4.dp))
         Sticker(
-            if (profile.bot) "🤖 Testprofil" else "${Countries.flag(profile.country)} ${profile.country}, ${profile.age}",
+            if (profile.bot) t("🤖 Testprofil") else "${Countries.flag(profile.country)} ${profile.country}, ${profile.age}",
             accent,
             rotation = -3f,
             fontSize = 16.sp,

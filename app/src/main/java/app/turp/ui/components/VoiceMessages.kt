@@ -1,5 +1,7 @@
 package app.turp.ui.components
 
+import app.turp.data.t
+
 import android.content.Context
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -132,7 +134,7 @@ fun VoiceMessageContent(
             when (status) {
                 "ok" -> Icon(
                     if (playing) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
-                    contentDescription = if (playing) "Pause" else "Abspielen",
+                    contentDescription = if (playing) t("Pause") else t("Abspielen"),
                     tint = if (mine) Ink else Teal,
                     modifier = Modifier.size(24.dp)
                 )
@@ -196,7 +198,7 @@ fun RecordingBar(elapsedMs: Long, onCancel: () -> Unit, onSend: () -> Unit, modi
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = onCancel) {
-                Icon(Icons.Rounded.Delete, contentDescription = "Verwerfen", tint = Coral)
+                Icon(Icons.Rounded.Delete, contentDescription = t("Verwerfen"), tint = Coral)
             }
             Box(
                 Modifier
@@ -208,7 +210,7 @@ fun RecordingBar(elapsedMs: Long, onCancel: () -> Unit, onSend: () -> Unit, modi
             Text(formatDuration(elapsedMs), color = TextHigh, fontSize = 17.sp, fontWeight = FontWeight.SemiBold)
             Spacer(Modifier.width(10.dp))
             Text(
-                "Aufnahme läuft …",
+                t("Aufnahme läuft …"),
                 color = TextLow,
                 fontSize = 14.sp,
                 modifier = Modifier.weight(1f)
@@ -220,7 +222,7 @@ fun RecordingBar(elapsedMs: Long, onCancel: () -> Unit, onSend: () -> Unit, modi
                     .clickable(onClick = onSend),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(Icons.AutoMirrored.Rounded.Send, contentDescription = "Senden", tint = Ink, modifier = Modifier.size(22.dp))
+                Icon(Icons.AutoMirrored.Rounded.Send, contentDescription = t("Senden"), tint = Ink, modifier = Modifier.size(22.dp))
             }
         }
     }

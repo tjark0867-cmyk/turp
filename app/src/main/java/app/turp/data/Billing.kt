@@ -38,9 +38,9 @@ object Billing {
     val PACKS = listOf(
         Pack("gems_50", 50, "0,99 €"),
         Pack("gems_150", 150, "2,49 €"),
-        Pack("gems_350", 350, "4,99 €", badge = "Beliebt"),
+        Pack("gems_350", 350, "4,99 €", badge = t("Beliebt")),
         Pack("gems_800", 800, "9,99 €"),
-        Pack("gems_2000", 2000, "19,99 €", badge = "Bester Wert"),
+        Pack("gems_2000", 2000, "19,99 €", badge = t("Bester Wert")),
     )
     const val PLUS = "kumi_plus"
     const val PLUS_LIST_PRICE = "3,99 €"
@@ -151,10 +151,10 @@ object Billing {
      * Fehler werden als Exception mit verständlicher Meldung geworfen.
      */
     suspend fun buy(context: Context, productId: String) {
-        val activity = context.findActivity() ?: throw IllegalStateException("Kauf konnte nicht gestartet werden.")
-        val c = client ?: throw IllegalStateException("Google Play ist nicht verbunden.")
+        val activity = context.findActivity() ?: throw IllegalStateException(t("Kauf konnte nicht gestartet werden."))
+        val c = client ?: throw IllegalStateException(t("Google Play ist nicht verbunden."))
         val details = _products.value[productId]
-            ?: throw IllegalStateException("Käufe gehen nur mit kumi aus dem Play Store.")
+            ?: throw IllegalStateException(t("Käufe gehen nur mit kumi aus dem Play Store."))
 
         val check = callFunction("purchaseCheck", mapOf("productId" to productId))
         val tag = check["accountTag"] as? String ?: ""
@@ -169,7 +169,7 @@ object Billing {
         if (result.responseCode != BillingClient.BillingResponseCode.OK &&
             result.responseCode != BillingClient.BillingResponseCode.USER_CANCELED
         ) {
-            throw IllegalStateException("Kauf konnte nicht gestartet werden (${result.responseCode}).")
+            throw IllegalStateException(t("Kauf konnte nicht gestartet werden ({0}).", result.responseCode))
         }
     }
 
@@ -190,7 +190,7 @@ object Billing {
             BillingClient.BillingResponseCode.OK -> purchases?.forEach { handle(it, quiet = false) }
             BillingClient.BillingResponseCode.USER_CANCELED -> Unit
             BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> restore()
-            else -> _events.tryEmit(Event.Failed("Der Kauf hat nicht geklappt (${result.responseCode}). Es wurde nichts abgebucht."))
+            else -> _events.tryEmit(Event.Failed(t("Der Kauf hat nicht geklappt ({0}). Es wurde nichts abgebucht.", result.responseCode)))
         }
     }
 

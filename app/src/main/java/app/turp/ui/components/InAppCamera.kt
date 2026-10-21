@@ -1,5 +1,7 @@
 package app.turp.ui.components
 
+import app.turp.data.t
+
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
@@ -85,7 +87,7 @@ fun InAppCamera(onClose: () -> Unit, onPhoto: (Uri) -> Unit) {
     val permission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { ok ->
         granted = ok
         if (!ok) {
-            context.toast("Ohne Kamera-Erlaubnis geht das leider nicht.")
+            context.toast(t("Ohne Kamera-Erlaubnis geht das leider nicht."))
             onClose()
         }
     }
@@ -113,7 +115,7 @@ fun InAppCamera(onClose: () -> Unit, onPhoto: (Uri) -> Unit) {
             provider.unbindAll()
             provider.bindToLifecycle(lifecycleOwner, selector, preview, capture)
         } catch (e: Exception) {
-            if (front) front = false else context.toast("Die Kamera ist gerade nicht verfügbar.")
+            if (front) front = false else context.toast(t("Die Kamera ist gerade nicht verfügbar."))
         }
     }
     DisposableEffect(Unit) {
@@ -145,7 +147,7 @@ fun InAppCamera(onClose: () -> Unit, onPhoto: (Uri) -> Unit) {
 
             override fun onError(exception: ImageCaptureException) {
                 busy = false
-                context.toast("Das Foto konnte nicht aufgenommen werden.")
+                context.toast(t("Das Foto konnte nicht aufgenommen werden."))
             }
         })
     }
@@ -175,7 +177,7 @@ fun InAppCamera(onClose: () -> Unit, onPhoto: (Uri) -> Unit) {
                     .statusBarsPadding()
                     .padding(8.dp)
             ) {
-                Icon(Icons.Rounded.Close, contentDescription = "Schließen", tint = Color.White, modifier = Modifier.size(30.dp))
+                Icon(Icons.Rounded.Close, contentDescription = t("Schließen"), tint = Color.White, modifier = Modifier.size(30.dp))
             }
             Row(
                 Modifier
@@ -202,14 +204,14 @@ fun InAppCamera(onClose: () -> Unit, onPhoto: (Uri) -> Unit) {
                         .size(52.dp)
                         .background(Color.Black.copy(alpha = 0.4f), CircleShape)
                 ) {
-                    Icon(Icons.Rounded.FlipCameraAndroid, contentDescription = "Kamera wechseln", tint = Color.White)
+                    Icon(Icons.Rounded.FlipCameraAndroid, contentDescription = t("Kamera wechseln"), tint = Color.White)
                 }
             }
         } else {
             // Vorschau des Fotos: nochmal oder senden
             AsyncImage(
                 model = current,
-                contentDescription = "Aufgenommenes Foto",
+                contentDescription = t("Aufgenommenes Foto"),
                 contentScale = ContentScale.Fit,
                 modifier = Modifier.fillMaxSize()
             )
@@ -222,7 +224,7 @@ fun InAppCamera(onClose: () -> Unit, onPhoto: (Uri) -> Unit) {
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 CandyButton(
-                    text = "Nochmal",
+                    text = t("Nochmal"),
                     onClick = {
                         current.delete()
                         shot = null
@@ -231,7 +233,7 @@ fun InAppCamera(onClose: () -> Unit, onPhoto: (Uri) -> Unit) {
                     modifier = Modifier.weight(1f)
                 )
                 CandyButton(
-                    text = "Senden",
+                    text = t("Senden"),
                     onClick = { onPhoto(Uri.fromFile(current)) },
                     color = Teal,
                     modifier = Modifier.weight(1f)

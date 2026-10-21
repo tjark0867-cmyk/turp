@@ -1,5 +1,7 @@
 package app.turp.ui.screens
 
+import app.turp.data.t
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -98,8 +100,8 @@ class RoomViewModel : BaseViewModel() {
     }
 
     fun report(message: RoomMessage, reason: String, details: String) = launchSafe {
-        SafetyRepo.report(message.senderId, reason, details, "Lounge: ${message.text}")
-        toast("Danke! Unser Team schaut sich das an. 💛")
+        SafetyRepo.report(message.senderId, reason, details, t("Lounge: {0}", message.text))
+        toast(t("Danke! Unser Team schaut sich das an. 💛"))
     }
 }
 
@@ -130,7 +132,7 @@ fun RoomScreen(
         // Kopfbereich im gemütlichen Lounge-Look
         Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Lounge", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.weight(1f))
+                Text(t("Lounge"), style = MaterialTheme.typography.headlineMedium, modifier = Modifier.weight(1f))
                 Surface(shape = CircleShape, color = Lilac.copy(alpha = 0.2f)) {
                     Text(
                         if (isTeen) "13–17" else "18+",
@@ -141,7 +143,7 @@ fun RoomScreen(
                 }
             }
             Text(
-                "Gruppenchat für deine Altersgruppe · Slow-Mode 10 s",
+                t("Gruppenchat für deine Altersgruppe · Slow-Mode 10 s"),
                 style = MaterialTheme.typography.bodySmall,
                 color = TextLow
             )
@@ -159,8 +161,8 @@ fun RoomScreen(
                 item {
                     EmptyState(
                         emoji = "🛋️",
-                        title = "Noch ruhig hier",
-                        text = "Sag Hallo und starte das Gespräch!"
+                        title = t("Noch ruhig hier"),
+                        text = t("Sag Hallo und starte das Gespräch!")
                     )
                 }
             }
@@ -176,7 +178,7 @@ fun RoomScreen(
         MessageInput(
             onSend = vm::post,
             modifier = Modifier.imePadding(),
-            placeholder = "In die Lounge schreiben…",
+            placeholder = t("In die Lounge schreiben…"),
             sendHint = if (vm.cooldown > 0) "${vm.cooldown} s" else null
         )
     }

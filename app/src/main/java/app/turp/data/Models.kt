@@ -98,7 +98,7 @@ data class Chat(
     fun otherUid(me: String): String = members.firstOrNull { it != me } ?: ""
 
     fun other(me: String): MemberInfo =
-        memberInfo[otherUid(me)] ?: MemberInfo("Unbekannt", "", DEFAULT_COLOR)
+        memberInfo[otherUid(me)] ?: MemberInfo(t("Unbekannt"), "", DEFAULT_COLOR)
 
     fun isUnread(me: String): Boolean {
         val last = lastAt ?: return false

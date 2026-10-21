@@ -38,7 +38,7 @@ data class DiscoverFilter(
 
 object DiscoverPrefs {
     /** Pro Konto eigene Datei – sonst übernimmt ein neues Konto die Filter des alten */
-    private fun file(uid: String) = "discover_prefs_$uid"
+    private fun file(uid: String) = "discover_prefs_${uid}"
 
     fun load(context: Context, uid: String, bounds: IntRange): DiscoverFilter {
         val p = context.getSharedPreferences(file(uid), Context.MODE_PRIVATE)

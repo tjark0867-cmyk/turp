@@ -1,5 +1,7 @@
 package app.turp.ui.screens
 
+import app.turp.data.t
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
@@ -156,14 +158,14 @@ fun SplashScreen(onRetry: (() -> Unit)? = null, onSignOut: (() -> Unit)? = null)
             CircularProgressIndicator(color = Teal)
             if (slow && (onRetry != null || onSignOut != null)) {
                 Spacer(Modifier.height(28.dp))
-                Text("Das dauert länger als sonst.", color = TextLow)
+                Text(t("Das dauert länger als sonst."), color = TextLow)
                 Spacer(Modifier.height(8.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     if (onRetry != null) {
-                        TextButton(onClick = { slow = false; onRetry() }) { Text("Erneut versuchen", color = Teal) }
+                        TextButton(onClick = { slow = false; onRetry() }) { Text(t("Erneut versuchen"), color = Teal) }
                     }
                     if (onSignOut != null) {
-                        TextButton(onClick = onSignOut) { Text("Abmelden", color = TextLow) }
+                        TextButton(onClick = onSignOut) { Text(t("Abmelden"), color = TextLow) }
                     }
                 }
             }
@@ -175,10 +177,8 @@ fun SplashScreen(onRetry: (() -> Unit)? = null, onSignOut: (() -> Unit)? = null)
 fun SetupMissingScreen() {
     MessageScreen(
         emoji = "🔧",
-        title = "Fast geschafft!",
-        text = "Diese kumi-Version ist noch nicht mit deinem Firebase-Projekt verbunden. " +
-            "Lege die Datei google-services.json in den Ordner app/ und baue die App neu. " +
-            "Die einzelnen Schritte stehen in der README."
+        title = t("Fast geschafft!"),
+        text = t("Diese kumi-Version ist noch nicht mit deinem Firebase-Projekt verbunden. Lege die Datei google-services.json in den Ordner app/ und baue die App neu. Die einzelnen Schritte stehen in der README.")
     )
 }
 
@@ -186,10 +186,9 @@ fun SetupMissingScreen() {
 fun BannedScreen(onSignOut: () -> Unit) {
     MessageScreen(
         emoji = "⛔",
-        title = "Konto gesperrt",
-        text = "Dein Konto wurde gesperrt, weil es gegen unsere Regeln verstoßen hat. " +
-            "Wenn du denkst, dass das ein Fehler ist, melde dich beim kumi-Team.",
-        actionLabel = "Abmelden",
+        title = t("Konto gesperrt"),
+        text = t("Dein Konto wurde gesperrt, weil es gegen unsere Regeln verstoßen hat. Wenn du denkst, dass das ein Fehler ist, melde dich beim kumi-Team."),
+        actionLabel = t("Abmelden"),
         onAction = onSignOut
     )
 }
@@ -256,11 +255,11 @@ class AuthViewModel : BaseViewModel() {
 
     fun resetPassword(email: String) = launchSafe {
         if (email.isBlank()) {
-            toast("Gib zuerst deine E-Mail-Adresse ein.")
+            toast(t("Gib zuerst deine E-Mail-Adresse ein."))
             return@launchSafe
         }
         Fb.auth.sendPasswordResetEmail(email.trim()).await()
-        toast("Wir haben dir eine E-Mail zum Zurücksetzen geschickt.")
+        toast(t("Wir haben dir eine E-Mail zum Zurücksetzen geschickt."))
     }
 
     /** Google-Konto auswählen lassen und damit bei Firebase anmelden */
@@ -268,7 +267,7 @@ class AuthViewModel : BaseViewModel() {
         val clientId = googleWebClientId(activity)
             ?: runCatching { callFunction("googleClientId")["clientId"] as? String }.getOrNull()?.takeIf { it.isNotBlank() }
         if (clientId == null) {
-            toast("Die Google-Anmeldung wird gerade eingerichtet – nutze bitte so lange deine E-Mail.")
+            toast(t("Die Google-Anmeldung wird gerade eingerichtet – nutze bitte so lange deine E-Mail."))
             return@launchSafe
         }
         val request = GetCredentialRequest.Builder()
@@ -279,16 +278,16 @@ class AuthViewModel : BaseViewModel() {
         } catch (e: GetCredentialCancellationException) {
             return@launchSafe
         } catch (e: NoCredentialException) {
-            toast("Auf diesem Handy ist kein Google-Konto eingerichtet.")
+            toast(t("Auf diesem Handy ist kein Google-Konto eingerichtet."))
             return@launchSafe
         } catch (e: GetCredentialException) {
             Log.w("kumi", "Google-Anmeldung", e)
-            toast("Google-Anmeldung hat nicht geklappt – bitte versuch es noch einmal.")
+            toast(t("Google-Anmeldung hat nicht geklappt – bitte versuch es noch einmal."))
             return@launchSafe
         }
         val cred = result.credential
         if (cred !is CustomCredential || cred.type != GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-            toast("Google-Anmeldung hat nicht geklappt.")
+            toast(t("Google-Anmeldung hat nicht geklappt."))
             return@launchSafe
         }
         val idToken = GoogleIdTokenCredential.createFrom(cred.data).idToken
@@ -340,7 +339,7 @@ private fun WelcomeAuth(busy: Boolean, onGoogle: () -> Unit, onEmail: () -> Unit
                 initialValue = -1f,
                 targetValue = 1f,
                 animationSpec = infiniteRepeatable(tween(2400 + i * 260, easing = FastOutSlowInEasing), RepeatMode.Reverse),
-                label = "sticker$i"
+                label = "sticker${i}"
             )
             Image(
                 painter = painterResource(s.res),
@@ -369,7 +368,7 @@ private fun WelcomeAuth(busy: Boolean, onGoogle: () -> Unit, onEmail: () -> Unit
             TurpLogo(fontSize = 76.sp)
             Spacer(Modifier.height(10.dp))
             Text(
-                "Finde Freunde, die dieselben Sachen lieben wie du.",
+                t("Finde Freunde, die dieselben Sachen lieben wie du."),
                 style = MaterialTheme.typography.titleMedium,
                 color = TextHigh,
                 textAlign = TextAlign.Center
@@ -395,7 +394,7 @@ private fun WelcomeAuth(busy: Boolean, onGoogle: () -> Unit, onEmail: () -> Unit
                         Image(painterResource(R.drawable.ic_google_g), contentDescription = null, modifier = Modifier.size(22.dp))
                     }
                     Spacer(Modifier.width(12.dp))
-                    Text("Mit Google fortfahren", color = Color(0xFF1F1F1F), fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text(t("Mit Google fortfahren"), color = Color(0xFF1F1F1F), fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 }
             }
             Spacer(Modifier.height(12.dp))
@@ -415,12 +414,12 @@ private fun WelcomeAuth(busy: Boolean, onGoogle: () -> Unit, onEmail: () -> Unit
                 ) {
                     Icon(Icons.Rounded.Email, contentDescription = null, tint = Teal, modifier = Modifier.size(22.dp))
                     Spacer(Modifier.width(12.dp))
-                    Text("Mit E-Mail fortfahren", color = TextHigh, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text(t("Mit E-Mail fortfahren"), color = TextHigh, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 }
             }
             Spacer(Modifier.height(18.dp))
             Text(
-                "Ab 13 Jahren · Goldene Regel: Sei immer freundlich. 💛",
+                t("Ab 13 Jahren · Goldene Regel: Sei immer freundlich. 💛"),
                 color = TextLow,
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center
@@ -458,14 +457,14 @@ private fun EmailAuth(vm: AuthViewModel, onBack: () -> Unit) {
     ) {
         Box(Modifier.fillMaxWidth().padding(top = 8.dp)) {
             IconButton(onClick = onBack, modifier = Modifier.align(Alignment.CenterStart)) {
-                Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Zurück", tint = TextHigh)
+                Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = t("Zurück"), tint = TextHigh)
             }
         }
         Spacer(Modifier.height(12.dp))
         TurpLogo(fontSize = 56.sp)
         Spacer(Modifier.height(6.dp))
         Text(
-            if (register) "Erstell dein Konto mit E-Mail" else "Willkommen zurück!",
+            if (register) t("Erstell dein Konto mit E-Mail") else t("Willkommen zurück!"),
             style = MaterialTheme.typography.titleMedium,
             color = TextLow,
             textAlign = TextAlign.Center
@@ -475,7 +474,7 @@ private fun EmailAuth(vm: AuthViewModel, onBack: () -> Unit) {
         // Umschalter Registrieren / Einloggen
         Surface(shape = CircleShape, color = InkElevated, border = BorderStroke(1.dp, InkLine), modifier = Modifier.fillMaxWidth()) {
             Row(Modifier.padding(4.dp)) {
-                listOf(true to "Neu hier", false to "Einloggen").forEach { (isRegister, label) ->
+                listOf(true to t("Neu hier"), false to t("Einloggen")).forEach { (isRegister, label) ->
                     val selected = register == isRegister
                     Box(
                         Modifier
@@ -495,7 +494,7 @@ private fun EmailAuth(vm: AuthViewModel, onBack: () -> Unit) {
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("E-Mail") },
+            label = { Text(t("E-Mail")) },
             singleLine = true,
             leadingIcon = { Icon(Icons.Rounded.Email, contentDescription = null, tint = TextLow) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -507,7 +506,7 @@ private fun EmailAuth(vm: AuthViewModel, onBack: () -> Unit) {
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text(if (register) "Passwort (mind. 6 Zeichen)" else "Passwort") },
+            label = { Text(if (register) t("Passwort (mind. 6 Zeichen)") else t("Passwort")) },
             singleLine = true,
             leadingIcon = { Icon(Icons.Rounded.Lock, contentDescription = null, tint = TextLow) },
             visualTransformation = PasswordVisualTransformation(),
@@ -518,13 +517,13 @@ private fun EmailAuth(vm: AuthViewModel, onBack: () -> Unit) {
         )
         Spacer(Modifier.height(22.dp))
         PrimaryButton(
-            text = if (register) "Konto erstellen" else "Einloggen",
+            text = if (register) t("Konto erstellen") else t("Einloggen"),
             onClick = { vm.submit(register, email, password) },
             enabled = email.contains("@") && password.length >= 6,
             loading = vm.busy
         )
         if (!register) {
-            TextButton(onClick = { vm.resetPassword(email) }) { Text("Passwort vergessen?", color = Teal) }
+            TextButton(onClick = { vm.resetPassword(email) }) { Text(t("Passwort vergessen?"), color = Teal) }
         }
         Spacer(Modifier.height(24.dp))
     }
@@ -712,7 +711,7 @@ fun OnboardingScreen(onSignOut: () -> Unit, vm: OnboardingViewModel = viewModel(
             Box(Modifier.size(48.dp), contentAlignment = Alignment.Center) {
                 if (step > 0) {
                     IconButton(onClick = { step-- }) {
-                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Zurück", tint = TextHigh)
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = t("Zurück"), tint = TextHigh)
                     }
                 }
             }
@@ -727,7 +726,7 @@ fun OnboardingScreen(onSignOut: () -> Unit, vm: OnboardingViewModel = viewModel(
                     )
                 }
             }
-            TextButton(onClick = onSignOut) { Text("Abmelden", color = TextLow, fontSize = 13.sp) }
+            TextButton(onClick = onSignOut) { Text(t("Abmelden"), color = TextLow, fontSize = 13.sp) }
         }
 
         AnimatedContent(
@@ -750,7 +749,7 @@ fun OnboardingScreen(onSignOut: () -> Unit, vm: OnboardingViewModel = viewModel(
                     0 -> {
                         val focus = remember { FocusRequester() }
                         LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
-                        StepTitle("Wie heißt du?", "Vorname oder Spitzname – so sehen dich die anderen.")
+                        StepTitle(t("Wie heißt du?"), t("Vorname oder Spitzname – so sehen dich die anderen."))
                         Spacer(Modifier.height(26.dp))
                         // Namensschild aus Pappe, der Name erscheint beim Tippen
                         Box(
@@ -801,7 +800,7 @@ fun OnboardingScreen(onSignOut: () -> Unit, vm: OnboardingViewModel = viewModel(
                             decorationBox = { inner ->
                                 Column {
                                     Box {
-                                        if (name.isEmpty()) Text("Dein Name", color = TextLow.copy(alpha = 0.6f), fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                                        if (name.isEmpty()) Text(t("Dein Name"), color = TextLow.copy(alpha = 0.6f), fontSize = 24.sp, fontWeight = FontWeight.Bold)
                                         inner()
                                     }
                                     Spacer(Modifier.height(10.dp))
@@ -822,8 +821,8 @@ fun OnboardingScreen(onSignOut: () -> Unit, vm: OnboardingViewModel = viewModel(
                         val fy = remember { FocusRequester() }
                         LaunchedEffect(Unit) { runCatching { fd.requestFocus() } }
                         StepTitle(
-                            "Wann hast du Geburtstag?",
-                            "Dein Alter bestimmt, wen du auf kumi triffst. Es lässt sich später nicht mehr ändern."
+                            t("Wann hast du Geburtstag?"),
+                            t("Dein Alter bestimmt, wen du auf kumi triffst. Es lässt sich später nicht mehr ändern.")
                         )
                         Spacer(Modifier.height(18.dp))
                         Image(
@@ -837,42 +836,41 @@ fun OnboardingScreen(onSignOut: () -> Unit, vm: OnboardingViewModel = viewModel(
                         )
                         Spacer(Modifier.height(18.dp))
                         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                            DateBox("Tag", day, 2, fd, Modifier.weight(1f)) {
+                            DateBox(t("Tag"), day, 2, fd, Modifier.weight(1f)) {
                                 day = it
                                 if (it.length == 2) runCatching { fm.requestFocus() }
                             }
-                            DateBox("Monat", month, 2, fm, Modifier.weight(1f)) {
+                            DateBox(t("Monat"), month, 2, fm, Modifier.weight(1f)) {
                                 month = it
                                 if (it.length == 2) runCatching { fy.requestFocus() }
                             }
-                            DateBox("Jahr", year, 4, fy, Modifier.weight(1.5f)) { year = it }
+                            DateBox(t("Jahr"), year, 4, fy, Modifier.weight(1.5f)) { year = it }
                         }
                         Spacer(Modifier.height(14.dp))
                         when {
                             dateTyped && birthDate == null ->
-                                Text("Dieses Datum gibt es nicht.", color = Coral, fontWeight = FontWeight.Bold)
+                                Text(t("Dieses Datum gibt es nicht."), color = Coral, fontWeight = FontWeight.Bold)
                             tooYoung ->
-                                Text("kumi ist erst ab 13 Jahren erlaubt.", color = Coral, fontWeight = FontWeight.Bold)
+                                Text(t("kumi ist erst ab 13 Jahren erlaubt."), color = Coral, fontWeight = FontWeight.Bold)
                             age != null && age > 110 ->
-                                Text("Bitte prüf das Jahr noch mal.", color = Coral, fontWeight = FontWeight.Bold)
+                                Text(t("Bitte prüf das Jahr noch mal."), color = Coral, fontWeight = FontWeight.Bold)
                             age != null ->
-                                Text("🎂  Du bist $age", color = TextHigh, fontWeight = FontWeight.ExtraBold, fontSize = 17.sp)
+                                Text(t("🎂  Du bist {0}", age), color = TextHigh, fontWeight = FontWeight.ExtraBold, fontSize = 17.sp)
                         }
                         if (isTeen) {
                             Spacer(Modifier.height(12.dp))
                             InfoBox(
-                                "🛡️ Du kommst in die Jugend-Community (13–17). Dort triffst du nur Leute in deinem Alter – " +
-                                    "Erwachsene können dich nicht sehen und dir nicht schreiben."
+                                t("🛡️ Du kommst in die Jugend-Community (13–17). Dort triffst du nur Leute in deinem Alter – Erwachsene können dich nicht sehen und dir nicht schreiben.")
                             )
                         }
                         if (needsParent) {
                             Spacer(Modifier.height(12.dp))
-                            InfoBox("👨‍👩‍👧 Weil du unter 16 bist, muss ein Elternteil zustimmen. Wir schicken eine E-Mail an diese Adresse.")
+                            InfoBox(t("👨‍👩‍👧 Weil du unter 16 bist, muss ein Elternteil zustimmen. Wir schicken eine E-Mail an diese Adresse."))
                             Spacer(Modifier.height(10.dp))
                             OutlinedTextField(
                                 value = parentEmail,
                                 onValueChange = { parentEmail = it.trim() },
-                                label = { Text("E-Mail eines Elternteils") },
+                                label = { Text(t("E-Mail eines Elternteils")) },
                                 singleLine = true,
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                                 shape = RoundedCornerShape(16.dp),
@@ -883,21 +881,21 @@ fun OnboardingScreen(onSignOut: () -> Unit, vm: OnboardingViewModel = viewModel(
                     }
 
                     2 -> {
-                        StepTitle("Ich bin …", "Damit dich die richtigen Leute in der Suche finden.")
+                        StepTitle(t("Ich bin …"), t("Damit dich die richtigen Leute in der Suche finden."))
                         Spacer(Modifier.height(26.dp))
                         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                             GenderCard(
-                                R.drawable.gender_male, if (adult) "Mann" else "Junge", selected = gender == "male",
+                                R.drawable.gender_male, if (adult) t("Mann") else t("Junge"), selected = gender == "male",
                                 dim = gender.isNotEmpty() && gender != "male", accent = Sky, modifier = Modifier.weight(1f)
                             ) { gender = "male" }
                             GenderCard(
-                                R.drawable.gender_female, if (adult) "Frau" else "Mädchen", selected = gender == "female",
+                                R.drawable.gender_female, if (adult) t("Frau") else t("Mädchen"), selected = gender == "female",
                                 dim = gender.isNotEmpty() && gender != "female", accent = GenderPink, modifier = Modifier.weight(1f)
                             ) { gender = "female" }
                         }
                         Spacer(Modifier.height(18.dp))
                         Text(
-                            if (gender == "other") "✓ Keine Angabe" else "Lieber keine Angabe",
+                            if (gender == "other") t("✓ Keine Angabe") else t("Lieber keine Angabe"),
                             color = if (gender == "other") Teal else TextLow,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
@@ -910,7 +908,7 @@ fun OnboardingScreen(onSignOut: () -> Unit, vm: OnboardingViewModel = viewModel(
                     }
 
                     else -> {
-                        StepTitle("Wo wohnst du?", "Leute aus deiner Gegend findest du so schneller.")
+                        StepTitle(t("Wo wohnst du?"), t("Leute aus deiner Gegend findest du so schneller."))
                         Spacer(Modifier.height(22.dp))
                         // Kofferanhänger aus Pappe mit Flagge – tippen zum Ändern
                         Box(
@@ -939,7 +937,7 @@ fun OnboardingScreen(onSignOut: () -> Unit, vm: OnboardingViewModel = viewModel(
                                         maxLines = 1,
                                         textAlign = TextAlign.Center
                                     )
-                                    Text("tippen zum Ändern", color = Color(0xFF9A8F80), fontSize = 11.sp)
+                                    Text(t("tippen zum Ändern"), color = Color(0xFF9A8F80), fontSize = 11.sp)
                                 }
                             }
                         }
@@ -948,7 +946,7 @@ fun OnboardingScreen(onSignOut: () -> Unit, vm: OnboardingViewModel = viewModel(
                             OutlinedTextField(
                                 value = invite,
                                 onValueChange = { invite = it.take(12) },
-                                label = { Text("Einladungscode") },
+                                label = { Text(t("Einladungscode")) },
                                 singleLine = true,
                                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters),
                                 shape = RoundedCornerShape(16.dp),
@@ -957,7 +955,7 @@ fun OnboardingScreen(onSignOut: () -> Unit, vm: OnboardingViewModel = viewModel(
                             )
                         } else {
                             Text(
-                                "🎁  Ich habe einen Einladungscode",
+                                t("🎁  Ich habe einen Einladungscode"),
                                 color = Teal,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 14.sp,
@@ -982,8 +980,7 @@ fun OnboardingScreen(onSignOut: () -> Unit, vm: OnboardingViewModel = viewModel(
                                 colors = CheckboxDefaults.colors(checkedColor = Teal, checkmarkColor = Ink, uncheckedColor = TextLow)
                             )
                             Text(
-                                "Ich akzeptiere die Nutzungsbedingungen und die Datenschutzerklärung und halte mich an " +
-                                    "die goldene Regel: Sei immer freundlich.",
+                                t("Ich akzeptiere die Nutzungsbedingungen und die Datenschutzerklärung und halte mich an die goldene Regel: Sei immer freundlich."),
                                 color = TextLow,
                                 fontSize = 13.sp,
                                 lineHeight = 18.sp
@@ -997,7 +994,7 @@ fun OnboardingScreen(onSignOut: () -> Unit, vm: OnboardingViewModel = viewModel(
 
         Box(Modifier.padding(horizontal = 24.dp, vertical = 14.dp)) {
             PrimaryButton(
-                text = if (step < ONBOARDING_STEPS - 1) "Weiter" else "Los geht's",
+                text = if (step < ONBOARDING_STEPS - 1) t("Weiter") else t("Los geht's"),
                 onClick = { next() },
                 enabled = stepOk,
                 loading = vm.busy
@@ -1022,7 +1019,7 @@ fun OnboardingScreen(onSignOut: () -> Unit, vm: OnboardingViewModel = viewModel(
 class ConsentViewModel : BaseViewModel() {
     fun resend(email: String) = launchSafe {
         ProfileRepo.resendConsent(email.trim())
-        toast("E-Mail wurde gesendet ✉️")
+        toast(t("E-Mail wurde gesendet ✉️"))
     }
 }
 
@@ -1051,10 +1048,9 @@ fun ConsentPendingScreen(account: Account, onSignOut: () -> Unit, vm: ConsentVie
     ) {
         Spacer(Modifier.height(32.dp))
         Text("⏳", fontSize = 64.sp)
-        Text("Fast geschafft!", style = MaterialTheme.typography.headlineMedium)
+        Text(t("Fast geschafft!"), style = MaterialTheme.typography.headlineMedium)
         Text(
-            "Wir haben eine E-Mail an ${maskEmail(account.parentEmail)} geschickt. " +
-                "Sobald ein Elternteil zustimmt, geht's los – die App aktualisiert sich dann von selbst.",
+            t("Wir haben eine E-Mail an {0} geschickt. Sobald ein Elternteil zustimmt, geht's los – die App aktualisiert sich dann von selbst.", maskEmail(account.parentEmail)),
             color = TextLow,
             textAlign = TextAlign.Center
         )
@@ -1062,17 +1058,17 @@ fun ConsentPendingScreen(account: Account, onSignOut: () -> Unit, vm: ConsentVie
         OutlinedTextField(
             value = newEmail,
             onValueChange = { newEmail = it.trim() },
-            label = { Text("Andere Eltern-E-Mail (optional)") },
+            label = { Text(t("Andere Eltern-E-Mail (optional)")) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier.fillMaxWidth()
         )
         PrimaryButton(
-            text = "E-Mail erneut senden",
+            text = t("E-Mail erneut senden"),
             onClick = { vm.resend(newEmail) },
             loading = vm.busy
         )
-        TextButton(onClick = onSignOut) { Text("Abmelden", color = TextLow) }
+        TextButton(onClick = onSignOut) { Text(t("Abmelden"), color = TextLow) }
     }
 }

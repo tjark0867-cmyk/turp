@@ -1,5 +1,7 @@
 package app.turp.ui.screens
 
+import app.turp.data.t
+
 import app.turp.ui.components.InterestIcon
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.SharingStarted
@@ -155,7 +157,7 @@ class RequestsViewModel : BaseViewModel() {
         launchSafe(showBusy = false) {
             try {
                 RequestRepo.respond(request.id, accept)
-                if (accept) toast("🎉 Du und ${request.fromName} seid jetzt Freunde! +$FRIEND_BONUS 💎")
+                if (accept) toast(t("🎉 Du und {0} seid jetzt Freunde! +{1} 💎", request.fromName, FRIEND_BONUS))
             } finally {
                 processing = processing - request.id
             }
@@ -208,7 +210,7 @@ fun FriendsScreen(
     LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 24.dp)) {
         item {
             TabHeader(
-                title = "Freunde",
+                title = t("Freunde"),
                 me = me,
                 gems = session.account.gems,
                 showDot = session.account.lastCheckIn != todayBerlin(),
@@ -216,12 +218,12 @@ fun FriendsScreen(
                 onOpenShop = onOpenShop,
             ) {
                 IconButton(onClick = onAllFriends) {
-                    Icon(Icons.Rounded.Group, contentDescription = "Alle Freunde", tint = TextHigh, modifier = Modifier.size(25.dp))
+                    Icon(Icons.Rounded.Group, contentDescription = t("Alle Freunde"), tint = TextHigh, modifier = Modifier.size(25.dp))
                 }
             }
         }
 
-        item { Heading("Neue Freunde", Modifier.padding(start = 16.dp, top = 6.dp, bottom = 10.dp)) }
+        item { Heading(t("Neue Freunde"), Modifier.padding(start = 16.dp, top = 6.dp, bottom = 10.dp)) }
         item {
             LazyRow(
                 contentPadding = PaddingValues(horizontal = 16.dp),
@@ -241,10 +243,10 @@ fun FriendsScreen(
                     .padding(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Heading("Anfragen", Modifier.weight(1f))
-                SortChip("Neueste", selected = !vm.sortByInterest) { vm.sortByInterest = false }
+                Heading(t("Anfragen"), Modifier.weight(1f))
+                SortChip(t("Neueste"), selected = !vm.sortByInterest) { vm.sortByInterest = false }
                 Spacer(Modifier.width(6.dp))
-                SortChip("Interessen", selected = vm.sortByInterest) { vm.sortByInterest = true }
+                SortChip(t("Interessen"), selected = vm.sortByInterest) { vm.sortByInterest = true }
             }
         }
 
@@ -266,8 +268,8 @@ fun FriendsScreen(
             item {
                 EmptyState(
                     emoji = "👋",
-                    title = "Noch keine Anfragen",
-                    text = "Wenn dich jemand hinzufügen möchte, siehst du es hier.",
+                    title = t("Noch keine Anfragen"),
+                    text = t("Wenn dich jemand hinzufügen möchte, siehst du es hier."),
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
@@ -388,7 +390,7 @@ private fun FindFriendsCard(onClick: () -> Unit) {
         }
         Spacer(Modifier.height(10.dp))
         Text(
-            "Finde neue Freunde",
+            t("Finde neue Freunde"),
             color = TextHigh,
             fontSize = 13.sp,
             fontWeight = FontWeight.SemiBold,
@@ -438,14 +440,14 @@ private fun TeamInviteRow(onShare: () -> Unit, onHide: () -> Unit, modifier: Mod
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
             Text("kumi Team", color = TextHigh, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-            Text("Lade Freunde ein: +$INVITE_BONUS 💎 pro Person", color = TextLow, fontSize = 13.sp)
+            Text(t("Lade Freunde ein: +{0} 💎 pro Person", INVITE_BONUS), color = TextLow, fontSize = 13.sp)
         }
         IconButton(onClick = onHide) {
-            Icon(Icons.Rounded.Close, contentDescription = "Ausblenden", tint = TextLow, modifier = Modifier.size(21.dp))
+            Icon(Icons.Rounded.Close, contentDescription = t("Ausblenden"), tint = TextLow, modifier = Modifier.size(21.dp))
         }
         Surface(onClick = onShare, shape = CircleShape, color = Teal) {
             Text(
-                "Teilen",
+                t("Teilen"),
                 color = Ink,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
@@ -535,13 +537,13 @@ private fun RequestRow(
                 }
             }
             IconButton(onClick = onDecline, enabled = !busy) {
-                Icon(Icons.Rounded.Close, contentDescription = "Ablehnen", tint = TextHigh, modifier = Modifier.size(25.dp))
+                Icon(Icons.Rounded.Close, contentDescription = t("Ablehnen"), tint = TextHigh, modifier = Modifier.size(25.dp))
             }
             IconButton(onClick = onAccept, enabled = !busy) {
                 if (busy) {
                     CircularProgressIndicator(color = Teal, strokeWidth = 2.dp, modifier = Modifier.size(20.dp))
                 } else {
-                    Icon(Icons.Rounded.Check, contentDescription = "Annehmen", tint = Teal, modifier = Modifier.size(27.dp))
+                    Icon(Icons.Rounded.Check, contentDescription = t("Annehmen"), tint = Teal, modifier = Modifier.size(27.dp))
                 }
             }
         }
@@ -572,7 +574,7 @@ private fun InterestEmoji(interest: String, shared: Boolean) {
 private fun TopMatchBadge(modifier: Modifier = Modifier) {
     val shape = RoundedCornerShape(10.dp)
     Text(
-        "Top Match",
+        t("Top Match"),
         style = TextStyle(fontFamily = Display, fontSize = 12.sp),
         color = Ink,
         modifier = modifier
@@ -641,10 +643,10 @@ fun AllFriendsScreen(
                 .padding(horizontal = 4.dp, vertical = 2.dp)
         ) {
             IconButton(onClick = onClose, modifier = Modifier.align(Alignment.CenterStart)) {
-                Icon(Icons.Rounded.Close, contentDescription = "Schließen", tint = TextHigh)
+                Icon(Icons.Rounded.Close, contentDescription = t("Schließen"), tint = TextHigh)
             }
             Text(
-                "Alle Freunde 👯",
+                t("Alle Freunde 👯"),
                 color = TextHigh,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.ExtraBold,
@@ -654,7 +656,7 @@ fun AllFriendsScreen(
         TextField(
             value = query,
             onValueChange = { query = it.take(30) },
-            placeholder = { Text("Nach Namen suchen") },
+            placeholder = { Text(t("Nach Namen suchen")) },
             leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = null) },
             singleLine = true,
             shape = CircleShape,
@@ -673,8 +675,8 @@ fun AllFriendsScreen(
                 item {
                     EmptyState(
                         emoji = "👯",
-                        title = if (friends.isEmpty()) "Noch keine Freunde" else "Niemand gefunden",
-                        text = if (friends.isEmpty()) "Nimm Anfragen an oder schick selbst welche beim Entdecken." else "Probier einen anderen Namen.",
+                        title = if (friends.isEmpty()) t("Noch keine Freunde") else t("Niemand gefunden"),
+                        text = if (friends.isEmpty()) t("Nimm Anfragen an oder schick selbst welche beim Entdecken.") else t("Probier einen anderen Namen."),
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 }
@@ -704,7 +706,7 @@ fun AllFriendsScreen(
                         )
                         if (profile != null) {
                             Text(
-                                if (profile.bot) "🤖 Testbot" else "${profile.age}, ${Countries.flag(profile.country)} ${profile.country}",
+                                if (profile.bot) t("🤖 Testbot") else "${profile.age}, ${Countries.flag(profile.country)} ${profile.country}",
                                 color = TextLow,
                                 fontSize = 12.sp
                             )
@@ -714,7 +716,7 @@ fun AllFriendsScreen(
                         Row(Modifier.padding(horizontal = 12.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Rounded.ChatBubble, contentDescription = null, tint = Ink, modifier = Modifier.size(14.dp))
                             Spacer(Modifier.width(5.dp))
-                            Text("Chat", color = Ink, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                            Text(t("Chat"), color = Ink, fontSize = 13.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                 }

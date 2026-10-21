@@ -1,5 +1,7 @@
 package app.turp.ui.screens
 
+import app.turp.data.t
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -88,7 +90,7 @@ class BlockedViewModel : BaseViewModel() {
         launchSafe(showBusy = false) {
             try {
                 SafetyRepo.unblock(user.uid)
-                toast("$name ist nicht mehr blockiert.")
+                toast(t("{0} ist nicht mehr blockiert.", name))
             } finally {
                 working.remove(user.uid)
             }
@@ -122,13 +124,13 @@ fun BlockedScreen(
             IconButton(onClick = onBack, modifier = Modifier.align(Alignment.CenterStart)) {
                 Icon(
                     Icons.AutoMirrored.Rounded.ArrowBackIos,
-                    contentDescription = "Zurück",
+                    contentDescription = t("Zurück"),
                     tint = TextHigh,
                     modifier = Modifier.size(22.dp)
                 )
             }
             Text(
-                "Blockierte Nutzer",
+                t("Blockierte Nutzer"),
                 color = TextHigh,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.ExtraBold,
@@ -141,8 +143,8 @@ fun BlockedScreen(
             entries == null -> LoadingBox()
             entries.isEmpty() -> EmptyState(
                 emoji = "🕊️",
-                title = "Niemand blockiert",
-                text = "Wenn du jemanden blockierst, erscheint die Person hier – und du kannst sie jederzeit wieder entblocken.",
+                title = t("Niemand blockiert"),
+                text = t("Wenn du jemanden blockierst, erscheint die Person hier – und du kannst sie jederzeit wieder entblocken."),
                 modifier = Modifier.padding(top = 40.dp)
             )
             else -> LazyColumn(
@@ -152,8 +154,7 @@ fun BlockedScreen(
             ) {
                 item {
                     Text(
-                        "Blockierte Personen sehen dich nicht und können dir nicht schreiben. " +
-                            "Entblockst du jemanden, kann er dich wieder finden und dir eine Anfrage schicken.",
+                        t("Blockierte Personen sehen dich nicht und können dir nicht schreiben. Entblockst du jemanden, kann er dich wieder finden und dir eine Anfrage schicken."),
                         color = TextLow,
                         fontSize = 13.sp,
                         modifier = Modifier.padding(bottom = 6.dp, start = 4.dp, end = 4.dp)
@@ -161,7 +162,7 @@ fun BlockedScreen(
                 }
                 items(entries, key = { it.uid }) { b ->
                     val fallback = vm.profiles[b.uid]
-                    val name = b.name.ifBlank { fallback?.name.orEmpty() }.ifBlank { "Unbekannt" }
+                    val name = b.name.ifBlank { fallback?.name.orEmpty() }.ifBlank { t("Unbekannt") }
                     val photo = b.photo.ifBlank { fallback?.photos?.firstOrNull().orEmpty() }
                     BlockedRow(
                         name = name,
@@ -181,9 +182,8 @@ fun BlockedScreen(
     if (c != null) {
         ConfirmDialog(
             title = "${c.second} entblocken?",
-            text = "${c.second} kann dich dann wieder im Entdecken sehen und dir eine Anfrage schicken. " +
-                "Eine frühere Freundschaft kommt nicht automatisch zurück.",
-            confirmLabel = "Entblocken",
+            text = t("{0} kann dich dann wieder im Entdecken sehen und dir eine Anfrage schicken. Eine frühere Freundschaft kommt nicht automatisch zurück.", c.second),
+            confirmLabel = t("Entblocken"),
             onDismiss = { confirm = null },
             onConfirm = {
                 confirm = null
@@ -226,7 +226,7 @@ private fun BlockedRow(
                         overflow = TextOverflow.Ellipsis
                     )
                     if (since.isNotBlank()) {
-                        Text("Blockiert · $since", color = TextLow, fontSize = 12.sp)
+                        Text(t("Blockiert · {0}", since), color = TextLow, fontSize = 12.sp)
                     }
                 }
             }
@@ -242,7 +242,7 @@ private fun BlockedRow(
                     if (working) {
                         CircularProgressIndicator(color = Teal, strokeWidth = 2.dp, modifier = Modifier.size(18.dp))
                     } else {
-                        Text("Entblocken", color = Teal, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                        Text(t("Entblocken"), color = Teal, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }

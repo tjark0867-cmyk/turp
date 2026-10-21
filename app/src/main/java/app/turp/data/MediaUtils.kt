@@ -18,7 +18,7 @@ object MediaUtils {
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
         resolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, bounds) }
         if (bounds.outWidth <= 0 || bounds.outHeight <= 0) {
-            throw IllegalArgumentException("Das Bild konnte nicht gelesen werden.")
+            throw IllegalArgumentException(t("Das Bild konnte nicht gelesen werden."))
         }
 
         var sample = 1
@@ -27,7 +27,7 @@ object MediaUtils {
         }
         val options = BitmapFactory.Options().apply { inSampleSize = sample }
         val decoded = resolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, options) }
-            ?: throw IllegalArgumentException("Das Bild konnte nicht gelesen werden.")
+            ?: throw IllegalArgumentException(t("Das Bild konnte nicht gelesen werden."))
 
         val orientation = try {
             resolver.openInputStream(uri)?.use { stream ->

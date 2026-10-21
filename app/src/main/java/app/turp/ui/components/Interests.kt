@@ -1,5 +1,7 @@
 package app.turp.ui.components
 
+import app.turp.data.t
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -71,12 +73,19 @@ private val BY_LABEL by lazy { INTEREST_CATALOG.associateBy { it.label } }
 
 /** "🎮 Gaming" → "Gaming" */
 fun interestLabel(interest: String): String {
-    val t = interest.trim()
-    return if (t.contains(" ")) t.substringAfter(" ") else t
+    val s = interest.trim()
+    // Namen aus dem Katalog in der gewählten Sprache (Eigennamen bleiben gleich)
+    return t(if (s.contains(" ")) s.substringAfter(" ") else s)
+}
+
+/** Name ohne Übersetzung – für die Suche im Katalog */
+fun interestLabelRaw(interest: String): String {
+    val s = interest.trim()
+    return if (s.contains(" ")) s.substringAfter(" ") else s
 }
 
 /** Eintrag aus dem Katalog (auch für ältere Schreibweisen) */
-fun interestDef(interest: String): InterestDef? = BY_VALUE[interest] ?: BY_LABEL[interestLabel(interest)]
+fun interestDef(interest: String): InterestDef? = BY_VALUE[interest] ?: BY_LABEL[interestLabelRaw(interest)]
 
 /** Kleinbuchstaben, ohne Akzente/Umlaute und Sonderzeichen – für die Suche */
 fun searchKey(text: String): String {
@@ -90,10 +99,10 @@ fun findInterests(query: String, category: InterestCategory?): List<InterestDef>
     val q = searchKey(query)
     return INTEREST_CATALOG.filter { def ->
         (category == null || def.category == category) &&
-            (q.isEmpty() || searchKey(def.label).contains(q) || searchKey(def.words).contains(q))
+            (q.isEmpty() || searchKey(def.label).contains(q) || searchKey(t(def.label)).contains(q) || searchKey(def.words).contains(q))
     }.let { list ->
         // Treffer am Wortanfang zuerst
-        if (q.isEmpty()) list else list.sortedByDescending { searchKey(it.label).startsWith(q) }
+        if (q.isEmpty()) list else list.sortedByDescending { searchKey(it.label).startsWith(q) || searchKey(t(it.label)).startsWith(q) }
     }
 }
 
@@ -104,7 +113,7 @@ fun InterestIcon(interest: String, size: Dp, modifier: Modifier = Modifier) {
     if (def != null) {
         Image(
             painter = painterResource(def.icon),
-            contentDescription = def.label,
+            contentDescription = t(def.label),
             modifier = modifier.size(size)
         )
     } else {
@@ -193,7 +202,7 @@ fun InterestPickTile(
                 }
             )
             InterestTape(
-                text = def.label,
+                text = t(def.label),
                 color = def.category.color,
                 rotation = -tilt / 2f,
                 modifier = Modifier
@@ -210,7 +219,7 @@ fun InterestPickTile(
                     .border(2.dp, Ink, CircleShape),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(Icons.Rounded.Check, contentDescription = "Ausgewählt", tint = Ink, modifier = Modifier.size(13.dp))
+                Icon(Icons.Rounded.Check, contentDescription = t("Ausgewählt"), tint = Ink, modifier = Modifier.size(13.dp))
             }
         }
     }
@@ -257,7 +266,7 @@ fun InterestSearchField(
         if (query.isNotEmpty()) {
             Icon(
                 Icons.Rounded.Close,
-                contentDescription = "Suche leeren",
+                contentDescription = t("Suche leeren"),
                 tint = TextLow,
                 modifier = Modifier
                     .size(22.dp)
@@ -281,9 +290,9 @@ fun InterestCategoryChips(
             .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        CategoryChip("Alle", Teal, selected == null) { onSelect(null) }
+        CategoryChip(t("Alle"), Teal, selected == null) { onSelect(null) }
         InterestCategory.entries.forEach { c ->
-            CategoryChip(c.label, c.color, selected == c) { onSelect(if (selected == c) null else c) }
+            CategoryChip(t(c.label), c.color, selected == c) { onSelect(if (selected == c) null else c) }
         }
     }
 }
@@ -329,7 +338,7 @@ fun InterestGrid(
     if (items.isEmpty()) {
         Box(modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
             Text(
-                "Dazu gibt es noch kein Interesse 🤔",
+                t("Dazu gibt es noch kein Interesse 🤔"),
                 color = TextLow,
                 fontSize = 14.sp,
                 modifier = Modifier.padding(top = 24.dp)
@@ -418,7 +427,7 @@ fun InterestSlots(
                             .background(Color.Black.copy(alpha = 0.6f), CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(Icons.Rounded.Close, contentDescription = "Entfernen", tint = Color.White, modifier = Modifier.size(12.dp))
+                        Icon(Icons.Rounded.Close, contentDescription = t("Entfernen"), tint = Color.White, modifier = Modifier.size(12.dp))
                     }
                 } else {
                     Icon(Icons.Rounded.Add, contentDescription = null, tint = InkLine, modifier = Modifier.size(22.dp))
@@ -445,7 +454,7 @@ fun InterestStickerWithTape(interest: String, size: Dp, modifier: Modifier = Mod
                         .border(2.dp, Ink, CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(Icons.Rounded.Check, contentDescription = "Gemeinsam", tint = Ink, modifier = Modifier.size(13.dp))
+                    Icon(Icons.Rounded.Check, contentDescription = t("Gemeinsam"), tint = Ink, modifier = Modifier.size(13.dp))
                 }
             }
         }

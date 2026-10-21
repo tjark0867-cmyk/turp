@@ -1,5 +1,7 @@
 package app.turp.ui.components
 
+import app.turp.data.t
+
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.awaitEachGesture
@@ -116,7 +118,7 @@ fun ImageViewer(model: Any, onDismiss: () -> Unit) {
         ) {
             AsyncImage(
                 model = model,
-                contentDescription = "Foto",
+                contentDescription = t("Foto"),
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .fillMaxSize()
@@ -135,7 +137,7 @@ fun ImageViewer(model: Any, onDismiss: () -> Unit) {
                     .padding(8.dp)
                     .background(Color.Black.copy(alpha = 0.45f), CircleShape)
             ) {
-                Icon(Icons.Rounded.Close, contentDescription = "Schließen", tint = Color.White, modifier = Modifier.size(26.dp))
+                Icon(Icons.Rounded.Close, contentDescription = t("Schließen"), tint = Color.White, modifier = Modifier.size(26.dp))
             }
         }
     }

@@ -1,5 +1,7 @@
 package app.turp.ui.screens
 
+import app.turp.data.t
+
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.platform.LocalDensity
@@ -194,9 +196,9 @@ class DiscoverViewModel : BaseViewModel() {
     fun report(profile: UserProfile, reason: String, details: String) {
         cards.value = cards.value - profile
         launchSafe {
-            SafetyRepo.report(profile.uid, reason, details, "Entdecken")
+            SafetyRepo.report(profile.uid, reason, details, t("Entdecken"))
             DiscoverRepo.skip(profile.uid)
-            toast("Danke! Unser Team schaut sich das an. 💛")
+            toast(t("Danke! Unser Team schaut sich das an. 💛"))
         }
     }
 
@@ -207,9 +209,9 @@ class DiscoverViewModel : BaseViewModel() {
                 val matched = DiscoverRepo.sendRequest(profile.uid)
                 toast(
                     when {
-                        profile.bot -> "🤖 ${profile.name} hat sofort angenommen – schau in deine Chats!"
-                        matched -> "🎉 Ihr seid jetzt Freunde – ${profile.name} hatte dich auch angefragt!"
-                        else -> "👋 Anfrage an ${profile.name} gesendet"
+                        profile.bot -> t("🤖 {0} hat sofort angenommen – schau in deine Chats!", profile.name)
+                        matched -> t("🎉 Ihr seid jetzt Freunde – {0} hatte dich auch angefragt!", profile.name)
+                        else -> t("👋 Anfrage an {0} gesendet", profile.name)
                     }
                 )
             } catch (e: CancellationException) {
@@ -284,7 +286,7 @@ fun DiscoverScreen(
                     Box {
                         Icon(
                             Icons.Rounded.Tune,
-                            contentDescription = "Such-Einstellungen",
+                            contentDescription = t("Such-Einstellungen"),
                             tint = if (showFilter) Teal else TextHigh,
                             modifier = Modifier.size(28.dp)
                         )
@@ -339,11 +341,11 @@ fun DiscoverScreen(
                 ) {
                     Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            "Lade ein Foto hoch, damit andere dich sehen können.",
+                            t("Lade ein Foto hoch, damit andere dich sehen können."),
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.weight(1f)
                         )
-                        Text("Bearbeiten", color = Teal, fontWeight = FontWeight.SemiBold)
+                        Text(t("Bearbeiten"), color = Teal, fontWeight = FontWeight.SemiBold)
                     }
                 }
             }
@@ -361,16 +363,16 @@ fun DiscoverScreen(
                     ) {
                         GemIcon(110.dp, spin = true)
                         Spacer(Modifier.height(18.dp))
-                        Text("Profile werden geladen", color = TextHigh, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
+                        Text(t("Profile werden geladen"), color = TextHigh, fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
                     }
                     cards.isEmpty() && vm.filter.isActive(vm.ageBounds) -> EmptyState(
                         emoji = "🔍",
-                        title = "Niemand passt gerade zu deiner Suche",
-                        text = "Probier andere Interessen, ein anderes Land oder ein größeres Alter.",
+                        title = t("Niemand passt gerade zu deiner Suche"),
+                        text = t("Probier andere Interessen, ein anderes Land oder ein größeres Alter."),
                         modifier = Modifier.align(Alignment.Center),
-                        actionLabel = "Such-Einstellungen ändern",
+                        actionLabel = t("Such-Einstellungen ändern"),
                         onAction = { showFilter = true },
-                        secondaryLabel = "Alle Filter zurücksetzen",
+                        secondaryLabel = t("Alle Filter zurücksetzen"),
                         onSecondary = {
                             val d = DiscoverFilter.defaults(vm.ageBounds)
                             DiscoverPrefs.save(context, session.uid, vm.ageBounds, d)
@@ -379,10 +381,10 @@ fun DiscoverScreen(
                     )
                     cards.isEmpty() -> EmptyState(
                         emoji = "🌍",
-                        title = "Gerade keine neuen Leute",
-                        text = "Schau später wieder vorbei oder ändere deine Such-Einstellungen.",
+                        title = t("Gerade keine neuen Leute"),
+                        text = t("Schau später wieder vorbei oder ändere deine Such-Einstellungen."),
                         modifier = Modifier.align(Alignment.Center),
-                        actionLabel = "Übersprungene nochmal zeigen",
+                        actionLabel = t("Übersprungene nochmal zeigen"),
                         onAction = { vm.reshuffle() }
                     )
                     else -> CardStack(
@@ -596,7 +598,7 @@ private fun ProfileCard(
                         IconButton(onClick = onReport) {
                             Icon(
                                 Icons.Rounded.Flag,
-                                contentDescription = "Melden",
+                                contentDescription = t("Melden"),
                                 tint = Color.White,
                                 modifier = Modifier.size(30.dp)
                             )
@@ -671,7 +673,7 @@ private fun ProfileCard(
                         )
                         Spacer(Modifier.width(12.dp))
                         Text(
-                            "Anfrage senden",
+                            t("Anfrage senden"),
                             color = Color.White,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.SemiBold,
@@ -679,13 +681,13 @@ private fun ProfileCard(
                         )
                         GemIcon(15.dp)
                         Spacer(Modifier.width(4.dp))
-                        Text("$requestCost", color = Color.White.copy(alpha = 0.75f), fontWeight = FontWeight.SemiBold)
+                        Text("${requestCost}", color = Color.White.copy(alpha = 0.75f), fontWeight = FontWeight.SemiBold)
                     }
                 }
                 Spacer(Modifier.width(10.dp))
                 RoundCandyButton(
                     icon = Icons.Rounded.Close,
-                    contentDescription = "Weiter",
+                    contentDescription = t("Weiter"),
                     color = Color.Black.copy(alpha = 0.45f),
                     borderColor = Color.White.copy(alpha = 0.7f),
                     iconColor = Color.White,
@@ -748,7 +750,7 @@ private fun SharedInterestsSticker(shared: List<String>) {
         }
         Spacer(Modifier.width(4.dp))
         Text(
-            if (shared.size == 1) "1 Gemeinsamkeit" else "${shared.size} Gemeinsamkeiten",
+            if (shared.size == 1) t("1 Gemeinsamkeit") else t("{0} Gemeinsamkeiten", shared.size),
             color = Color.White,
             fontSize = 13.sp,
             fontWeight = FontWeight.ExtraBold

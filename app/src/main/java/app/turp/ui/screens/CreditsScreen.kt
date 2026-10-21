@@ -1,5 +1,7 @@
 package app.turp.ui.screens
 
+import app.turp.data.t
+
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.background
@@ -84,10 +86,10 @@ fun CreditsScreen(onBack: () -> Unit) {
                 .padding(horizontal = 4.dp, vertical = 2.dp)
         ) {
             IconButton(onClick = onBack, modifier = Modifier.align(Alignment.CenterStart)) {
-                Icon(Icons.AutoMirrored.Rounded.ArrowBackIos, contentDescription = "Zurück", tint = TextHigh, modifier = Modifier.size(22.dp))
+                Icon(Icons.AutoMirrored.Rounded.ArrowBackIos, contentDescription = t("Zurück"), tint = TextHigh, modifier = Modifier.size(22.dp))
             }
             Text(
-                "Lizenzen",
+                t("Lizenzen"),
                 color = TextHigh,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.ExtraBold,
@@ -101,10 +103,7 @@ fun CreditsScreen(onBack: () -> Unit) {
         ) {
             item {
                 Text(
-                    "Viele Interessen-Sticker sind selbst gestaltet, einige beruhen auf freien Fotos von Wikimedia Commons. " +
-                        "Für die Sticker wurden die Fotos freigestellt, zugeschnitten und mit einem Rand versehen. " +
-                        "Sticker nach Fotos unter „CC BY-SA“ stehen unter derselben Lizenz. " +
-                        "Fotos ohne Eintrag hier sind gemeinfrei (CC0 / Public Domain) oder selbst erstellt. Tippen öffnet die Quelle.",
+                    t("Viele Interessen-Sticker sind selbst gestaltet, einige beruhen auf freien Fotos von Wikimedia Commons. Für die Sticker wurden die Fotos freigestellt, zugeschnitten und mit einem Rand versehen. Sticker nach Fotos unter „CC BY-SA“ stehen unter derselben Lizenz. Fotos ohne Eintrag hier sind gemeinfrei (CC0 / Public Domain) oder selbst erstellt. Tippen öffnet die Quelle."),
                     color = TextLow,
                     fontSize = 13.sp,
                     modifier = Modifier.padding(vertical = 8.dp)
@@ -125,13 +124,13 @@ fun CreditsScreen(onBack: () -> Unit) {
                     Spacer(Modifier.width(10.dp))
                     Column(Modifier.weight(1f)) {
                         Text(
-                            interestDef(c.value)?.label ?: c.value,
+                            interestDef(c.value)?.label?.let { t(it) } ?: c.value,
                             color = TextHigh,
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp
                         )
                         Text(
-                            "Foto: ${c.artist.ifBlank { "unbekannt" }} · ${c.license}",
+                            t("Foto: {0} · {1}", c.artist.ifBlank { t("unbekannt") }, c.license),
                             color = Teal,
                             fontSize = 12.sp
                         )

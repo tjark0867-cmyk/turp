@@ -133,15 +133,15 @@ object ProfileRepo {
 
     suspend fun uploadVideo(context: Context, uri: Uri): String {
         val info = withContext(Dispatchers.IO) { MediaUtils.videoInfo(context, uri) }
-        if (info.durationMs > 30_000) throw IllegalArgumentException("Das Video darf höchstens 30 Sekunden lang sein.")
-        if (info.sizeBytes > 40L * 1024 * 1024) throw IllegalArgumentException("Das Video ist zu groß (höchstens 40 MB).")
+        if (info.durationMs > 30_000) throw IllegalArgumentException(t("Das Video darf höchstens 30 Sekunden lang sein."))
+        if (info.sizeBytes > 40L * 1024 * 1024) throw IllegalArgumentException(t("Das Video ist zu groß (höchstens 40 MB)."))
         val ext = when {
             info.mimeType.contains("quicktime") -> "mov"
             info.mimeType.contains("webm") -> "webm"
             info.mimeType.contains("3gp") -> "3gp"
             else -> "mp4"
         }
-        val path = "uploads/${Fb.uid}/${UUID.randomUUID()}.$ext"
+        val path = "uploads/${Fb.uid}/${UUID.randomUUID()}.${ext}"
         val meta = StorageMetadata.Builder().setContentType(info.mimeType).build()
         Fb.storage.reference.child(path).putFile(uri, meta).await()
         val result = callFunction("addProfileMedia", mapOf("path" to path, "kind" to "video"), timeoutSeconds = 300)
@@ -362,7 +362,7 @@ object ChatRepo {
     /** Startet einen Chat mit dem Test-Bot und liefert die Chat-ID */
     suspend fun startTestChat(): String =
         callFunction("startTestChat")["chatId"] as? String
-            ?: throw IllegalStateException("Der Test-Chat konnte nicht gestartet werden.")
+            ?: throw IllegalStateException(t("Der Test-Chat konnte nicht gestartet werden."))
 
     suspend fun markRead(chatId: String) {
         chatRef(chatId).update("readAt.${Fb.uid}", FieldValue.serverTimestamp()).await()
