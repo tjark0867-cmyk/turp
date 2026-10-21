@@ -1,11 +1,12 @@
 package app.turp.ui.screens
 
-import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.platform.LocalDensity
 import kotlin.math.exp
 import kotlin.math.sign
+import kotlin.math.ln
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import app.turp.R
@@ -428,26 +429,41 @@ private fun CardStack(
     var flinging by remember(top.uid) { mutableStateOf(false) }
     var widthPx by remember { mutableFloatStateOf(1000f) }
     val density = LocalDensity.current
-    // Nach oben/unten gibt die Karte nur wenig nach (Gummiband), höchstens ~56 dp
-    val maxLift = with(density) { 56.dp.toPx() }
-    fun rubber(raw: Float): Float = sign(raw) * maxLift * (1f - exp(-abs(raw) / (maxLift * 2.2f)))
+    // Werte aus der purp-Aufnahme nachgemessen:
+    // - seitlich folgt die Karte erst dem Finger, dann immer zäher (Gummiband) –
+    //   langsam gezogen kommt sie nie ganz aus dem Bild (max. ~85 % der Breite)
+    // - sie dreht sich um ihre Mitte, ~40° pro Bildschirmbreite (bei 65 % ≈ 26°)
+    // - nach oben/unten gibt sie nur wenig nach
+    // - weg fliegt sie nur bei einem schnellen Wisch, sonst federt sie zurück
+    val maxLift = with(density) { 40.dp.toPx() }
+    val flingVelocity = with(density) { 420.dp.toPx() }
+    fun rubberX(raw: Float): Float {
+        val m = widthPx * 0.85f
+        return sign(raw) * m * (1f - exp(-abs(raw) / m))
+    }
+    fun unRubberX(off: Float): Float {
+        val m = widthPx * 0.85f
+        val f = (abs(off) / m).coerceAtMost(0.99f)
+        return sign(off) * -m * ln(1f - f)
+    }
+    fun rubberY(raw: Float): Float = sign(raw) * maxLift * (1f - exp(-abs(raw) / (maxLift * 2.4f)))
 
     fun fling(right: Boolean, velocity: Float = 0f) {
         if (flinging) return
         flinging = true
         scope.launch {
-            launch { offsetY.animateTo(offsetY.value * 1.4f, tween(240)) }
-            offsetX.animateTo(
-                if (right) widthPx * 1.5f else -widthPx * 1.5f,
-                tween(if (abs(velocity) > 2500f) 170 else 240, easing = FastOutLinearInEasing)
-            )
+            val target = if (right) widthPx * 1.6f else -widthPx * 1.6f
+            val dist = abs(target - offsetX.value)
+            val ms = if (abs(velocity) > 1f) (dist / abs(velocity) * 1000f).toInt().coerceIn(120, 280) else 260
+            launch { offsetY.animateTo(offsetY.value * 1.5f, tween(ms)) }
+            offsetX.animateTo(target, tween(ms, easing = LinearOutSlowInEasing))
             if (right) onLike(top) else onSkip(top)
         }
     }
 
     fun settle() {
         scope.launch {
-            val back = spring<Float>(dampingRatio = 0.62f, stiffness = 520f)
+            val back = spring<Float>(dampingRatio = 0.78f, stiffness = 420f)
             launch { offsetX.animateTo(0f, back) }
             offsetY.animateTo(0f, back)
         }
@@ -461,57 +477,37 @@ private fun CardStack(
         if (cards.size > 1) {
             val next = cards[1]
             key(next.uid) {
-                // Nächste Karte liegt voll sichtbar darunter und wächst beim Wischen ein kleines Stück
+                // Nächste Karte liegt in voller Größe darunter (wie bei purp)
                 ProfileCard(
                     profile = next,
                     myInterests = myInterests,
                     interactive = false,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .graphicsLayer {
-                            val p = (abs(offsetX.value) / widthPx).coerceIn(0f, 1f)
-                            scaleX = 0.965f + 0.035f * p
-                            scaleY = 0.965f + 0.035f * p
-                        }
+                    modifier = Modifier.fillMaxSize()
                 )
             }
         }
         key(top.uid) {
+            var rawX by remember { mutableFloatStateOf(0f) }
             var rawY by remember { mutableFloatStateOf(0f) }
-            ProfileCard(
-                profile = top,
-                myInterests = myInterests,
-                requestCost = requestCost,
-                interactive = true,
-                onOpen = { onOpen(top.uid) },
-                onLike = { fling(true) },
-                onSkip = { fling(false) },
-                onReport = { onReport(top) },
-                likeProgress = { (offsetX.value / widthPx * 2.6f).coerceIn(-1f, 1f) },
-                modifier = Modifier
+            // Gesten auf einer festen Fläche messen (nicht auf der bewegten Karte),
+            // sonst stimmen Weg und Geschwindigkeit nicht
+            Box(
+                Modifier
                     .fillMaxSize()
-                    .graphicsLayer {
-                        translationX = offsetX.value
-                        translationY = offsetY.value
-                        // kippt um einen Punkt unter der Karte – wie ein Stapel Karten in der Hand
-                        transformOrigin = TransformOrigin(0.5f, 1.1f)
-                        rotationZ = offsetX.value / widthPx * 34f
-                    }
                     .pointerInput(top.uid) {
                         val tracker = VelocityTracker()
                         detectDragGestures(
                             onDragStart = {
                                 tracker.resetTracking()
+                                rawX = unRubberX(offsetX.value)
                                 rawY = offsetY.value
                             },
                             onDragEnd = {
                                 val v = tracker.calculateVelocity().x
-                                val threshold = size.width * 0.3f
+                                val minMove = widthPx * 0.05f
                                 when {
-                                    v > 1400f && offsetX.value > -threshold / 2 -> fling(true, v)
-                                    v < -1400f && offsetX.value < threshold / 2 -> fling(false, v)
-                                    offsetX.value > threshold -> fling(true, v)
-                                    offsetX.value < -threshold -> fling(false, v)
+                                    v > flingVelocity && offsetX.value > minMove -> fling(true, v)
+                                    v < -flingVelocity && offsetX.value < -minMove -> fling(false, v)
                                     else -> settle()
                                 }
                             },
@@ -519,15 +515,36 @@ private fun CardStack(
                             onDrag = { change, amount ->
                                 change.consume()
                                 tracker.addPosition(change.uptimeMillis, change.position)
+                                rawX += amount.x
                                 rawY += amount.y
                                 scope.launch {
-                                    offsetX.snapTo(offsetX.value + amount.x)
-                                    offsetY.snapTo(rubber(rawY))
+                                    offsetX.snapTo(rubberX(rawX))
+                                    offsetY.snapTo(rubberY(rawY))
                                 }
                             }
                         )
                     }
-            )
+            ) {
+                ProfileCard(
+                    profile = top,
+                    myInterests = myInterests,
+                    requestCost = requestCost,
+                    interactive = true,
+                    onOpen = { onOpen(top.uid) },
+                    onLike = { fling(true) },
+                    onSkip = { fling(false) },
+                    onReport = { onReport(top) },
+                    likeProgress = { (offsetX.value / widthPx * 2.6f).coerceIn(-1f, 1f) },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .graphicsLayer {
+                            translationX = offsetX.value
+                            translationY = offsetY.value
+                            transformOrigin = TransformOrigin(0.5f, 0.5f)
+                            rotationZ = offsetX.value / widthPx * 40f
+                        }
+                )
+            }
         }
     }
 }
