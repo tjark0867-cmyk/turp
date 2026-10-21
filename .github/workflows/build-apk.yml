@@ -121,6 +121,15 @@ jobs:
           done
           curl -fsSL -o app/src/main/assets/licenses/LilitaOne-OFL.txt "$URL/OFL.txt" || true
           test -s app/src/main/res/font/lilita_one.ttf
+          # "Permanent Marker" (Apache 2.0) für handgeschriebene Stellen
+          M="https://raw.githubusercontent.com/google/fonts/main/apache/permanentmarker"
+          for i in 1 2 3; do
+            curl -fsSL -o app/src/main/res/font/permanent_marker.ttf "$M/PermanentMarker-Regular.ttf" && break
+            sleep 5
+          done
+          curl -fsSL -o app/src/main/assets/licenses/PermanentMarker-LICENSE.txt "$M/LICENSE.txt" || true
+          # Notfalls die Lilita-Schrift nehmen, damit der Bau nicht scheitert
+          test -s app/src/main/res/font/permanent_marker.ttf || cp app/src/main/res/font/lilita_one.ttf app/src/main/res/font/permanent_marker.ttf
 
       - name: APK bauen
         id: build

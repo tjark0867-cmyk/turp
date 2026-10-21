@@ -1,6 +1,23 @@
 package app.turp.ui.screens
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
+import app.turp.ui.theme.Display
+import app.turp.ui.theme.Marker
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -42,9 +59,7 @@ import androidx.credentials.exceptions.NoCredentialException
 import app.turp.R
 import app.turp.data.findActivity
 import app.turp.data.callFunction
-import app.turp.ui.components.Sticker
 import app.turp.ui.theme.Sky
-import app.turp.ui.theme.Sun
 import app.turp.ui.theme.TextHigh
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
@@ -71,15 +86,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -117,12 +128,9 @@ import app.turp.ui.theme.Night
 import app.turp.ui.theme.Teal
 import app.turp.ui.theme.TextLow
 import kotlinx.coroutines.tasks.await
-import java.time.Instant
 import java.time.LocalDate
 import java.time.Period
 import java.time.ZoneId
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 
 private val backgroundGradient = Brush.verticalGradient(listOf(Ink, Night))
 
@@ -222,22 +230,6 @@ private fun InfoBox(text: String) {
     }
 }
 
-@Composable
-private fun PickerField(label: String, value: String, onClick: () -> Unit) {
-    Surface(
-        onClick = onClick,
-        shape = RoundedCornerShape(16.dp),
-        color = InkElevated,
-        border = BorderStroke(1.dp, InkLine),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
-            Text(label, style = MaterialTheme.typography.labelMedium, color = TextLow)
-            Text(value, style = MaterialTheme.typography.bodyLarge)
-        }
-    }
-}
-
 // ---- Login & Registrierung ------------------------------------------------
 
 /** Web-Client-ID für „Mit Google“ – steht in google-services.json, sobald Google-Login in Firebase an ist */
@@ -308,14 +300,11 @@ class AuthViewModel : BaseViewModel() {
 private data class FloatingSticker(val res: Int, val x: Float, val y: Float, val size: Int, val rotation: Float)
 
 private val StartStickers = listOf(
-    FloatingSticker(R.drawable.interest_gaming, 0.05f, 0.05f, 96, -10f),
-    FloatingSticker(R.drawable.interest_kpop, 0.68f, 0.03f, 92, 9f),
-    FloatingSticker(R.drawable.interest_kaffee, 0.38f, 0.13f, 84, -4f),
-    FloatingSticker(R.drawable.interest_tiere, 0.72f, 0.21f, 98, 11f),
-    FloatingSticker(R.drawable.interest_reisen, 0.02f, 0.25f, 92, 7f),
-    FloatingSticker(R.drawable.interest_digitalart, 0.40f, 0.31f, 84, -9f),
-    FloatingSticker(R.drawable.interest_basketball, 0.12f, 0.43f, 70, 14f),
-    FloatingSticker(R.drawable.interest_musik, 0.76f, 0.40f, 76, -12f),
+    FloatingSticker(R.drawable.interest_lesen, 0.06f, 0.06f, 104, -8f),
+    FloatingSticker(R.drawable.interest_singen, 0.66f, 0.04f, 100, 10f),
+    FloatingSticker(R.drawable.interest_katzen, 0.37f, 0.15f, 112, -3f),
+    FloatingSticker(R.drawable.interest_reisen, 0.04f, 0.28f, 96, 7f),
+    FloatingSticker(R.drawable.interest_basketball, 0.72f, 0.26f, 86, -12f),
 )
 
 @Composable
@@ -366,7 +355,7 @@ private fun WelcomeAuth(busy: Boolean, onGoogle: () -> Unit, onEmail: () -> Unit
         Box(
             Modifier
                 .fillMaxSize()
-                .background(Brush.verticalGradient(0.45f to Color.Transparent, 0.62f to Night.copy(alpha = 0.92f), 1f to Night))
+                .background(Brush.verticalGradient(0.34f to Color.Transparent, 0.5f to Night.copy(alpha = 0.9f), 1f to Night))
         )
         Column(
             Modifier
@@ -375,6 +364,7 @@ private fun WelcomeAuth(busy: Boolean, onGoogle: () -> Unit, onEmail: () -> Unit
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // etwas unter der Mitte, aber nicht ganz unten
             Spacer(Modifier.weight(1f))
             TurpLogo(fontSize = 76.sp)
             Spacer(Modifier.height(10.dp))
@@ -435,7 +425,7 @@ private fun WelcomeAuth(busy: Boolean, onGoogle: () -> Unit, onEmail: () -> Unit
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center
             )
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.weight(0.45f))
         }
     }
 }
@@ -606,10 +596,54 @@ private fun GenderCard(res: Int, label: String, selected: Boolean, dim: Boolean,
     }
 }
 
+// ---- Profil anlegen: vier kurze Schritte ------------------------------------
+
+private const val ONBOARDING_STEPS = 4
+private val InkBlue = Color(0xFF1F2B5C)
+
 @Composable
-private fun OnboardingCard(content: @Composable () -> Unit) {
-    Surface(shape = RoundedCornerShape(22.dp), color = InkHigh.copy(alpha = 0.55f), border = BorderStroke(1.dp, InkLine), modifier = Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) { content() }
+private fun StepTitle(title: String, subtitle: String) {
+    Text(title, fontFamily = Display, fontSize = 34.sp, lineHeight = 38.sp, color = TextHigh)
+    Spacer(Modifier.height(8.dp))
+    Text(subtitle, color = TextLow, fontSize = 15.sp, lineHeight = 21.sp)
+}
+
+/** Eingabefeld für Tag/Monat/Jahr (nur Ziffern, springt weiter wenn voll) */
+@Composable
+private fun DateBox(
+    label: String,
+    value: String,
+    digits: Int,
+    focus: FocusRequester,
+    modifier: Modifier,
+    onChange: (String) -> Unit,
+) {
+    var focused by remember { mutableStateOf(false) }
+    Column(modifier) {
+        Text(label, color = TextLow, fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 4.dp, bottom = 6.dp))
+        BasicTextField(
+            value = value,
+            onValueChange = { onChange(it.filter(Char::isDigit).take(digits)) },
+            singleLine = true,
+            textStyle = TextStyle(color = TextHigh, fontSize = 26.sp, fontWeight = FontWeight.ExtraBold, textAlign = TextAlign.Center),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+            cursorBrush = SolidColor(Teal),
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focus)
+                .onFocusChanged { focused = it.isFocused }
+                .background(InkElevated, RoundedCornerShape(16.dp))
+                .border(if (focused) 2.dp else 1.dp, if (focused) Teal else InkLine, RoundedCornerShape(16.dp))
+                .padding(vertical = 14.dp),
+            decorationBox = { inner ->
+                Box(contentAlignment = Alignment.Center) {
+                    if (value.isEmpty()) {
+                        Text("•".repeat(digits), color = InkLine, fontSize = 26.sp, fontWeight = FontWeight.ExtraBold)
+                    }
+                    inner()
+                }
+            }
+        )
     }
 }
 
@@ -618,181 +652,359 @@ fun OnboardingScreen(onSignOut: () -> Unit, vm: OnboardingViewModel = viewModel(
     val context = LocalContext.current
     LaunchedEffect(Unit) { vm.notices.collect { context.toast(it) } }
 
+    var step by rememberSaveable { mutableIntStateOf(0) }
     var name by rememberSaveable { mutableStateOf("") }
-    var birthMillis by rememberSaveable { mutableStateOf<Long?>(null) }
+    var day by rememberSaveable { mutableStateOf("") }
+    var month by rememberSaveable { mutableStateOf("") }
+    var year by rememberSaveable { mutableStateOf("") }
     var country by rememberSaveable { mutableStateOf(Countries.deviceDefault()) }
     var parentEmail by rememberSaveable { mutableStateOf("") }
     var invite by rememberSaveable { mutableStateOf("") }
+    var showInvite by rememberSaveable { mutableStateOf(false) }
     var gender by rememberSaveable { mutableStateOf("") }
     var accepted by rememberSaveable { mutableStateOf(false) }
-    var showDate by remember { mutableStateOf(false) }
     var showCountry by remember { mutableStateOf(false) }
 
-    val birthDate = birthMillis?.let { Instant.ofEpochMilli(it).atZone(ZoneOffset.UTC).toLocalDate() }
-    val age = birthDate?.let { Period.between(it, LocalDate.now(ZoneId.of("Europe/Berlin"))).years }
+    val today = LocalDate.now(ZoneId.of("Europe/Berlin"))
+    val birthDate = if (year.length == 4) {
+        runCatching { LocalDate.of(year.toInt(), month.toInt(), day.toInt()) }.getOrNull()?.takeIf { !it.isAfter(today) }
+    } else null
+    val dateTyped = day.isNotEmpty() && month.isNotEmpty() && year.length == 4
+    val age = birthDate?.let { Period.between(it, today).years }
     val tooYoung = age != null && age < 13
     val needsParent = age != null && age in 13..15
     val isTeen = age != null && age in 13..17
     val adult = age != null && age >= 18
-    val canSubmit = name.trim().length >= 2 &&
-        birthDate != null && !tooYoung &&
-        gender.isNotEmpty() &&
-        (!needsParent || parentEmail.contains("@")) &&
-        accepted
+    val parentOk = parentEmail.contains("@") && parentEmail.substringAfter("@").contains(".")
+
+    val stepOk = when (step) {
+        0 -> name.trim().length >= 2
+        1 -> birthDate != null && !tooYoung && age!! <= 110 && (!needsParent || parentOk)
+        2 -> gender.isNotEmpty()
+        else -> accepted
+    }
+
+    fun next() {
+        if (!stepOk) return
+        if (step < ONBOARDING_STEPS - 1) {
+            step++
+        } else if (birthDate != null) {
+            vm.submit(name, birthDate, country, parentEmail, invite, gender)
+        }
+    }
+
+    BackHandler(enabled = step > 0) { step-- }
 
     Column(
         Modifier
             .fillMaxSize()
-            .background(backgroundGradient)
+            .background(Night)
             .systemBarsPadding()
             .imePadding()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            TurpLogo(fontSize = 34.sp)
-            Spacer(Modifier.weight(1f))
-            TextButton(onClick = onSignOut) { Text("Abmelden", color = TextLow) }
-        }
-        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            Text("Erzähl uns kurz von dir 👋", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.ExtraBold)
-            Text(
-                "Dein Alter bestimmt, wen du auf kumi triffst – es lässt sich später nicht mehr ändern.",
-                color = TextLow,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-
-        Sticker("Ich bin …", Teal, rotation = -2f, fontSize = 18.sp)
-        Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-            GenderCard(
-                R.drawable.gender_male, if (adult) "Mann" else "Junge", selected = gender == "male",
-                dim = gender.isNotEmpty() && gender != "male", accent = Sky, modifier = Modifier.weight(1f)
-            ) { gender = "male" }
-            GenderCard(
-                R.drawable.gender_female, if (adult) "Frau" else "Mädchen", selected = gender == "female",
-                dim = gender.isNotEmpty() && gender != "female", accent = GenderPink, modifier = Modifier.weight(1f)
-            ) { gender = "female" }
-        }
-        Text(
-            if (gender == "other") "✓ Keine Angabe" else "Lieber keine Angabe",
-            color = if (gender == "other") Teal else TextLow,
-            style = MaterialTheme.typography.bodySmall,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .clip(CircleShape)
-                .clickable { gender = "other" }
-                .padding(horizontal = 12.dp, vertical = 6.dp)
-        )
-
-        Sticker("Über dich", Sun, rotation = 2f, fontSize = 18.sp)
-        OnboardingCard {
-            OutlinedTextField(
-                value = name,
-                onValueChange = { name = it.take(30) },
-                label = { Text("Vorname oder Spitzname") },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words),
-                shape = RoundedCornerShape(16.dp),
-                colors = kumiFieldColors(),
-                modifier = Modifier.fillMaxWidth()
-            )
-            PickerField(
-                label = "🎂 Geburtsdatum",
-                value = birthDate?.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) ?: "Tippen zum Auswählen",
-                onClick = { showDate = true }
-            )
-            if (tooYoung) {
-                Text("kumi ist erst ab 13 Jahren erlaubt.", color = Coral, fontWeight = FontWeight.Bold)
-            }
-            PickerField(
-                label = "🌍 Land",
-                value = "${Countries.flag(country)} ${Countries.name(country)}",
-                onClick = { showCountry = true }
-            )
-        }
-
-        if (isTeen) {
-            InfoBox(
-                "🛡️ Du kommst in die Jugend-Community (13–17). Dort triffst du nur Leute in deinem Alter – " +
-                    "Erwachsene können dich nicht sehen und dir nicht schreiben."
-            )
-        }
-        if (needsParent) {
-            InfoBox(
-                "👨‍👩‍👧 Weil du unter 16 bist, muss ein Elternteil zustimmen. " +
-                    "Wir schicken eine E-Mail an diese Adresse."
-            )
-            OutlinedTextField(
-                value = parentEmail,
-                onValueChange = { parentEmail = it.trim() },
-                label = { Text("E-Mail eines Elternteils") },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                shape = RoundedCornerShape(16.dp),
-                colors = kumiFieldColors(),
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-
-        OutlinedTextField(
-            value = invite,
-            onValueChange = { invite = it.take(12) },
-            label = { Text("🎁 Einladungscode (optional)") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters),
-            shape = RoundedCornerShape(16.dp),
-            colors = kumiFieldColors(),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Surface(
-            onClick = { accepted = !accepted },
-            shape = RoundedCornerShape(18.dp),
-            color = if (accepted) Teal.copy(alpha = 0.10f) else InkElevated,
-            border = BorderStroke(1.dp, if (accepted) Teal else InkLine),
-            modifier = Modifier.fillMaxWidth()
+        // Kopf: zurück · Fortschritt · abmelden
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(start = 4.dp, end = 4.dp, top = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(Modifier.padding(horizontal = 8.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(
-                    checked = accepted,
-                    onCheckedChange = { accepted = it },
-                    colors = CheckboxDefaults.colors(checkedColor = Teal, checkmarkColor = Ink)
-                )
-                Spacer(Modifier.width(4.dp))
-                Text(
-                    "Ich akzeptiere die Nutzungsbedingungen und die Datenschutzerklärung und halte mich an die " +
-                        "goldene Regel: Sei immer freundlich. 💛",
-                    style = MaterialTheme.typography.bodySmall
-                )
+            Box(Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+                if (step > 0) {
+                    IconButton(onClick = { step-- }) {
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Zurück", tint = TextHigh)
+                    }
+                }
+            }
+            Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                repeat(ONBOARDING_STEPS) { i ->
+                    Box(
+                        Modifier
+                            .weight(1f)
+                            .height(5.dp)
+                            .clip(CircleShape)
+                            .background(if (i <= step) Teal else InkLine)
+                    )
+                }
+            }
+            TextButton(onClick = onSignOut) { Text("Abmelden", color = TextLow, fontSize = 13.sp) }
+        }
+
+        AnimatedContent(
+            targetState = step,
+            transitionSpec = {
+                val dir = if (targetState > initialState) 1 else -1
+                (slideInHorizontally { it * dir / 3 } + fadeIn()) togetherWith (slideOutHorizontally { -it * dir / 3 } + fadeOut())
+            },
+            label = "schritt",
+            modifier = Modifier.weight(1f)
+        ) { s ->
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 24.dp)
+            ) {
+                Spacer(Modifier.height(22.dp))
+                when (s) {
+                    0 -> {
+                        val focus = remember { FocusRequester() }
+                        LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
+                        StepTitle("Wie heißt du?", "Vorname oder Spitzname – so sehen dich die anderen.")
+                        Spacer(Modifier.height(26.dp))
+                        // Namensschild aus Pappe, der Name erscheint beim Tippen
+                        Box(
+                            Modifier
+                                .fillMaxWidth(0.88f)
+                                .align(Alignment.CenterHorizontally)
+                                .aspectRatio(640f / 440f)
+                                .graphicsLayer { rotationZ = -3f }
+                        ) {
+                            Image(painterResource(R.drawable.onb_nametag), contentDescription = null, modifier = Modifier.fillMaxSize())
+                            BoxWithConstraints(Modifier.fillMaxSize()) {
+                                Box(
+                                    Modifier
+                                        .offset(x = maxWidth * 0.072f, y = maxHeight * 0.423f)
+                                        .size(maxWidth * 0.856f, maxHeight * 0.482f),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    val n = name.trim()
+                                    Text(
+                                        n.ifEmpty { "…" },
+                                        fontFamily = Marker,
+                                        color = if (n.isEmpty()) InkBlue.copy(alpha = 0.3f) else InkBlue,
+                                        fontSize = when {
+                                            n.length > 18 -> 20.sp
+                                            n.length > 11 -> 26.sp
+                                            else -> 36.sp
+                                        },
+                                        maxLines = 1,
+                                        modifier = Modifier.graphicsLayer { rotationZ = 1.5f }
+                                    )
+                                }
+                            }
+                        }
+                        Spacer(Modifier.height(30.dp))
+                        var focused by remember { mutableStateOf(false) }
+                        BasicTextField(
+                            value = name,
+                            onValueChange = { name = it.take(30) },
+                            singleLine = true,
+                            textStyle = TextStyle(color = TextHigh, fontSize = 24.sp, fontWeight = FontWeight.Bold),
+                            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words, imeAction = ImeAction.Next),
+                            keyboardActions = KeyboardActions(onNext = { next() }),
+                            cursorBrush = SolidColor(Teal),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .focusRequester(focus)
+                                .onFocusChanged { focused = it.isFocused },
+                            decorationBox = { inner ->
+                                Column {
+                                    Box {
+                                        if (name.isEmpty()) Text("Dein Name", color = TextLow.copy(alpha = 0.6f), fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                                        inner()
+                                    }
+                                    Spacer(Modifier.height(10.dp))
+                                    Box(
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .height(2.dp)
+                                            .background(if (focused) Teal else InkLine)
+                                    )
+                                }
+                            }
+                        )
+                    }
+
+                    1 -> {
+                        val fd = remember { FocusRequester() }
+                        val fm = remember { FocusRequester() }
+                        val fy = remember { FocusRequester() }
+                        LaunchedEffect(Unit) { runCatching { fd.requestFocus() } }
+                        StepTitle(
+                            "Wann hast du Geburtstag?",
+                            "Dein Alter bestimmt, wen du auf kumi triffst. Es lässt sich später nicht mehr ändern."
+                        )
+                        Spacer(Modifier.height(18.dp))
+                        Image(
+                            painterResource(R.drawable.onb_cake),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth(0.52f)
+                                .align(Alignment.CenterHorizontally)
+                                .aspectRatio(600f / 560f)
+                                .graphicsLayer { rotationZ = 3f }
+                        )
+                        Spacer(Modifier.height(18.dp))
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            DateBox("Tag", day, 2, fd, Modifier.weight(1f)) {
+                                day = it
+                                if (it.length == 2) runCatching { fm.requestFocus() }
+                            }
+                            DateBox("Monat", month, 2, fm, Modifier.weight(1f)) {
+                                month = it
+                                if (it.length == 2) runCatching { fy.requestFocus() }
+                            }
+                            DateBox("Jahr", year, 4, fy, Modifier.weight(1.5f)) { year = it }
+                        }
+                        Spacer(Modifier.height(14.dp))
+                        when {
+                            dateTyped && birthDate == null ->
+                                Text("Dieses Datum gibt es nicht.", color = Coral, fontWeight = FontWeight.Bold)
+                            tooYoung ->
+                                Text("kumi ist erst ab 13 Jahren erlaubt.", color = Coral, fontWeight = FontWeight.Bold)
+                            age != null && age > 110 ->
+                                Text("Bitte prüf das Jahr noch mal.", color = Coral, fontWeight = FontWeight.Bold)
+                            age != null ->
+                                Text("🎂  Du bist $age", color = TextHigh, fontWeight = FontWeight.ExtraBold, fontSize = 17.sp)
+                        }
+                        if (isTeen) {
+                            Spacer(Modifier.height(12.dp))
+                            InfoBox(
+                                "🛡️ Du kommst in die Jugend-Community (13–17). Dort triffst du nur Leute in deinem Alter – " +
+                                    "Erwachsene können dich nicht sehen und dir nicht schreiben."
+                            )
+                        }
+                        if (needsParent) {
+                            Spacer(Modifier.height(12.dp))
+                            InfoBox("👨‍👩‍👧 Weil du unter 16 bist, muss ein Elternteil zustimmen. Wir schicken eine E-Mail an diese Adresse.")
+                            Spacer(Modifier.height(10.dp))
+                            OutlinedTextField(
+                                value = parentEmail,
+                                onValueChange = { parentEmail = it.trim() },
+                                label = { Text("E-Mail eines Elternteils") },
+                                singleLine = true,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                                shape = RoundedCornerShape(16.dp),
+                                colors = kumiFieldColors(),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    }
+
+                    2 -> {
+                        StepTitle("Ich bin …", "Damit dich die richtigen Leute in der Suche finden.")
+                        Spacer(Modifier.height(26.dp))
+                        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                            GenderCard(
+                                R.drawable.gender_male, if (adult) "Mann" else "Junge", selected = gender == "male",
+                                dim = gender.isNotEmpty() && gender != "male", accent = Sky, modifier = Modifier.weight(1f)
+                            ) { gender = "male" }
+                            GenderCard(
+                                R.drawable.gender_female, if (adult) "Frau" else "Mädchen", selected = gender == "female",
+                                dim = gender.isNotEmpty() && gender != "female", accent = GenderPink, modifier = Modifier.weight(1f)
+                            ) { gender = "female" }
+                        }
+                        Spacer(Modifier.height(18.dp))
+                        Text(
+                            if (gender == "other") "✓ Keine Angabe" else "Lieber keine Angabe",
+                            color = if (gender == "other") Teal else TextLow,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .clip(CircleShape)
+                                .clickable { gender = "other" }
+                                .padding(horizontal = 14.dp, vertical = 8.dp)
+                        )
+                    }
+
+                    else -> {
+                        StepTitle("Wo wohnst du?", "Leute aus deiner Gegend findest du so schneller.")
+                        Spacer(Modifier.height(22.dp))
+                        // Kofferanhänger aus Pappe mit Flagge – tippen zum Ändern
+                        Box(
+                            Modifier
+                                .fillMaxWidth(0.94f)
+                                .align(Alignment.CenterHorizontally)
+                                .aspectRatio(640f / 400f)
+                                .graphicsLayer { rotationZ = -4f }
+                                .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) { showCountry = true }
+                        ) {
+                            Image(painterResource(R.drawable.onb_tag), contentDescription = null, modifier = Modifier.fillMaxSize())
+                            BoxWithConstraints(Modifier.fillMaxSize()) {
+                                Column(
+                                    Modifier
+                                        .offset(x = maxWidth * 0.306f, y = maxHeight * 0.195f)
+                                        .size(maxWidth * 0.6f, maxHeight * 0.61f),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Text(Countries.flag(country), fontSize = 38.sp)
+                                    Text(
+                                        Countries.name(country),
+                                        fontFamily = Marker,
+                                        color = InkBlue,
+                                        fontSize = if (Countries.name(country).length > 12) 18.sp else 24.sp,
+                                        maxLines = 1,
+                                        textAlign = TextAlign.Center
+                                    )
+                                    Text("tippen zum Ändern", color = Color(0xFF9A8F80), fontSize = 11.sp)
+                                }
+                            }
+                        }
+                        Spacer(Modifier.height(26.dp))
+                        if (showInvite) {
+                            OutlinedTextField(
+                                value = invite,
+                                onValueChange = { invite = it.take(12) },
+                                label = { Text("Einladungscode") },
+                                singleLine = true,
+                                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters),
+                                shape = RoundedCornerShape(16.dp),
+                                colors = kumiFieldColors(),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        } else {
+                            Text(
+                                "🎁  Ich habe einen Einladungscode",
+                                color = Teal,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .clickable { showInvite = true }
+                                    .padding(vertical = 8.dp, horizontal = 2.dp)
+                            )
+                        }
+                        Spacer(Modifier.height(14.dp))
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(16.dp))
+                                .clickable { accepted = !accepted }
+                                .padding(vertical = 6.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Checkbox(
+                                checked = accepted,
+                                onCheckedChange = { accepted = it },
+                                colors = CheckboxDefaults.colors(checkedColor = Teal, checkmarkColor = Ink, uncheckedColor = TextLow)
+                            )
+                            Text(
+                                "Ich akzeptiere die Nutzungsbedingungen und die Datenschutzerklärung und halte mich an " +
+                                    "die goldene Regel: Sei immer freundlich.",
+                                color = TextLow,
+                                fontSize = 13.sp,
+                                lineHeight = 18.sp
+                            )
+                        }
+                    }
+                }
+                Spacer(Modifier.height(24.dp))
             }
         }
 
-        PrimaryButton(
-            text = "Los geht's",
-            onClick = { if (birthDate != null) vm.submit(name, birthDate, country, parentEmail, invite, gender) },
-            enabled = canSubmit,
-            loading = vm.busy
-        )
-        if (!canSubmit && gender.isEmpty() && name.isNotBlank() && birthDate != null) {
-            Text("Wähl noch aus, wer du bist. ☝️", color = TextLow, style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.align(Alignment.CenterHorizontally))
+        Box(Modifier.padding(horizontal = 24.dp, vertical = 14.dp)) {
+            PrimaryButton(
+                text = if (step < ONBOARDING_STEPS - 1) "Weiter" else "Los geht's",
+                onClick = { next() },
+                enabled = stepOk,
+                loading = vm.busy
+            )
         }
-        Spacer(Modifier.height(12.dp))
     }
 
-    if (showDate) {
-        BirthDateDialog(
-            initial = birthMillis,
-            onDismiss = { showDate = false },
-            onPick = {
-                birthMillis = it
-                showDate = false
-            }
-        )
-    }
     if (showCountry) {
         CountryPickerDialog(
             allowAll = false,
@@ -801,33 +1013,6 @@ fun OnboardingScreen(onSignOut: () -> Unit, vm: OnboardingViewModel = viewModel(
                 if (code != null) country = code
                 showCountry = false
             }
-        )
-    }
-}
-
-@Composable
-private fun BirthDateDialog(initial: Long?, onDismiss: () -> Unit, onPick: (Long) -> Unit) {
-    val thisYear = LocalDate.now().year
-    val suggestion = LocalDate.of(thisYear - 15, 1, 1).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
-    val state = rememberDatePickerState(
-        initialSelectedDateMillis = initial,
-        initialDisplayedMonthMillis = initial ?: suggestion,
-        yearRange = (thisYear - 100)..thisYear,
-        initialDisplayMode = DisplayMode.Input,
-    )
-    DatePickerDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(
-                onClick = { state.selectedDateMillis?.let(onPick) },
-                enabled = state.selectedDateMillis != null
-            ) { Text("Übernehmen") }
-        },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Abbrechen") } }
-    ) {
-        DatePicker(
-            state = state,
-            title = { Text("Dein Geburtsdatum", Modifier.padding(start = 24.dp, end = 12.dp, top = 16.dp)) }
         )
     }
 }

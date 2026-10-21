@@ -37,6 +37,9 @@ val TextLow = Color(0xFF8E8E96)
 /** Runde Marken-Schrift (Lilita One, SIL OFL) – nur für Logo und Namensschilder */
 val Display = FontFamily(Font(R.font.lilita_one, FontWeight.Normal))
 
+/** Filzstift-Schrift für handgeschriebene Stellen (Namensschild, Kofferanhänger) */
+val Marker = FontFamily(Font(R.font.permanent_marker, FontWeight.Normal))
+
 private val colors = darkColorScheme(
     primary = Teal,
     onPrimary = Ink,
