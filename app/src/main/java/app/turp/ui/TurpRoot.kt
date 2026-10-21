@@ -24,8 +24,14 @@ fun TurpRoot(pendingChatId: String?, onChatHandled: () -> Unit) {
     val session: SessionViewModel = viewModel()
     val state by session.state.collectAsState()
 
+    val activity = androidx.compose.ui.platform.LocalContext.current as? android.app.Activity
     Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier.fillMaxSize()) {
-        when (val s = state) {
+        // Allererster Schritt: Sprache wählen
+        if (!app.turp.data.I18n.chosen) {
+            app.turp.ui.screens.LanguageScreen(onDone = { code ->
+                activity?.let { app.turp.data.I18n.set(it, code); it.recreate() }
+            })
+        } else when (val s = state) {
             SessionState.Loading -> SplashScreen(onRetry = session::retry, onSignOut = session::signOut)
             SessionState.NoFirebase -> SetupMissingScreen()
             SessionState.SignedOut -> AuthScreen()

@@ -233,7 +233,15 @@ fun MainNav(
                 onCheckUpdate = { updateVm.checkManually() },
                 onBlocked = { nav.navigate("blocked") },
                 onCredits = { nav.navigate("credits") },
+                onLanguage = { nav.navigate("language") },
             )
+        }
+        composable("language") {
+            val activity = LocalContext.current as? android.app.Activity
+            LanguageScreen(onDone = { code ->
+                activity?.let { app.turp.data.I18n.set(it, code); it.recreate() }
+                nav.popBackStack()
+            })
         }
         composable("credits") {
             CreditsScreen(onBack = { nav.popBackStack() })

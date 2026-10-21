@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.offset
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -287,60 +288,46 @@ private fun InfoPage(
     }
 }
 
-/** Interessen-Sticker auf der Karte: 5 pro Reihe, leicht schief, ohne Text (Antippen zeigt den Namen) */
+/** Interessen-Sticker auf der Karte: 5 pro Reihe, leicht schief, darunter der Name auf einem Pappstreifen */
 @Composable
 private fun InterestGridOnCard(interests: List<String>, highlight: Set<String>) {
-    var shown by remember { mutableStateOf<String?>(null) }
-    LaunchedEffect(shown) {
-        if (shown != null) {
-            kotlinx.coroutines.delay(1800)
-            shown = null
-        }
-    }
     BoxWithConstraints(Modifier.fillMaxWidth()) {
         val cell = maxWidth / 5
-        FlowRow(maxItemsInEachRow = 5) {
+        FlowRow(maxItemsInEachRow = 5, verticalArrangement = Arrangement.spacedBy(4.dp)) {
             interests.forEach { interest ->
-                Box(
-                    Modifier
-                        .width(cell)
-                        .height(cell * 1.08f)
-                        .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {
-                            shown = if (shown == interest) null else interest
-                        },
-                    contentAlignment = Alignment.TopCenter
+                Column(
+                    Modifier.width(cell),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     val tilt = tiltOf(interest, 9)
-                    InterestIcon(interest, cell * 0.82f, Modifier.graphicsLayer { rotationZ = tilt })
-                    if (interest in highlight) {
-                        Box(
-                            Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(end = 4.dp)
-                                .size(18.dp)
-                                .background(app.turp.ui.theme.Teal, CircleShape)
-                                .border(2.dp, Color.Black, CircleShape),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            androidx.compose.material3.Icon(
-                                androidx.compose.material.icons.Icons.Rounded.Check,
-                                contentDescription = "Gemeinsam",
-                                tint = Color.Black,
-                                modifier = Modifier.size(12.dp)
-                            )
+                    Box {
+                        InterestIcon(interest, cell * 0.8f, Modifier.graphicsLayer { rotationZ = tilt })
+                        if (interest in highlight) {
+                            Box(
+                                Modifier
+                                    .align(Alignment.TopEnd)
+                                    .size(18.dp)
+                                    .background(app.turp.ui.theme.Teal, CircleShape)
+                                    .border(2.dp, Color.Black, CircleShape),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                androidx.compose.material3.Icon(
+                                    androidx.compose.material.icons.Icons.Rounded.Check,
+                                    contentDescription = "Gemeinsam",
+                                    tint = Color.Black,
+                                    modifier = Modifier.size(12.dp)
+                                )
+                            }
                         }
                     }
-                    if (shown == interest) {
-                        InterestTape(
-                            text = interestLabel(interest),
-                            color = interestDef(interest)?.category?.color ?: app.turp.ui.theme.Teal,
-                            rotation = -tilt / 2f,
-                            fontSize = 11,
-                            modifier = Modifier
-                                .align(Alignment.BottomCenter)
-                                .widthIn(max = cell + 30.dp)
-                        )
-                    }
+                    CardboardLabel(
+                        text = interestLabel(interest),
+                        rotation = -tilt / 2f,
+                        fontSize = 10,
+                        modifier = Modifier
+                            .offset(y = (-6).dp)
+                            .widthIn(max = cell + 4.dp)
+                    )
                 }
             }
         }

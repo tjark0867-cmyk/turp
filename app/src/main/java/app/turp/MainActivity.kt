@@ -16,6 +16,11 @@ class MainActivity : ComponentActivity() {
     /** Chat, der über eine Push-Benachrichtigung geöffnet werden soll */
     private val pendingChatId = mutableStateOf<String?>(null)
 
+    // Gewählte Sprache für die ganze Oberfläche (auch Datumsauswahl und Schreibrichtung)
+    override fun attachBaseContext(newBase: android.content.Context) {
+        super.attachBaseContext(app.turp.data.I18n.wrap(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(

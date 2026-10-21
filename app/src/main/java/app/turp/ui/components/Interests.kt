@@ -134,6 +134,33 @@ fun InterestTape(text: String, color: Color, modifier: Modifier = Modifier, rota
     )
 }
 
+/** Beschriftung auf einem kleinen Pappstreifen (Kraftpapier, ausgerissene Kanten) */
+@Composable
+fun CardboardLabel(text: String, modifier: Modifier = Modifier, rotation: Float = 0f, fontSize: Int = 11) {
+    Box(
+        modifier.graphicsLayer { rotationZ = rotation },
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(app.turp.R.drawable.label_strip),
+            contentDescription = null,
+            contentScale = androidx.compose.ui.layout.ContentScale.FillBounds,
+            modifier = Modifier.matchParentSize()
+        )
+        Text(
+            text = text,
+            color = Color(0xFF3B2410),
+            fontFamily = app.turp.ui.theme.Display,
+            fontSize = fontSize.sp,
+            lineHeight = (fontSize + 2).sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 9.dp, vertical = 3.dp)
+        )
+    }
+}
+
 internal fun tiltOf(key: String, range: Int = 7): Float = ((abs(key.hashCode()) % (range * 2 + 1)) - range).toFloat()
 
 /** Auswahl-Kachel: Sticker mit Namens-Streifen; ausgewählt mit türkisem Haken */

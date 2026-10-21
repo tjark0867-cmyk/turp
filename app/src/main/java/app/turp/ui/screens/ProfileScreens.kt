@@ -71,6 +71,7 @@ import androidx.compose.material.icons.rounded.AddAPhoto
 import androidx.compose.material.icons.rounded.AdminPanelSettings
 import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.Block
+import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.DeleteForever
 import androidx.compose.material.icons.rounded.Edit
@@ -419,6 +420,7 @@ fun SettingsScreen(
     onCheckUpdate: () -> Unit,
     onBlocked: () -> Unit,
     onCredits: () -> Unit,
+    onLanguage: () -> Unit,
     vm: ProfileViewModel = viewModel(),
 ) {
     val context = LocalContext.current
@@ -460,6 +462,7 @@ fun SettingsScreen(
                 MenuRow(Icons.Rounded.SystemUpdate, "Nach Updates suchen", onClick = onCheckUpdate)
             }
             SectionCard {
+                MenuRow(Icons.Rounded.Language, "Sprache · ${app.turp.data.I18n.LANGS.firstOrNull { it.code == app.turp.data.I18n.lang }?.name.orEmpty()}", onClick = onLanguage)
                 MenuRow(Icons.Rounded.Block, "Blockierte Nutzer", onClick = onBlocked)
             }
             SectionCard {
