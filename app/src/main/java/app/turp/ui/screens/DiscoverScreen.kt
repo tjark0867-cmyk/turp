@@ -1,5 +1,11 @@
 package app.turp.ui.screens
 
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.input.pointer.util.VelocityTracker
+import androidx.compose.ui.platform.LocalDensity
+import kotlin.math.exp
+import kotlin.math.sign
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
@@ -252,7 +258,7 @@ fun DiscoverScreen(
     Column(
         Modifier
             .fillMaxSize()
-            .padding(horizontal = 12.dp)
+            .padding(horizontal = 10.dp)
     ) {
         // Kopfzeile: eigenes Profil + Filter | Logo | Gems
         Box(
@@ -418,13 +424,29 @@ private fun CardStack(
     val offsetY = remember(top.uid) { Animatable(0f) }
     var flinging by remember(top.uid) { mutableStateOf(false) }
     var widthPx by remember { mutableFloatStateOf(1000f) }
+    val density = LocalDensity.current
+    // Nach oben/unten gibt die Karte nur wenig nach (Gummiband), höchstens ~56 dp
+    val maxLift = with(density) { 56.dp.toPx() }
+    fun rubber(raw: Float): Float = sign(raw) * maxLift * (1f - exp(-abs(raw) / (maxLift * 2.2f)))
 
-    fun fling(right: Boolean) {
+    fun fling(right: Boolean, velocity: Float = 0f) {
         if (flinging) return
         flinging = true
         scope.launch {
-            offsetX.animateTo(if (right) widthPx * 1.6f else -widthPx * 1.6f, tween(260))
+            launch { offsetY.animateTo(offsetY.value * 1.4f, tween(240)) }
+            offsetX.animateTo(
+                if (right) widthPx * 1.5f else -widthPx * 1.5f,
+                tween(if (abs(velocity) > 2500f) 170 else 240, easing = FastOutLinearInEasing)
+            )
             if (right) onLike(top) else onSkip(top)
+        }
+    }
+
+    fun settle() {
+        scope.launch {
+            val back = spring<Float>(dampingRatio = 0.62f, stiffness = 520f)
+            launch { offsetX.animateTo(0f, back) }
+            offsetY.animateTo(0f, back)
         }
     }
 
@@ -436,6 +458,7 @@ private fun CardStack(
         if (cards.size > 1) {
             val next = cards[1]
             key(next.uid) {
+                // Nächste Karte liegt voll sichtbar darunter und wächst beim Wischen ein kleines Stück
                 ProfileCard(
                     profile = next,
                     myInterests = myInterests,
@@ -444,14 +467,14 @@ private fun CardStack(
                         .fillMaxSize()
                         .graphicsLayer {
                             val p = (abs(offsetX.value) / widthPx).coerceIn(0f, 1f)
-                            scaleX = 0.94f + 0.06f * p
-                            scaleY = 0.94f + 0.06f * p
-                            alpha = 0.5f + 0.5f * p
+                            scaleX = 0.965f + 0.035f * p
+                            scaleY = 0.965f + 0.035f * p
                         }
                 )
             }
         }
         key(top.uid) {
+            var rawY by remember { mutableFloatStateOf(0f) }
             ProfileCard(
                 profile = top,
                 myInterests = myInterests,
@@ -461,38 +484,42 @@ private fun CardStack(
                 onLike = { fling(true) },
                 onSkip = { fling(false) },
                 onReport = { onReport(top) },
-                likeProgress = { (offsetX.value / widthPx * 3f).coerceIn(-1f, 1f) },
+                likeProgress = { (offsetX.value / widthPx * 2.6f).coerceIn(-1f, 1f) },
                 modifier = Modifier
                     .fillMaxSize()
                     .graphicsLayer {
                         translationX = offsetX.value
                         translationY = offsetY.value
-                        rotationZ = offsetX.value / 45f
+                        // kippt um einen Punkt unter der Karte – wie ein Stapel Karten in der Hand
+                        transformOrigin = TransformOrigin(0.5f, 1.25f)
+                        rotationZ = offsetX.value / widthPx * 22f
                     }
                     .pointerInput(top.uid) {
+                        val tracker = VelocityTracker()
                         detectDragGestures(
+                            onDragStart = {
+                                tracker.resetTracking()
+                                rawY = offsetY.value
+                            },
                             onDragEnd = {
-                                val threshold = size.width * 0.28f
+                                val v = tracker.calculateVelocity().x
+                                val threshold = size.width * 0.3f
                                 when {
-                                    offsetX.value > threshold -> fling(true)
-                                    offsetX.value < -threshold -> fling(false)
-                                    else -> scope.launch {
-                                        launch { offsetX.animateTo(0f, spring()) }
-                                        offsetY.animateTo(0f, spring())
-                                    }
+                                    v > 1400f && offsetX.value > -threshold / 2 -> fling(true, v)
+                                    v < -1400f && offsetX.value < threshold / 2 -> fling(false, v)
+                                    offsetX.value > threshold -> fling(true, v)
+                                    offsetX.value < -threshold -> fling(false, v)
+                                    else -> settle()
                                 }
                             },
-                            onDragCancel = {
-                                scope.launch {
-                                    launch { offsetX.animateTo(0f, spring()) }
-                                    offsetY.animateTo(0f, spring())
-                                }
-                            },
+                            onDragCancel = { settle() },
                             onDrag = { change, amount ->
                                 change.consume()
+                                tracker.addPosition(change.uptimeMillis, change.position)
+                                rawY += amount.y
                                 scope.launch {
                                     offsetX.snapTo(offsetX.value + amount.x)
-                                    offsetY.snapTo(offsetY.value + amount.y)
+                                    offsetY.snapTo(rubber(rawY))
                                 }
                             }
                         )
@@ -515,7 +542,7 @@ private fun ProfileCard(
     onReport: () -> Unit = {},
     likeProgress: () -> Float = { 0f },
 ) {
-    val shape = RoundedCornerShape(30.dp)
+    val shape = RoundedCornerShape(16.dp)
 
     Box(
         modifier
@@ -528,7 +555,7 @@ private fun ProfileCard(
         ProfileStory(
             profile = profile,
             interactive = interactive,
-            bottomSpace = if (interactive) 86.dp else 16.dp,
+            bottomSpace = if (interactive) 72.dp else 16.dp,
             highlight = shared,
             modifier = Modifier.fillMaxSize(),
             header = {
@@ -560,28 +587,33 @@ private fun ProfileCard(
         )
 
         if (interactive) {
-            SwipeBadge(
-                icon = Icons.AutoMirrored.Rounded.Send,
-                background = Teal,
+            // Beim Wischen erscheint ein Daumen: nach rechts 👍 (Anfrage), nach links 👎 (weiter)
+            Text(
+                "👍",
+                fontSize = 92.sp,
                 modifier = Modifier
-                    .align(Alignment.Center)
+                    .align(Alignment.CenterStart)
+                    .padding(start = 28.dp)
                     .graphicsLayer {
                         val p = likeProgress().coerceIn(0f, 1f)
                         alpha = p
-                        scaleX = 0.7f + 0.3f * p
-                        scaleY = 0.7f + 0.3f * p
+                        scaleX = 0.6f + 0.4f * p
+                        scaleY = 0.6f + 0.4f * p
+                        rotationZ = -18f + 10f * p
                     }
             )
-            SwipeBadge(
-                icon = Icons.Rounded.Close,
-                background = InkHigh,
+            Text(
+                "👎",
+                fontSize = 92.sp,
                 modifier = Modifier
-                    .align(Alignment.Center)
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 28.dp)
                     .graphicsLayer {
                         val p = (-likeProgress()).coerceIn(0f, 1f)
                         alpha = p
-                        scaleX = 0.7f + 0.3f * p
-                        scaleY = 0.7f + 0.3f * p
+                        scaleX = 0.6f + 0.4f * p
+                        scaleY = 0.6f + 0.4f * p
+                        rotationZ = 18f - 10f * p
                     }
             )
         }
@@ -591,7 +623,7 @@ private fun ProfileCard(
                 Modifier
                     .align(Alignment.BottomStart)
                     .fillMaxWidth()
-                    .padding(14.dp),
+                    .padding(horizontal = 12.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Surface(
@@ -601,7 +633,7 @@ private fun ProfileCard(
                     border = BorderStroke(1.5.dp, Color.White.copy(alpha = 0.7f)),
                     modifier = Modifier
                         .weight(1f)
-                        .height(56.dp)
+                        .height(48.dp)
                 ) {
                     Row(
                         Modifier.padding(horizontal = 18.dp),
@@ -617,7 +649,7 @@ private fun ProfileCard(
                         Text(
                             "Anfrage senden",
                             color = Color.White,
-                            fontSize = 16.sp,
+                            fontSize = 15.sp,
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.weight(1f)
                         )
@@ -633,7 +665,7 @@ private fun ProfileCard(
                     color = Color.Black.copy(alpha = 0.45f),
                     borderColor = Color.White.copy(alpha = 0.7f),
                     iconColor = Color.White,
-                    size = 56.dp,
+                    size = 48.dp,
                     onClick = onSkip
                 )
             }

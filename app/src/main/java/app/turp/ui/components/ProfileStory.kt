@@ -1,6 +1,14 @@
 package app.turp.ui.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.layout.Layout
 import app.turp.R
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
@@ -146,12 +154,12 @@ fun ProfileStory(
                 Box(
                     Modifier
                         .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.72f))
+                        .background(Color.Black.copy(alpha = 0.56f))
                         .background(
                             Brush.verticalGradient(
-                                0.0f to Color.Black.copy(alpha = 0.25f),
-                                0.45f to Color.Transparent,
-                                1.0f to Color.Black.copy(alpha = 0.35f)
+                                0.0f to Color.Black.copy(alpha = 0.22f),
+                                0.35f to Color.Transparent,
+                                1.0f to Color.Black.copy(alpha = 0.25f)
                             )
                         )
                 )
@@ -163,9 +171,9 @@ fun ProfileStory(
                 .fillMaxSize()
                 .padding(top = topSpace, bottom = bottomSpace)
         ) {
-            StoryBars(count = pages.size, current = index, modifier = Modifier.padding(horizontal = 16.dp))
-            Spacer(Modifier.height(14.dp))
-            header()
+            StoryBars(count = pages.size, current = index, modifier = Modifier.padding(horizontal = 14.dp))
+            Spacer(Modifier.height(12.dp))
+            if (page != StoryPage.Info) header()
             if (page == StoryPage.Info) {
                 InfoPage(
                     profile = profile,
@@ -188,7 +196,7 @@ private fun StoryBars(count: Int, current: Int, modifier: Modifier = Modifier) {
             Box(
                 Modifier
                     .weight(1f)
-                    .height(4.dp)
+                    .height(3.dp)
                     .clip(CircleShape)
                     .background(if (i == current) Color.White else Color.White.copy(alpha = 0.35f))
             )
@@ -199,7 +207,11 @@ private fun StoryBars(count: Int, current: Int, modifier: Modifier = Modifier) {
 /** Leichter Schatten, damit weiße Schrift auf jedem Foto lesbar bleibt */
 private val TextOnPhoto = TextStyle(shadow = Shadow(Color.Black.copy(alpha = 0.7f), Offset(0f, 2f), 10f))
 
-/** Seite 2: Bio kompakt (Platz für längere Texte), darunter die Interessen als Sticker */
+/**
+ * Seite 2 wie bei purp: Bio oben links (mittelgroß), die Interessen sitzen etwa
+ * in der Mitte der Karte – bei langer Bio direkt darunter. Sticker ohne Beschriftung,
+ * fünf pro Reihe; Antippen zeigt kurz den Namen.
+ */
 @Composable
 private fun InfoPage(
     profile: UserProfile,
@@ -208,48 +220,129 @@ private fun InfoPage(
     extra: (@Composable () -> Unit)? = null,
     highlight: Set<String> = emptySet(),
 ) {
-    Column(
-        modifier
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 18.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        val bio = profile.bio.trim()
-        if (bio.isNotEmpty()) {
-            val long = bio.length > 200
-            Text(
-                text = bio,
-                color = Color.White,
-                fontSize = if (long) 14.sp else 16.sp,
-                lineHeight = if (long) 20.sp else 22.sp,
-                fontWeight = FontWeight.Medium,
-                style = TextOnPhoto,
-            )
-        } else {
-            Text(
-                text = "${profile.name} hat noch nichts über sich geschrieben.",
-                color = Color.White.copy(alpha = 0.7f),
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Medium,
-                style = TextOnPhoto,
-            )
-        }
-        if (profile.interests.isNotEmpty()) {
-            Spacer(Modifier.height(2.dp))
-            Sticker("Interessen", accent, rotation = -3f, fontSize = 20.sp)
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                // Gemeinsame Interessen zuerst und mit Haken
-                profile.interests.sortedByDescending { it in highlight }.forEach {
-                    InterestStickerWithTape(it, 60.dp, Modifier.widthIn(min = 66.dp), highlight = it in highlight)
+    BoxWithConstraints(modifier) {
+        val pageHeight = maxHeight
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp)
+        ) {
+            Layout(
+                content = {
+                    // 1) Bio
+                    Box {
+                        val bio = profile.bio.trim()
+                        if (bio.isNotEmpty()) {
+                            val long = bio.length > 220
+                            Text(
+                                text = bio,
+                                color = Color.White,
+                                fontSize = if (long) 15.sp else 17.sp,
+                                lineHeight = if (long) 22.sp else 25.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                style = TextOnPhoto,
+                            )
+                        } else {
+                            Text(
+                                text = "${profile.name} hat noch nichts über sich geschrieben.",
+                                color = Color.White.copy(alpha = 0.7f),
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium,
+                                style = TextOnPhoto,
+                            )
+                        }
+                    }
+                    // 2) Interessen (+ Extra)
+                    Column {
+                        if (profile.interests.isNotEmpty()) {
+                            Sticker("Interessen", accent, rotation = -3f, fontSize = 16.sp)
+                            Spacer(Modifier.height(10.dp))
+                            InterestGridOnCard(
+                                interests = profile.interests.sortedByDescending { it in highlight },
+                                highlight = highlight
+                            )
+                        }
+                        if (extra != null) {
+                            Spacer(Modifier.height(12.dp))
+                            extra()
+                        }
+                    }
+                }
+            ) { measurables, constraints ->
+                val loose = constraints.copy(minHeight = 0)
+                val bio = measurables[0].measure(loose)
+                val rest = measurables[1].measure(loose)
+                val gap = 28.dp.roundToPx()
+                // Interessen etwa in der Mitte der Seite, aber nie über der Bio
+                val restTop = maxOf(bio.height + gap, (pageHeight.toPx() * 0.47f).toInt())
+                val height = if (rest.height > 0) restTop + rest.height else bio.height
+                layout(constraints.maxWidth, height) {
+                    bio.placeRelative(0, 0)
+                    rest.placeRelative(0, restTop)
                 }
             }
+            Spacer(Modifier.height(16.dp))
         }
-        if (extra != null) {
-            Spacer(Modifier.height(2.dp))
-            extra()
+    }
+}
+
+/** Interessen-Sticker auf der Karte: 5 pro Reihe, leicht schief, ohne Text (Antippen zeigt den Namen) */
+@Composable
+private fun InterestGridOnCard(interests: List<String>, highlight: Set<String>) {
+    var shown by remember { mutableStateOf<String?>(null) }
+    LaunchedEffect(shown) {
+        if (shown != null) {
+            kotlinx.coroutines.delay(1800)
+            shown = null
+        }
+    }
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        val cell = maxWidth / 5
+        FlowRow(maxItemsInEachRow = 5) {
+            interests.forEach { interest ->
+                Box(
+                    Modifier
+                        .width(cell)
+                        .height(cell * 1.08f)
+                        .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {
+                            shown = if (shown == interest) null else interest
+                        },
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    val tilt = tiltOf(interest, 9)
+                    InterestIcon(interest, cell * 0.82f, Modifier.graphicsLayer { rotationZ = tilt })
+                    if (interest in highlight) {
+                        Box(
+                            Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(end = 4.dp)
+                                .size(18.dp)
+                                .background(app.turp.ui.theme.Teal, CircleShape)
+                                .border(2.dp, Color.Black, CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            androidx.compose.material3.Icon(
+                                androidx.compose.material.icons.Icons.Rounded.Check,
+                                contentDescription = "Gemeinsam",
+                                tint = Color.Black,
+                                modifier = Modifier.size(12.dp)
+                            )
+                        }
+                    }
+                    if (shown == interest) {
+                        InterestTape(
+                            text = interestLabel(interest),
+                            color = interestDef(interest)?.category?.color ?: app.turp.ui.theme.Teal,
+                            rotation = -tilt / 2f,
+                            fontSize = 11,
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .widthIn(max = cell + 30.dp)
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -264,25 +357,25 @@ fun ProfileNameStickers(profile: UserProfile, modifier: Modifier = Modifier, onC
         )
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Sticker(profile.name, accent, rotation = -3f, fontSize = 30.sp)
+            Sticker(profile.name, accent, rotation = -3f, fontSize = 23.sp)
             if (profile.plus) {
                 Image(
                     painter = painterResource(R.drawable.gold_plus),
                     contentDescription = "kumi+",
                     modifier = Modifier
                         .padding(start = 6.dp)
-                        .size(30.dp)
+                        .size(24.dp)
                         .graphicsLayer { rotationZ = 8f }
                 )
             }
         }
-        Spacer(Modifier.height(6.dp))
+        Spacer(Modifier.height(4.dp))
         Sticker(
             if (profile.bot) "🤖 Testprofil" else "${Countries.flag(profile.country)} ${profile.country}, ${profile.age}",
             accent,
             rotation = -3f,
-            fontSize = 18.sp,
-            modifier = Modifier.padding(start = 8.dp)
+            fontSize = 13.sp,
+            modifier = Modifier.padding(start = 6.dp)
         )
     }
 }

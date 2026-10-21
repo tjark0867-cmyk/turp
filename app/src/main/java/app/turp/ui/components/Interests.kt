@@ -134,7 +134,7 @@ fun InterestTape(text: String, color: Color, modifier: Modifier = Modifier, rota
     )
 }
 
-private fun tiltOf(key: String, range: Int = 7): Float = ((abs(key.hashCode()) % (range * 2 + 1)) - range).toFloat()
+internal fun tiltOf(key: String, range: Int = 7): Float = ((abs(key.hashCode()) % (range * 2 + 1)) - range).toFloat()
 
 /** Auswahl-Kachel: Sticker mit Namens-Streifen; ausgewählt mit türkisem Haken */
 @Composable
