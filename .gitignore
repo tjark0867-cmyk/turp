@@ -11,3 +11,4 @@ functions/.env.local
 firebase-debug.log
 app/src/main/res/font/lilita_one.ttf
 app/src/main/assets/licenses/
+tools/paper/out/
