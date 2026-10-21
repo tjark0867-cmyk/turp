@@ -620,8 +620,6 @@ private fun ProfileCard(
                     }
             )
         }
-            )
-        }
 
         if (interactive) {
             Row(
