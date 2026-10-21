@@ -594,9 +594,11 @@ private fun ProfileCard(
             Image(
                 painter = painterResource(R.drawable.swipe_yes),
                 contentDescription = null,
+                // wie bei purp: erscheint auf der Seite, von der die Karte wegzieht (hier links)
                 modifier = Modifier
-                    .align(Alignment.Center)
-                    .size(150.dp)
+                    .align(Alignment.CenterStart)
+                    .padding(start = 20.dp)
+                    .size(124.dp)
                     .graphicsLayer {
                         val p = likeProgress().coerceIn(0f, 1f)
                         alpha = p
@@ -608,9 +610,11 @@ private fun ProfileCard(
             Image(
                 painter = painterResource(R.drawable.swipe_no),
                 contentDescription = null,
+                // beim Wischen nach links rechts auf der Karte
                 modifier = Modifier
-                    .align(Alignment.Center)
-                    .size(150.dp)
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 20.dp)
+                    .size(124.dp)
                     .graphicsLayer {
                         val p = (-likeProgress()).coerceIn(0f, 1f)
                         alpha = p
