@@ -6,6 +6,9 @@ import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.platform.LocalDensity
 import kotlin.math.exp
 import kotlin.math.sign
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import app.turp.R
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
@@ -587,34 +590,36 @@ private fun ProfileCard(
         )
 
         if (interactive) {
-            // Beim Wischen erscheint ein Daumen: nach rechts 👍 (Anfrage), nach links 👎 (weiter)
-            Text(
-                "👍",
-                fontSize = 92.sp,
+            // Beim Wischen erscheint ein Zeichen aus Pappe: Haken (Anfrage) bzw. X (weiter)
+            Image(
+                painter = painterResource(R.drawable.swipe_yes),
+                contentDescription = null,
                 modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .padding(start = 28.dp)
+                    .align(Alignment.Center)
+                    .size(150.dp)
                     .graphicsLayer {
                         val p = likeProgress().coerceIn(0f, 1f)
                         alpha = p
                         scaleX = 0.6f + 0.4f * p
                         scaleY = 0.6f + 0.4f * p
-                        rotationZ = -18f + 10f * p
+                        rotationZ = -14f + 8f * p
                     }
             )
-            Text(
-                "👎",
-                fontSize = 92.sp,
+            Image(
+                painter = painterResource(R.drawable.swipe_no),
+                contentDescription = null,
                 modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(end = 28.dp)
+                    .align(Alignment.Center)
+                    .size(150.dp)
                     .graphicsLayer {
                         val p = (-likeProgress()).coerceIn(0f, 1f)
                         alpha = p
                         scaleX = 0.6f + 0.4f * p
                         scaleY = 0.6f + 0.4f * p
-                        rotationZ = 18f - 10f * p
+                        rotationZ = 14f - 8f * p
                     }
+            )
+        }
             )
         }
 

@@ -357,14 +357,14 @@ fun ProfileNameStickers(profile: UserProfile, modifier: Modifier = Modifier, onC
         )
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Sticker(profile.name, accent, rotation = -3f, fontSize = 23.sp)
+            Sticker(profile.name, accent, rotation = -3f, fontSize = 27.sp)
             if (profile.plus) {
                 Image(
                     painter = painterResource(R.drawable.gold_plus),
                     contentDescription = "kumi+",
                     modifier = Modifier
                         .padding(start = 6.dp)
-                        .size(24.dp)
+                        .size(28.dp)
                         .graphicsLayer { rotationZ = 8f }
                 )
             }
@@ -374,8 +374,8 @@ fun ProfileNameStickers(profile: UserProfile, modifier: Modifier = Modifier, onC
             if (profile.bot) "🤖 Testprofil" else "${Countries.flag(profile.country)} ${profile.country}, ${profile.age}",
             accent,
             rotation = -3f,
-            fontSize = 13.sp,
-            modifier = Modifier.padding(start = 6.dp)
+            fontSize = 16.sp,
+            modifier = Modifier.padding(start = 7.dp)
         )
     }
 }
