@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.Text
@@ -56,6 +57,8 @@ fun LanguageScreen(onDone: (String) -> Unit) {
             painter = painterResource(R.drawable.kraft_bg),
             contentDescription = null,
             contentScale = ContentScale.Crop,
+            // oben verankert: Abriss und Aufdruck sitzen auf jedem Handy neben Logo/Titel
+            alignment = Alignment.TopCenter,
             modifier = Modifier.fillMaxSize()
         )
         Column(
@@ -95,11 +98,19 @@ fun LanguageScreen(onDone: (String) -> Unit) {
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 modifier = Modifier.weight(1f)
             ) {
-                itemsIndexed(I18n.LANGS, key = { _, l -> l.code }) { i, l ->
+                val lastAlone = I18n.LANGS.size % 2 == 1
+                itemsIndexed(
+                    I18n.LANGS,
+                    key = { _, l -> l.code },
+                    // ungerade Anzahl: das letzte Schild steht mittig statt allein links
+                    span = { i, _ -> GridItemSpan(if (lastAlone && i == I18n.LANGS.lastIndex) 2 else 1) }
+                ) { i, l ->
                     val sel = l.code == selected
+                    val alone = lastAlone && i == I18n.LANGS.lastIndex
+                    Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     Box(
                         Modifier
-                            .fillMaxWidth()
+                            .fillMaxWidth(if (alone) 0.5f else 1f)
                             .height(58.dp)
                             .graphicsLayer {
                                 rotationZ = if (sel) 0f else if (i % 3 == 0) -1.8f else if (i % 3 == 1) 1.2f else -0.6f
@@ -137,6 +148,7 @@ fun LanguageScreen(onDone: (String) -> Unit) {
                                 Text("✓", fontFamily = Display, color = InkBrown, fontSize = 18.sp)
                             }
                         }
+                    }
                     }
                 }
             }
