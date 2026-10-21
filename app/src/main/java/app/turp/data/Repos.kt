@@ -166,6 +166,11 @@ object ProfileRepo {
         callFunction("claimAdmin")
     }
 
+    /** Sprache merken, damit Push-Nachrichten in der richtigen Sprache kommen */
+    suspend fun saveLang(code: String) {
+        Fb.db.collection("accounts").document(Fb.uid).update("lang", code).await()
+    }
+
     suspend fun saveFcmToken(token: String) {
         Fb.db.collection("accounts").document(Fb.uid).update("fcmToken", token).await()
     }

@@ -241,8 +241,18 @@ fun MainNav(
         composable("language") {
             val activity = LocalContext.current as? android.app.Activity
             LanguageScreen(onDone = { code ->
-                activity?.let { app.turp.data.I18n.set(it, code); it.recreate() }
-                nav.popBackStack()
+                val a = activity ?: return@LanguageScreen
+                if (code == app.turp.data.I18n.lang) {
+                    nav.popBackStack()
+                    return@LanguageScreen
+                }
+                app.turp.data.I18n.set(a, code)
+                // App einmal neu starten, damit wirklich alles in der neuen Sprache ist
+                val intent = android.content.Intent(a, app.turp.MainActivity::class.java)
+                    .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                a.startActivity(intent)
+                a.finishAffinity()
+                Runtime.getRuntime().exit(0)
             })
         }
         composable("credits") {

@@ -106,6 +106,9 @@ class SessionViewModel : ViewModel() {
                     tokenSaved = true
                     saveFcmToken(account.fcmToken)
                 }
+                if (account.status == "active" && account.lang != I18n.lang) {
+                    viewModelScope.launch { runCatching { ProfileRepo.saveLang(I18n.lang) } }
+                }
             }
         }
     }

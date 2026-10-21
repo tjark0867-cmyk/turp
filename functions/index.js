@@ -183,11 +183,23 @@ function pathFromDownloadUrl(url) {
   }
 }
 
-async function notify(uid, title, body, data = {}) {
+// Push-Texte in der Sprache des Empfängers (accounts/{uid}.lang, setzt die App)
+const PUSH_I18N = require("./push_i18n.json");
+function trPush(lang, text, vars = {}) {
+  const table = PUSH_I18N[lang] || {};
+  let out = table[text] || text;
+  for (const [k, v] of Object.entries(vars)) out = out.split(`{${k}}`).join(String(v));
+  return out;
+}
+
+async function notify(uid, title, body, data = {}, vars = {}) {
   try {
     const acc = await db.doc(`accounts/${uid}`).get();
     const token = acc.exists ? acc.get("fcmToken") : "";
     if (!token) return;
+    const lang = (acc.exists && acc.get("lang")) || "de";
+    title = trPush(lang, title, vars);
+    body = trPush(lang, body, vars);
     const payload = {};
     for (const [k, v] of Object.entries(data)) payload[k] = String(v);
     await getMessaging().send({
@@ -759,8 +771,8 @@ exports.sendRequest = onCall(async (req) => {
     const chatId = await befriend(toUid, uid);
     await reverseRef.update({ status: "accepted", respondedAt: FieldValue.serverTimestamp(), chatId });
     await db.doc(`users/${uid}/seen/${toUid}`).set({ at: FieldValue.serverTimestamp(), liked: true });
-    await notify(toUid, "Ihr seid jetzt Freunde 🎉", `${me.get("name")} hat deine Anfrage erwidert. Sagt Hallo!`,
-      { type: "accepted", chatId });
+    await notify(toUid, "Ihr seid jetzt Freunde 🎉", "{name} hat deine Anfrage erwidert. Sagt Hallo!",
+      { type: "accepted", chatId }, { name: me.get("name") });
     return { matched: true, chatId };
   }
 
@@ -800,7 +812,7 @@ exports.sendRequest = onCall(async (req) => {
     return current - cost;
   });
 
-  await notify(toUid, "Neue Freundschaftsanfrage 👋", `${me.get("name")} möchte mit dir befreundet sein.`, { type: "request" });
+  await notify(toUid, "Neue Freundschaftsanfrage 👋", "{name} möchte mit dir befreundet sein.", { type: "request" }, { name: me.get("name") });
   return { matched: false, gems };
 });
 
@@ -823,8 +835,8 @@ exports.respondRequest = onCall(async (req) => {
   const chatId = await befriend(from, uid);
   await ref.update({ status: "accepted", respondedAt: FieldValue.serverTimestamp(), chatId });
   const me = await db.doc(`users/${uid}`).get();
-  await notify(from, "Anfrage angenommen 🎉", `${me.get("name")} hat deine Anfrage angenommen. Sagt Hallo!`,
-    { type: "accepted", chatId });
+  await notify(from, "Anfrage angenommen 🎉", "{name} hat deine Anfrage angenommen. Sagt Hallo!",
+    { type: "accepted", chatId }, { name: me.get("name") });
   return { chatId };
 });
 

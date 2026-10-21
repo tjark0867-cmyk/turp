@@ -44,6 +44,8 @@ data class Account(
     val plus: Boolean = false,
     val fcmToken: String = "",
     val plusUntil: Timestamp? = null,
+    /** Sprache für Push-Benachrichtigungen */
+    val lang: String = "",
 ) {
     /** kumi+ gerade aktiv (auch wenn der Tagesjob ein abgelaufenes Abo noch nicht beendet hat) */
     val plusActive: Boolean
@@ -183,6 +185,7 @@ fun DocumentSnapshot.toAccount() = Account(
     plus = b("plus"),
     fcmToken = s("fcmToken"),
     plusUntil = ts("plusUntil"),
+    lang = s("lang"),
 )
 
 fun DocumentSnapshot.toSocials() = Socials(

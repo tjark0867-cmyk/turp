@@ -284,7 +284,7 @@ private fun ChatRow(chat: Chat, me: String, onClick: () -> Unit) {
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                if (chat.closed) t("Chat geschlossen") else chat.lastMessage,
+                if (chat.closed) t("Chat geschlossen") else previewText(chat.lastMessage),
                 color = if (unread) TextHigh else TextLow,
                 fontSize = 14.sp,
                 fontWeight = if (unread) FontWeight.Bold else FontWeight.Normal,
@@ -904,4 +904,12 @@ private fun BubbleText(text: String, time: String, color: Color, timeColor: Colo
         Spacer(Modifier.width(8.dp))
         Text(time, color = timeColor, fontSize = 11.sp, modifier = Modifier.padding(bottom = 1.dp))
     }
+}
+
+/** Vorschau in der Chat-Liste: Platzhalter vom Server („📷 Foto“ …) übersetzen, echte Nachrichten nicht */
+private fun previewText(raw: String): String = when (raw) {
+    "📷 Foto" -> t("📷 Foto")
+    "📷 Foto (blockiert)" -> t("📷 Foto (blockiert)")
+    "🎤 Sprachnachricht" -> t("🎤 Sprachnachricht")
+    else -> raw
 }

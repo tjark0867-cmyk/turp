@@ -71,7 +71,7 @@ object I18n {
     }
 
     fun set(context: Context, code: String) {
-        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putString(KEY, code).apply()
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putString(KEY, code).commit()
         lang = code
         chosen = true
     }
