@@ -250,12 +250,12 @@ private fun FriendBubble(chat: Chat, me: String, onClick: () -> Unit) {
     val online = rememberIsOnline(chat.otherUid(me))
     Column(
         Modifier
-            .width(64.dp)
+            .width(72.dp)
             .clip(RoundedCornerShape(12.dp))
             .clickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Avatar(other.photo, other.name, other.color, 56.dp, online = online)
+        Avatar(other.photo, other.name, other.color, 64.dp, online = online)
         Spacer(Modifier.height(4.dp))
         Text(
             other.name,
