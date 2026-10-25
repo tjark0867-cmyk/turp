@@ -119,7 +119,10 @@ import app.turp.ui.components.parseColor
 import app.turp.ui.components.toast
 import app.turp.ui.theme.Coral
 import app.turp.ui.theme.Ink
-import app.turp.ui.components.GemPriceTag
+import app.turp.ui.theme.Display
+import app.turp.ui.theme.TealDark
+import app.turp.ui.theme.PaperInk
+import app.turp.ui.components.paperPress
 import app.turp.ui.components.CardboardDiscButton
 import app.turp.ui.components.PaperImageButton
 import app.turp.ui.theme.Look
@@ -603,7 +606,7 @@ private fun ProfileCard(
         ProfileStory(
             profile = profile,
             interactive = interactive,
-            bottomSpace = if (interactive) (if (Look.cardboard) 108.dp else 72.dp) else 16.dp,
+            bottomSpace = if (interactive) (if (Look.cardboard) 80.dp else 72.dp) else 16.dp,
             highlight = shared,
             modifier = Modifier.fillMaxSize(),
             header = {
@@ -673,27 +676,54 @@ private fun ProfileCard(
         }
 
         if (interactive && Look.cardboard) {
-            // Pappe: zwei runde Pappscheiben – X (weiter) und größer der Haken (Anfrage) mit Preis-Schildchen
+            // Pappe: gleiche Anordnung wie sonst – „Anfrage senden“ als Pappschild, daneben das X als Pappscheibe
             Row(
                 Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 14.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(34.dp)
+                    .align(Alignment.BottomStart)
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                CardboardDiscButton(onClick = onSkip, label = t("Weiter"), size = 68.dp) {
-                    Image(painterResource(R.drawable.swipe_no), null, Modifier.size(38.dp))
-                }
-                Box {
-                    CardboardDiscButton(onClick = onLike, label = t("Anfrage senden"), size = 84.dp) {
-                        Image(painterResource(R.drawable.swipe_yes), null, Modifier.size(50.dp).offset(y = 2.dp))
-                    }
-                    GemPriceTag(
-                        cost = requestCost.toLong(),
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .offset(x = 22.dp, y = (-4).dp)
+                Box(
+                    Modifier
+                        .weight(1f)
+                        .height(56.dp)
+                        .paperPress(t("Anfrage senden"), onLike),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.tag_white),
+                        contentDescription = null,
+                        contentScale = ContentScale.FillBounds,
+                        modifier = Modifier.matchParentSize()
                     )
+                    Row(
+                        Modifier.padding(start = 18.dp, end = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.AutoMirrored.Rounded.Send,
+                            contentDescription = null,
+                            tint = TealDark,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(Modifier.width(12.dp))
+                        Text(
+                            t("Anfrage senden"),
+                            color = PaperInk,
+                            fontFamily = Display,
+                            fontSize = 18.sp,
+                            maxLines = 1,
+                            modifier = Modifier.weight(1f)
+                        )
+                        GemIcon(16.dp)
+                        Spacer(Modifier.width(4.dp))
+                        Text("${requestCost}", color = PaperInk, fontFamily = Display, fontSize = 17.sp)
+                    }
+                }
+                Spacer(Modifier.width(10.dp))
+                CardboardDiscButton(onClick = onSkip, label = t("Weiter"), size = 58.dp) {
+                    Image(painterResource(R.drawable.swipe_no), null, Modifier.size(30.dp))
                 }
             }
         } else if (interactive) {
