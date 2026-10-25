@@ -28,13 +28,6 @@
   "url": "https://commons.wikimedia.org/wiki/File:Pilot_Urban_MR_Retro_Pop_M_Fountain_Pen_(no_clip)_2.jpg"
  },
  {
-  "value": "🍳 Kochen",
-  "title": "File:Griswold cast iron skillet.jpg",
-  "artist": "NMorales (WMF)",
-  "license": "CC BY-SA 4.0",
-  "url": "https://commons.wikimedia.org/wiki/File:Griswold_cast_iron_skillet.jpg"
- },
- {
   "value": "🐶 Tiere",
   "title": "File:Cream-colored long-hair pet Syrian hamster with watermelon 02.jpg",
   "artist": "Bluerasberry",
@@ -61,13 +54,6 @@
   "artist": "Amada44",
   "license": "CC BY-SA 3.0",
   "url": "https://commons.wikimedia.org/wiki/File:Olympus_CH2_microscope_3.jpg"
- },
- {
-  "value": "🌸 Anime",
-  "title": "File:Cherry Blossom in El Retiro Park, Madrid, Spain.jpg",
-  "artist": "Satdeep Gill",
-  "license": "CC BY-SA 4.0",
-  "url": "https://commons.wikimedia.org/wiki/File:Cherry_Blossom_in_El_Retiro_Park,_Madrid,_Spain.jpg"
  },
  {
   "value": "🎲 Brettspiele",
@@ -308,20 +294,6 @@
   "url": "https://commons.wikimedia.org/wiki/File:Campus_Martin_Running_Shoes.jpg"
  },
  {
-  "value": "⛷️ Skifahren",
-  "title": "File:Skis crosscarver funcarver.jpg",
-  "artist": "Chianti",
-  "license": "CC BY-SA 3.0",
-  "url": "https://commons.wikimedia.org/wiki/File:Skis_crosscarver_funcarver.jpg"
- },
- {
-  "value": "🏄 Surfen",
-  "title": "File:Surf board leash.jpg",
-  "artist": "Bengt Nyman",
-  "license": "CC BY 2.0",
-  "url": "https://commons.wikimedia.org/wiki/File:Surf_board_leash.jpg"
- },
- {
   "value": "🤸 Turnen",
   "title": "File:Gymnastic rings 20190613.jpg",
   "artist": "Santeri Viinamäki",
@@ -357,13 +329,6 @@
   "url": "https://commons.wikimedia.org/wiki/File:Black_Venetian_mask_(4924949067).jpg"
  },
  {
-  "value": "🧶 Häkeln & Stricken",
-  "title": "File:Red thread (yarn).jpg",
-  "artist": "多多123",
-  "license": "CC BY 4.0",
-  "url": "https://commons.wikimedia.org/wiki/File:Red_thread_(yarn).jpg"
- },
- {
   "value": "🪡 Nähen",
   "title": "File:Vesta sewing machine IMGP0718.jpg",
   "artist": "Nikodem Nijaki",
@@ -385,13 +350,6 @@
   "url": "https://commons.wikimedia.org/wiki/File:Various_Used_Wooden_Paintbrushes_-_41511977320.jpg"
  },
  {
-  "value": "🏺 Töpfern",
-  "title": "File:Hittite pottery from Alaca Höyük.jpg",
-  "artist": "Bernard Gagnon",
-  "license": "CC BY-SA 3.0",
-  "url": "https://commons.wikimedia.org/wiki/File:Hittite_pottery_from_Alaca_H%C3%B6y%C3%BCk.jpg"
- },
- {
   "value": "🎩 Zaubertricks",
   "title": "File:Collapsible top hat IMGP9692.jpg",
   "artist": "Nikodem Nijaki",
@@ -411,13 +369,6 @@
   "artist": "Михаило Јовановић",
   "license": "CC BY-SA 3.0",
   "url": "https://commons.wikimedia.org/wiki/File:HALINA_binoculars_7x50_10.jpg"
- },
- {
-  "value": "🥢 K-Dramas",
-  "title": "File:Chinese Plate with Chopsticks (b).jpg",
-  "artist": "Michael Johnson - http://www.thebusybrain.com",
-  "license": "CC BY 2.0",
-  "url": "https://commons.wikimedia.org/wiki/File:Chinese_Plate_with_Chopsticks_(b).jpg"
  },
  {
   "value": "👽 Sci-Fi",
@@ -677,5 +628,75 @@
   "artist": "CriMen1",
   "license": "CC BY-SA 4.0",
   "url": "https://commons.wikimedia.org/wiki/File:Architectural_model_of_the_Castro_do_Zambujal,_Portugal.png"
+ },
+ {
+  "value": "🏝️ Animal Crossing",
+  "title": "Green Leaf Isolated White Background",
+  "artist": "",
+  "license": "CC0",
+  "url": "https://www.rawpixel.com/image/5915718/image-background-white-public-domain"
+ },
+ {
+  "value": "🌸 Anime",
+  "title": "Cherry Blossom Branch",
+  "artist": "cahadikin",
+  "license": "CC BY 2.0",
+  "url": "https://www.flickr.com/photos/58869751@N08/8600264407"
+ },
+ {
+  "value": "🧝 Cosplay",
+  "title": "Colorful wigs",
+  "artist": "",
+  "license": "CC0",
+  "url": "https://www.rawpixel.com/image/6029747/colorful-wigs-free-public-domain-cc0-photo"
+ },
+ {
+  "value": "🎉 Feiern",
+  "title": "green mum in pink party hat",
+  "artist": "ProFlowers.com",
+  "license": "CC BY 2.0",
+  "url": "https://www.flickr.com/photos/127365614@N08/19759205468"
+ },
+ {
+  "value": "🧶 Häkeln & Stricken",
+  "title": "My first amigurumi: a snail from Happy Berry Crochet’s pattern",
+  "artist": "dumbledad",
+  "license": "CC BY 2.0",
+  "url": "https://www.flickr.com/photos/27141279@N00/8650428813"
+ },
+ {
+  "value": "🥢 K-Dramas",
+  "title": "떡볶이 Tteokbokki - Hello Cook AUD7",
+  "artist": "avlxyz",
+  "license": "CC BY-SA 2.0",
+  "url": "https://www.flickr.com/photos/10559879@N00/3242611133"
+ },
+ {
+  "value": "🍳 Kochen",
+  "title": "Flower omelette",
+  "artist": "George M. Groutas",
+  "license": "CC BY 2.0",
+  "url": "https://www.flickr.com/photos/22083482@N03/5675244406"
+ },
+ {
+  "value": "⛷️ Skifahren",
+  "title": "trying to sell my ski boots",
+  "artist": "Cangul",
+  "license": "CC BY 2.0",
+  "url": "https://www.flickr.com/photos/12802745@N00/4318607401"
+ },
+ {
+  "value": "🏄 Surfen",
+  "title": "Mandala Quad Surfboard",
+  "artist": "surfcrs",
+  "license": "CC BY 2.0",
+  "url": "https://www.flickr.com/photos/31487723@N00/3976353024"
+ },
+ {
+  "value": "🏺 Töpfern",
+  "title": "Potter's Hands",
+  "artist": "Walt Stoneburner",
+  "license": "CC BY 2.0",
+  "url": "https://www.flickr.com/photos/8404611@N06/5745387762"
  }
 ]
