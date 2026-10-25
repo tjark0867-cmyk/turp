@@ -1,5 +1,7 @@
 {
  "ar": {
+  "Neuer Brief ✉️": "رسالة جديدة ✉️",
+  "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.": "كتب لك {name} رسالة. اقرأها وقرّر إن كنتما ستصبحان صديقين.",
   "Ihr seid jetzt Freunde 🎉": "أصبحتما صديقين 🎉",
   "{name} hat deine Anfrage erwidert. Sagt Hallo!": "{name} أضافك أيضًا. قل مرحبًا!",
   "Neue Freundschaftsanfrage 👋": "طلب صداقة جديد 👋",
@@ -13,6 +15,8 @@
   "🎤 Sprachnachricht": "🎤 رسالة صوتية"
  },
  "en": {
+  "Neuer Brief ✉️": "New letter ✉️",
+  "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.": "{name} wrote you a letter. Read it and decide if you want to be friends.",
   "Ihr seid jetzt Freunde 🎉": "You're friends now 🎉",
   "{name} hat deine Anfrage erwidert. Sagt Hallo!": "{name} added you back. Say hi!",
   "Neue Freundschaftsanfrage 👋": "New friend request 👋",
@@ -26,6 +30,8 @@
   "🎤 Sprachnachricht": "🎤 Voice message"
  },
  "es": {
+  "Neuer Brief ✉️": "Nueva carta ✉️",
+  "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.": "{name} te ha escrito una carta. Léela y decide si queréis ser amigos.",
   "Ihr seid jetzt Freunde 🎉": "Ya sois amigos 🎉",
   "{name} hat deine Anfrage erwidert. Sagt Hallo!": "{name} aceptó tu amistad. ¡Saluda!",
   "Neue Freundschaftsanfrage 👋": "Nueva solicitud de amistad 👋",
@@ -39,6 +45,8 @@
   "🎤 Sprachnachricht": "🎤 Mensaje de voz"
  },
  "fr": {
+  "Neuer Brief ✉️": "Nouvelle lettre ✉️",
+  "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.": "{name} t'a écrit une lettre. Lis-la et décide si vous devenez amis.",
   "Ihr seid jetzt Freunde 🎉": "Vous êtes amis 🎉",
   "{name} hat deine Anfrage erwidert. Sagt Hallo!": "{name} t'a ajouté aussi. Dis bonjour !",
   "Neue Freundschaftsanfrage 👋": "Nouvelle demande d'ami 👋",
@@ -52,6 +60,8 @@
   "🎤 Sprachnachricht": "🎤 Message vocal"
  },
  "hi": {
+  "Neuer Brief ✉️": "नई चिट्ठी ✉️",
+  "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.": "{name} ने तुम्हें चिट्ठी लिखी है। पढ़ो और तय करो कि दोस्त बनना है या नहीं।",
   "Ihr seid jetzt Freunde 🎉": "अब तुम दोस्त हो 🎉",
   "{name} hat deine Anfrage erwidert. Sagt Hallo!": "{name} ने भी तुम्हें जोड़ लिया। हाय बोलो!",
   "Neue Freundschaftsanfrage 👋": "नई फ्रेंड रिक्वेस्ट 👋",
@@ -65,6 +75,8 @@
   "🎤 Sprachnachricht": "🎤 वॉइस मैसेज"
  },
  "id": {
+  "Neuer Brief ✉️": "Surat baru ✉️",
+  "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.": "{name} menulis surat untukmu. Baca dan putuskan apakah kalian berteman.",
   "Ihr seid jetzt Freunde 🎉": "Kalian sekarang berteman 🎉",
   "{name} hat deine Anfrage erwidert. Sagt Hallo!": "{name} juga menambahkanmu. Sapa dia!",
   "Neue Freundschaftsanfrage 👋": "Permintaan pertemanan baru 👋",
@@ -78,6 +90,8 @@
   "🎤 Sprachnachricht": "🎤 Pesan suara"
  },
  "it": {
+  "Neuer Brief ✉️": "Nuova lettera ✉️",
+  "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.": "{name} ti ha scritto una lettera. Leggila e decidi se diventare amici.",
   "Ihr seid jetzt Freunde 🎉": "Ora siete amici 🎉",
   "{name} hat deine Anfrage erwidert. Sagt Hallo!": "{name} ha ricambiato la tua richiesta. Salutalo!",
   "Neue Freundschaftsanfrage 👋": "Nuova richiesta di amicizia 👋",
@@ -91,6 +105,8 @@
   "🎤 Sprachnachricht": "🎤 Messaggio vocale"
  },
  "ja": {
+  "Neuer Brief ✉️": "新しい手紙 ✉️",
+  "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.": "{name} から手紙が届きました。読んで友達になるか決めよう。",
   "Ihr seid jetzt Freunde 🎉": "友達になったよ 🎉",
   "{name} hat deine Anfrage erwidert. Sagt Hallo!": "{name} もあなたを追加しました。あいさつしよう！",
   "Neue Freundschaftsanfrage 👋": "新しい友達リクエスト 👋",
@@ -104,6 +120,8 @@
   "🎤 Sprachnachricht": "🎤 ボイスメッセージ"
  },
  "ko": {
+  "Neuer Brief ✉️": "새 편지 ✉️",
+  "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.": "{name}님이 편지를 보냈어요. 읽고 친구가 될지 정해 봐.",
   "Ihr seid jetzt Freunde 🎉": "이제 친구예요 🎉",
   "{name} hat deine Anfrage erwidert. Sagt Hallo!": "{name}님도 너를 추가했어요. 인사해 봐!",
   "Neue Freundschaftsanfrage 👋": "새 친구 요청 👋",
@@ -117,6 +135,8 @@
   "🎤 Sprachnachricht": "🎤 음성 메시지"
  },
  "nl": {
+  "Neuer Brief ✉️": "Nieuwe brief ✉️",
+  "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.": "{name} heeft je een brief geschreven. Lees hem en beslis of jullie vrienden worden.",
   "Ihr seid jetzt Freunde 🎉": "Jullie zijn nu vrienden 🎉",
   "{name} hat deine Anfrage erwidert. Sagt Hallo!": "{name} heeft jou ook toegevoegd. Zeg hoi!",
   "Neue Freundschaftsanfrage 👋": "Nieuw vriendschapsverzoek 👋",
@@ -130,6 +150,8 @@
   "🎤 Sprachnachricht": "🎤 Spraakbericht"
  },
  "pl": {
+  "Neuer Brief ✉️": "Nowy list ✉️",
+  "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.": "{name} napisał(a) do ciebie list. Przeczytaj go i zdecyduj, czy chcecie zostać znajomymi.",
   "Ihr seid jetzt Freunde 🎉": "Jesteście znajomymi 🎉",
   "{name} hat deine Anfrage erwidert. Sagt Hallo!": "{name} też cię dodał(a). Przywitaj się!",
   "Neue Freundschaftsanfrage 👋": "Nowe zaproszenie do znajomych 👋",
@@ -143,6 +165,8 @@
   "🎤 Sprachnachricht": "🎤 Wiadomość głosowa"
  },
  "pt": {
+  "Neuer Brief ✉️": "Nova carta ✉️",
+  "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.": "{name} te escreveu uma carta. Leia e decida se querem ser amigos.",
   "Ihr seid jetzt Freunde 🎉": "Vocês agora são amigos 🎉",
   "{name} hat deine Anfrage erwidert. Sagt Hallo!": "{name} também te adicionou. Diga oi!",
   "Neue Freundschaftsanfrage 👋": "Novo pedido de amizade 👋",
@@ -156,6 +180,8 @@
   "🎤 Sprachnachricht": "🎤 Mensagem de voz"
  },
  "ru": {
+  "Neuer Brief ✉️": "Новое письмо ✉️",
+  "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.": "{name} написал(а) тебе письмо. Прочитай и реши, станете ли вы друзьями.",
   "Ihr seid jetzt Freunde 🎉": "Теперь вы друзья 🎉",
   "{name} hat deine Anfrage erwidert. Sagt Hallo!": "{name} тоже добавил(а) тебя. Поздоровайся!",
   "Neue Freundschaftsanfrage 👋": "Новая заявка в друзья 👋",
@@ -169,6 +195,8 @@
   "🎤 Sprachnachricht": "🎤 Голосовое сообщение"
  },
  "tr": {
+  "Neuer Brief ✉️": "Yeni mektup ✉️",
+  "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.": "{name} sana bir mektup yazdı. Oku ve arkadaş olup olmayacağına karar ver.",
   "Ihr seid jetzt Freunde 🎉": "Artık arkadaşsınız 🎉",
   "{name} hat deine Anfrage erwidert. Sagt Hallo!": "{name} de seni ekledi. Merhaba de!",
   "Neue Freundschaftsanfrage 👋": "Yeni arkadaşlık isteği 👋",
@@ -182,6 +210,8 @@
   "🎤 Sprachnachricht": "🎤 Sesli mesaj"
  },
  "uk": {
+  "Neuer Brief ✉️": "Новий лист ✉️",
+  "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.": "{name} написав(ла) тобі лист. Прочитай і виріши, чи станете ви друзями.",
   "Ihr seid jetzt Freunde 🎉": "Тепер ви друзі 🎉",
   "{name} hat deine Anfrage erwidert. Sagt Hallo!": "{name} теж додав(ла) тебе. Привітайся!",
   "Neue Freundschaftsanfrage 👋": "Новий запит у друзі 👋",
@@ -195,6 +225,8 @@
   "🎤 Sprachnachricht": "🎤 Голосове повідомлення"
  },
  "zh": {
+  "Neuer Brief ✉️": "新信件 ✉️",
+  "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.": "{name} 给你写了一封信。读一读，决定要不要成为好友。",
   "Ihr seid jetzt Freunde 🎉": "你们现在是好友了 🎉",
   "{name} hat deine Anfrage erwidert. Sagt Hallo!": "{name} 也加了你。打个招呼吧！",
   "Neue Freundschaftsanfrage 👋": "新的好友请求 👋",

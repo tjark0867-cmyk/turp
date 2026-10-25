@@ -1,5 +1,14 @@
 package app.turp.ui.screens
 
+import app.turp.ui.theme.Display
+import app.turp.ui.theme.Coral
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.RepeatMode
 import app.turp.data.t
 
 import androidx.compose.foundation.BorderStroke
@@ -92,6 +101,9 @@ import java.time.ZonedDateTime
 
 private val Berlin: ZoneId = ZoneId.of("Europe/Berlin")
 
+/** 5 Briefe kosten so viele Gems – muss zu buyLetters in functions/index.js passen */
+private const val LETTER_PACK_COST = 500L
+
 /** Gems pro Tag der Serie – muss zu checkIn in functions/index.js passen (10 + 2 pro Tag, höchstens +10; kumi+ doppelt) */
 private fun dailyReward(day: Long, plus: Boolean = false): Long = (10 + minOf(day - 1, 5) * 2) * (if (plus) 2 else 1)
 
@@ -101,8 +113,13 @@ class ShopViewModel : BaseViewModel() {
         private set
 
     fun claimDaily() = launchSafe {
-        val (reward, streak) = ProfileRepo.checkIn()
-        toast(t("+{0} 💎 · {1} {2} Serie 🔥", reward, streak, if (streak == 1L) t("Tag") else t("Tage")))
+        val (reward, streak, letters) = ProfileRepo.checkIn()
+        toast(t("+{0} 💎 · {1} {2} Serie 🔥", reward, streak, if (streak == 1L) t("Tag") else t("Tage")) + if (letters > 0) "  " + t("+{0} Brief ✉️", letters) else "")
+    }
+
+    fun buyLetters() = launchSafe {
+        ProfileRepo.buyLetters()
+        toast(t("+5 Briefe ✉️ – viel Spaß beim Schreiben!"))
     }
 
     fun buy(context: Context, productId: String) {
@@ -225,6 +242,27 @@ fun ShopScreen(session: SessionState.Active, onBack: () -> Unit, vm: ShopViewMod
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            // Was du gerade hast
+            Inventory(gems = account.gems, letters = account.letters)
+
+            // Tägliche Belohnung als Wochen-Kalender (Tag 3: Brief)
+            DailyRewards(
+                streak = account.streak,
+                lastCheckIn = account.lastCheckIn,
+                busy = vm.busy,
+                plus = account.plusActive,
+                onClaim = { vm.claimDaily() }
+            )
+
+            SectionHeading(t("Items"), Modifier.padding(top = 6.dp))
+            LetterOffer(
+                letters = account.letters,
+                gems = account.gems,
+                busy = vm.busy,
+                onBuy = { vm.buyLetters() }
+            )
+
+            SectionHeading("kumi+", Modifier.padding(top = 6.dp))
             PlusBanner()
             Surface(shape = RoundedCornerShape(20.dp), color = InkElevated) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -331,20 +369,6 @@ fun ShopScreen(session: SessionState.Active, onBack: () -> Unit, vm: ShopViewMod
                 }
             }
 
-            SectionHeading(t("Tägliche Belohnung"), Modifier.padding(top = 6.dp))
-            Text(
-                t("Hol dir jeden Tag gratis Gems – je länger deine Serie, desto mehr.") +
-                    if (account.plusActive) " " + t("Mit kumi+ doppelt!") else "",
-                color = TextLow,
-                fontSize = 13.sp
-            )
-            DailyRewards(
-                streak = account.streak,
-                lastCheckIn = account.lastCheckIn,
-                busy = vm.busy,
-                plus = account.plusActive,
-                onClaim = { vm.claimDaily() }
-            )
             Spacer(Modifier.height(24.dp))
         }
     }
@@ -430,7 +454,96 @@ private fun GemPackTile(
     }
 }
 
-/** Tage der Serie mit ihren Belohnungen, darunter Abholen oder Countdown bis Mitternacht */
+/** Gems + Briefe auf einen Blick */
+@Composable
+private fun Inventory(gems: Long, letters: Long) {
+    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        InventoryChip(Modifier.weight(1f), "$gems", t("Gems")) { GemIcon(30.dp, spin = true) }
+        InventoryChip(Modifier.weight(1f), "$letters", t("Briefe")) {
+            Image(painterResource(R.drawable.item_letter), null, Modifier.size(38.dp))
+        }
+    }
+}
+
+@Composable
+private fun InventoryChip(modifier: Modifier, value: String, label: String, icon: @Composable () -> Unit) {
+    Surface(shape = RoundedCornerShape(18.dp), color = InkElevated, modifier = modifier) {
+        Row(Modifier.padding(horizontal = 14.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+            Box(Modifier.size(40.dp), contentAlignment = Alignment.Center) { icon() }
+            Spacer(Modifier.width(10.dp))
+            Column {
+                Text(value, color = TextHigh, fontSize = 20.sp, fontWeight = FontWeight.ExtraBold, fontFamily = Display)
+                Text(label, color = TextLow, fontSize = 12.sp)
+            }
+        }
+    }
+}
+
+/** Brief-Paket: 5 Briefe für 500 Gems */
+@Composable
+private fun LetterOffer(letters: Long, gems: Long, busy: Boolean, onBuy: () -> Unit) {
+    val canBuy = gems >= LETTER_PACK_COST
+    Surface(shape = RoundedCornerShape(22.dp), color = InkElevated) {
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .background(Brush.horizontalGradient(listOf(Coral.copy(alpha = 0.16f), Color.Transparent)))
+        ) {
+            Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                // kleiner Stapel Briefe
+                Box(Modifier.size(width = 96.dp, height = 84.dp)) {
+                    Image(painterResource(R.drawable.item_letter), null, Modifier.size(70.dp).align(Alignment.TopStart).graphicsLayer { rotationZ = -14f })
+                    Image(painterResource(R.drawable.item_letter), null, Modifier.size(70.dp).align(Alignment.Center).graphicsLayer { rotationZ = 4f })
+                    Image(painterResource(R.drawable.item_letter), null, Modifier.size(70.dp).align(Alignment.BottomEnd).graphicsLayer { rotationZ = 16f })
+                    Text(
+                        "×5",
+                        fontFamily = Display,
+                        color = Color.White,
+                        fontSize = 15.sp,
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .background(Coral, CircleShape)
+                            .padding(horizontal = 8.dp, vertical = 1.dp)
+                    )
+                }
+                Spacer(Modifier.width(12.dp))
+                Column(Modifier.weight(1f)) {
+                    Text(t("Briefe ✉️"), color = TextHigh, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        t("Schreib jemandem, bevor er dich angenommen hat. Er bekommt deinen Chat und entscheidet dort."),
+                        color = TextLow,
+                        fontSize = 12.sp,
+                        lineHeight = 16.sp
+                    )
+                    Spacer(Modifier.height(10.dp))
+                    CandyButton(
+                        text = t("5 Briefe · {0} 💎", LETTER_PACK_COST),
+                        onClick = onBuy,
+                        enabled = canBuy,
+                        loading = busy,
+                        color = Coral,
+                        height = 42.dp,
+                        fontSize = 14.sp
+                    )
+                    if (!canBuy) {
+                        Text(
+                            t("Dir fehlen noch {0} 💎", LETTER_PACK_COST - gems),
+                            color = TextLow,
+                            fontSize = 11.sp,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Wochen-Kalender der täglichen Belohnung: 7 Tage, Tag 3 bringt zusätzlich einen Brief.
+ * Muss zu checkIn in functions/index.js passen (CHECKIN_CYCLE = 7, LETTER_DAY = 3).
+ */
 @Composable
 private fun DailyRewards(streak: Long, lastCheckIn: String, busy: Boolean, plus: Boolean, onClaim: () -> Unit) {
     val today = todayBerlin()
@@ -440,69 +553,148 @@ private fun DailyRewards(streak: Long, lastCheckIn: String, busy: Boolean, plus:
     val current = if (claimedToday || lastCheckIn == yesterday) streak else 0L
     val nextDay = current + 1
     val focus = if (claimedToday) current else nextDay
-    val first = maxOf(1L, focus - 1)
+    val weekStart = ((focus - 1) / 7) * 7 + 1
+    val pulse by rememberInfiniteTransition(label = "daily").animateFloat(
+        initialValue = 1f,
+        targetValue = 1.06f,
+        animationSpec = infiniteRepeatable(tween(700), RepeatMode.Reverse),
+        label = "pulse"
+    )
 
-    Surface(shape = RoundedCornerShape(20.dp), color = InkElevated) {
-        Column(Modifier.padding(14.dp)) {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                (first until first + 4).forEach { day ->
-                    val done = day <= current
-                    val isFocus = day == focus
-                    val shape = RoundedCornerShape(16.dp)
-                    Column(
-                        Modifier
-                            .weight(1f)
-                            .clip(shape)
-                            .background(if (isFocus) Teal.copy(alpha = 0.12f) else InkHigh)
-                            .border(if (isFocus) 2.dp else 1.dp, if (isFocus) Teal else InkLine, shape)
-                            .padding(vertical = 10.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
+    Surface(shape = RoundedCornerShape(24.dp), color = InkElevated) {
+        Box(Modifier.background(Brush.verticalGradient(listOf(Teal.copy(alpha = 0.14f), Color.Transparent)))) {
+            Column(Modifier.padding(16.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) {
+                        Text(t("Tägliche Belohnung"), color = TextHigh, fontSize = 19.sp, fontWeight = FontWeight.ExtraBold)
                         Text(
-                            (if (done) "✓ " else "") + t("Tag {0}", day),
-                            color = if (done) Teal else TextHigh,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold
+                            t("Jeden Tag gratis Gems – an Tag 3 gibt's einen Brief dazu.") +
+                                if (plus) " " + t("Mit kumi+ doppelt!") else "",
+                            color = TextLow,
+                            fontSize = 12.sp
                         )
-                        Spacer(Modifier.height(6.dp))
-                        GemIcon(26.dp, spin = isFocus && !claimedToday)
-                        Spacer(Modifier.height(6.dp))
+                    }
+                    if (current > 0) {
                         Text(
-                            "${dailyReward(day, plus)}",
-                            color = if (done && !isFocus) TextLow else TextHigh,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold
+                            "🔥 $current",
+                            fontFamily = Display,
+                            color = Ink,
+                            fontSize = 17.sp,
+                            modifier = Modifier
+                                .background(Sun, RoundedCornerShape(12.dp))
+                                .padding(horizontal = 10.dp, vertical = 3.dp)
                         )
                     }
                 }
-            }
-            Spacer(Modifier.height(14.dp))
-            if (!claimedToday) {
-                CandyButton(
-                    text = t("Abholen · +{0} 💎", dailyReward(nextDay, plus)),
-                    onClick = onClaim,
-                    loading = busy,
-                    color = Teal,
-                    height = 48.dp,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            } else {
-                val left by produceState(0L) {
-                    while (true) {
-                        val now = ZonedDateTime.now(Berlin)
-                        val midnight = now.toLocalDate().plusDays(1).atStartOfDay(Berlin)
-                        value = Duration.between(now, midnight).seconds.coerceAtLeast(0)
-                        delay(1000)
+                Spacer(Modifier.height(14.dp))
+                val days = (weekStart until weekStart + 7).toList()
+                listOf(days.take(4), days.drop(4)).forEach { row ->
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(bottom = 8.dp)) {
+                        row.forEach { day ->
+                            DayTile(
+                                weekDay = (day - weekStart + 1).toInt(),
+                                gems = dailyReward(day, plus),
+                                done = day <= current,
+                                isFocus = day == focus,
+                                ready = day == focus && !claimedToday,
+                                scale = if (day == focus && !claimedToday) pulse else 1f,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                        if (row.size < 4) Spacer(Modifier.weight((4 - row.size).toFloat()))
                     }
                 }
-                Text(
-                    t("Nächste Belohnung in %02d:%02d:%02d ⏰").format(left / 3600, (left % 3600) / 60, left % 60),
-                    color = TextLow,
-                    fontSize = 13.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Spacer(Modifier.height(6.dp))
+                if (!claimedToday) {
+                    val letterToday = ((nextDay - 1) % 7) + 1 == 3L
+                    CandyButton(
+                        text = t("Abholen · +{0} 💎", dailyReward(nextDay, plus)) + if (letterToday) " + ✉️" else "",
+                        onClick = onClaim,
+                        loading = busy,
+                        color = Teal,
+                        height = 50.dp,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                } else {
+                    val left by produceState(0L) {
+                        while (true) {
+                            val now = ZonedDateTime.now(Berlin)
+                            val midnight = now.toLocalDate().plusDays(1).atStartOfDay(Berlin)
+                            value = Duration.between(now, midnight).seconds.coerceAtLeast(0)
+                            delay(1000)
+                        }
+                    }
+                    Text(
+                        t("Nächste Belohnung in %02d:%02d:%02d ⏰").format(left / 3600, (left % 3600) / 60, left % 60),
+                        color = TextLow,
+                        fontSize = 13.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
+        }
+    }
+}
+
+@Composable
+private fun DayTile(weekDay: Int, gems: Long, done: Boolean, isFocus: Boolean, ready: Boolean, scale: Float, modifier: Modifier) {
+    val letterDay = weekDay == 3
+    val shape = RoundedCornerShape(16.dp)
+    Box(
+        modifier
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
+            .clip(shape)
+            .background(
+                when {
+                    isFocus -> Teal.copy(alpha = 0.22f)
+                    letterDay -> Coral.copy(alpha = 0.14f)
+                    else -> InkHigh
+                }
+            )
+            .border(if (isFocus) 2.dp else 1.dp, if (isFocus) Teal else if (letterDay) Coral.copy(alpha = 0.6f) else InkLine, shape)
+            .padding(vertical = 8.dp)
+    ) {
+        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                t("Tag {0}", weekDay),
+                color = if (isFocus) TextHigh else TextLow,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(Modifier.height(4.dp))
+            Box(Modifier.height(34.dp), contentAlignment = Alignment.Center) {
+                if (letterDay) {
+                    Image(painterResource(R.drawable.item_letter), null, Modifier.size(36.dp))
+                } else {
+                    GemIcon(28.dp, spin = ready)
+                }
+            }
+            Spacer(Modifier.height(2.dp))
+            Text(
+                if (letterDay) "+$gems 💎" else "$gems",
+                color = if (done && !isFocus) TextLow else TextHigh,
+                fontSize = if (letterDay) 11.sp else 14.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1
+            )
+        }
+        if (done) {
+            // abgehakt: Stempel oben rechts
+            Text(
+                "✓",
+                color = Ink,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.ExtraBold,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(end = 4.dp)
+                    .background(Teal, CircleShape)
+                    .padding(horizontal = 5.dp)
+            )
         }
     }
 }

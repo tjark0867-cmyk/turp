@@ -281,3 +281,28 @@
 561|Joyeux anniversaire ! 🎂
 562|Tu as maintenant 18 ans et tu passes dans la communauté adulte de kumi.
 563|Mode carton
+564|✉️ Lettre envoyée à {0}
+565|Écrire une lettre
+566|Lettre à {0}
+567|Tu n'as pas de lettres. Prends-en 5 pour 500 💎 dans la boutique – ou une chaque semaine au jour 3 de la récompense quotidienne.
+568|{0} reçoit ton message tout de suite sous forme de chat et décide là si vous devenez amis.
+569|Écris quelque chose de gentil …
+570|Il te reste {0} ✉️
+571|Vers la boutique
+572|+{0} lettre ✉️
+573|+5 lettres ✉️ – amuse-toi bien à écrire !
+574|Objets
+575|Lettres
+576|Lettres ✉️
+577|Écris à quelqu'un avant qu'il t'ait accepté. Il reçoit ton chat et décide là.
+578|5 lettres · {0} 💎
+579|Il te manque encore {0} 💎
+580|Des gems gratuits chaque jour – au jour 3, une lettre en plus.
+581|Lettre – lire et décider
+582|Lettre envoyée · en attente
+583|Ta lettre est en route ✉️ Dès que {0} accepte, vous pourrez écrire.
+584|{0} t'a écrit une lettre. Vous voulez devenir amis ?
+585|Tu n'as plus de lettres – prends-en 5 pour 500 💎 dans la boutique !
+586|Pas assez de gems – {0} lettres coûtent {1} 💎.
+587|Nouvelle lettre ✉️
+588|{name} t'a écrit une lettre. Lis-la et décide si vous devenez amis.

@@ -206,7 +206,7 @@ fun FriendsScreen(
         ?.id
 
     // Neue Freunde: neueste Freundschaft zuerst
-    val friends = chats.filter { !it.closed }.sortedByDescending { it.createdAt ?: it.lastAt }
+    val friends = chats.filter { !it.closed && !it.pending }.sortedByDescending { it.createdAt ?: it.lastAt }
 
     LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 24.dp)) {
         item {
@@ -627,7 +627,7 @@ fun AllFriendsScreen(
 ) {
     val me = Fb.uid
     val chats by vm.chats.collectAsState()
-    val friends = chats.filter { !it.closed }.sortedBy { it.other(me).name.lowercase() }
+    val friends = chats.filter { !it.closed && !it.pending }.sortedBy { it.other(me).name.lowercase() }
     LaunchedEffect(friends.size) { vm.load(friends.map { it.otherUid(me) }) }
     var query by remember { mutableStateOf("") }
     val shown = if (query.isBlank()) friends else friends.filter { it.other(me).name.contains(query.trim(), ignoreCase = true) }

@@ -281,3 +281,28 @@
 561|Selamat ulang tahun! 🎂
 562|Sekarang kamu 18 tahun dan pindah ke komunitas dewasa kumi.
 563|Mode kardus
+564|✉️ Surat terkirim ke {0}
+565|Tulis surat
+566|Surat untuk {0}
+567|Kamu tidak punya surat. Ambil 5 seharga 500 💎 di toko – atau satu tiap minggu di hari ke-3 hadiah harian.
+568|{0} langsung menerima pesanmu sebagai chat dan memutuskan di sana apakah kalian berteman.
+569|Tulis sesuatu yang manis …
+570|Sisa {0} ✉️
+571|Ke toko
+572|+{0} surat ✉️
+573|+5 surat ✉️ – selamat menulis!
+574|Item
+575|Surat
+576|Surat ✉️
+577|Kirim pesan ke seseorang sebelum dia menerimamu. Dia menerima chatmu dan memutuskan di sana.
+578|5 surat · {0} 💎
+579|Kurang {0} 💎 lagi
+580|Gem gratis tiap hari – di hari ke-3 dapat surat juga.
+581|Surat – baca & putuskan
+582|Surat terkirim · menunggu
+583|Suratmu sedang dikirim ✉️ Begitu {0} menerima, kalian bisa ngobrol.
+584|{0} menulis surat untukmu. Mau berteman?
+585|Suratmu habis – ambil 5 seharga 500 💎 di toko!
+586|Gem tidak cukup – {0} surat seharga {1} 💎.
+587|Surat baru ✉️
+588|{name} menulis surat untukmu. Baca dan putuskan apakah kalian berteman.

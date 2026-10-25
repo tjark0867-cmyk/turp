@@ -139,6 +139,9 @@ import app.turp.ui.components.timeOfDay
 import app.turp.ui.components.toast
 import app.turp.ui.theme.Coral
 import app.turp.ui.theme.Ink
+import app.turp.R
+import androidx.compose.ui.res.painterResource
+import androidx.compose.foundation.Image
 import app.turp.ui.theme.PaperLight
 import app.turp.ui.theme.cardboard
 import app.turp.ui.theme.TornShape
@@ -170,7 +173,7 @@ fun ChatsScreen(
 ) {
     val me = session.uid
     val myProfile by remember(me) { ProfileRepo.profile(me) }.collectAsState()
-    val friends = chats.filter { !it.closed }
+    val friends = chats.filter { !it.closed && !it.pending }
 
     LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 16.dp)) {
         item {
@@ -289,6 +292,19 @@ private fun ChatRow(chat: Chat, me: String, onClick: () -> Unit) {
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+            if (chat.pending) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(painterResource(R.drawable.item_letter), null, Modifier.size(18.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        if (chat.letterFor(me)) t("Brief – lesen & entscheiden") else t("Brief gesendet · wartet"),
+                        color = if (chat.letterFor(me)) Coral else TextLow,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1
+                    )
+                }
+            }
             Text(
                 if (chat.closed) t("Chat geschlossen") else previewText(chat.lastMessage),
                 color = if (unread) TextHigh else TextLow,
@@ -381,6 +397,12 @@ class ChatViewModel(private val chatId: String) : BaseViewModel() {
     fun report(targetUid: String, reason: String, details: String, context: String) = launchSafe {
         SafetyRepo.report(targetUid, reason, details, context)
         toast(t("Danke! Unser Team schaut sich das an. 💛"))
+    }
+
+    /** Brief annehmen (= Freunde werden) oder ablehnen (Chat wird gelöscht) */
+    fun answerLetter(fromUid: String, accept: Boolean, onDeclined: () -> Unit) = launchSafe {
+        RequestRepo.respond("${fromUid}_${Fb.uid}", accept)
+        if (accept) toast(t("🎉 Ihr seid jetzt Freunde!")) else onDeclined()
     }
 
     fun block(targetUid: String, onDone: () -> Unit) = launchSafe {
@@ -591,7 +613,35 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
             }
         },
         bottomBar = {
-            if (current?.closed == true) {
+            if (current != null && current.letterFor(me)) {
+                // Brief bekommen: hier entscheiden
+                LetterDecisionBar(
+                    name = otherName,
+                    busy = vm.busy,
+                    onAccept = { vm.answerLetter(current.pendingFrom, true) {} },
+                    onDecline = { vm.answerLetter(current.pendingFrom, false) { onBack() } },
+                    modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars)
+                )
+            } else if (current?.pending == true) {
+                // eigener Brief: warten
+                Surface(color = InkElevated, modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .windowInsetsPadding(WindowInsets.navigationBars)
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(painterResource(R.drawable.item_letter), null, Modifier.size(40.dp))
+                        Spacer(Modifier.width(12.dp))
+                        Text(
+                            t("Dein Brief ist unterwegs ✉️ Sobald {0} annimmt, könnt ihr schreiben.", otherName),
+                            color = TextLow,
+                            fontSize = 14.sp
+                        )
+                    }
+                }
+            } else if (current?.closed == true) {
                 Surface(color = InkElevated, modifier = Modifier.fillMaxWidth()) {
                     Text(
                         t("Dieser Chat ist geschlossen."),
@@ -931,4 +981,43 @@ private fun previewText(raw: String): String = when (raw) {
     "📷 Foto (blockiert)" -> t("📷 Foto (blockiert)")
     "🎤 Sprachnachricht" -> t("🎤 Sprachnachricht")
     else -> raw
+}
+
+
+/** Unten im Brief-Chat: annehmen oder ablehnen */
+@Composable
+private fun LetterDecisionBar(name: String, busy: Boolean, onAccept: () -> Unit, onDecline: () -> Unit, modifier: Modifier = Modifier) {
+    Surface(color = InkElevated, modifier = Modifier.fillMaxWidth()) {
+        Column(modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Image(painterResource(R.drawable.item_letter), null, Modifier.size(44.dp))
+                Spacer(Modifier.width(10.dp))
+                Text(
+                    t("{0} hat dir einen Brief geschrieben. Wollt ihr Freunde werden?", name),
+                    color = TextHigh,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+            Spacer(Modifier.height(10.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                CandyButton(
+                    text = t("Ablehnen"),
+                    onClick = onDecline,
+                    enabled = !busy,
+                    color = InkHigh,
+                    height = 46.dp,
+                    modifier = Modifier.weight(1f)
+                )
+                CandyButton(
+                    text = t("Annehmen"),
+                    onClick = onAccept,
+                    loading = busy,
+                    color = Teal,
+                    height = 46.dp,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        }
+    }
 }

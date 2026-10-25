@@ -46,6 +46,8 @@ data class Account(
     val plusUntil: Timestamp? = null,
     /** Sprache für Push-Benachrichtigungen */
     val lang: String = "",
+    /** Briefe: jemandem schreiben, bevor er angenommen hat */
+    val letters: Long = 0,
 ) {
     /** kumi+ gerade aktiv (auch wenn der Tagesjob ein abgelaufenes Abo noch nicht beendet hat) */
     val plusActive: Boolean
@@ -73,6 +75,8 @@ data class FriendRequest(
     val toPhoto: String,
     val toColor: String,
     val createdAt: Timestamp?,
+    /** Anfrage als Brief (mit Chat und erster Nachricht) */
+    val letter: Boolean = false,
 )
 
 data class MemberInfo(val name: String, val photo: String, val color: String)
@@ -96,7 +100,13 @@ data class Chat(
     val readAt: Map<String, Timestamp>,
     val memberInfo: Map<String, MemberInfo>,
     val createdAt: Timestamp? = null,
+    /** Brief-Chat: noch nicht angenommen – [pendingFrom] hat geschrieben */
+    val pending: Boolean = false,
+    val pendingFrom: String = "",
 ) {
+    /** Ein offener Brief, den ich bekommen habe und noch annehmen/ablehnen muss */
+    fun letterFor(me: String): Boolean = pending && pendingFrom != me && pendingFrom.isNotEmpty()
+
     fun otherUid(me: String): String = members.firstOrNull { it != me } ?: ""
 
     fun other(me: String): MemberInfo =
@@ -186,6 +196,7 @@ fun DocumentSnapshot.toAccount() = Account(
     fcmToken = s("fcmToken"),
     plusUntil = ts("plusUntil"),
     lang = s("lang"),
+    letters = n("letters"),
 )
 
 fun DocumentSnapshot.toSocials() = Socials(
@@ -209,6 +220,7 @@ fun DocumentSnapshot.toRequest() = FriendRequest(
     toPhoto = s("toPhoto"),
     toColor = s("toColor").ifBlank { DEFAULT_COLOR },
     createdAt = ts("createdAt"),
+    letter = b("letter"),
 )
 
 fun DocumentSnapshot.toChat(): Chat {
@@ -237,6 +249,8 @@ fun DocumentSnapshot.toChat(): Chat {
         readAt = read,
         memberInfo = info,
         createdAt = ts("createdAt"),
+        pending = b("pending"),
+        pendingFrom = s("pendingFrom"),
     )
 }
 

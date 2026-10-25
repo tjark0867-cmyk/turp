@@ -281,3 +281,28 @@
 561|Gefeliciteerd! 🎂
 562|Je bent nu 18 en gaat over naar de volwassenencommunity van kumi.
 563|Kartonmodus
+564|✉️ Brief verstuurd naar {0}
+565|Brief schrijven
+566|Brief aan {0}
+567|Je hebt geen brieven. Haal er 5 voor 500 💎 in de shop – of elke week één op dag 3 van de dagelijkse beloning.
+568|{0} krijgt je bericht meteen als chat en beslist daar of jullie vrienden worden.
+569|Schrijf iets aardigs …
+570|Je hebt nog {0} ✉️
+571|Naar de shop
+572|+{0} brief ✉️
+573|+5 brieven ✉️ – veel schrijfplezier!
+574|Items
+575|Brieven
+576|Brieven ✉️
+577|Schrijf iemand voordat die je heeft geaccepteerd. Diegene krijgt je chat en beslist daar.
+578|5 brieven · {0} 💎
+579|Je mist nog {0} 💎
+580|Elke dag gratis gems – op dag 3 krijg je er een brief bij.
+581|Brief – lezen & beslissen
+582|Brief verstuurd · wacht
+583|Je brief is onderweg ✉️ Zodra {0} accepteert, kunnen jullie chatten.
+584|{0} heeft je een brief geschreven. Willen jullie vrienden worden?
+585|Je hebt geen brieven meer – haal er 5 voor 500 💎 in de shop!
+586|Niet genoeg gems – {0} brieven kosten {1} 💎.
+587|Nieuwe brief ✉️
+588|{name} heeft je een brief geschreven. Lees hem en beslis of jullie vrienden worden.

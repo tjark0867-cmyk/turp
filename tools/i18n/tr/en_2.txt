@@ -281,3 +281,28 @@
 561|Happy Birthday! 🎂
 562|You're 18 now and moving to the adult community of kumi.
 563|Cardboard mode
+564|✉️ Letter sent to {0}
+565|Write a letter
+566|Letter to {0}
+567|You have no letters. Get 5 for 500 💎 in the shop – or one every week on day 3 of the daily reward.
+568|{0} gets your message right away as a chat and decides there whether you become friends.
+569|Write something nice …
+570|You have {0} ✉️ left
+571|To the shop
+572|+{0} letter ✉️
+573|+5 letters ✉️ – have fun writing!
+574|Items
+575|Letters
+576|Letters ✉️
+577|Write to someone before they've accepted you. They get your chat and decide there.
+578|5 letters · {0} 💎
+579|You still need {0} 💎
+580|Free gems every day – on day 3 you get a letter too.
+581|Letter – read & decide
+582|Letter sent · waiting
+583|Your letter is on its way ✉️ As soon as {0} accepts, you can chat.
+584|{0} wrote you a letter. Do you want to be friends?
+585|You have no letters left – get 5 for 500 💎 in the shop!
+586|Not enough gems – {0} letters cost {1} 💎.
+587|New letter ✉️
+588|{name} wrote you a letter. Read it and decide if you want to be friends.

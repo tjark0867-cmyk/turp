@@ -209,8 +209,8 @@ class ProfileViewModel : BaseViewModel() {
     }
 
     fun checkIn() = launchSafe {
-        val (reward, streak) = ProfileRepo.checkIn()
-        toast(t("+{0} 💎 · {1} {2} Serie 🔥", reward, streak, if (streak == 1L) t("Tag") else t("Tage")))
+        val (reward, streak, letters) = ProfileRepo.checkIn()
+        toast(t("+{0} 💎 · {1} {2} Serie 🔥", reward, streak, if (streak == 1L) t("Tag") else t("Tage")) + if (letters > 0) "  " + t("+{0} Brief ✉️", letters) else "")
     }
 
     fun claimAdmin(onDone: () -> Unit) = launchSafe {

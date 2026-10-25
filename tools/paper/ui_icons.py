@@ -105,6 +105,22 @@ def flag(col):
             f'<g filter="url(#cut)">{painted(cloth, col, cx=C+16, cy=C-38)}</g>')
 
 
+def letter(col="#FCEADF"):
+    """Briefumschlag: Papier mit Falz-Linien in Filzstift, rotes Wachssiegel mit Herz."""
+    body = f'<rect x="{C-96}" y="{C-62}" width="192" height="128" rx="12" transform="rotate(-8 {C} {C})"/>'
+    g = f'<g transform="rotate(-8 {C} {C})">'
+    flap = f'<path d="M {C-92} {C-58} L {C} {C+14} L {C+92} {C-58} Z" transform="rotate(-8 {C} {C})"/>'
+    det = (g + marker(f"M {C-90} {C+60} L {C-34} {C+16}", 6) + marker(f"M {C+90} {C+60} L {C+34} {C+16}", 6) + '</g>' +
+           f'<g filter="url(#cut)">{painted(flap, "#F4C9BC", s=0.97, cx=C, cy=C-30)}</g>' +
+           g + marker(f"M {C-88} {C-55} L {C} {C+12} L {C+88} {C-55}", 6) + '</g>')
+    seal_shape = wobble_circle(C, C + 6, 30, 33, n=40, amp=2.6)
+    heart = (f'<path d="M {C} {C+22} C {C-22} {C+8}, {C-20} {C-10}, {C-8} {C-8} C {C-3} {C-7}, {C} {C-3}, {C} {C} '
+             f'C {C} {C-3}, {C+3} {C-7}, {C+8} {C-8} C {C+20} {C-10}, {C+22} {C+8}, {C} {C+22} Z" '
+             f'fill="#B8233F" opacity="0.85" filter="url(#cutSoft)"/>')
+    return (f'<g filter="url(#cut)">{painted(body, col)}</g>{det}'
+            f'<g filter="url(#cut)">{painted(seal_shape, "#E23A55", s=0.9, cx=C, cy=C + 6)}</g>{heart}')
+
+
 def disc(col):
     return f'<g filter="url(#cut)">{painted(wobble_circle(C, C - 2, 104, 21, n=80, amp=3.2), col, s=0.95)}</g>'
 
@@ -117,6 +133,7 @@ jobs = {
     "pap_filter": sliders(CREAM), "pap_filter_on": sliders(TEAL),
     "pap_flag": flag(CORAL),
     "disc_cream": disc(CREAM),
+    "item_letter": letter(),
 }
 
 with sync_playwright() as p:

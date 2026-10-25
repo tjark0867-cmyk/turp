@@ -281,3 +281,28 @@
 561|¡Feliz cumpleaños! 🎂
 562|Ya tienes 18 y pasas a la comunidad de adultos de kumi.
 563|Modo cartón
+564|✉️ Carta enviada a {0}
+565|Escribir una carta
+566|Carta para {0}
+567|No tienes cartas. Consigue 5 por 500 💎 en la tienda – o una cada semana el día 3 de la recompensa diaria.
+568|{0} recibe tu mensaje al instante como chat y decide allí si os hacéis amigos.
+569|Escribe algo bonito …
+570|Te quedan {0} ✉️
+571|Ir a la tienda
+572|+{0} carta ✉️
+573|+5 cartas ✉️ – ¡disfruta escribiendo!
+574|Objetos
+575|Cartas
+576|Cartas ✉️
+577|Escribe a alguien antes de que te acepte. Recibe tu chat y decide allí.
+578|5 cartas · {0} 💎
+579|Te faltan {0} 💎
+580|Gemas gratis cada día – el día 3 también te llevas una carta.
+581|Carta – leer y decidir
+582|Carta enviada · esperando
+583|Tu carta está en camino ✉️ En cuanto {0} acepte, podréis escribiros.
+584|{0} te ha escrito una carta. ¿Queréis ser amigos?
+585|No te quedan cartas – ¡consigue 5 por 500 💎 en la tienda!
+586|No tienes suficientes gemas – {0} cartas cuestan {1} 💎.
+587|Nueva carta ✉️
+588|{name} te ha escrito una carta. Léela y decide si queréis ser amigos.

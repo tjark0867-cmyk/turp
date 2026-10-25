@@ -54,6 +54,12 @@ const PLUS_REQUEST_COST = 5; // mit kumi+
 const CHECKIN_BASE = 10;
 const STREAK_BONUS = 2; // pro Tag Serie, höchstens 5 Tage
 const FRIEND_BONUS = 5;
+// Briefe: jemandem schreiben, bevor er die Anfrage angenommen hat
+const LETTER_PACK = 5;
+const LETTER_PACK_COST = 500;
+const LETTER_MAX_LEN = 500;
+const CHECKIN_CYCLE = 7;   // Wochen-Kalender der täglichen Belohnung
+const LETTER_DAY = 3;      // an Tag 3 jeder Woche gibt es einen Brief dazu
 const INVITE_BONUS_INVITER = 50;
 const INVITE_BONUS_NEW = 20;
 const SLOW_MODE_MS = 10 * 1000;
@@ -829,6 +835,12 @@ exports.respondRequest = onCall(async (req) => {
   }
   if (!accept) {
     await ref.update({ status: "declined", respondedAt: FieldValue.serverTimestamp() });
+    if (snap.get("letter") === true && snap.get("chatId")) {
+      const chatRef = db.doc(`chats/${snap.get("chatId")}`);
+      const chat = await chatRef.get();
+      // nur löschen, solange der Brief-Chat noch offen ist (nicht nach einer Freundschaft)
+      if (chat.exists && chat.get("pending") === true) await db.recursiveDelete(chatRef);
+    }
     return { ok: true };
   }
   const from = snap.get("from");
@@ -838,6 +850,114 @@ exports.respondRequest = onCall(async (req) => {
   await notify(from, "Anfrage angenommen 🎉", "{name} hat deine Anfrage angenommen. Sagt Hallo!",
     { type: "accepted", chatId }, { name: me.get("name") });
   return { chatId };
+});
+
+// ---- Briefe ----------------------------------------------------------------
+// Ein Brief ist eine Anfrage mit erster Nachricht: Die andere Person bekommt sofort
+// einen Chat und entscheidet dort, ob sie annimmt. Bis dahin kann niemand weiterschreiben.
+
+exports.sendLetter = onCall(async (req) => {
+  const uid = requireActive(req);
+  const toUid = str(req.data && req.data.toUid, 128);
+  const text = str(req.data && req.data.text, LETTER_MAX_LEN);
+  if (!isSafeId(toUid) || toUid === uid) throw new HttpsError("invalid-argument", "Ungültige Person.");
+  if (!text) throw new HttpsError("invalid-argument", "Die Nachricht ist leer.");
+  const group = req.auth.token.ageGroup;
+
+  const [me, other, blockedByMe, blockedMe, friend] = await Promise.all([
+    db.doc(`users/${uid}`).get(),
+    db.doc(`users/${toUid}`).get(),
+    db.doc(`users/${uid}/blocked/${toUid}`).get(),
+    db.doc(`users/${toUid}/blocked/${uid}`).get(),
+    db.doc(`users/${uid}/friends/${toUid}`).get(),
+  ]);
+  if (!me.exists || me.get("ageGroup") !== group) throw new HttpsError("failed-precondition", "Bitte starte die App neu.");
+  const unavailable = new HttpsError("not-found", "Dieses Profil ist gerade nicht verfügbar.");
+  if (!other.exists || other.get("ageGroup") !== group || other.get("active") !== true) throw unavailable;
+  if (other.get("bot") === true) throw unavailable;
+  if (blockedByMe.exists || blockedMe.exists) throw unavailable;
+  if (friend.exists) throw new HttpsError("already-exists", "Ihr seid schon befreundet.");
+
+  // Hat die andere Person mich schon angefragt? Dann direkt Freunde – der Brief kostet nichts.
+  const reverseRef = db.doc(`requests/${toUid}_${uid}`);
+  const reverse = await reverseRef.get();
+  if (reverse.exists && reverse.get("status") === "pending") {
+    const chatId = await befriend(toUid, uid);
+    await reverseRef.update({ status: "accepted", respondedAt: FieldValue.serverTimestamp(), chatId });
+    await db.doc(`users/${uid}/seen/${toUid}`).set({ at: FieldValue.serverTimestamp(), liked: true });
+    await db.collection(`chats/${chatId}/messages`).add({ senderId: uid, type: "text", text, createdAt: FieldValue.serverTimestamp() });
+    return { matched: true, chatId };
+  }
+
+  const reqRef = db.doc(`requests/${uid}_${toUid}`);
+  const accRef = db.doc(`accounts/${uid}`);
+  const chatId = pairId(uid, toUid);
+  const chatRef = db.doc(`chats/${chatId}`);
+  const letters = await db.runTransaction(async (tx) => {
+    const [acc, existing] = await Promise.all([tx.get(accRef), tx.get(reqRef)]);
+    if (existing.exists && existing.get("status") === "pending") {
+      throw new HttpsError("already-exists", "Du hast schon eine Anfrage gesendet.");
+    }
+    if (existing.exists && existing.get("status") === "declined") {
+      throw new HttpsError("failed-precondition", "Eine Anfrage ist hier gerade nicht möglich.");
+    }
+    const have = acc.get("letters") || 0;
+    if (have < 1) {
+      throw new HttpsError("resource-exhausted", "Du hast keine Briefe mehr – hol dir 5 Stück für 500 💎 im Shop!");
+    }
+    const now = FieldValue.serverTimestamp();
+    tx.update(accRef, { letters: have - 1 });
+    tx.set(reqRef, {
+      from: uid,
+      to: toUid,
+      ageGroup: group,
+      status: "pending",
+      letter: true,
+      chatId,
+      createdAt: now,
+      fromName: me.get("name") || "",
+      fromPhoto: (me.get("photos") || [])[0] || "",
+      fromColor: me.get("color") || DEFAULT_COLOR,
+      fromAge: me.get("age") || 0,
+      fromCountry: me.get("country") || "",
+      toName: other.get("name") || "",
+      toPhoto: (other.get("photos") || [])[0] || "",
+      toColor: other.get("color") || DEFAULT_COLOR,
+    });
+    tx.set(chatRef, {
+      members: [uid, toUid],
+      ageGroup: group,
+      closed: false,
+      pending: true,
+      pendingFrom: uid,
+      createdAt: now,
+      lastAt: now,
+      lastMessage: text.slice(0, 80),
+      lastSender: uid,
+      readAt: {},
+      memberInfo: { [uid]: memberInfo(me), [toUid]: memberInfo(other) },
+    });
+    tx.set(chatRef.collection("messages").doc(), { senderId: uid, type: "text", text, letter: true, createdAt: now });
+    tx.set(db.doc(`users/${uid}/seen/${toUid}`), { at: now, liked: true });
+    return have - 1;
+  });
+  return { matched: false, chatId, letters };
+});
+
+exports.buyLetters = onCall(async (req) => {
+  const uid = requireActive(req);
+  const ref = db.doc(`accounts/${uid}`);
+  return db.runTransaction(async (tx) => {
+    const acc = await tx.get(ref);
+    if (!acc.exists) throw new HttpsError("not-found", "Konto nicht gefunden.");
+    const gems = acc.get("gems") || 0;
+    if (gems < LETTER_PACK_COST) {
+      throw new HttpsError("resource-exhausted", `Nicht genug Gems – ${LETTER_PACK} Briefe kosten ${LETTER_PACK_COST} 💎.`);
+    }
+    const letters = (acc.get("letters") || 0) + LETTER_PACK;
+    tx.update(ref, { gems: gems - LETTER_PACK_COST, letters });
+    return { gems: gems - LETTER_PACK_COST, letters };
+  });
 });
 
 // ---- Gems ----------------------------------------------------------------
@@ -856,8 +976,11 @@ exports.checkIn = onCall(async (req) => {
     const streak = acc.get("lastCheckIn") === yesterday ? (acc.get("streak") || 0) + 1 : 1;
     // kumi+: doppelte Belohnung
     const reward = (CHECKIN_BASE + Math.min(streak - 1, 5) * STREAK_BONUS) * (isPlus(acc) ? 2 : 1);
-    tx.update(ref, { lastCheckIn: today, streak, gems: FieldValue.increment(reward) });
-    return { reward, streak };
+    const letters = ((streak - 1) % CHECKIN_CYCLE) + 1 === LETTER_DAY ? 1 : 0;
+    const update = { lastCheckIn: today, streak, gems: FieldValue.increment(reward) };
+    if (letters) update.letters = FieldValue.increment(letters);
+    tx.update(ref, update);
+    return { reward, streak, letters };
   });
 });
 
@@ -1324,6 +1447,11 @@ exports.onMessageCreated = onDocumentCreated(
     }
 
     const senderName = (chat.memberInfo && chat.memberInfo[msg.senderId] && chat.memberInfo[msg.senderId].name) || "kumi";
+    if (chat.pending === true) {
+      await notify(other, "Neuer Brief ✉️", "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.",
+        { type: "message", chatId: event.params.chatId }, { name: senderName });
+      return;
+    }
     await notify(other, senderName, preview, { type: "message", chatId: event.params.chatId });
   });
 

@@ -152,10 +152,19 @@ object ProfileRepo {
         callFunction("removeProfileMedia", mapOf("url" to url))
     }
 
-    /** Täglicher Check-in. Liefert Belohnung und Serie. */
-    suspend fun checkIn(): Pair<Long, Long> {
+    /** Täglicher Check-in. Liefert Belohnung (Gems), Serie und Briefe (Tag 3 der Woche). */
+    suspend fun checkIn(): Triple<Long, Long, Long> {
         val r = callFunction("checkIn")
-        return ((r["reward"] as? Number)?.toLong() ?: 0L) to ((r["streak"] as? Number)?.toLong() ?: 0L)
+        return Triple(
+            (r["reward"] as? Number)?.toLong() ?: 0L,
+            (r["streak"] as? Number)?.toLong() ?: 0L,
+            (r["letters"] as? Number)?.toLong() ?: 0L,
+        )
+    }
+
+    /** 5 Briefe für 500 Gems */
+    suspend fun buyLetters() {
+        callFunction("buyLetters")
     }
 
     suspend fun resendConsent(parentEmail: String) {
@@ -266,6 +275,12 @@ object DiscoverRepo {
         val r = callFunction("sendRequest", mapOf("toUid" to uid))
         return r["matched"] == true
     }
+
+    /** Brief schicken: Anfrage + erste Nachricht. true = sofort befreundet (gegenseitig) */
+    suspend fun sendLetter(uid: String, text: String): Boolean {
+        val r = callFunction("sendLetter", mapOf("toUid" to uid, "text" to text))
+        return r["matched"] == true
+    }
 }
 
 // ---- Anfragen -------------------------------------------------------------
@@ -277,7 +292,8 @@ object RequestRepo {
             .whereEqualTo("to", Fb.uid)
             .whereEqualTo("status", "pending")
             .asFlow()
-            .map { docs -> docs.map { it.toRequest() }.sortedByDescending { it.createdAt } }
+            // Briefe erscheinen als Chat (dort annehmen/ablehnen), nicht in der Anfragen-Liste
+            .map { docs -> docs.map { it.toRequest() }.filter { !it.letter }.sortedByDescending { it.createdAt } }
 
     fun outgoing(): Flow<List<FriendRequest>> =
         Fb.db.collection("requests")

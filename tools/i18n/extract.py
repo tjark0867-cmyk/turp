@@ -52,7 +52,7 @@ for m in re.finditer(r'HttpsError\(\s*"[a-z-]+",\s*(`[^`]*`|"[^"]*")', js):
         r = '{%d}' % k[0]; k[0] += 1; return r
     lit = re.sub(r'\$\{[^}]*\}', rep, lit)
     add(lit, 'Server-Fehlermeldung')
-PUSH = ["Ihr seid jetzt Freunde 🎉", "{name} hat deine Anfrage erwidert. Sagt Hallo!", "Neue Freundschaftsanfrage 👋",
+PUSH = ["Neuer Brief ✉️", "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.", "Ihr seid jetzt Freunde 🎉", "{name} hat deine Anfrage erwidert. Sagt Hallo!", "Neue Freundschaftsanfrage 👋",
         "{name} möchte mit dir befreundet sein.", "Anfrage angenommen 🎉", "{name} hat deine Anfrage angenommen. Sagt Hallo!",
         "Happy Birthday! 🎂", "Du bist jetzt 18 und wechselst in die Erwachsenen-Community von kumi."]
 for p in PUSH:

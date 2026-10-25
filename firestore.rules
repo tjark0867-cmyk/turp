@@ -120,6 +120,7 @@ service cloud.firestore {
         allow create: if active()
           && isMember(chatId)
           && chatDoc(chatId).closed == false
+          && chatDoc(chatId).get('pending', false) == false
           && request.resource.data.senderId == me()
           && request.resource.data.createdAt == request.time
           && (

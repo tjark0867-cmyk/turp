@@ -119,6 +119,9 @@ import app.turp.ui.components.parseColor
 import app.turp.ui.components.toast
 import app.turp.ui.theme.Coral
 import app.turp.ui.theme.Ink
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.material3.OutlinedTextField
 import app.turp.ui.theme.Display
 import app.turp.ui.theme.TealDark
 import app.turp.ui.theme.PaperInk
@@ -211,6 +214,25 @@ class DiscoverViewModel : BaseViewModel() {
         }
     }
 
+    /** Brief schicken: Anfrage + erste Nachricht in einem */
+    fun letter(profile: UserProfile, text: String) {
+        cards.value = cards.value - profile
+        viewModelScope.launch {
+            try {
+                val matched = DiscoverRepo.sendLetter(profile.uid, text)
+                toast(
+                    if (matched) t("🎉 Ihr seid jetzt Freunde – {0} hatte dich auch angefragt!", profile.name)
+                    else t("✉️ Brief an {0} gesendet", profile.name)
+                )
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                toast(e.toUserMessage())
+                cards.value = listOf(profile) + cards.value
+            }
+        }
+    }
+
     fun like(profile: UserProfile) {
         cards.value = cards.value - profile
         viewModelScope.launch {
@@ -250,6 +272,7 @@ fun DiscoverScreen(
     val me by remember(session.uid) { ProfileRepo.profile(session.uid) }.collectAsState()
     var showFilter by remember { mutableStateOf(false) }
     var reporting by remember { mutableStateOf<UserProfile?>(null) }
+    var writing by remember { mutableStateOf<UserProfile?>(null) }
     val myProfile = me
     val checkInOpen = session.account.lastCheckIn != todayBerlin()
     val myInterests = myProfile?.interests.orEmpty().toSet()
@@ -423,11 +446,29 @@ fun DiscoverScreen(
                         onSkip = vm::skip,
                         onLike = vm::like,
                         onOpen = onOpenUser,
-                        onReport = { reporting = it }
+                        onReport = { reporting = it },
+                        onLetter = { writing = it }
                     )
                 }
             }
         }
+    }
+
+    val letterTo = writing
+    if (letterTo != null) {
+        LetterDialog(
+            name = letterTo.name,
+            letters = session.account.letters,
+            onDismiss = { writing = null },
+            onShop = {
+                writing = null
+                onOpenShop()
+            },
+            onSend = { text ->
+                writing = null
+                vm.letter(letterTo, text)
+            }
+        )
     }
 
     val target = reporting
@@ -452,6 +493,7 @@ private fun CardStack(
     onLike: (UserProfile) -> Unit,
     onOpen: (String) -> Unit,
     onReport: (UserProfile) -> Unit,
+    onLetter: (UserProfile) -> Unit,
 ) {
     val top = cards.first()
     val scope = rememberCoroutineScope()
@@ -565,6 +607,7 @@ private fun CardStack(
                     onLike = { fling(true) },
                     onSkip = { fling(false) },
                     onReport = { onReport(top) },
+                    onLetter = { onLetter(top) },
                     likeProgress = { (offsetX.value / widthPx * 2.6f).coerceIn(-1f, 1f) },
                     modifier = Modifier
                         .fillMaxSize()
@@ -591,6 +634,7 @@ private fun ProfileCard(
     onLike: () -> Unit = {},
     onSkip: () -> Unit = {},
     onReport: () -> Unit = {},
+    onLetter: () -> Unit = {},
     likeProgress: () -> Float = { 0f },
 ) {
     val shape = RoundedCornerShape(16.dp)
@@ -721,7 +765,11 @@ private fun ProfileCard(
                         Text("${requestCost}", color = PaperInk, fontFamily = Display, fontSize = 17.sp)
                     }
                 }
-                Spacer(Modifier.width(10.dp))
+                Spacer(Modifier.width(8.dp))
+                CardboardDiscButton(onClick = onLetter, label = t("Brief schreiben"), size = 58.dp) {
+                    Image(painterResource(R.drawable.item_letter), null, Modifier.size(40.dp))
+                }
+                Spacer(Modifier.width(8.dp))
                 CardboardDiscButton(onClick = onSkip, label = t("Weiter"), size = 58.dp) {
                     Image(painterResource(R.drawable.swipe_no), null, Modifier.size(30.dp))
                 }
@@ -766,7 +814,19 @@ private fun ProfileCard(
                         Text("${requestCost}", color = Color.White.copy(alpha = 0.75f), fontWeight = FontWeight.SemiBold)
                     }
                 }
-                Spacer(Modifier.width(10.dp))
+                Spacer(Modifier.width(8.dp))
+                Box(
+                    Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(Color.Black.copy(alpha = 0.45f))
+                        .border(1.5.dp, Color.White.copy(alpha = 0.7f), CircleShape)
+                        .paperPress(t("Brief schreiben"), onLetter),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(painterResource(R.drawable.item_letter), null, Modifier.size(32.dp))
+                }
+                Spacer(Modifier.width(8.dp))
                 RoundCandyButton(
                     icon = Icons.Rounded.Close,
                     contentDescription = t("Weiter"),
@@ -838,4 +898,51 @@ private fun SharedInterestsSticker(shared: List<String>) {
             fontWeight = FontWeight.ExtraBold
         )
     }
+}
+
+
+/** Brief schreiben: kurze Nachricht, die die andere Person mit deinem Chat bekommt */
+@Composable
+private fun LetterDialog(name: String, letters: Long, onDismiss: () -> Unit, onShop: () -> Unit, onSend: (String) -> Unit) {
+    var text by rememberSaveable { mutableStateOf("") }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = { Image(painterResource(R.drawable.item_letter), null, Modifier.size(64.dp)) },
+        title = { Text(t("Brief an {0}", name), textAlign = TextAlign.Center) },
+        text = {
+            Column {
+                if (letters <= 0) {
+                    Text(
+                        t("Du hast keine Briefe. Hol dir 5 Stück für 500 💎 im Shop – oder jede Woche einen an Tag 3 der täglichen Belohnung."),
+                        color = TextLow
+                    )
+                } else {
+                    Text(
+                        t("{0} bekommt deine Nachricht sofort als Chat und entscheidet dort, ob ihr Freunde werdet.", name),
+                        color = TextLow,
+                        fontSize = 14.sp
+                    )
+                    Spacer(Modifier.height(10.dp))
+                    OutlinedTextField(
+                        value = text,
+                        onValueChange = { text = it.take(500) },
+                        placeholder = { Text(t("Schreib etwas Nettes …")) },
+                        minLines = 3,
+                        maxLines = 6,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(Modifier.height(6.dp))
+                    Text(t("Du hast noch {0} ✉️", letters), color = TextLow, fontSize = 12.sp)
+                }
+            }
+        },
+        confirmButton = {
+            if (letters <= 0) {
+                TextButton(onClick = onShop) { Text(t("Zum Shop")) }
+            } else {
+                TextButton(onClick = { onSend(text.trim()) }, enabled = text.isNotBlank()) { Text(t("Senden")) }
+            }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(t("Abbrechen")) } }
+    )
 }

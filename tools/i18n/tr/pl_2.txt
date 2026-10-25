@@ -281,3 +281,28 @@
 561|Wszystkiego najlepszego! 🎂
 562|Masz już 18 lat i przechodzisz do społeczności dorosłych w kumi.
 563|Tryb kartonu
+564|✉️ List wysłany do {0}
+565|Napisz list
+566|List do {0}
+567|Nie masz listów. Kup 5 za 500 💎 w sklepie – albo zdobywaj jeden co tydzień w 3. dniu codziennej nagrody.
+568|{0} od razu dostanie twoją wiadomość jako czat i tam zdecyduje, czy zostaniecie znajomymi.
+569|Napisz coś miłego …
+570|Zostało ci {0} ✉️
+571|Do sklepu
+572|+{0} list ✉️
+573|+5 listów ✉️ – miłego pisania!
+574|Przedmioty
+575|Listy
+576|Listy ✉️
+577|Napisz do kogoś, zanim cię przyjmie. Dostanie twój czat i tam zdecyduje.
+578|5 listów · {0} 💎
+579|Brakuje ci jeszcze {0} 💎
+580|Codziennie darmowe klejnoty – w 3. dniu dodatkowo list.
+581|List – przeczytaj i zdecyduj
+582|List wysłany · czeka
+583|Twój list jest w drodze ✉️ Gdy {0} go przyjmie, będziecie mogli pisać.
+584|{0} napisał(a) do ciebie list. Chcecie zostać znajomymi?
+585|Nie masz już listów – kup 5 za 500 💎 w sklepie!
+586|Za mało klejnotów – {0} listów kosztuje {1} 💎.
+587|Nowy list ✉️
+588|{name} napisał(a) do ciebie list. Przeczytaj go i zdecyduj, czy chcecie zostać znajomymi.
