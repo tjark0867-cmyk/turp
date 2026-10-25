@@ -16,6 +16,7 @@ class TurpApp : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         app.turp.data.I18n.init(this)
+        app.turp.ui.theme.Look.init(this)
         // Ohne google-services.json gibt es keine Firebase-Konfiguration.
         // Die App zeigt dann einen Hinweis statt abzustürzen.
         firebaseReady = FirebaseApp.getApps(this).isNotEmpty() || FirebaseApp.initializeApp(this) != null

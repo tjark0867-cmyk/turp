@@ -97,8 +97,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
+import app.turp.ui.components.Surface
 import androidx.compose.material3.Switch
+import androidx.compose.material.icons.rounded.Palette
+import app.turp.data.findActivity
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -164,6 +166,7 @@ import app.turp.ui.components.toast
 import app.turp.ui.components.todayBerlin
 import app.turp.ui.theme.Coral
 import app.turp.ui.theme.Ink
+import app.turp.ui.theme.PageBg
 import app.turp.ui.theme.InkElevated
 import app.turp.ui.theme.InkHigh
 import app.turp.ui.theme.InkLine
@@ -432,7 +435,7 @@ fun SettingsScreen(
     Column(
         Modifier
             .fillMaxSize()
-            .background(Ink)
+            .background(PageBg)
             .statusBarsPadding()
             .verticalScroll(rememberScrollState())
     ) {
@@ -464,6 +467,16 @@ fun SettingsScreen(
             }
             SectionCard {
                 MenuRow(Icons.Rounded.Language, t("Sprache · {0}", app.turp.data.I18n.LANGS.firstOrNull { it.code == app.turp.data.I18n.lang }?.name.orEmpty()), onClick = onLanguage)
+                // Pappe-Modus: ganze App im Cardboard-Look (wird gespeichert, Ansicht baut sich neu auf)
+                MenuSwitchRow(
+                    icon = Icons.Rounded.Palette,
+                    label = t("Pappe-Modus"),
+                    checked = app.turp.ui.theme.Look.cardboard,
+                    onChange = { on ->
+                        app.turp.ui.theme.Look.set(context, on)
+                        context.findActivity()?.recreate()
+                    }
+                )
                 MenuRow(Icons.Rounded.Block, t("Blockierte Nutzer"), onClick = onBlocked)
             }
             SectionCard {
@@ -517,6 +530,27 @@ private fun MenuRow(icon: ImageVector, label: String, tint: Color = TextHigh, on
         Icon(icon, contentDescription = null, tint = tint)
         Spacer(Modifier.width(14.dp))
         Text(label, color = tint, style = MaterialTheme.typography.bodyLarge)
+    }
+}
+
+@Composable
+private fun MenuSwitchRow(icon: ImageVector, label: String, checked: Boolean, onChange: (Boolean) -> Unit) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .clickable { onChange(!checked) }
+            .padding(vertical = 6.dp, horizontal = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(icon, contentDescription = null, tint = TextHigh)
+        Spacer(Modifier.width(14.dp))
+        Text(label, color = TextHigh, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+        Switch(
+            checked = checked,
+            onCheckedChange = onChange,
+            colors = SwitchDefaults.colors(checkedTrackColor = Teal, checkedThumbColor = Ink)
+        )
     }
 }
 
@@ -635,7 +669,7 @@ private fun EditProfileContent(p: UserProfile, socials: Socials?, vm: EditProfil
     Column(
         Modifier
             .fillMaxSize()
-            .background(Ink)
+            .background(PageBg)
             .statusBarsPadding()
     ) {
         // Zurück | Profil bearbeiten | Speichern
@@ -1208,7 +1242,7 @@ fun UserProfileScreen(
     Column(
         Modifier
             .fillMaxSize()
-            .background(Ink)
+            .background(PageBg)
             .statusBarsPadding()
             .navigationBarsPadding()
     ) {

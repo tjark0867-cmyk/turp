@@ -280,3 +280,4 @@
 560|{name} heeft je verzoek geaccepteerd. Zeg hoi!
 561|Gefeliciteerd! 🎂
 562|Je bent nu 18 en gaat over naar de volwassenencommunity van kumi.
+563|Kartonmodus

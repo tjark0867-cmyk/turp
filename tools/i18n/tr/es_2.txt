@@ -280,3 +280,4 @@
 560|{name} aceptó tu solicitud. ¡Saluda!
 561|¡Feliz cumpleaños! 🎂
 562|Ya tienes 18 y pasas a la comunidad de adultos de kumi.
+563|Modo cartón

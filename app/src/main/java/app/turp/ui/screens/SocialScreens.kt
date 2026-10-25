@@ -88,7 +88,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
+import app.turp.ui.components.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -139,6 +139,12 @@ import app.turp.ui.components.timeOfDay
 import app.turp.ui.components.toast
 import app.turp.ui.theme.Coral
 import app.turp.ui.theme.Ink
+import app.turp.ui.theme.PaperLight
+import app.turp.ui.theme.cardboard
+import app.turp.ui.theme.TornShape
+import app.turp.ui.theme.PaperBar
+import app.turp.ui.theme.Look
+import app.turp.ui.theme.PageBg
 import app.turp.ui.theme.InkElevated
 import app.turp.ui.theme.InkHigh
 import app.turp.ui.theme.Teal
@@ -496,13 +502,19 @@ fun ChatScreen(chatId: String, onBack: () -> Unit, onOpenUser: (String) -> Unit)
 
     Box(Modifier.fillMaxSize()) {
     Scaffold(
-        containerColor = Ink,
+        containerColor = PageBg,
         topBar = {
             // Zurück | Profilbild + Name + zuletzt online | Menü
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .background(Ink)
+                    .then(
+                        if (Look.cardboard) {
+                            Modifier.cardboard(PaperBar, remember { TornShape(21, jag = 2.4.dp, step = 9.dp, top = false, right = false, left = false) })
+                        } else {
+                            Modifier.background(Ink)
+                        }
+                    )
                     .statusBarsPadding()
                     .padding(start = 2.dp, end = 2.dp, top = 4.dp, bottom = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -810,8 +822,15 @@ private fun Bubble(
     Box(
         Modifier
             .widthIn(max = 280.dp)
-            .clip(shape)
-            .background(if (mine) Teal else InkHigh)
+            .then(
+                if (Look.cardboard) {
+                    // Pappe: jede Nachricht ein kleiner ausgerissener Zettel
+                    val paper = remember(message.id) { TornShape(message.id.hashCode(), jag = 1.5.dp, step = 6.dp) }
+                    Modifier.cardboard(if (mine) Teal else PaperLight, paper).clip(paper)
+                } else {
+                    Modifier.clip(shape).background(if (mine) Teal else InkHigh)
+                }
+            )
             .combinedClickable(onClick = { imageModel?.let(onOpenImage) }, onLongClick = onLongPress)
     ) {
         when {

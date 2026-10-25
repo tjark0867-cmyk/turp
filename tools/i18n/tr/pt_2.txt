@@ -280,3 +280,4 @@
 560|{name} aceitou seu pedido. Diga oi!
 561|Feliz aniversário! 🎂
 562|Agora você tem 18 anos e vai para a comunidade adulta do kumi.
+563|Modo papelão

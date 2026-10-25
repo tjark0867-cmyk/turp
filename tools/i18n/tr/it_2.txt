@@ -280,3 +280,4 @@
 560|{name} ha accettato la tua richiesta. Salutalo!
 561|Buon compleanno! 🎂
 562|Ora hai 18 anni e passi alla community adulti di kumi.
+563|Modalità cartone

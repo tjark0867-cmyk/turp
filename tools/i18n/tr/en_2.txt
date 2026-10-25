@@ -280,3 +280,4 @@
 560|{name} accepted your request. Say hi!
 561|Happy Birthday! 🎂
 562|You're 18 now and moving to the adult community of kumi.
+563|Cardboard mode

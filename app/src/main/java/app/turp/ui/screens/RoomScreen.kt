@@ -21,7 +21,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import app.turp.ui.components.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -53,6 +53,11 @@ import app.turp.ui.components.parseColor
 import app.turp.ui.components.timeOfDay
 import app.turp.ui.components.toast
 import app.turp.ui.theme.Ink
+import app.turp.ui.theme.cardboard
+import app.turp.ui.theme.TornShape
+import app.turp.ui.theme.PaperLight
+import app.turp.ui.theme.Look
+import app.turp.ui.theme.PageBg
 import app.turp.ui.theme.InkHigh
 import app.turp.ui.theme.Lilac
 import app.turp.ui.theme.Night
@@ -127,7 +132,7 @@ fun RoomScreen(
     Column(
         Modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(listOf(Night, Ink)))
+            .background(Brush.verticalGradient(listOf(Night, PageBg)))
     ) {
         // Kopfbereich im gemütlichen Lounge-Look
         Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
@@ -210,8 +215,16 @@ private fun RoomBubble(message: RoomMessage, onOpenUser: () -> Unit, onLongPress
         Spacer(Modifier.width(8.dp))
         Column(
             Modifier
-                .clip(RoundedCornerShape(topStart = 6.dp, topEnd = 18.dp, bottomStart = 18.dp, bottomEnd = 18.dp))
-                .background(InkHigh.copy(alpha = 0.85f))
+                .then(
+                    if (Look.cardboard) {
+                        val paper = remember(message.id) { TornShape(message.id.hashCode(), jag = 1.5.dp, step = 6.dp) }
+                        Modifier.cardboard(PaperLight, paper).clip(paper)
+                    } else {
+                        Modifier
+                            .clip(RoundedCornerShape(topStart = 6.dp, topEnd = 18.dp, bottomStart = 18.dp, bottomEnd = 18.dp))
+                            .background(InkHigh.copy(alpha = 0.85f))
+                    }
+                )
                 .combinedClickable(onClick = {}, onLongClick = onLongPress)
                 .padding(horizontal = 12.dp, vertical = 8.dp)
         ) {

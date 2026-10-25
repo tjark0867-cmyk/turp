@@ -90,7 +90,7 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
+import app.turp.ui.components.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -123,6 +123,7 @@ import app.turp.ui.components.TurpLogo
 import app.turp.ui.components.toast
 import app.turp.ui.theme.Coral
 import app.turp.ui.theme.Ink
+import app.turp.ui.theme.PageBg
 import app.turp.ui.theme.InkElevated
 import app.turp.ui.theme.InkHigh
 import app.turp.ui.theme.InkLine
@@ -134,7 +135,7 @@ import java.time.LocalDate
 import java.time.Period
 import java.time.ZoneId
 
-private val backgroundGradient = Brush.verticalGradient(listOf(Ink, Night))
+private val backgroundGradient: Brush get() = Brush.verticalGradient(listOf(PageBg, Night))
 
 // ---- Ladebildschirm & Hinweise --------------------------------------------
 

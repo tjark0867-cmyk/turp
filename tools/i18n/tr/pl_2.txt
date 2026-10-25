@@ -280,3 +280,4 @@
 560|{name} przyjął(ęła) twoje zaproszenie. Przywitaj się!
 561|Wszystkiego najlepszego! 🎂
 562|Masz już 18 lat i przechodzisz do społeczności dorosłych w kumi.
+563|Tryb kartonu

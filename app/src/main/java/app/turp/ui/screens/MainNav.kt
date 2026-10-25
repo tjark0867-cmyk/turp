@@ -34,7 +34,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.TextButton
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.material3.Surface
+import app.turp.ui.components.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
@@ -101,6 +101,12 @@ import app.turp.data.UpdateViewModel
 import app.turp.data.Updates
 import app.turp.ui.theme.Coral
 import app.turp.ui.theme.Ink
+import app.turp.ui.theme.cardboard
+import app.turp.ui.theme.TornCircleShape
+import app.turp.ui.theme.TornShape
+import app.turp.ui.theme.PaperInk
+import app.turp.ui.theme.PaperBar
+import app.turp.ui.theme.Look
 import app.turp.ui.theme.InkElevated
 import app.turp.ui.theme.InkLine
 import app.turp.ui.theme.Lilac
@@ -453,9 +459,11 @@ private fun MainTabs(
 /** Untere Leiste: nur Symbole, jedes in seiner eigenen Farbe */
 @Composable
 private fun TurpBottomBar(selected: Tab, onSelect: (Tab) -> Unit, badges: Map<Tab, Int>) {
-    Surface(color = Ink) {
+    // Pappe-Modus: Leiste aus dunklerer Pappe mit ausgerissener Oberkante
+    val barShape = remember { TornShape(11, jag = 2.6.dp, step = 9.dp, right = false, bottom = false, left = false) }
+    Box(if (Look.cardboard) Modifier.cardboard(PaperBar, barShape, shadow = false) else Modifier.background(Ink)) {
         Column {
-            HorizontalDivider(color = Color.White.copy(alpha = 0.06f), thickness = 1.dp)
+            if (!Look.cardboard) HorizontalDivider(color = Color.White.copy(alpha = 0.06f), thickness = 1.dp)
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -475,10 +483,22 @@ private fun TurpBottomBar(selected: Tab, onSelect: (Tab) -> Unit, badges: Map<Ta
                             .clickable { onSelect(tab) },
                         contentAlignment = Alignment.Center
                     ) {
+                        if (Look.cardboard && isSelected) {
+                            // ausgewählt: kleines Mint-Pappstück hinter dem Symbol
+                            Box(
+                                Modifier
+                                    .size(46.dp)
+                                    .cardboard(Teal, remember(tab) { TornCircleShape(tab.ordinal + 3) })
+                            )
+                        }
                         Icon(
                             if (isSelected) tab.icon else tab.iconOutlined,
                             contentDescription = t(tab.label),
-                            tint = if (isSelected) Teal else TextLow,
+                            tint = when {
+                                Look.cardboard -> if (isSelected) PaperInk else PaperInk.copy(alpha = 0.6f)
+                                isSelected -> Teal
+                                else -> TextLow
+                            },
                             modifier = Modifier
                                 .size(28.dp)
                                 .graphicsLayer {

@@ -5,6 +5,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -16,10 +24,14 @@ import androidx.compose.ui.unit.sp
 import app.turp.R
 
 // kumi-Farben: tiefes Schwarz, Grautöne und genau EINE Akzentfarbe (Mint).
-val Ink = Color(0xFF050506)
-val InkElevated = Color(0xFF121214)
-val InkHigh = Color(0xFF1C1C20)
-val InkLine = Color(0xFF2A2A30)
+// Im Pappe-Modus (Look.cardboard) werden die dunklen Töne zu Pappe und Filzstift-Braun.
+/** Dunkle Kontrastfarbe: Schrift/Symbole auf Mint, Ränder um Abzeichen */
+val Ink: Color get() = if (Look.cardboard) PaperInk else Color(0xFF050506)
+/** Seitenhintergrund – im Pappe-Modus durchsichtig, darunter liegt die Wellpappe */
+val PageBg: Color get() = if (Look.cardboard) Color.Transparent else Color(0xFF050506)
+val InkElevated: Color get() = if (Look.cardboard) PaperLight else Color(0xFF121214)
+val InkHigh: Color get() = if (Look.cardboard) PaperMid else Color(0xFF1C1C20)
+val InkLine: Color get() = if (Look.cardboard) PaperEdge else Color(0xFF2A2A30)
 val Teal = Color(0xFF2DE1C2)          // Akzent: Logo, aktive Icons, Haupt-Buttons
 val TealDark = Color(0xFF1AA88F)
 val Coral = Color(0xFFFF4D6D)         // nur für Warnungen, Abzeichen, Ablehnen
@@ -29,10 +41,10 @@ val SunDark = Color(0xFFD9A21F)
 val Lilac = Color(0xFF9C8CFF)
 val LilacDark = Color(0xFF6E5BE0)
 val Sky = Color(0xFF4DB8FF)
-val Night = Color(0xFF0D0B17)
+val Night: Color get() = if (Look.cardboard) Color.Transparent else Color(0xFF0D0B17)
 val Online = Color(0xFF3DDC84)
-val TextHigh = Color(0xFFF5F5F7)
-val TextLow = Color(0xFF8E8E96)
+val TextHigh: Color get() = if (Look.cardboard) PaperInk else Color(0xFFF5F5F7)
+val TextLow: Color get() = if (Look.cardboard) PaperInkLow else Color(0xFF8E8E96)
 
 /** Runde Marken-Schrift (Lilita One, SIL OFL) – nur für Logo und Namensschilder */
 val Display = FontFamily(Font(R.font.lilita_one, FontWeight.Normal))
@@ -40,7 +52,7 @@ val Display = FontFamily(Font(R.font.lilita_one, FontWeight.Normal))
 /** Filzstift-Schrift für handgeschriebene Stellen (Namensschild, Kofferanhänger) */
 val Marker = FontFamily(Font(R.font.permanent_marker, FontWeight.Normal))
 
-private val colors = darkColorScheme(
+private fun darkColors() = darkColorScheme(
     primary = Teal,
     onPrimary = Ink,
     primaryContainer = Color(0xFF0B3B34),
@@ -66,6 +78,39 @@ private val colors = darkColorScheme(
     outline = InkLine,
     outlineVariant = InkLine,
     error = Coral,
+    onError = Color.White,
+)
+
+/** Farbschema für den Pappe-Modus: helle Pappe, braune Schrift, Mint bleibt Akzent */
+private fun cardboardColors() = lightColorScheme(
+    primary = TealDark,
+    onPrimary = PaperInk,
+    primaryContainer = Teal,
+    onPrimaryContainer = PaperInk,
+    secondary = PaperEdge,
+    onSecondary = PaperInk,
+    secondaryContainer = PaperMid,
+    onSecondaryContainer = PaperInk,
+    tertiary = TealDark,
+    onTertiary = PaperInk,
+    background = Color.Transparent,
+    onBackground = PaperInk,
+    surface = PaperLight,
+    onSurface = PaperInk,
+    surfaceVariant = PaperMid,
+    onSurfaceVariant = PaperInkLow,
+    surfaceTint = Color.Transparent,
+    surfaceContainerLowest = PaperLight,
+    surfaceContainerLow = PaperLight,
+    surfaceContainer = PaperLight,
+    surfaceContainerHigh = PaperLight,
+    surfaceContainerHighest = PaperMid,
+    inverseSurface = PaperInk,
+    inverseOnSurface = PaperLight,
+    outline = PaperEdge,
+    outlineVariant = PaperEdge.copy(alpha = 0.5f),
+    scrim = Color.Black,
+    error = CoralDark,
     onError = Color.White,
 )
 
@@ -100,10 +145,26 @@ val LogoStyle = TextStyle(fontFamily = Display, fontSize = 56.sp, letterSpacing 
 
 @Composable
 fun TurpTheme(content: @Composable () -> Unit) {
+    val cardboard = Look.cardboard
     MaterialTheme(
-        colorScheme = colors,
+        colorScheme = if (cardboard) cardboardColors() else darkColors(),
         typography = typography,
         shapes = shapes,
-        content = content,
-    )
+    ) {
+        if (cardboard) {
+            // Pappe-Modus: Wellpappe liegt hinter der ganzen App
+            Box(Modifier.fillMaxSize()) {
+                Image(
+                    painter = painterResource(R.drawable.kraft_bg),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.TopCenter,
+                    modifier = Modifier.fillMaxSize()
+                )
+                content()
+            }
+        } else {
+            content()
+        }
+    }
 }

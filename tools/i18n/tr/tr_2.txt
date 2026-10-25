@@ -280,3 +280,4 @@
 560|{name} isteğini kabul etti. Merhaba de!
 561|İyi ki doğdun! 🎂
 562|Artık 18 yaşındasın ve kumi'nin yetişkin topluluğuna geçiyorsun.
+563|Karton modu

@@ -280,3 +280,4 @@
 560|{name} a accepté ta demande. Dis bonjour !
 561|Joyeux anniversaire ! 🎂
 562|Tu as maintenant 18 ans et tu passes dans la communauté adulte de kumi.
+563|Mode carton

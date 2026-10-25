@@ -69,7 +69,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
-import androidx.compose.material3.Surface
+import app.turp.ui.components.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -116,6 +116,12 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import app.turp.ui.theme.Coral
+import androidx.compose.runtime.currentCompositeKeyHash
+import app.turp.ui.theme.cardboard
+import app.turp.ui.theme.TornCircleShape
+import app.turp.ui.theme.TornShape
+import app.turp.ui.theme.PaperInk
+import app.turp.ui.theme.Look
 import app.turp.ui.theme.Display
 import app.turp.ui.theme.Online
 import app.turp.ui.theme.Sun
@@ -150,7 +156,11 @@ fun TurpLogo(modifier: Modifier = Modifier, fontSize: TextUnit = 56.sp) {
 
 /** Gut lesbare Schriftfarbe auf einer Hintergrundfarbe */
 fun readableOn(background: Color): Color =
-    if (background.alpha > 0.6f && background.luminance() > 0.45f) Color(0xFF0B0B0F) else Color.White
+    if (background.alpha > 0.6f && background.luminance() > 0.45f) {
+        if (Look.cardboard) PaperInk else Color(0xFF0B0B0F)
+    } else {
+        Color.White
+    }
 
 /** Dunklere Variante einer Farbe */
 fun darken(color: Color, factor: Float = 0.7f): Color =
@@ -175,9 +185,18 @@ fun Sticker(
         overflow = TextOverflow.Ellipsis,
         modifier = modifier
             .graphicsLayer { rotationZ = rotation }
-            .shadow(8.dp, shape, ambientColor = Color.Black, spotColor = Color.Black)
-            .background(background, shape)
-            .border(1.5.dp, darken(background, 0.55f), shape)
+            .then(
+                if (Look.cardboard && background.alpha > 0.9f) {
+                    // Pappe: ausgerissenes Schild mit dunklerer Schnittkante
+                    val seed = currentCompositeKeyHash
+                    Modifier.cardboard(background, remember(seed) { TornShape(seed, jag = 1.4.dp, step = 5.dp) }, edge = darken(background, 0.6f))
+                } else {
+                    Modifier
+                        .shadow(8.dp, shape, ambientColor = Color.Black, spotColor = Color.Black)
+                        .background(background, shape)
+                        .border(1.5.dp, darken(background, 0.55f), shape)
+                }
+            )
             .padding(horizontal = 10.dp, vertical = 1.dp)
     )
 }
@@ -208,8 +227,14 @@ fun CandyButton(
                 alpha = if (enabled || loading) 1f else 0.4f
             }
             .height(height)
-            .clip(shape)
-            .background(color)
+            .then(
+                if (Look.cardboard && color.alpha > 0.9f) {
+                    val seed = currentCompositeKeyHash
+                    Modifier.cardboard(color, remember(seed) { TornShape(seed, jag = 2.2.dp, step = 8.dp) })
+                } else {
+                    Modifier.clip(shape).background(color)
+                }
+            )
             .clickable(interactionSource = interaction, indication = null, enabled = active, onClick = onClick)
             .padding(horizontal = 22.dp),
         contentAlignment = Alignment.Center
@@ -217,7 +242,12 @@ fun CandyButton(
         if (loading) {
             CircularProgressIndicator(Modifier.size(20.dp), color = contentColor, strokeWidth = 2.dp)
         } else {
-            Text(text, color = contentColor, fontSize = fontSize, fontWeight = FontWeight.SemiBold, maxLines = 1)
+            if (Look.cardboard) {
+                // Pappe: Schrift wie auf den Schildern
+                Text(text, color = contentColor, fontSize = fontSize * 1.08f, fontFamily = Display, maxLines = 1)
+            } else {
+                Text(text, color = contentColor, fontSize = fontSize, fontWeight = FontWeight.SemiBold, maxLines = 1)
+            }
         }
     }
 }
@@ -244,9 +274,17 @@ fun RoundCandyButton(
                 scaleX = scale
                 scaleY = scale
             }
-            .clip(CircleShape)
-            .background(color)
-            .then(if (borderColor != null) Modifier.border(1.5.dp, borderColor, CircleShape) else Modifier)
+            .then(
+                if (Look.cardboard && color.alpha > 0.9f) {
+                    val seed = currentCompositeKeyHash
+                    Modifier.cardboard(color, remember(seed) { TornCircleShape(seed) })
+                } else {
+                    Modifier
+                        .clip(CircleShape)
+                        .background(color)
+                        .then(if (borderColor != null) Modifier.border(1.5.dp, borderColor, CircleShape) else Modifier)
+                }
+            )
             .clickable(interactionSource = interaction, indication = null, onClick = onClick),
         contentAlignment = Alignment.Center
     ) {

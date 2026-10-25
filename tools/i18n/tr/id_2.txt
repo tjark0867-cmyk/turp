@@ -280,3 +280,4 @@
 560|{name} menerima permintaanmu. Sapa dia!
 561|Selamat ulang tahun! 🎂
 562|Sekarang kamu 18 tahun dan pindah ke komunitas dewasa kumi.
+563|Mode kardus

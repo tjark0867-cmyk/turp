@@ -1,0 +1,2258 @@
+[
+[
+"Nachrichten & Anfragen",
+"bestehend"
+],
+[
+"Neue Nachrichten und Freundschaftsanfragen",
+"bestehend"
+],
+[
+"Beliebt",
+"bestehend"
+],
+[
+"Bester Wert",
+"bestehend"
+],
+[
+"Kauf konnte nicht gestartet werden.",
+"bestehend"
+],
+[
+"Google Play ist nicht verbunden.",
+"bestehend"
+],
+[
+"Käufe gehen nur mit kumi aus dem Play Store.",
+"bestehend"
+],
+[
+"Kauf konnte nicht gestartet werden ({0}).",
+"bestehend"
+],
+[
+"Der Kauf hat nicht geklappt ({0}). Es wurde nichts abgebucht.",
+"bestehend"
+],
+[
+"Diese Anmeldeart ist noch nicht freigeschaltet – nutze bitte vorerst deine E-Mail.",
+"bestehend"
+],
+[
+"Serverfehler – bitte versuch es gleich noch einmal.",
+"bestehend"
+],
+[
+"Verbindung zum Server fehlgeschlagen – bitte gleich noch einmal versuchen.",
+"bestehend"
+],
+[
+"Dafür fehlt dir die Berechtigung.",
+"bestehend"
+],
+[
+"Diese Funktion ist gerade nicht verfügbar.",
+"bestehend"
+],
+[
+"Etwas ist schiefgelaufen.",
+"bestehend"
+],
+[
+"Das Passwort ist zu schwach (mindestens 6 Zeichen).",
+"bestehend"
+],
+[
+"Diese E-Mail-Adresse ist schon registriert. Log dich ein.",
+"bestehend"
+],
+[
+"Kein aktives Konto mit dieser E-Mail gefunden.",
+"bestehend"
+],
+[
+"E-Mail oder Passwort ist falsch.",
+"bestehend"
+],
+[
+"Keine Internetverbindung.",
+"bestehend"
+],
+[
+"Speichern fehlgeschlagen – bitte versuch es noch einmal.",
+"bestehend"
+],
+[
+"Upload fehlgeschlagen – bitte versuch es noch einmal.",
+"bestehend"
+],
+[
+"Ungültige Eingabe.",
+"bestehend"
+],
+[
+"Das Bild konnte nicht gelesen werden.",
+"bestehend"
+],
+[
+"Unbekannt",
+"bestehend"
+],
+[
+"Das Video darf höchstens 30 Sekunden lang sein.",
+"bestehend"
+],
+[
+"Das Video ist zu groß (höchstens 40 MB).",
+"bestehend"
+],
+[
+"Der Test-Chat konnte nicht gestartet werden.",
+"bestehend"
+],
+[
+"Download fehlgeschlagen (Fehler {0}).",
+"bestehend"
+],
+[
+"Updates gibt es nur für die Version von GitHub.",
+"bestehend"
+],
+[
+"Du hast schon die neueste Version ✅",
+"bestehend"
+],
+[
+"Nachricht schreiben…",
+"bestehend"
+],
+[
+"Foto aufnehmen",
+"bestehend"
+],
+[
+"Foto senden",
+"bestehend"
+],
+[
+"Sprachnachricht aufnehmen",
+"bestehend"
+],
+[
+"Senden",
+"bestehend"
+],
+[
+"Land wählen",
+"bestehend"
+],
+[
+"Suchen…",
+"bestehend"
+],
+[
+"Alle Länder",
+"bestehend"
+],
+[
+"Schließen",
+"bestehend"
+],
+[
+"Eigener Farbton",
+"bestehend"
+],
+[
+"{0} melden",
+"bestehend"
+],
+[
+"Was ist passiert? (optional)",
+"bestehend"
+],
+[
+"Deine Meldung ist anonym. Bei Gefahr wende dich bitte auch an eine erwachsene Vertrauensperson oder die Polizei (110).",
+"bestehend"
+],
+[
+"Melden",
+"bestehend"
+],
+[
+"Abbrechen",
+"bestehend"
+],
+[
+"Foto",
+"bestehend"
+],
+[
+"Ohne Kamera-Erlaubnis geht das leider nicht.",
+"bestehend"
+],
+[
+"Die Kamera ist gerade nicht verfügbar.",
+"bestehend"
+],
+[
+"Das Foto konnte nicht aufgenommen werden.",
+"bestehend"
+],
+[
+"Kamera wechseln",
+"bestehend"
+],
+[
+"Aufgenommenes Foto",
+"bestehend"
+],
+[
+"Nochmal",
+"bestehend"
+],
+[
+"Ausgewählt",
+"bestehend"
+],
+[
+"Suche leeren",
+"bestehend"
+],
+[
+"Alle",
+"bestehend"
+],
+[
+"Dazu gibt es noch kein Interesse 🤔",
+"bestehend"
+],
+[
+"Entfernen",
+"bestehend"
+],
+[
+"Gemeinsam",
+"bestehend"
+],
+[
+"{0} hat noch nichts über sich geschrieben.",
+"bestehend"
+],
+[
+"Interessen",
+"bestehend"
+],
+[
+"🤖 Testprofil",
+"bestehend"
+],
+[
+"gestern",
+"bestehend"
+],
+[
+"jetzt",
+"bestehend"
+],
+[
+"{0} Min.",
+"bestehend"
+],
+[
+"{0} Std.",
+"bestehend"
+],
+[
+"1 Tag",
+"bestehend"
+],
+[
+"{0} Tage",
+"bestehend"
+],
+[
+"{0} T.",
+"bestehend"
+],
+[
+"7 T.+",
+"bestehend"
+],
+[
+"vor {0} Min.",
+"bestehend"
+],
+[
+"vor {0} Std.",
+"bestehend"
+],
+[
+"vor 1 Tag",
+"bestehend"
+],
+[
+"vor {0} Tagen",
+"bestehend"
+],
+[
+"am {0}",
+"bestehend"
+],
+[
+"Heute",
+"bestehend"
+],
+[
+"Gestern",
+"bestehend"
+],
+[
+"Pause",
+"bestehend"
+],
+[
+"Abspielen",
+"bestehend"
+],
+[
+"Verwerfen",
+"bestehend"
+],
+[
+"Aufnahme läuft …",
+"bestehend"
+],
+[
+"{0} ist nicht mehr blockiert.",
+"bestehend"
+],
+[
+"Zurück",
+"bestehend"
+],
+[
+"Blockierte Nutzer",
+"bestehend"
+],
+[
+"Niemand blockiert",
+"bestehend"
+],
+[
+"Wenn du jemanden blockierst, erscheint die Person hier – und du kannst sie jederzeit wieder entblocken.",
+"bestehend"
+],
+[
+"Blockierte Personen sehen dich nicht und können dir nicht schreiben. Entblockst du jemanden, kann er dich wieder finden und dir eine Anfrage schicken.",
+"bestehend"
+],
+[
+"{0} kann dich dann wieder im Entdecken sehen und dir eine Anfrage schicken. Eine frühere Freundschaft kommt nicht automatisch zurück.",
+"bestehend"
+],
+[
+"Entblocken",
+"bestehend"
+],
+[
+"Blockiert · {0}",
+"bestehend"
+],
+[
+"Lizenzen",
+"bestehend"
+],
+[
+"Viele Interessen-Sticker sind selbst gestaltet, einige beruhen auf freien Fotos von Wikimedia Commons. Für die Sticker wurden die Fotos freigestellt, zugeschnitten und mit einem Rand versehen. Sticker nach Fotos unter „CC BY-SA“ stehen unter derselben Lizenz. Fotos ohne Eintrag hier sind gemeinfrei (CC0 / Public Domain) oder selbst erstellt. Tippen öffnet die Quelle.",
+"bestehend"
+],
+[
+"Foto: {0} · {1}",
+"bestehend"
+],
+[
+"unbekannt",
+"bestehend"
+],
+[
+"Entdecken",
+"bestehend"
+],
+[
+"Danke! Unser Team schaut sich das an. 💛",
+"bestehend"
+],
+[
+"🤖 {0} hat sofort angenommen – schau in deine Chats!",
+"bestehend"
+],
+[
+"🎉 Ihr seid jetzt Freunde – {0} hatte dich auch angefragt!",
+"bestehend"
+],
+[
+"👋 Anfrage an {0} gesendet",
+"bestehend"
+],
+[
+"Such-Einstellungen",
+"bestehend"
+],
+[
+"Lade ein Foto hoch, damit andere dich sehen können.",
+"bestehend"
+],
+[
+"Bearbeiten",
+"bestehend"
+],
+[
+"Profile werden geladen",
+"bestehend"
+],
+[
+"Niemand passt gerade zu deiner Suche",
+"bestehend"
+],
+[
+"Probier andere Interessen, ein anderes Land oder ein größeres Alter.",
+"bestehend"
+],
+[
+"Such-Einstellungen ändern",
+"bestehend"
+],
+[
+"Alle Filter zurücksetzen",
+"bestehend"
+],
+[
+"Gerade keine neuen Leute",
+"bestehend"
+],
+[
+"Schau später wieder vorbei oder ändere deine Such-Einstellungen.",
+"bestehend"
+],
+[
+"Übersprungene nochmal zeigen",
+"bestehend"
+],
+[
+"Anfrage senden",
+"bestehend"
+],
+[
+"Weiter",
+"bestehend"
+],
+[
+"1 Gemeinsamkeit",
+"bestehend"
+],
+[
+"{0} Gemeinsamkeiten",
+"bestehend"
+],
+[
+"Konto gesperrt.",
+"bestehend"
+],
+[
+"Meldung verworfen.",
+"bestehend"
+],
+[
+"Meldungen",
+"bestehend"
+],
+[
+"Alles erledigt",
+"bestehend"
+],
+[
+"Keine offenen Meldungen.",
+"bestehend"
+],
+[
+"Meldungen aus der Jugend-Community stehen oben. Profile mit 3 oder mehr Meldern sind automatisch versteckt.",
+"bestehend"
+],
+[
+"Das Konto wird sofort gesperrt, aus dem Entdecken entfernt und alle Chats werden geschlossen.",
+"bestehend"
+],
+[
+"Sperren",
+"bestehend"
+],
+[
+"Jugend 13–17",
+"bestehend"
+],
+[
+"Gemeldet: {0}",
+"bestehend"
+],
+[
+"Profil",
+"bestehend"
+],
+[
+"🎉 Du und {0} seid jetzt Freunde! +{1} 💎",
+"bestehend"
+],
+[
+"Freunde",
+"bestehend"
+],
+[
+"Alle Freunde",
+"bestehend"
+],
+[
+"Neue Freunde",
+"bestehend"
+],
+[
+"Anfragen",
+"bestehend"
+],
+[
+"Neueste",
+"bestehend"
+],
+[
+"Noch keine Anfragen",
+"bestehend"
+],
+[
+"Wenn dich jemand hinzufügen möchte, siehst du es hier.",
+"bestehend"
+],
+[
+"Finde neue Freunde",
+"bestehend"
+],
+[
+"Lade Freunde ein: +{0} 💎 pro Person",
+"bestehend"
+],
+[
+"Ausblenden",
+"bestehend"
+],
+[
+"Teilen",
+"bestehend"
+],
+[
+"Ablehnen",
+"bestehend"
+],
+[
+"Annehmen",
+"bestehend"
+],
+[
+"Top Match",
+"bestehend"
+],
+[
+"Alle Freunde 👯",
+"bestehend"
+],
+[
+"Nach Namen suchen",
+"bestehend"
+],
+[
+"Noch keine Freunde",
+"bestehend"
+],
+[
+"Niemand gefunden",
+"bestehend"
+],
+[
+"Nimm Anfragen an oder schick selbst welche beim Entdecken.",
+"bestehend"
+],
+[
+"Probier einen anderen Namen.",
+"bestehend"
+],
+[
+"🤖 Testbot",
+"bestehend"
+],
+[
+"Chat",
+"bestehend"
+],
+[
+"Wähle deine Sprache",
+"bestehend"
+],
+[
+"Du kannst sie später in den Einstellungen ändern.",
+"bestehend"
+],
+[
+"+{0} 💎 gutgeschrieben – danke! 💛",
+"bestehend"
+],
+[
+"kumi+ ist aktiv ✨ Danke für deine Unterstützung!",
+"bestehend"
+],
+[
+"Zahlung ausstehend – die Gems kommen, sobald sie bestätigt ist.",
+"bestehend"
+],
+[
+"Einmal neu installieren",
+"bestehend"
+],
+[
+"kumi {0} kann die installierte Version nicht direkt ersetzen. Lade die neue Version herunter, lösche kumi und installiere sie dann. Dein Konto, deine Freunde und Chats bleiben erhalten – du meldest dich einfach wieder an.",
+"bestehend"
+],
+[
+"Herunterladen",
+"bestehend"
+],
+[
+"Später",
+"bestehend"
+],
+[
+"Neue Version verfügbar",
+"bestehend"
+],
+[
+"kumi {0} ist da.",
+"bestehend"
+],
+[
+"Wird geladen … {0} %",
+"bestehend"
+],
+[
+"Jetzt aktualisieren",
+"bestehend"
+],
+[
+"Foto geprüft und hinzugefügt ✨",
+"bestehend"
+],
+[
+"+{0} 💎 · {1} {2} Serie 🔥",
+"bestehend"
+],
+[
+"Tag",
+"bestehend"
+],
+[
+"Tage",
+"bestehend"
+],
+[
+"Bitte bestätige zuerst deine E-Mail – wir haben dir einen Link geschickt. Tippe danach erneut.",
+"bestehend"
+],
+[
+"Admin-Zugang aktiviert 🛡️",
+"bestehend"
+],
+[
+"Komm zu kumi und finde neue Freunde! 🌍 Gib bei der Anmeldung meinen Code {0} ein, dann bekommst du 10 Bonus-Gems 💎",
+"bestehend"
+],
+[
+"kumi teilen",
+"bestehend"
+],
+[
+"Einstellungen",
+"bestehend"
+],
+[
+"Vorschau",
+"bestehend"
+],
+[
+"{0} Medien",
+"bestehend"
+],
+[
+"Foto hinzufügen",
+"bestehend"
+],
+[
+"Upgrade ⭐",
+"bestehend"
+],
+[
+"Deine Gems: {0}",
+"bestehend"
+],
+[
+"Nutze sie, um noch mehr Freunde zu finden.",
+"bestehend"
+],
+[
+"Mehr erfahren",
+"bestehend"
+],
+[
+"Profil bearbeiten",
+"bestehend"
+],
+[
+"Shop & kumi+",
+"bestehend"
+],
+[
+"Freunde einladen (+{0} 💎)",
+"bestehend"
+],
+[
+"Admin-Bereich",
+"bestehend"
+],
+[
+"Nach Updates suchen",
+"bestehend"
+],
+[
+"Sprache · {0}",
+"bestehend"
+],
+[
+"Abmelden",
+"bestehend"
+],
+[
+"Konto löschen",
+"bestehend"
+],
+[
+"kumi {0} · Dein Einladungscode: {1}\nGoldene Regel: Sei immer freundlich. 💛\n\nNamen von Spielen, Serien und Künstlern gehören ihren Inhabern; kumi steht in keiner Verbindung zu ihnen.",
+"bestehend"
+],
+[
+"Admin? Zugang prüfen",
+"bestehend"
+],
+[
+"Konto löschen?",
+"bestehend"
+],
+[
+"Dein Profil, deine Fotos, Chats und Freundschaften werden endgültig gelöscht. Das kann nicht rückgängig gemacht werden.",
+"bestehend"
+],
+[
+"Endgültig löschen",
+"bestehend"
+],
+[
+"Video geprüft und hinzugefügt 🎬",
+"bestehend"
+],
+[
+"Der Name braucht mindestens 2 Zeichen.",
+"bestehend"
+],
+[
+"Gespeichert ✅",
+"bestehend"
+],
+[
+"Speichern",
+"bestehend"
+],
+[
+"Name",
+"bestehend"
+],
+[
+"Dein Name",
+"bestehend"
+],
+[
+"Alter",
+"bestehend"
+],
+[
+"Profilfarbe",
+"bestehend"
+],
+[
+"Ich bin",
+"bestehend"
+],
+[
+"Mann",
+"bestehend"
+],
+[
+"Junge",
+"bestehend"
+],
+[
+"Frau",
+"bestehend"
+],
+[
+"Mädchen",
+"bestehend"
+],
+[
+"Keine Angabe",
+"bestehend"
+],
+[
+"Land",
+"bestehend"
+],
+[
+"Bio",
+"bestehend"
+],
+[
+"Erzähl etwas über dich …",
+"bestehend"
+],
+[
+"Meine Interessen",
+"bestehend"
+],
+[
+"Auswählen",
+"bestehend"
+],
+[
+"Medien",
+"bestehend"
+],
+[
+"Fotos und Videos werden automatisch geprüft. Tippe auf ⭐, um ein Foto zum Hauptfoto zu machen.",
+"bestehend"
+],
+[
+"Profilvideo",
+"bestehend"
+],
+[
+"Profilvideo (max. 30 s)",
+"bestehend"
+],
+[
+"Socials",
+"bestehend"
+],
+[
+"Snapchat hinzufügen",
+"bestehend"
+],
+[
+"Instagram hinzufügen",
+"bestehend"
+],
+[
+"TikTok hinzufügen",
+"bestehend"
+],
+[
+"Für Freunde sichtbar",
+"bestehend"
+],
+[
+"Nur deine Freunde können deine Socials sehen – und nur, wenn du sie freigibst. Überleg gut, mit wem du sie teilst.",
+"bestehend"
+],
+[
+"Nur deine Freunde auf kumi können deine Socials sehen – und nur, wenn du sie freigibst.",
+"bestehend"
+],
+[
+"Profilfarbe 🎨",
+"bestehend"
+],
+[
+"Wähle eine Farbe für dein Namensschild",
+"bestehend"
+],
+[
+"Tippe an, was du magst – so finden dich Leute mit denselben Interessen.",
+"bestehend"
+],
+[
+"Suchen, z. B. Minecraft",
+"bestehend"
+],
+[
+"Höchstens {0} Interessen.",
+"bestehend"
+],
+[
+"Fertig",
+"bestehend"
+],
+[
+"Wird geprüft…",
+"bestehend"
+],
+[
+"Hauptfoto",
+"bestehend"
+],
+[
+"Als Hauptfoto",
+"bestehend"
+],
+[
+"🎉 Ihr seid jetzt Freunde!",
+"bestehend"
+],
+[
+"👋 Anfrage gesendet",
+"bestehend"
+],
+[
+"Blockiert. Du kannst das in den Einstellungen jederzeit rückgängig machen.",
+"bestehend"
+],
+[
+"Nicht mehr blockiert.",
+"bestehend"
+],
+[
+"Mehr",
+"bestehend"
+],
+[
+"Blockieren",
+"bestehend"
+],
+[
+"Profil nicht verfügbar",
+"bestehend"
+],
+[
+"Diese Person ist gerade nicht erreichbar.",
+"bestehend"
+],
+[
+"Blockiert · Entblocken",
+"bestehend"
+],
+[
+"Chat öffnen",
+"bestehend"
+],
+[
+"Anfrage gesendet ✓",
+"bestehend"
+],
+[
+"Ihr könnt euch dann nicht mehr sehen oder schreiben. Entblocken kannst du jederzeit in den Einstellungen unter „Blockierte Nutzer“.",
+"bestehend"
+],
+[
+"Link konnte nicht geöffnet werden.",
+"bestehend"
+],
+[
+"▶  Video ansehen",
+"bestehend"
+],
+[
+"🔒 Sichtbar, sobald ihr Freunde seid.",
+"bestehend"
+],
+[
+"Keine Socials freigegeben.",
+"bestehend"
+],
+[
+"Lounge: {0}",
+"bestehend"
+],
+[
+"Lounge",
+"bestehend"
+],
+[
+"Gruppenchat für deine Altersgruppe · Slow-Mode 10 s",
+"bestehend"
+],
+[
+"Noch ruhig hier",
+"bestehend"
+],
+[
+"Sag Hallo und starte das Gespräch!",
+"bestehend"
+],
+[
+"In die Lounge schreiben…",
+"bestehend"
+],
+[
+"Höchstens {0} – tippe oben eins an, um es zu entfernen.",
+"bestehend"
+],
+[
+"Zurücksetzen",
+"bestehend"
+],
+[
+"Freunde finden, die das mögen",
+"bestehend"
+],
+[
+"Bis zu {0} Interessen wählen",
+"bestehend"
+],
+[
+"Zeig mir",
+"bestehend"
+],
+[
+"👥 Alle",
+"bestehend"
+],
+[
+"🙋‍♂️ Männer",
+"bestehend"
+],
+[
+"🙋‍♂️ Jungs",
+"bestehend"
+],
+[
+"🙋‍♀️ Frauen",
+"bestehend"
+],
+[
+"🙋‍♀️ Mädchen",
+"bestehend"
+],
+[
+"Die wohnen in",
+"bestehend"
+],
+[
+"{0} Mein Land",
+"bestehend"
+],
+[
+"🌍 Weltweit",
+"bestehend"
+],
+[
+"🧭 Anderes",
+"bestehend"
+],
+[
+"Bei kumi siehst du nur Leute zwischen 13 und 17 – Erwachsene sind getrennt.",
+"bestehend"
+],
+[
+"🤝 Gemeinsamkeiten zuerst",
+"bestehend"
+],
+[
+"Leute mit denselben Interessen wie du kommen zuerst",
+"bestehend"
+],
+[
+"Günstigere Anfragen, doppelte Belohnung.",
+"bestehend"
+],
+[
+"Verbinde mit Google Play …",
+"bestehend"
+],
+[
+"Käufe gehen nur mit kumi aus dem Play Store – bis dahin gibt's Gems gratis weiter unten 💎",
+"bestehend"
+],
+[
+"Shop",
+"bestehend"
+],
+[
+"Anfragen kosten nur {0} statt {1} Gems",
+"bestehend"
+],
+[
+"Doppelte tägliche Belohnung",
+"bestehend"
+],
+[
+"Goldenes Plus an deinem Namen",
+"bestehend"
+],
+[
+"kumi+ ist aktiv bis {0} ✨",
+"bestehend"
+],
+[
+"kumi+ ist aktiv ✨",
+"bestehend"
+],
+[
+"Abo verwalten",
+"bestehend"
+],
+[
+"kumi+ holen · {0} / Monat",
+"bestehend"
+],
+[
+"Monatlich kündbar über Google Play. Verlängert sich automatisch, bis du kündigst.",
+"bestehend"
+],
+[
+"Gems",
+"bestehend"
+],
+[
+"Gems kaufen geht, sobald du kumi aus dem Play Store hast. Bis dahin: Gems gratis per Einladung und täglicher Belohnung 👇",
+"bestehend"
+],
+[
+"Preise inkl. MwSt. Bezahlung über Google Play.",
+"bestehend"
+],
+[
+"Unter 18 kannst du höchstens 30 € im Monat ausgeben – frag am besten vorher deine Eltern.",
+"bestehend"
+],
+[
+"Gratis Gems",
+"bestehend"
+],
+[
+"😊 Freunde einladen",
+"bestehend"
+],
+[
+"Pro Person, die sich mit deinem Code {0} anmeldet",
+"bestehend"
+],
+[
+"Einladen",
+"bestehend"
+],
+[
+"Tägliche Belohnung",
+"bestehend"
+],
+[
+"Hol dir jeden Tag gratis Gems – je länger deine Serie, desto mehr.",
+"bestehend"
+],
+[
+"Mit kumi+ doppelt!",
+"bestehend"
+],
+[
+"= {0} Anfragen",
+"bestehend"
+],
+[
+"Tag {0}",
+"bestehend"
+],
+[
+"Abholen · +{0} 💎",
+"bestehend"
+],
+[
+"Nächste Belohnung in %02d:%02d:%02d ⏰",
+"bestehend"
+],
+[
+"Chats 💬",
+"bestehend"
+],
+[
+"Noch keine Chats",
+"bestehend"
+],
+[
+"Sobald jemand deine Anfrage annimmt, könnt ihr hier schreiben.",
+"bestehend"
+],
+[
+"Leute entdecken",
+"bestehend"
+],
+[
+"Test-Chat mit dem kumi Bot",
+"bestehend"
+],
+[
+"Start",
+"bestehend"
+],
+[
+"Chat geschlossen",
+"bestehend"
+],
+[
+"Blockiert. Ihr könnt euch nicht mehr schreiben.",
+"bestehend"
+],
+[
+"Online",
+"bestehend"
+],
+[
+"Zuletzt online {0}",
+"bestehend"
+],
+[
+"Zu kurz – sprich etwas länger.",
+"bestehend"
+],
+[
+"Aufnahme nicht möglich.",
+"bestehend"
+],
+[
+"Ohne Mikrofon-Erlaubnis geht das leider nicht.",
+"bestehend"
+],
+[
+"Profil ansehen",
+"bestehend"
+],
+[
+"Dieser Chat ist geschlossen.",
+"bestehend"
+],
+[
+"🛡️ Teile keine Adresse, Passwörter oder Nacktbilder und triff dich nie allein mit Leuten aus dem Internet. Halte eine Nachricht gedrückt, um sie zu melden.",
+"bestehend"
+],
+[
+"[Sprachnachricht]",
+"bestehend"
+],
+[
+"[Foto]",
+"bestehend"
+],
+[
+"Ihr könnt euch dann nicht mehr sehen oder schreiben, und der Chat wird geschlossen. Entblocken kannst du jederzeit in den Einstellungen unter „Blockierte Nutzer“.",
+"bestehend"
+],
+[
+"Wird geprüft",
+"bestehend"
+],
+[
+"🚫 Foto wurde blockiert",
+"bestehend"
+],
+[
+"📷 Foto wird geprüft…",
+"bestehend"
+],
+[
+"Das dauert länger als sonst.",
+"bestehend"
+],
+[
+"Erneut versuchen",
+"bestehend"
+],
+[
+"Fast geschafft!",
+"bestehend"
+],
+[
+"Diese kumi-Version ist noch nicht mit deinem Firebase-Projekt verbunden. Lege die Datei google-services.json in den Ordner app/ und baue die App neu. Die einzelnen Schritte stehen in der README.",
+"bestehend"
+],
+[
+"Konto gesperrt",
+"bestehend"
+],
+[
+"Dein Konto wurde gesperrt, weil es gegen unsere Regeln verstoßen hat. Wenn du denkst, dass das ein Fehler ist, melde dich beim kumi-Team.",
+"bestehend"
+],
+[
+"Gib zuerst deine E-Mail-Adresse ein.",
+"bestehend"
+],
+[
+"Wir haben dir eine E-Mail zum Zurücksetzen geschickt.",
+"bestehend"
+],
+[
+"Die Google-Anmeldung wird gerade eingerichtet – nutze bitte so lange deine E-Mail.",
+"bestehend"
+],
+[
+"Auf diesem Handy ist kein Google-Konto eingerichtet.",
+"bestehend"
+],
+[
+"Google-Anmeldung hat nicht geklappt – bitte versuch es noch einmal.",
+"bestehend"
+],
+[
+"Google-Anmeldung hat nicht geklappt.",
+"bestehend"
+],
+[
+"Finde Freunde, die dieselben Sachen lieben wie du.",
+"bestehend"
+],
+[
+"Mit Google fortfahren",
+"bestehend"
+],
+[
+"Mit E-Mail fortfahren",
+"bestehend"
+],
+[
+"Ab 13 Jahren · Goldene Regel: Sei immer freundlich. 💛",
+"bestehend"
+],
+[
+"Erstell dein Konto mit E-Mail",
+"bestehend"
+],
+[
+"Willkommen zurück!",
+"bestehend"
+],
+[
+"Neu hier",
+"bestehend"
+],
+[
+"Einloggen",
+"bestehend"
+],
+[
+"E-Mail",
+"bestehend"
+],
+[
+"Passwort (mind. 6 Zeichen)",
+"bestehend"
+],
+[
+"Passwort",
+"bestehend"
+],
+[
+"Konto erstellen",
+"bestehend"
+],
+[
+"Passwort vergessen?",
+"bestehend"
+],
+[
+"Wie heißt du?",
+"bestehend"
+],
+[
+"Vorname oder Spitzname – so sehen dich die anderen.",
+"bestehend"
+],
+[
+"Wann hast du Geburtstag?",
+"bestehend"
+],
+[
+"Dein Alter bestimmt, wen du auf kumi triffst. Es lässt sich später nicht mehr ändern.",
+"bestehend"
+],
+[
+"Monat",
+"bestehend"
+],
+[
+"Jahr",
+"bestehend"
+],
+[
+"Dieses Datum gibt es nicht.",
+"bestehend"
+],
+[
+"kumi ist erst ab 13 Jahren erlaubt.",
+"bestehend"
+],
+[
+"Bitte prüf das Jahr noch mal.",
+"bestehend"
+],
+[
+"🎂  Du bist {0}",
+"bestehend"
+],
+[
+"🛡️ Du kommst in die Jugend-Community (13–17). Dort triffst du nur Leute in deinem Alter – Erwachsene können dich nicht sehen und dir nicht schreiben.",
+"bestehend"
+],
+[
+"👨‍👩‍👧 Weil du unter 16 bist, muss ein Elternteil zustimmen. Wir schicken eine E-Mail an diese Adresse.",
+"bestehend"
+],
+[
+"E-Mail eines Elternteils",
+"bestehend"
+],
+[
+"Ich bin …",
+"bestehend"
+],
+[
+"Damit dich die richtigen Leute in der Suche finden.",
+"bestehend"
+],
+[
+"✓ Keine Angabe",
+"bestehend"
+],
+[
+"Lieber keine Angabe",
+"bestehend"
+],
+[
+"Wo wohnst du?",
+"bestehend"
+],
+[
+"Leute aus deiner Gegend findest du so schneller.",
+"bestehend"
+],
+[
+"tippen zum Ändern",
+"bestehend"
+],
+[
+"Einladungscode",
+"bestehend"
+],
+[
+"🎁  Ich habe einen Einladungscode",
+"bestehend"
+],
+[
+"Ich akzeptiere die Nutzungsbedingungen und die Datenschutzerklärung und halte mich an die goldene Regel: Sei immer freundlich.",
+"bestehend"
+],
+[
+"Los geht's",
+"bestehend"
+],
+[
+"E-Mail wurde gesendet ✉️",
+"bestehend"
+],
+[
+"Wir haben eine E-Mail an {0} geschickt. Sobald ein Elternteil zustimmt, geht's los – die App aktualisiert sich dann von selbst.",
+"bestehend"
+],
+[
+"Andere Eltern-E-Mail (optional)",
+"bestehend"
+],
+[
+"E-Mail erneut senden",
+"bestehend"
+],
+[
+"Games",
+"bestehend"
+],
+[
+"Musik",
+"bestehend"
+],
+[
+"Sport",
+"bestehend"
+],
+[
+"Kreativ",
+"bestehend"
+],
+[
+"Film & Anime",
+"bestehend"
+],
+[
+"Lifestyle",
+"bestehend"
+],
+[
+"Wissen",
+"bestehend"
+],
+[
+"Gaming",
+"bestehend"
+],
+[
+"Fußball",
+"bestehend"
+],
+[
+"Zeichnen",
+"bestehend"
+],
+[
+"Filme",
+"bestehend"
+],
+[
+"Kochen",
+"bestehend"
+],
+[
+"Lesen",
+"bestehend"
+],
+[
+"Brettspiele",
+"bestehend"
+],
+[
+"Singen",
+"bestehend"
+],
+[
+"Basketball",
+"bestehend"
+],
+[
+"Fotografie",
+"bestehend"
+],
+[
+"Serien",
+"bestehend"
+],
+[
+"Tiere",
+"bestehend"
+],
+[
+"Coden",
+"bestehend"
+],
+[
+"Retro-Games",
+"bestehend"
+],
+[
+"Instrumente",
+"bestehend"
+],
+[
+"Fitness",
+"bestehend"
+],
+[
+"Schreiben",
+"bestehend"
+],
+[
+"Anime",
+"bestehend"
+],
+[
+"Natur",
+"bestehend"
+],
+[
+"Wissenschaft",
+"bestehend"
+],
+[
+"Shooter",
+"bestehend"
+],
+[
+"Rap",
+"bestehend"
+],
+[
+"Skaten",
+"bestehend"
+],
+[
+"Theater",
+"bestehend"
+],
+[
+"Horror",
+"bestehend"
+],
+[
+"Reisen",
+"bestehend"
+],
+[
+"Sprachen",
+"bestehend"
+],
+[
+"Rollenspiele",
+"bestehend"
+],
+[
+"Pop",
+"bestehend"
+],
+[
+"Tanzen",
+"bestehend"
+],
+[
+"Häkeln & Stricken",
+"bestehend"
+],
+[
+"Superhelden",
+"bestehend"
+],
+[
+"Mode",
+"bestehend"
+],
+[
+"Weltall",
+"bestehend"
+],
+[
+"Rennspiele",
+"bestehend"
+],
+[
+"Rock",
+"bestehend"
+],
+[
+"Yoga",
+"bestehend"
+],
+[
+"Nähen",
+"bestehend"
+],
+[
+"Dokus",
+"bestehend"
+],
+[
+"Memes",
+"bestehend"
+],
+[
+"Geschichte",
+"bestehend"
+],
+[
+"Rätsel",
+"bestehend"
+],
+[
+"Metal",
+"bestehend"
+],
+[
+"Schwimmen",
+"bestehend"
+],
+[
+"Basteln",
+"bestehend"
+],
+[
+"K-Dramas",
+"bestehend"
+],
+[
+"Podcasts",
+"bestehend"
+],
+[
+"Psychologie",
+"bestehend"
+],
+[
+"Schach",
+"bestehend"
+],
+[
+"Klavier",
+"bestehend"
+],
+[
+"Radfahren",
+"bestehend"
+],
+[
+"Videos drehen",
+"bestehend"
+],
+[
+"Manga",
+"bestehend"
+],
+[
+"Katzen",
+"bestehend"
+],
+[
+"Technik & KI",
+"bestehend"
+],
+[
+"Kartenspiele",
+"bestehend"
+],
+[
+"Schlagzeug",
+"bestehend"
+],
+[
+"Volleyball",
+"bestehend"
+],
+[
+"Kunst",
+"bestehend"
+],
+[
+"Sci-Fi",
+"bestehend"
+],
+[
+"Hunde",
+"bestehend"
+],
+[
+"Mathe",
+"bestehend"
+],
+[
+"Handyspiele",
+"bestehend"
+],
+[
+"Klassik",
+"bestehend"
+],
+[
+"Tennis",
+"bestehend"
+],
+[
+"Töpfern",
+"bestehend"
+],
+[
+"Fantasy",
+"bestehend"
+],
+[
+"Pferde",
+"bestehend"
+],
+[
+"Biologie",
+"bestehend"
+],
+[
+"PC-Gaming",
+"bestehend"
+],
+[
+"Techno",
+"bestehend"
+],
+[
+"Boxen",
+"bestehend"
+],
+[
+"Zaubertricks",
+"bestehend"
+],
+[
+"Romance",
+"bestehend"
+],
+[
+"Dinos",
+"bestehend"
+],
+[
+"Philosophie",
+"bestehend"
+],
+[
+"E-Sport",
+"bestehend"
+],
+[
+"Kampfsport",
+"bestehend"
+],
+[
+"Journaling",
+"bestehend"
+],
+[
+"True Crime",
+"bestehend"
+],
+[
+"Reptilien",
+"bestehend"
+],
+[
+"Finanzen",
+"bestehend"
+],
+[
+"Musik machen",
+"bestehend"
+],
+[
+"Eishockey",
+"bestehend"
+],
+[
+"Cosplay",
+"bestehend"
+],
+[
+"Streams",
+"bestehend"
+],
+[
+"Foodie",
+"bestehend"
+],
+[
+"Architektur",
+"bestehend"
+],
+[
+"Tischtennis",
+"bestehend"
+],
+[
+"Digital Art",
+"bestehend"
+],
+[
+"Backen",
+"bestehend"
+],
+[
+"Umwelt",
+"bestehend"
+],
+[
+"Reiten",
+"bestehend"
+],
+[
+"Design",
+"bestehend"
+],
+[
+"Kaffee",
+"bestehend"
+],
+[
+"Klettern",
+"bestehend"
+],
+[
+"Bubble Tea",
+"bestehend"
+],
+[
+"Laufen",
+"bestehend"
+],
+[
+"Vegan",
+"bestehend"
+],
+[
+"Skifahren",
+"bestehend"
+],
+[
+"Shopping",
+"bestehend"
+],
+[
+"Surfen",
+"bestehend"
+],
+[
+"Sneaker",
+"bestehend"
+],
+[
+"Turnen",
+"bestehend"
+],
+[
+"Make-up",
+"bestehend"
+],
+[
+"Football",
+"bestehend"
+],
+[
+"Astrologie",
+"bestehend"
+],
+[
+"Formel 1",
+"bestehend"
+],
+[
+"Camping",
+"bestehend"
+],
+[
+"Handball",
+"bestehend"
+],
+[
+"Chillen",
+"bestehend"
+],
+[
+"Angeln",
+"bestehend"
+],
+[
+"Feiern",
+"bestehend"
+],
+[
+"Badminton",
+"bestehend"
+],
+[
+"Autos",
+"bestehend"
+],
+[
+"Motorräder",
+"bestehend"
+],
+[
+"Pflanzen",
+"bestehend"
+],
+[
+"Die Sims",
+"bestehend"
+],
+[
+"Die Simpsons",
+"bestehend"
+],
+[
+"Chats",
+"bestehend"
+],
+[
+"Belästigung oder Mobbing",
+"bestehend"
+],
+[
+"Sexuelle Inhalte",
+"bestehend"
+],
+[
+"Falsches Alter / Fake-Profil",
+"bestehend"
+],
+[
+"Spam oder Betrug",
+"bestehend"
+],
+[
+"Gewalt oder Drohungen",
+"bestehend"
+],
+[
+"Sonstiges",
+"bestehend"
+],
+[
+"Bitte melde dich an.",
+"bestehend"
+],
+[
+"Dein Konto ist noch nicht freigeschaltet.",
+"bestehend"
+],
+[
+"Nur für Admins.",
+"bestehend"
+],
+[
+"Bitte gib einen Namen mit mindestens 2 Zeichen ein.",
+"bestehend"
+],
+[
+"Bitte gib ein gültiges Geburtsdatum ein.",
+"bestehend"
+],
+[
+"Bitte wähle dein Land aus.",
+"bestehend"
+],
+[
+"Du musst mindestens 13 Jahre alt sein, um kumi zu nutzen.",
+"bestehend"
+],
+[
+"Bitte gib die E-Mail-Adresse eines Elternteils ein.",
+"bestehend"
+],
+[
+"Die Eltern-E-Mail muss eine andere Adresse sein als deine eigene.",
+"bestehend"
+],
+[
+"Du hast bereits ein Profil.",
+"bestehend"
+],
+[
+"Für dein Konto ist keine Zustimmung nötig.",
+"bestehend"
+],
+[
+"Bitte warte ein paar Minuten, bevor du die E-Mail erneut sendest.",
+"bestehend"
+],
+[
+"Bitte gib eine gültige E-Mail-Adresse ein.",
+"bestehend"
+],
+[
+"Der E-Mail-Versand ist noch nicht eingerichtet. Bitte melde dich beim kumi-Team.",
+"bestehend"
+],
+[
+"Kein Admin-Zugang für dieses Konto.",
+"bestehend"
+],
+[
+"Bitte bestätige zuerst deine E-Mail-Adresse.",
+"bestehend"
+],
+[
+"Ungültige Aktion.",
+"bestehend"
+],
+[
+"Meldung nicht gefunden.",
+"bestehend"
+],
+[
+"Diese Freundschaft ist nicht möglich.",
+"bestehend"
+],
+[
+"Ungültige Person.",
+"bestehend"
+],
+[
+"Bitte starte die App neu.",
+"bestehend"
+],
+[
+"Dieses Profil ist gerade nicht verfügbar.",
+"bestehend"
+],
+[
+"Ihr seid schon befreundet.",
+"bestehend"
+],
+[
+"Du hast schon eine Anfrage gesendet.",
+"bestehend"
+],
+[
+"Eine Anfrage ist hier gerade nicht möglich.",
+"bestehend"
+],
+[
+"Nicht genug Gems – eine Anfrage kostet {0} 💎. Hol dir neue beim täglichen Check-in oder im Shop!",
+"bestehend"
+],
+[
+"Ungültige Anfrage.",
+"bestehend"
+],
+[
+"Diese Anfrage gibt es nicht mehr.",
+"bestehend"
+],
+[
+"Konto nicht gefunden.",
+"bestehend"
+],
+[
+"Du hast heute schon eingecheckt. Bis morgen! 👋",
+"bestehend"
+],
+[
+"Ungültige Datei.",
+"bestehend"
+],
+[
+"Upload nicht gefunden. Bitte versuch es noch einmal.",
+"bestehend"
+],
+[
+"Dateityp oder Größe passt nicht.",
+"bestehend"
+],
+[
+"Du kannst höchstens {0} Fotos haben.",
+"bestehend"
+],
+[
+"Die automatische Prüfung ist gerade nicht erreichbar. Bitte versuch es später noch einmal.",
+"bestehend"
+],
+[
+"Das verstößt gegen unsere Regeln und wurde nicht hochgeladen.",
+"bestehend"
+],
+[
+"Datei nicht gefunden.",
+"bestehend"
+],
+[
+"Die Nachricht ist leer.",
+"bestehend"
+],
+[
+"Slow-Mode: Warte noch {0} Sekunden.",
+"bestehend"
+],
+[
+"Profil nicht gefunden.",
+"bestehend"
+],
+[
+"Käufe sind auf dem Server noch nicht freigeschaltet. Keine Sorge: Der Kauf wird beim nächsten Start gutgeschrieben.",
+"bestehend"
+],
+[
+"Diesen Kauf kennt Google nicht.",
+"bestehend"
+],
+[
+"Google Play ist gerade nicht erreichbar. Der Kauf wird beim nächsten Start nachgeholt.",
+"bestehend"
+],
+[
+"Unbekanntes Produkt.",
+"bestehend"
+],
+[
+"Unter 18 kannst du bei kumi höchstens {0} € im Monat ausgeben. Nächsten Monat geht es wieder.",
+"bestehend"
+],
+[
+"Ungültiger Kauf.",
+"bestehend"
+],
+[
+"Dieser Kauf wurde storniert.",
+"bestehend"
+],
+[
+"Dieser Kauf gehört zu einem anderen Konto.",
+"bestehend"
+],
+[
+"Dieses Abo gehört zu einem anderen Konto.",
+"bestehend"
+],
+[
+"📷 Foto",
+"bestehend"
+],
+[
+"📷 Foto (blockiert)",
+"bestehend"
+],
+[
+"🎤 Sprachnachricht",
+"bestehend"
+],
+[
+"Ihr seid jetzt Freunde 🎉",
+"bestehend"
+],
+[
+"{name} hat deine Anfrage erwidert. Sagt Hallo!",
+"bestehend"
+],
+[
+"Neue Freundschaftsanfrage 👋",
+"bestehend"
+],
+[
+"{name} möchte mit dir befreundet sein.",
+"bestehend"
+],
+[
+"Anfrage angenommen 🎉",
+"bestehend"
+],
+[
+"{name} hat deine Anfrage angenommen. Sagt Hallo!",
+"bestehend"
+],
+[
+"Happy Birthday! 🎂",
+"bestehend"
+],
+[
+"Du bist jetzt 18 und wechselst in die Erwachsenen-Community von kumi.",
+"bestehend"
+],
+[
+"Pappe-Modus",
+"ProfileScreens.kt"
+]
+]

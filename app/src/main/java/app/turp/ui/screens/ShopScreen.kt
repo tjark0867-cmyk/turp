@@ -29,7 +29,7 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBackIos
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
+import app.turp.ui.components.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -71,6 +71,7 @@ import app.turp.ui.components.TurpLogo
 import app.turp.ui.components.toast
 import app.turp.ui.components.todayBerlin
 import app.turp.ui.theme.Ink
+import app.turp.ui.theme.PageBg
 import app.turp.ui.theme.InkElevated
 import app.turp.ui.theme.InkHigh
 import app.turp.ui.theme.InkLine
@@ -201,7 +202,7 @@ fun ShopScreen(session: SessionState.Active, onBack: () -> Unit, vm: ShopViewMod
     Column(
         Modifier
             .fillMaxSize()
-            .background(Ink)
+            .background(PageBg)
             .statusBarsPadding()
     ) {
         Row(

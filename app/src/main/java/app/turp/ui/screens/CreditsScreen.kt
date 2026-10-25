@@ -38,6 +38,7 @@ import app.turp.R
 import app.turp.ui.components.InterestIcon
 import app.turp.ui.components.interestDef
 import app.turp.ui.theme.Ink
+import app.turp.ui.theme.PageBg
 import app.turp.ui.theme.InkElevated
 import app.turp.ui.theme.Teal
 import app.turp.ui.theme.TextHigh
@@ -77,7 +78,7 @@ fun CreditsScreen(onBack: () -> Unit) {
     Column(
         Modifier
             .fillMaxSize()
-            .background(Ink)
+            .background(PageBg)
             .statusBarsPadding()
     ) {
         Box(
