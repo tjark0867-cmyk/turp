@@ -1,0 +1,201 @@
+== Google-Dienste einschalten
+Operation "operations/acat.p2-141786151194-f729ba00-9fc2-4408-a0c9-d0662429300c" finished successfully.
+== Firebase hinzufügen (falls noch nicht geschehen)
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+npm warn deprecated json-ptr@3.1.1: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+- Adding Firebase resources to Google Cloud Platform project
+✖ Adding Firebase resources to Google Cloud Platform project
+
+[1m[31mError:[39m[22m Failed to add Firebase to Google Cloud Platform project. See firebase-debug.log for more info.
+== Datenbank anlegen (Frankfurt)
+ERROR: (gcloud.firestore.databases.create) Resource in projects [turp-70daa] is the subject of a conflict: Database already exists. Please use another database_id
+europe-west3
+== E-Mail/Passwort-Login einschalten
+E-Mail/Passwort-Login ist aktiv
+== Google-Login vorbereiten
+Fingerabdruck 77db7b91… ist eingetragen
+Fingerabdruck 50648b4c… ist eingetragen
+OAuth-Clients (Typen): []
+Google-Login ist noch aus
+::warning title=Google-Login::Bitte in der Firebase-Konsole unter Authentication > Anmeldemethode > Google einschalten (Support-E-Mail auswählen, speichern).
+== Rechte für die Server-Funktionen
+Rolle roles/editor gesetzt
+Rolle roles/cloudbuild.builds.builder gesetzt
+Rolle roles/secretmanager.secretAccessor gesetzt
+== E-Mail-Versand (optional)
+Kein Gmail-Zugang hinterlegt - Eltern-E-Mails werden noch nicht verschickt
+Created version [23] of the secret [SMTP_URI].
+== Admin-Adressen
+== Abhängigkeiten installieren
+npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+npm warn deprecated uuid@10.0.0: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+
+added 246 packages in 6s
+== Regeln und Indizes hochladen
+
+[1m[37m===[39m Deploying to 'turp-70daa'...[22m
+
+[36m[1mi [22m[39m deploying [1mfirestore[22m
+[36m[1mi  firestore:[22m[39m ensuring required API [1mfirestore.googleapis.com[22m is enabled...
+[32m[1m✔  firestore:[22m[39m required API [1mfirestore.googleapis.com[22m is enabled
+[36m[1mi  firestore:[22m[39m ensuring required API [1mfirestore.googleapis.com[22m is enabled...
+[36m[1mi [22m[39m [1m[36mfirestore:[39m[22m reading indexes from [1mfirestore.indexes.json[22m...
+[36m[1mi  cloud.firestore:[22m[39m checking [1mfirestore.rules[22m for compilation errors...
+[32m[1m✔  cloud.firestore:[22m[39m rules file [1mfirestore.rules[22m compiled successfully
+[36m[1mi  firestore:[22m[39m latest version of [1mfirestore.rules[22m already up to date, skipping upload...
+[36m[1mi [22m[39m [1m[36mfirestore: [39m[22mdeploying indexes...
+[32m[1m✔ [22m[39m [1m[32mfirestore:[39m[22m deployed indexes in [1mfirestore.indexes.json[22m successfully for (default) database
+[32m[1m✔  firestore:[22m[39m released rules [1mfirestore.rules[22m to [1mcloud.firestore[22m
+
+[32m[1m✔ [22m[39m [1m[4mDeploy complete![24m[22m
+
+[1mProject Console:[22m https://console.firebase.google.com/project/turp-70daa/overview
+== Server-Funktionen hochladen
+
+[1m[37m===[39m Deploying to 'turp-70daa'...[22m
+
+[36m[1mi [22m[39m deploying [1mfunctions[22m
+[36m[1mi  functions:[22m[39m preparing codebase [1mdefault[22m for deployment
+[36m[1mi  functions:[22m[39m ensuring required API [1mcloudfunctions.googleapis.com[22m is enabled...
+[36m[1mi  functions:[22m[39m ensuring required API [1mcloudbuild.googleapis.com[22m is enabled...
+[36m[1mi  artifactregistry:[22m[39m ensuring required API [1martifactregistry.googleapis.com[22m is enabled...
+[32m[1m✔  functions:[22m[39m required API [1mcloudbuild.googleapis.com[22m is enabled
+[32m[1m✔  functions:[22m[39m required API [1mcloudfunctions.googleapis.com[22m is enabled
+[32m[1m✔  artifactregistry:[22m[39m required API [1martifactregistry.googleapis.com[22m is enabled
+[33m[1m⚠ [22m[39m [1m[33mfunctions: [39m[22mpackage.json indicates an outdated version of firebase-functions. Please upgrade using [1mnpm install --save firebase-functions@latest[22m in your functions directory.
+[33m[1m⚠ [22m[39m [1m[33mfunctions: [39m[22mPlease note that there will be breaking changes when you upgrade.
+[36m[1mi [22m[39m [36m[1mfunctions: [22m[39mLoaded environment variables from functions/.env
+[36m[1mi  functions:[22m[39m Loading and analyzing source code for codebase default to determine what to deploy
+Serving at port 8255
+
+[36m[1mi  extensions:[22m[39m ensuring required API [1mfirebaseextensions.googleapis.com[22m is enabled...
+[32m[1m✔  extensions:[22m[39m required API [1mfirebaseextensions.googleapis.com[22m is enabled
+[36m[1mi [22m[39m [36m[1mfunctions: [22m[39mLoaded environment variables from functions/.env
+[36m[1mi  functions:[22m[39m preparing [1mfunctions[22m directory for uploading...
+[36m[1mi [22m[39m [36m[1mfunctions:[22m[39m packaged [1m/home/runner/work/turp/turp/functions[22m (87.43 KB) for uploading
+[36m[1mi  functions:[22m[39m ensuring required API [1mcloudscheduler.googleapis.com[22m is enabled...
+[32m[1m✔  functions:[22m[39m required API [1mcloudscheduler.googleapis.com[22m is enabled
+[36m[1mi  functions:[22m[39m ensuring required API [1mrun.googleapis.com[22m is enabled...
+[36m[1mi  functions:[22m[39m ensuring required API [1meventarc.googleapis.com[22m is enabled...
+[36m[1mi  functions:[22m[39m ensuring required API [1mpubsub.googleapis.com[22m is enabled...
+[36m[1mi  functions:[22m[39m ensuring required API [1mstorage.googleapis.com[22m is enabled...
+[32m[1m✔  functions:[22m[39m required API [1mrun.googleapis.com[22m is enabled
+[32m[1m✔  functions:[22m[39m required API [1meventarc.googleapis.com[22m is enabled
+[32m[1m✔  functions:[22m[39m required API [1mpubsub.googleapis.com[22m is enabled
+[32m[1m✔  functions:[22m[39m required API [1mstorage.googleapis.com[22m is enabled
+[36m[1mi  functions:[22m[39m generating the service identity for [1mpubsub.googleapis.com[22m...
+[36m[1mi  functions:[22m[39m generating the service identity for [1meventarc.googleapis.com[22m...
+[36m[1mi  functions:[22m[39m ensuring required API [1msecretmanager.googleapis.com[22m is enabled...
+[32m[1m✔  functions:[22m[39m required API [1msecretmanager.googleapis.com[22m is enabled
+[32m[1m✔  functions:[22m[39m [1mfunctions[22m source uploaded successfully
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1mcreateProfile(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1mresendConsent(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1mparentConsent(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1mclaimAdmin(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1madminAction(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1mstartTestChat(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1msendRequest(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1mrespondRequest(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1msendLetter(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1mclaimLetterGift(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1mbuyLetters(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1mcheckIn(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1mremoveProfileMedia(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1mpostRoomMessage(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1mreport(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1mblockUser(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1munblockUser(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1mpurchaseCheck(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1mverifyPurchase(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1mdeleteAccount(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1monProfileWritten(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1mdailyMaintenance(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1mgoogleClientId(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1maddProfileMedia(europe-west3)[22m...
+[36m[1mi  functions:[22m[39m updating Node.js 22 (2nd Gen) function [1monMessageCreated(europe-west3)[22m...
+[32m[1m✔ [22m[39m [1m[32mfunctions[sendLetter(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[createProfile(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[onMessageCreated(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[sendRequest(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[report(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[verifyPurchase(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[purchaseCheck(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[buyLetters(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[parentConsent(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[unblockUser(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[checkIn(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[deleteAccount(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[googleClientId(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[dailyMaintenance(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[respondRequest(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[resendConsent(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[postRoomMessage(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[adminAction(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[claimAdmin(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[onProfileWritten(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[blockUser(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[claimLetterGift(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[removeProfileMedia(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[startTestChat(europe-west3)][39m[22m Successful update operation.
+[32m[1m✔ [22m[39m [1m[32mfunctions[addProfileMedia(europe-west3)][39m[22m Successful update operation.
+[1mFunction URL[22m (parentConsent(europe-west3)): https://parentconsent-grk44armxa-ey.a.run.app
+
+[32m[1m✔ [22m[39m [1m[4mDeploy complete![24m[22m
+
+[1mProject Console:[22m https://console.firebase.google.com/project/turp-70daa/overview
+== Aufrufrechte der App-Funktionen prüfen
+Privat (Auslöser/Zeitplan): onProfileWritten, onMessageCreated, dailyMaintenance
+createprofile: erreichbar
+sendrequest: erreichbar
+blockuser: erreichbar
+verifypurchase: erreichbar
+postroommessage: erreichbar
+purchasecheck: erreichbar
+checkin: erreichbar
+removeprofilemedia: erreichbar
+sendletter: erreichbar
+adminaction: erreichbar
+googleclientid: erreichbar
+parentconsent: erreichbar
+claimadmin: erreichbar
+resendconsent: erreichbar
+unblockuser: erreichbar
+addprofilemedia: erreichbar
+buyletters: erreichbar
+deleteaccount: erreichbar
+claimlettergift: erreichbar
+respondrequest: erreichbar
+report: erreichbar
+starttestchat: erreichbar
+== Dienstkonto für Google-Play-Käufe
+141786151194-compute@developer.gserviceaccount.com
+== Speicher einrichten
+{
+  "name": "projects/turp-70daa/defaultBucket",
+  "location": "EUROPE-WEST3",
+  "bucket": {
+    "name": "projects/turp-70daa/buckets/turp-70daa.firebasestorage.app"
+  },
+  "storageClass": "REGIONAL"
+}
+
+== Speicher-Regeln hochladen
+
+[1m[37m===[39m Deploying to 'turp-70daa'...[22m
+
+[36m[1mi [22m[39m deploying [1mstorage[22m
+[36m[1mi  storage:[22m[39m ensuring required API [1mfirebasestorage.googleapis.com[22m is enabled...
+[32m[1m✔  storage:[22m[39m required API [1mfirebasestorage.googleapis.com[22m is enabled
+[36m[1mi  firebase.storage:[22m[39m checking [1mstorage.rules[22m for compilation errors...
+[32m[1m✔  firebase.storage:[22m[39m rules file [1mstorage.rules[22m compiled successfully
+[36m[1mi  storage:[22m[39m latest version of [1mstorage.rules[22m already up to date, skipping upload...
+[32m[1m✔  storage:[22m[39m released rules [1mstorage.rules[22m to [1mfirebase.storage[22m
+
+[32m[1m✔ [22m[39m [1m[4mDeploy complete![24m[22m
+
+[1mProject Console:[22m https://console.firebase.google.com/project/turp-70daa/overview
+== Fertig
