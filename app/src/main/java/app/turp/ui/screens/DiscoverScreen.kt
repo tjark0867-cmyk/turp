@@ -447,7 +447,8 @@ fun DiscoverScreen(
                         onLike = vm::like,
                         onOpen = onOpenUser,
                         onReport = { reporting = it },
-                        onLetter = { writing = it }
+                        onLetter = { writing = it },
+                        letters = session.account.letters
                     )
                 }
             }
@@ -494,6 +495,7 @@ private fun CardStack(
     onOpen: (String) -> Unit,
     onReport: (UserProfile) -> Unit,
     onLetter: (UserProfile) -> Unit,
+    letters: Long,
 ) {
     val top = cards.first()
     val scope = rememberCoroutineScope()
@@ -608,6 +610,7 @@ private fun CardStack(
                     onSkip = { fling(false) },
                     onReport = { onReport(top) },
                     onLetter = { onLetter(top) },
+                    letters = letters,
                     likeProgress = { (offsetX.value / widthPx * 2.6f).coerceIn(-1f, 1f) },
                     modifier = Modifier
                         .fillMaxSize()
@@ -635,6 +638,7 @@ private fun ProfileCard(
     onSkip: () -> Unit = {},
     onReport: () -> Unit = {},
     onLetter: () -> Unit = {},
+    letters: Long = 0,
     likeProgress: () -> Float = { 0f },
 ) {
     val shape = RoundedCornerShape(16.dp)
@@ -732,7 +736,7 @@ private fun ProfileCard(
                     Modifier
                         .weight(1f)
                         .height(56.dp)
-                        .paperPress(t("Anfrage senden"), onLike),
+                        .paperPress(t("Nachricht senden"), onLetter),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Image(
@@ -745,31 +749,20 @@ private fun ProfileCard(
                         Modifier.padding(start = 18.dp, end = 16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            Icons.AutoMirrored.Rounded.Send,
-                            contentDescription = null,
-                            tint = TealDark,
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Spacer(Modifier.width(12.dp))
+                        Image(painterResource(R.drawable.item_letter), null, Modifier.size(34.dp))
+                        Spacer(Modifier.width(10.dp))
                         Text(
-                            t("Anfrage senden"),
+                            t("Nachricht senden"),
                             color = PaperInk,
                             fontFamily = Display,
                             fontSize = 18.sp,
                             maxLines = 1,
                             modifier = Modifier.weight(1f)
                         )
-                        GemIcon(16.dp)
-                        Spacer(Modifier.width(4.dp))
-                        Text("${requestCost}", color = PaperInk, fontFamily = Display, fontSize = 17.sp)
+                        Text("×$letters", color = PaperInk.copy(alpha = 0.7f), fontFamily = Display, fontSize = 16.sp)
                     }
                 }
-                Spacer(Modifier.width(8.dp))
-                CardboardDiscButton(onClick = onLetter, label = t("Brief schreiben"), size = 58.dp) {
-                    Image(painterResource(R.drawable.item_letter), null, Modifier.size(40.dp))
-                }
-                Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(10.dp))
                 CardboardDiscButton(onClick = onSkip, label = t("Weiter"), size = 58.dp) {
                     Image(painterResource(R.drawable.swipe_no), null, Modifier.size(30.dp))
                 }
@@ -783,7 +776,7 @@ private fun ProfileCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Surface(
-                    onClick = onLike,
+                    onClick = onLetter,
                     shape = CircleShape,
                     color = Color.Black.copy(alpha = 0.45f),
                     border = BorderStroke(1.5.dp, Color.White.copy(alpha = 0.7f)),
@@ -795,36 +788,17 @@ private fun ProfileCard(
                         Modifier.padding(horizontal = 18.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            Icons.AutoMirrored.Rounded.Send,
-                            contentDescription = null,
-                            tint = Teal,
-                            modifier = Modifier.size(22.dp)
-                        )
-                        Spacer(Modifier.width(12.dp))
+                        Image(painterResource(R.drawable.item_letter), null, Modifier.size(30.dp))
+                        Spacer(Modifier.width(10.dp))
                         Text(
-                            t("Anfrage senden"),
+                            t("Nachricht senden"),
                             color = Color.White,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.weight(1f)
                         )
-                        GemIcon(15.dp)
-                        Spacer(Modifier.width(4.dp))
-                        Text("${requestCost}", color = Color.White.copy(alpha = 0.75f), fontWeight = FontWeight.SemiBold)
+                        Text("×$letters", color = Color.White.copy(alpha = 0.75f), fontWeight = FontWeight.SemiBold)
                     }
-                }
-                Spacer(Modifier.width(8.dp))
-                Box(
-                    Modifier
-                        .size(48.dp)
-                        .clip(CircleShape)
-                        .background(Color.Black.copy(alpha = 0.45f))
-                        .border(1.5.dp, Color.White.copy(alpha = 0.7f), CircleShape)
-                        .paperPress(t("Brief schreiben"), onLetter),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(painterResource(R.drawable.item_letter), null, Modifier.size(32.dp))
                 }
                 Spacer(Modifier.width(8.dp))
                 RoundCandyButton(

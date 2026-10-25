@@ -307,3 +307,4 @@
 587|Surat baru ✉️
 588|{name} menulis surat untukmu. Baca dan putuskan apakah kalian berteman.
 589|🎁 Hadiah: 5 surat ✉️ – kirim pesan ke seseorang sebelum dia menerimamu!
+590|Kirim pesan

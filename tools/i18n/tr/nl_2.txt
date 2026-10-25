@@ -307,3 +307,4 @@
 587|Nieuwe brief ✉️
 588|{name} heeft je een brief geschreven. Lees hem en beslis of jullie vrienden worden.
 589|🎁 Cadeau: 5 brieven ✉️ – schrijf iemand voordat die je accepteert!
+590|Bericht sturen

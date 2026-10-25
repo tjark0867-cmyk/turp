@@ -307,3 +307,4 @@
 587|New letter ✉️
 588|{name} wrote you a letter. Read it and decide if you want to be friends.
 589|🎁 Gift: 5 letters ✉️ – write to someone before they accept you!
+590|Send message

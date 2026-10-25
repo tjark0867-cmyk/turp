@@ -307,3 +307,4 @@
 587|Nowy list ✉️
 588|{name} napisał(a) do ciebie list. Przeczytaj go i zdecyduj, czy chcecie zostać znajomymi.
 589|🎁 Prezent: 5 listów ✉️ – napisz do kogoś, zanim cię przyjmie!
+590|Wyślij wiadomość
