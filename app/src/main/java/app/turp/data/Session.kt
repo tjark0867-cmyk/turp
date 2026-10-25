@@ -36,6 +36,7 @@ class SessionViewModel : ViewModel() {
 
     private var accountJob: Job? = null
     private var tokenSaved = false
+    private var giftAsked = false
 
     private val authListener = FirebaseAuth.AuthStateListener { auth -> onUserChanged(auth.currentUser) }
 
@@ -105,6 +106,18 @@ class SessionViewModel : ViewModel() {
                 if (account.status == "active" && !tokenSaved) {
                     tokenSaved = true
                     saveFcmToken(account.fcmToken)
+                }
+                if (account.status == "active" && !account.letterGift && !giftAsked) {
+                    // neue Version: 5 Briefe als Geschenk (der Server gibt sie nur einmal)
+                    giftAsked = true
+                    viewModelScope.launch {
+                        runCatching {
+                            if (ProfileRepo.claimLetterGift() > 0) {
+                                val ctx = com.google.firebase.FirebaseApp.getInstance().applicationContext
+                                android.widget.Toast.makeText(ctx, t("🎁 Geschenk: 5 Briefe ✉️ – schreib jemandem, bevor er dich annimmt!"), android.widget.Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    }
                 }
                 if (account.status == "active" && account.lang != I18n.lang) {
                     viewModelScope.launch { runCatching { ProfileRepo.saveLang(I18n.lang) } }

@@ -48,6 +48,8 @@ data class Account(
     val lang: String = "",
     /** Briefe: jemandem schreiben, bevor er angenommen hat */
     val letters: Long = 0,
+    /** Start-Geschenk (5 Briefe) schon abgeholt */
+    val letterGift: Boolean = false,
 ) {
     /** kumi+ gerade aktiv (auch wenn der Tagesjob ein abgelaufenes Abo noch nicht beendet hat) */
     val plusActive: Boolean
@@ -197,6 +199,7 @@ fun DocumentSnapshot.toAccount() = Account(
     plusUntil = ts("plusUntil"),
     lang = s("lang"),
     letters = n("letters"),
+    letterGift = b("letterGift"),
 )
 
 fun DocumentSnapshot.toSocials() = Socials(

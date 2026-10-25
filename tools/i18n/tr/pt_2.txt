@@ -306,3 +306,4 @@
 586|Gems insuficientes – {0} cartas custam {1} 💎.
 587|Nova carta ✉️
 588|{name} te escreveu uma carta. Leia e decida se querem ser amigos.
+589|🎁 Presente: 5 cartas ✉️ – escreva para alguém antes de ser aceito!

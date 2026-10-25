@@ -2349,10 +2349,14 @@
 ],
 [
 "Neuer Brief ✉️",
-"Push-Benachrichtigung"
+"bestehend"
 ],
 [
 "{name} hat dir einen Brief geschrieben. Lies ihn und entscheide, ob ihr Freunde werdet.",
-"Push-Benachrichtigung"
+"bestehend"
+],
+[
+"🎁 Geschenk: 5 Briefe ✉️ – schreib jemandem, bevor er dich annimmt!",
+"Session.kt"
 ]
 ]

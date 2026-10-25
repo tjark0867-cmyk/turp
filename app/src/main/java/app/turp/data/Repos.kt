@@ -162,6 +162,10 @@ object ProfileRepo {
         )
     }
 
+    /** Einmaliges Geschenk: 5 Briefe. Liefert die Anzahl (0 = schon abgeholt). */
+    suspend fun claimLetterGift(): Long =
+        (callFunction("claimLetterGift")["granted"] as? Number)?.toLong() ?: 0L
+
     /** 5 Briefe für 500 Gems */
     suspend fun buyLetters() {
         callFunction("buyLetters")

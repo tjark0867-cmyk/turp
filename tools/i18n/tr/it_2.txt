@@ -306,3 +306,4 @@
 586|Gemme insufficienti – {0} lettere costano {1} 💎.
 587|Nuova lettera ✉️
 588|{name} ti ha scritto una lettera. Leggila e decidi se diventare amici.
+589|🎁 Regalo: 5 lettere ✉️ – scrivi a qualcuno prima che ti accetti!

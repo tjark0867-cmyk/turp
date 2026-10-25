@@ -306,3 +306,4 @@
 586|Yeterli taş yok – {0} mektup {1} 💎.
 587|Yeni mektup ✉️
 588|{name} sana bir mektup yazdı. Oku ve arkadaş olup olmayacağına karar ver.
+589|🎁 Hediye: 5 mektup ✉️ – biri seni kabul etmeden ona yaz!

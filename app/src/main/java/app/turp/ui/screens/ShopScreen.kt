@@ -245,15 +245,6 @@ fun ShopScreen(session: SessionState.Active, onBack: () -> Unit, vm: ShopViewMod
             // Was du gerade hast
             Inventory(gems = account.gems, letters = account.letters)
 
-            // Tägliche Belohnung als Wochen-Kalender (Tag 3: Brief)
-            DailyRewards(
-                streak = account.streak,
-                lastCheckIn = account.lastCheckIn,
-                busy = vm.busy,
-                plus = account.plusActive,
-                onClaim = { vm.claimDaily() }
-            )
-
             SectionHeading(t("Items"), Modifier.padding(top = 6.dp))
             LetterOffer(
                 letters = account.letters,
@@ -369,6 +360,15 @@ fun ShopScreen(session: SessionState.Active, onBack: () -> Unit, vm: ShopViewMod
                 }
             }
 
+            // Tägliche Belohnung als Wochen-Kalender (Tag 3: Brief) – ganz unten
+            Spacer(Modifier.height(6.dp))
+            DailyRewards(
+                streak = account.streak,
+                lastCheckIn = account.lastCheckIn,
+                busy = vm.busy,
+                plus = account.plusActive,
+                onClaim = { vm.claimDaily() }
+            )
             Spacer(Modifier.height(24.dp))
         }
     }

@@ -944,6 +944,19 @@ exports.sendLetter = onCall(async (req) => {
   return { matched: false, chatId, letters };
 });
 
+// Geschenk zum Start der Briefe: jedes Konto bekommt einmalig 5 Briefe (holt die neue App-Version ab)
+exports.claimLetterGift = onCall(async (req) => {
+  const uid = requireActive(req);
+  const ref = db.doc(`accounts/${uid}`);
+  return db.runTransaction(async (tx) => {
+    const acc = await tx.get(ref);
+    if (!acc.exists) throw new HttpsError("not-found", "Konto nicht gefunden.");
+    if (acc.get("letterGift") === true) return { granted: 0 };
+    tx.update(ref, { letterGift: true, letters: FieldValue.increment(LETTER_PACK) });
+    return { granted: LETTER_PACK };
+  });
+});
+
 exports.buyLetters = onCall(async (req) => {
   const uid = requireActive(req);
   const ref = db.doc(`accounts/${uid}`);
