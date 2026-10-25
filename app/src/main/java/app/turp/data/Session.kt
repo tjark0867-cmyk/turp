@@ -29,6 +29,9 @@ sealed interface SessionState {
     ) : SessionState
 }
 
+/** Aktuelle Brief-Geschenk-Runde – muss zu LETTER_GIFT_ID in functions/index.js passen */
+private const val CURRENT_LETTER_GIFT = 2L
+
 class SessionViewModel : ViewModel() {
 
     private val _state = MutableStateFlow<SessionState>(SessionState.Loading)
@@ -107,7 +110,7 @@ class SessionViewModel : ViewModel() {
                     tokenSaved = true
                     saveFcmToken(account.fcmToken)
                 }
-                if (account.status == "active" && !account.letterGift && !giftAsked) {
+                if (account.status == "active" && account.letterGiftId < CURRENT_LETTER_GIFT && !giftAsked) {
                     // neue Version: 5 Briefe als Geschenk (der Server gibt sie nur einmal)
                     giftAsked = true
                     viewModelScope.launch {

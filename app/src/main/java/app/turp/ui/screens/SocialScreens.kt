@@ -281,7 +281,7 @@ private fun ChatRow(chat: Chat, me: String, onClick: () -> Unit) {
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Avatar(other.photo, other.name, other.color, 50.dp, online = online)
+        Avatar(other.photo, other.name, other.color, 60.dp, online = online)
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
             Text(

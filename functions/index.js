@@ -944,15 +944,18 @@ exports.sendLetter = onCall(async (req) => {
   return { matched: false, chatId, letters };
 });
 
-// Geschenk zum Start der Briefe: jedes Konto bekommt einmalig 5 Briefe (holt die neue App-Version ab)
+// Brief-Geschenke: jedes Konto bekommt pro Geschenk-Nummer einmal 5 Briefe (holt die neue App-Version ab).
+// Neue Geschenk-Runde = LETTER_GIFT_ID erhöhen (und in der App CURRENT_LETTER_GIFT).
+const LETTER_GIFT_ID = 2;
 exports.claimLetterGift = onCall(async (req) => {
   const uid = requireActive(req);
   const ref = db.doc(`accounts/${uid}`);
   return db.runTransaction(async (tx) => {
     const acc = await tx.get(ref);
     if (!acc.exists) throw new HttpsError("not-found", "Konto nicht gefunden.");
-    if (acc.get("letterGift") === true) return { granted: 0 };
-    tx.update(ref, { letterGift: true, letters: FieldValue.increment(LETTER_PACK) });
+    const last = acc.get("letterGiftId") || (acc.get("letterGift") === true ? 1 : 0);
+    if (last >= LETTER_GIFT_ID) return { granted: 0 };
+    tx.update(ref, { letterGift: true, letterGiftId: LETTER_GIFT_ID, letters: FieldValue.increment(LETTER_PACK) });
     return { granted: LETTER_PACK };
   });
 });

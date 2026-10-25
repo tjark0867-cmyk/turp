@@ -48,8 +48,8 @@ data class Account(
     val lang: String = "",
     /** Briefe: jemandem schreiben, bevor er angenommen hat */
     val letters: Long = 0,
-    /** Start-Geschenk (5 Briefe) schon abgeholt */
-    val letterGift: Boolean = false,
+    /** Nummer des zuletzt abgeholten Brief-Geschenks (je 5 Briefe) */
+    val letterGiftId: Long = 0,
 ) {
     /** kumi+ gerade aktiv (auch wenn der Tagesjob ein abgelaufenes Abo noch nicht beendet hat) */
     val plusActive: Boolean
@@ -199,7 +199,7 @@ fun DocumentSnapshot.toAccount() = Account(
     plusUntil = ts("plusUntil"),
     lang = s("lang"),
     letters = n("letters"),
-    letterGift = b("letterGift"),
+    letterGiftId = n("letterGiftId").let { if (it == 0L && b("letterGift")) 1L else it },
 )
 
 fun DocumentSnapshot.toSocials() = Socials(
