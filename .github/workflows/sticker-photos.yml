@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       step:
-        description: "search oder cutout"
+        description: "search, openverse oder cutout"
         required: true
         default: "search"
       keys:
@@ -42,6 +42,10 @@ jobs:
         if: inputs.step == 'search'
         run: python3 tools/sticker-photos/search.py out "${{ inputs.keys }}"
 
+      - name: Fotos suchen (Openverse, ohne Wikimedia)
+        if: inputs.step == 'openverse'
+        run: python3 tools/sticker-photos/openverse.py out "${{ inputs.keys }}"
+
       - name: Fotos freistellen
         if: inputs.step == 'cutout'
         run: |
@@ -52,7 +56,7 @@ jobs:
         run: |
           BR="${{ inputs.branch }}"
           if [ -z "$BR" ]; then
-            if [ "${{ inputs.step }}" = "search" ]; then BR=sticker-photos; else BR=sticker-cutouts; fi
+            if [ "${{ inputs.step }}" != "cutout" ]; then BR=sticker-photos; else BR=sticker-cutouts; fi
           fi
           cp -r out /tmp/out
           git config user.name "turp-bot"
