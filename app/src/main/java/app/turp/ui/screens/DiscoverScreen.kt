@@ -59,7 +59,7 @@ import androidx.compose.material.icons.rounded.Tune
 import androidx.compose.material.icons.rounded.PersonAdd
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
+import app.turp.ui.components.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -119,6 +119,10 @@ import app.turp.ui.components.parseColor
 import app.turp.ui.components.toast
 import app.turp.ui.theme.Coral
 import app.turp.ui.theme.Ink
+import app.turp.ui.components.GemPriceTag
+import app.turp.ui.components.CardboardDiscButton
+import app.turp.ui.components.PaperImageButton
+import app.turp.ui.theme.Look
 import app.turp.ui.theme.InkHigh
 import app.turp.ui.theme.Teal
 import app.turp.ui.theme.TextLow
@@ -284,7 +288,27 @@ fun DiscoverScreen(
                     online = true,
                     modifier = Modifier.clickable(onClick = onOpenProfile)
                 )
-                IconButton(onClick = { showFilter = !showFilter }) {
+                if (Look.cardboard) {
+                    // Pappe: Regler-Kärtchen (Mint, solange der Filter offen ist)
+                    Box(Modifier.padding(start = 8.dp)) {
+                        PaperImageButton(
+                            res = if (showFilter) R.drawable.pap_filter_on else R.drawable.pap_filter,
+                            label = t("Such-Einstellungen"),
+                            size = 46.dp,
+                            rotation = -4f,
+                            onClick = { showFilter = !showFilter }
+                        )
+                        if (vm.filter.isActive(vm.ageBounds)) {
+                            Box(
+                                Modifier
+                                    .align(Alignment.TopEnd)
+                                    .size(12.dp)
+                                    .background(Coral, CircleShape)
+                                    .border(2.dp, Ink, CircleShape)
+                            )
+                        }
+                    }
+                } else IconButton(onClick = { showFilter = !showFilter }) {
                     Box {
                         Icon(
                             Icons.Rounded.Tune,
@@ -579,7 +603,7 @@ private fun ProfileCard(
         ProfileStory(
             profile = profile,
             interactive = interactive,
-            bottomSpace = if (interactive) 72.dp else 16.dp,
+            bottomSpace = if (interactive) (if (Look.cardboard) 108.dp else 72.dp) else 16.dp,
             highlight = shared,
             modifier = Modifier.fillMaxSize(),
             header = {
@@ -596,7 +620,9 @@ private fun ProfileCard(
                             SharedInterestsSticker(shared.toList())
                         }
                     }
-                    if (interactive) {
+                    if (interactive && Look.cardboard) {
+                        PaperImageButton(R.drawable.pap_flag, t("Melden"), 42.dp, onReport, Modifier.padding(top = 4.dp), rotation = 6f)
+                    } else if (interactive) {
                         IconButton(onClick = onReport) {
                             Icon(
                                 Icons.Rounded.Flag,
@@ -646,7 +672,31 @@ private fun ProfileCard(
             )
         }
 
-        if (interactive) {
+        if (interactive && Look.cardboard) {
+            // Pappe: zwei runde Pappscheiben – X (weiter) und größer der Haken (Anfrage) mit Preis-Schildchen
+            Row(
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(34.dp)
+            ) {
+                CardboardDiscButton(onClick = onSkip, label = t("Weiter"), size = 68.dp) {
+                    Image(painterResource(R.drawable.swipe_no), null, Modifier.size(38.dp))
+                }
+                Box {
+                    CardboardDiscButton(onClick = onLike, label = t("Anfrage senden"), size = 84.dp) {
+                        Image(painterResource(R.drawable.swipe_yes), null, Modifier.size(50.dp).offset(y = 2.dp))
+                    }
+                    GemPriceTag(
+                        cost = requestCost.toLong(),
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .offset(x = 22.dp, y = (-4).dp)
+                    )
+                }
+            }
+        } else if (interactive) {
             Row(
                 Modifier
                     .align(Alignment.BottomStart)

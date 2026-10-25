@@ -59,7 +59,7 @@ import androidx.compose.material.icons.rounded.Public
 import androidx.compose.material.icons.rounded.Style
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
-import androidx.compose.material3.Icon
+import app.turp.ui.components.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -101,6 +101,9 @@ import app.turp.data.UpdateViewModel
 import app.turp.data.Updates
 import app.turp.ui.theme.Coral
 import app.turp.ui.theme.Ink
+import app.turp.R
+import androidx.compose.ui.res.painterResource
+import androidx.compose.foundation.Image
 import app.turp.ui.theme.cardboard
 import app.turp.ui.theme.TornCircleShape
 import app.turp.ui.theme.TornShape
@@ -483,22 +486,31 @@ private fun TurpBottomBar(selected: Tab, onSelect: (Tab) -> Unit, badges: Map<Ta
                             .clickable { onSelect(tab) },
                         contentAlignment = Alignment.Center
                     ) {
-                        if (Look.cardboard && isSelected) {
-                            // ausgewählt: kleines Mint-Pappstück hinter dem Symbol
-                            Box(
-                                Modifier
-                                    .size(46.dp)
-                                    .cardboard(Teal, remember(tab) { TornCircleShape(tab.ordinal + 3) })
+                        if (Look.cardboard) {
+                            // Pappe: eigene ausgeschnittene Symbole, das gewählte in Mint und etwas größer/schief
+                            val res = when (tab) {
+                                Tab.Lounge -> if (isSelected) R.drawable.nav_lounge_on else R.drawable.nav_lounge_off
+                                Tab.Discover -> if (isSelected) R.drawable.nav_discover_on else R.drawable.nav_discover_off
+                                Tab.Requests -> if (isSelected) R.drawable.nav_friends_on else R.drawable.nav_friends_off
+                                else -> if (isSelected) R.drawable.nav_chats_on else R.drawable.nav_chats_off
+                            }
+                            val tilt by animateFloatAsState(if (isSelected) -8f else 0f, label = "tabTilt")
+                            Image(
+                                painter = painterResource(res),
+                                contentDescription = t(tab.label),
+                                modifier = Modifier
+                                    .size(if (isSelected) 46.dp else 38.dp)
+                                    .graphicsLayer {
+                                        scaleX = scale
+                                        scaleY = scale
+                                        rotationZ = tilt
+                                    }
                             )
-                        }
+                        } else {
                         Icon(
                             if (isSelected) tab.icon else tab.iconOutlined,
                             contentDescription = t(tab.label),
-                            tint = when {
-                                Look.cardboard -> if (isSelected) PaperInk else PaperInk.copy(alpha = 0.6f)
-                                isSelected -> Teal
-                                else -> TextLow
-                            },
+                            tint = if (isSelected) Teal else TextLow,
                             modifier = Modifier
                                 .size(28.dp)
                                 .graphicsLayer {
@@ -506,6 +518,7 @@ private fun TurpBottomBar(selected: Tab, onSelect: (Tab) -> Unit, badges: Map<Ta
                                     scaleY = scale
                                 }
                         )
+                        }
                         val count = badges[tab] ?: 0
                         if (count > 0) {
                             Box(

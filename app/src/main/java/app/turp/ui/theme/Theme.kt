@@ -155,7 +155,7 @@ fun TurpTheme(content: @Composable () -> Unit) {
             // Pappe-Modus: Wellpappe liegt hinter der ganzen App
             Box(Modifier.fillMaxSize()) {
                 Image(
-                    painter = painterResource(R.drawable.kraft_bg),
+                    painter = painterResource(R.drawable.app_bg),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     alignment = Alignment.TopCenter,

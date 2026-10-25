@@ -63,8 +63,12 @@ def fill(poly):
 
 # ---------------------------------------------------------------- Abrissstellen
 peel = np.zeros((H, W), np.float32)
-peel = np.maximum(peel, fill(torn_poly([(-60, -60), (360, -60), (300, 70), (215, 150), (120, 205), (40, 300), (-60, 330)], 11, jag=8)))
-peel = np.maximum(peel, fill(torn_poly([(1140, 2140), (1140, 2460), (700, 2460), (760, 2370), (860, 2300), (960, 2250)], 23, jag=8)))
+APP = "app" in sys.argv   # Variante für die App-Seiten: ohne Aufdruck, Abrisse dort, wo nichts drüberliegt
+if APP:
+    pass   # keine Abrisse – dafür Kritzeleien (siehe unten)
+else:
+    peel = np.maximum(peel, fill(torn_poly([(-60, -60), (360, -60), (300, 70), (215, 150), (120, 205), (40, 300), (-60, 330)], 11, jag=8)))
+    peel = np.maximum(peel, fill(torn_poly([(1140, 2140), (1140, 2460), (700, 2460), (760, 2370), (860, 2300), (960, 2250)], 23, jag=8)))
 # feine Faserkante: Maske mit Rauschen ausfransen
 fray = noise(1.2, 99) * 0.5 + noise(3, 98) * 0.5
 soft = ndi.gaussian_filter(peel, 2.2)
@@ -113,9 +117,9 @@ shade *= 1 - 0.18 * peel * (1 - crest) ** 2
 def rgb(c):
     return np.array(c, np.float32) / 255
 
-base = rgb((196, 141, 86))
-dark = rgb((168, 112, 62))
-light = rgb((214, 166, 110))
+base = rgb((188, 132, 78)) if APP else rgb((196, 141, 86))
+dark = rgb((160, 104, 56)) if APP else rgb((168, 112, 62))
+light = rgb((208, 158, 102)) if APP else rgb((214, 166, 110))
 blot = fbm(60, (14, 50, 160, 420))
 blot2 = noise(260, 61)
 t = np.clip(0.5 + 0.38 * blot, 0, 1)[..., None]
@@ -177,10 +181,86 @@ def stamp(cx, cy, s, angle, seed):
     grain = np.clip(0.80 + 0.20 * patchy, 0, 1) * (fine > -1.1 + 0.25 * patchy)   # feine Aussetzer
     return np.clip(ink * grain, 0, 1)
 
-ink = stamp(905, 262, 78, -9, 300)
+ink = stamp(905, 262, 78, -9, 300) * (0 if APP else 1)
 ink_col = rgb((74, 42, 22))
 a = (0.30 * ink * liner)[..., None]
 col = col * (1 - a) + ink_col * a
+
+
+# Filzstift-Kritzeleien wie auf einem bemalten Karton (nur App-Variante)
+def doodles(seed):
+    r = np.random.default_rng(seed)
+    SS = 4
+    layers = {k: np.zeros((H, W), np.uint8) for k in ("ink", "teal", "coral")}
+
+    def wob(pts, amp=2.0):
+        pts = np.asarray(pts, np.float32)
+        return pts + r.normal(0, amp, pts.shape).astype(np.float32)
+
+    def stroke(layer, pts, th, closed=False):
+        p = np.round(wob(pts) * SS).astype(np.int32)
+        cv2.polylines(layers[layer], [p], closed, 255, th * SS // 2, cv2.LINE_AA, shift=2)
+
+    def rot(pts, cx, cy, ang, sc):
+        a_ = np.deg2rad(ang)
+        R = np.array([[np.cos(a_), -np.sin(a_)], [np.sin(a_), np.cos(a_)]], np.float32)
+        return (np.asarray(pts, np.float32) * sc) @ R.T + [cx, cy]
+
+    t = np.linspace(0, 2 * np.pi, 60)
+    shapes = {
+        "star": [[np.cos(-np.pi / 2 + k * 4 * np.pi / 5), np.sin(-np.pi / 2 + k * 4 * np.pi / 5)] for k in range(6)],
+        "heart": np.stack([16 * np.sin(t) ** 3 / 17, -(13 * np.cos(t) - 5 * np.cos(2 * t) - 2 * np.cos(3 * t) - np.cos(4 * t)) / 17], 1),
+        "spiral": np.stack([(0.15 + 0.85 * t / (2 * np.pi)) * np.cos(t * 2.2), (0.15 + 0.85 * t / (2 * np.pi)) * np.sin(t * 2.2)], 1),
+        "zigzag": [[-1, 0.2], [-0.6, -0.3], [-0.2, 0.2], [0.2, -0.3], [0.6, 0.2], [1, -0.3]],
+        "arrow": np.concatenate([np.stack([np.linspace(-1, 0.8, 20), 0.35 * np.sin(np.linspace(0, np.pi, 20))], 1)]),
+        "circle": np.stack([np.cos(t), np.sin(t)], 1),
+    }
+    # lockeres Raster, damit es verteilt aussieht, nicht zufällig geklumpt
+    cols, rows = 3, 8
+    kinds = list(shapes) + ["smiley", "sparkle", "dots"]
+    for i in range(rows):
+        for j in range(cols):
+            if r.random() < 0.18:
+                continue
+            cx = (j + 0.5 + r.uniform(-0.3, 0.3)) * W / cols
+            cy = (i + 0.5 + r.uniform(-0.3, 0.3)) * H / rows
+            sc = r.uniform(34, 58)
+            ang = r.uniform(-30, 30)
+            kind = kinds[(i * cols + j + int(r.integers(0, 3))) % len(kinds)]
+            layer = r.choice(["ink", "ink", "ink", "teal", "coral"])
+            th = int(r.uniform(5, 7))
+            if kind == "smiley":
+                stroke(layer, rot(shapes["circle"], cx, cy, ang, sc), th, True)
+                for ex in (-0.35, 0.35):
+                    stroke(layer, rot([[ex, -0.25], [ex, -0.15]], cx, cy, ang, sc), th + 2)
+                stroke(layer, rot(np.stack([np.linspace(-0.45, 0.45, 12), 0.25 + 0.2 * np.sin(np.linspace(0, np.pi, 12))], 1), cx, cy, ang, sc), th)
+            elif kind == "sparkle":
+                for a_ in (0, 45, 90, 135):
+                    L = 1.0 if a_ % 90 == 0 else 0.55
+                    stroke(layer, rot([[-L, 0], [L, 0]], cx, cy, ang + a_, sc * 0.8), th)
+            elif kind == "dots":
+                for _ in range(5):
+                    dx, dy = r.uniform(-1, 1, 2) * sc
+                    cv2.circle(layers[layer], (int((cx + dx) * SS), int((cy + dy) * SS)), int(r.uniform(4, 7) * SS), 255, -1, cv2.LINE_AA, shift=2)
+            elif kind == "arrow":
+                pts = rot(shapes["arrow"], cx, cy, ang, sc)
+                stroke(layer, pts, th)
+                tip = pts[-1]
+                d_ = pts[-1] - pts[-3]
+                d_ /= np.linalg.norm(d_) + 1e-6
+                nrm_ = np.array([-d_[1], d_[0]])
+                stroke(layer, [tip - d_ * 22 + nrm_ * 16, tip, tip - d_ * 22 - nrm_ * 16], th)
+            else:
+                stroke(layer, rot(shapes[kind], cx, cy, ang, sc), th, kind in ("circle", "heart"))
+    return {k: v.astype(np.float32) / 255 for k, v in layers.items()}
+
+
+if APP:
+    dl = doodles(77)
+    chalk = np.clip(0.75 + 0.35 * noise(1.0, 400), 0, 1)       # Strich nicht ganz deckend
+    for k, c_, al in (("ink", (70, 40, 20), 0.20), ("teal", (40, 170, 150), 0.30), ("coral", (215, 70, 90), 0.26)):
+        m = (dl[k] * chalk * al * liner)[..., None]
+        col = col * (1 - m) + rgb(c_) * m
 
 img = col * shade[..., None]
 
@@ -192,7 +272,8 @@ img *= glow[..., None]
 
 img = np.clip(img, 0, 1)
 out = (img * 255 + rng.uniform(-1.2, 1.2, img.shape)).clip(0, 255).astype(np.uint8)
-cv2.imwrite(str(OUT / "kraft_bg.png"), cv2.cvtColor(out, cv2.COLOR_RGB2BGR))
+NAME = "app_bg" if APP else "kraft_bg"
+cv2.imwrite(str(OUT / f"{NAME}.png"), cv2.cvtColor(out, cv2.COLOR_RGB2BGR))
 ok, buf = cv2.imencode(".webp", cv2.cvtColor(out, cv2.COLOR_RGB2BGR), [cv2.IMWRITE_WEBP_QUALITY, 88])
-(OUT / "kraft_bg.webp").write_bytes(buf.tobytes())
-print("kraft_bg", out.shape, len(buf) // 1024, "KB")
+(OUT / f"{NAME}.webp").write_bytes(buf.tobytes())
+print(NAME, out.shape, len(buf) // 1024, "KB")

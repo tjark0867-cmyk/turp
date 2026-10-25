@@ -27,7 +27,7 @@ import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
+import app.turp.ui.components.Icon
 import androidx.compose.material3.IconButton
 import app.turp.ui.components.Surface
 import androidx.compose.material3.Text

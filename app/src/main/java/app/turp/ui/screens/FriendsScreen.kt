@@ -45,7 +45,7 @@ import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.PersonAdd
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
+import app.turp.ui.components.Icon
 import androidx.compose.material3.IconButton
 import app.turp.ui.components.Surface
 import androidx.compose.material3.Text

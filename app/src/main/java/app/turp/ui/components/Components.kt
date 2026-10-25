@@ -61,7 +61,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
+import app.turp.ui.components.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -527,6 +527,10 @@ private fun DrawScope.drawGem(angleDeg: Float, path: Path, twinkle: Boolean) {
 /** Gem-Anzeige oben rechts; roter Punkt = Check-in heute noch offen */
 @Composable
 fun GemPill(gems: Long, showDot: Boolean, modifier: Modifier = Modifier) {
+    if (Look.cardboard) {
+        PaperGemPill(gems, showDot, modifier)
+        return
+    }
     Box(modifier) {
         Row(
             Modifier.padding(horizontal = 6.dp, vertical = 6.dp),
