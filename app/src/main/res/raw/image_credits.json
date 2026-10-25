@@ -630,13 +630,6 @@
   "url": "https://commons.wikimedia.org/wiki/File:Architectural_model_of_the_Castro_do_Zambujal,_Portugal.png"
  },
  {
-  "value": "🏝️ Animal Crossing",
-  "title": "Green Leaf Isolated White Background",
-  "artist": "",
-  "license": "CC0",
-  "url": "https://www.rawpixel.com/image/5915718/image-background-white-public-domain"
- },
- {
   "value": "🌸 Anime",
   "title": "Cherry Blossom Branch",
   "artist": "cahadikin",
@@ -644,32 +637,11 @@
   "url": "https://www.flickr.com/photos/58869751@N08/8600264407"
  },
  {
-  "value": "🧝 Cosplay",
-  "title": "Colorful wigs",
-  "artist": "",
-  "license": "CC0",
-  "url": "https://www.rawpixel.com/image/6029747/colorful-wigs-free-public-domain-cc0-photo"
- },
- {
-  "value": "🎉 Feiern",
-  "title": "green mum in pink party hat",
-  "artist": "ProFlowers.com",
-  "license": "CC BY 2.0",
-  "url": "https://www.flickr.com/photos/127365614@N08/19759205468"
- },
- {
   "value": "🧶 Häkeln & Stricken",
   "title": "My first amigurumi: a snail from Happy Berry Crochet’s pattern",
   "artist": "dumbledad",
   "license": "CC BY 2.0",
   "url": "https://www.flickr.com/photos/27141279@N00/8650428813"
- },
- {
-  "value": "🥢 K-Dramas",
-  "title": "떡볶이 Tteokbokki - Hello Cook AUD7",
-  "artist": "avlxyz",
-  "license": "CC BY-SA 2.0",
-  "url": "https://www.flickr.com/photos/10559879@N00/3242611133"
  },
  {
   "value": "🍳 Kochen",
@@ -698,5 +670,12 @@
   "artist": "Walt Stoneburner",
   "license": "CC BY 2.0",
   "url": "https://www.flickr.com/photos/8404611@N06/5745387762"
+ },
+ {
+  "value": "🥢 K-Dramas",
+  "title": "File:Chinese Plate with Chopsticks (b).jpg",
+  "artist": "Michael Johnson - http://www.thebusybrain.com",
+  "license": "CC BY 2.0",
+  "url": "https://commons.wikimedia.org/wiki/File:Chinese_Plate_with_Chopsticks_(b).jpg"
  }
 ]
